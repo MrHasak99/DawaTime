@@ -18,7 +18,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(
+        title: const Text(
+          "Welcome To 9i7ati",
+          style: TextStyle(
+            color: Colors.lightGreen,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -38,6 +46,9 @@ class _LoginPageState extends State<LoginPage> {
               isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightGreen,
+                    ),
                     onPressed: () async {
                       setState(() => isLoading = true);
                       try {
@@ -60,7 +71,13 @@ class _LoginPageState extends State<LoginPage> {
                         if (mounted) setState(() => isLoading = false);
                       }
                     },
-                    child: const Text("Login"),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
               TextButton(
                 onPressed: () async {
@@ -69,7 +86,13 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (_) => const SignUpPage()),
                   );
                 },
-                child: const Text("Don't have an account? Sign Up"),
+                child: const Text(
+                  "Don't have an account? Sign Up",
+                  style: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
