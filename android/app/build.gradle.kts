@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.medication_app_full"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973" // <-- Set the required NDK version
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,10 +24,10 @@ android {
         applicationId = "com.example.medication_app_full"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdkVersion(23) // correct
+        targetSdkVersion(34) // <-- Replace 34 with your desired target SDK version
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
