@@ -35,16 +35,38 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: "Email"),
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
               ),
               TextField(
                 controller: passwordController,
-                decoration: const InputDecoration(labelText: "Password"),
+                keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
+                style: TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  labelStyle: TextStyle(color: Colors.lightGreen),
+                ),
               ),
               const SizedBox(height: 24),
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(color: Colors.lightGreen)
                   : ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.lightGreen,
@@ -64,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           MaterialPageRoute(builder: (_) => HomePage(uid: uid)),
                         );
                       } on FirebaseAuthException catch (e) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(e.message ?? "Login failed")),
                         );
@@ -88,6 +111,88 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: const Text(
                   "Don't have an account? Sign Up",
+                  style: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  final emailController = TextEditingController();
+                  final result = await showDialog<bool>(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          backgroundColor: Colors.lightGreen,
+                          title: const Text(
+                            'Reset Password',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: TextField(
+                            controller: emailController,
+                            style: TextStyle(color: Colors.black),
+                            decoration: const InputDecoration(
+                              labelText: 'Please enter your email',
+                              labelStyle: TextStyle(color: Colors.white),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text(
+                                'Send',
+                                style: TextStyle(
+                                  color: Colors.lightGreen,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                  );
+                  if (result == true) {
+                    try {
+                      await FirebaseAuth.instance.sendPasswordResetEmail(
+                        email: emailController.text.trim(),
+                      );
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Password reset email sent!'),
+                        ),
+                      );
+                    } catch (e) {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to send reset email: $e'),
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: const Text(
+                  "Forgot Password?",
                   style: TextStyle(
                     color: Colors.lightGreen,
                     fontWeight: FontWeight.bold,

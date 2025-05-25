@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
       dosage: double.tryParse(data['dosage'].toString()) ?? 0,
       frequency: data['frequency'] ?? '',
       amount: double.tryParse(data['amount'].toString()) ?? 0,
+      notifyTime: data['notifyTime'],
     );
   }
 
@@ -76,7 +77,10 @@ class _HomePageState extends State<HomePage> {
             return const Center(
               child: Text(
                 "No Medications Found",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             );
           }
@@ -106,28 +110,50 @@ class _HomePageState extends State<HomePage> {
                   },
                   title: Text(
                     medication.name,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${medication.dosage} ${medication.typeOfMedication} ${medication.frequency}",
-                        style: const TextStyle(color: Colors.black),
+                        "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       if (medication.amount > 0)
                         Text(
                           "${(medication.amount).toStringAsFixed(2)} left",
-                          style: const TextStyle(color: Colors.black),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       else
                         const Text(
                           "Out of stock",
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      if (medication.notifyTime != null &&
+                          medication.notifyTime!.isNotEmpty)
+                        Text(
+                          "Notify at: ${medication.notifyTime}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                     ],
                   ),
                   trailing: IconButton(
+                    tooltip: "Take Medication",
                     icon: const Icon(
                       Icons.medication_rounded,
                       color: Colors.white,
@@ -152,11 +178,17 @@ class _HomePageState extends State<HomePage> {
                               backgroundColor: Colors.lightGreen,
                               title: Text(
                                 "You're out of ${medication.name}!",
-                                style: const TextStyle(color: Colors.black),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               content: Text(
                                 "Please refill your ${medication.name}.",
-                                style: const TextStyle(color: Colors.black),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               actions: [
                                 TextButton(
@@ -165,7 +197,10 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: const Text(
                                     "OK",
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -182,6 +217,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: "Add Medication",
         shape: const CircleBorder(),
         backgroundColor: Colors.lightGreen,
         onPressed: () async {
@@ -191,6 +227,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => AddMedications(uid: widget.uid!),
             ),
           );
+          if (!mounted) return;
         },
         child: const Icon(Icons.add_circle_rounded, color: Colors.white),
       ),

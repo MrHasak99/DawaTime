@@ -24,13 +24,143 @@ class UserPage extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.lightGreen,
+        actions: [
+          Builder(
+            builder:
+                (context) => IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.white),
+                  tooltip: 'Edit Profile',
+                  onPressed: () async {
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user == null) return;
+                    final userDoc = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(user.uid);
+                    final docSnapshot = await userDoc.get();
+                    final data = docSnapshot.data() ?? {};
+                    final nameController = TextEditingController(
+                      text: data['name'] ?? '',
+                    );
+                    final emailController = TextEditingController(
+                      text: data['email'] ?? '',
+                    );
+
+                    final result = await showDialog<bool>(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            backgroundColor: Colors.lightGreen,
+                            title: const Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: nameController,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Name',
+                                    labelStyle: TextStyle(color: Colors.white),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TextField(
+                                  controller: emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: TextStyle(color: Colors.black),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Email',
+                                    labelStyle: TextStyle(color: Colors.white),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: Colors.lightGreen,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                    );
+
+                    if (result == true) {
+                      try {
+                        await userDoc.update({
+                          'name': nameController.text.trim(),
+                          'email': emailController.text.trim(),
+                        });
+                        if (user.email != emailController.text.trim()) {
+                          await user.verifyBeforeUpdateEmail(
+                            emailController.text.trim(),
+                          );
+                        }
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Profile updated!')),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to update: $e')),
+                          );
+                        }
+                      }
+                    }
+                  },
+                ),
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder<DocumentSnapshot>(
           future: userDoc.get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.lightGreen),
+              );
             }
             if (!snapshot.hasData || !snapshot.data!.exists) {
               return const Center(child: Text("User data not found."));
@@ -87,7 +217,7 @@ class UserPage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                TextButton(
+                                ElevatedButton(
                                   onPressed: () => Navigator.pop(context, true),
                                   child: const Text(
                                     "Delete",
