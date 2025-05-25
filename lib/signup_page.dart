@@ -35,26 +35,52 @@ class _SignUpPageState extends State<SignUpPage> {
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: "Name"),
+                style: const TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  labelText: "Name",
+                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
               ),
               TextField(
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
                   labelText: "Email",
                   labelStyle: TextStyle(color: Colors.lightGreen),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
                 ),
               ),
               TextField(
                 controller: passwordController,
-                decoration: const InputDecoration(labelText: "Password"),
+                keyboardType: TextInputType.visiblePassword,
+                style: const TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
                 obscureText: true,
               ),
               const SizedBox(height: 24),
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(color: Colors.lightGreen)
                   : ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.lightGreen,
@@ -78,6 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (!mounted) return;
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(e.message ?? "Sign up failed"),
