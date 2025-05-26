@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             tooltip: 'Logout',
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              if (!mounted) return;
+              if (!context.mounted) return;
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => const LoginPage()),

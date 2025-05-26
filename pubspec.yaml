@@ -1,6 +1,6 @@
 name: medication_app_full
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.13.1
   cloud_firestore: ^5.6.8
+  flutter_local_notifications: ^17.1.2
+  timezone: ^0.9.2
 
 dev_dependencies:
   flutter_test:

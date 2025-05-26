@@ -1,18 +1,18 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
     namespace = "com.example.medication_app_full"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973" // <-- Set the required NDK version
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -24,8 +24,8 @@ android {
         applicationId = "com.example.medication_app_full"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdkVersion(23) // correct
-        targetSdkVersion(34) // <-- Replace 34 with your desired target SDK version
+        minSdkVersion(23)
+        targetSdkVersion(34)
         versionCode = 1
         versionName = "1.0"
     }
@@ -41,4 +41,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // ...existing dependencies...
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

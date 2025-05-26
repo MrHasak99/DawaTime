@@ -125,13 +125,12 @@ class _AddMedicationsState extends State<AddMedications> {
                         'frequency':
                             "${frequencyNumberController.text} $frequencyPeriod",
                         'amount': double.tryParse(amountController.text) ?? 0,
-                        'notifyTime':
-                            _selectedTime?.format(context),
+                        'notifyTime': _selectedTime?.format(context),
                       });
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       Navigator.pop(context);
                     } catch (e) {
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Failed to add medication: $e")),
                       );
