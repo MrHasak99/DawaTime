@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                               password: passwordController.text.trim(),
                             );
                         final uid = userCredential.user?.uid;
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (_) => HomePage(uid: uid)),
@@ -175,14 +175,14 @@ class _LoginPageState extends State<LoginPage> {
                       await FirebaseAuth.instance.sendPasswordResetEmail(
                         email: emailController.text.trim(),
                       );
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Password reset email sent!'),
                         ),
                       );
                     } catch (e) {
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Failed to send reset email: $e'),

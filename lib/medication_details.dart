@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medication_app_full/database/medications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _requestIOSNotificationPermission() async {}
 
 class MedicationDetails extends StatefulWidget {
   final String uid;
@@ -25,6 +33,83 @@ class _MedicationDetailsState extends State<MedicationDetails> {
   void initState() {
     super.initState();
     _medication = widget.medications;
+    _initializeNotifications();
+    _scheduleMedicationNotification();
+    _requestIOSNotificationPermission();
+  }
+
+  Future<void> _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder:
+                (_) => AlertDialog(
+                  title: Text(response.payload ?? 'Notification'),
+                  content: Text('You received a notification!'),
+                ),
+          );
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+    tz.initializeTimeZones();
+  }
+
+  Future<void> _scheduleMedicationNotification() async {
+    if (_medication?.notifyTime == null || _medication!.notifyTime!.isEmpty) {
+      return;
+    }
+
+    final timeParts = _medication!.notifyTime!.split(':');
+    if (timeParts.length != 2) return;
+
+    final hour = int.tryParse(timeParts[0]) ?? 0;
+    final minute = int.tryParse(timeParts[1]) ?? 0;
+
+    final now = DateTime.now();
+    var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+
+    if (scheduledTime.isBefore(now)) {
+      scheduledTime = scheduledTime.add(const Duration(days: 1));
+    }
+
+    print('Scheduling medication notification for $scheduledTime');
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      _medication.hashCode,
+      'Medication Reminder',
+      'Time to take ${_medication!.name}!',
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medication_channel',
+          'Medication Reminders',
+          channelDescription: 'Reminds you to take your medication',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
   @override
@@ -237,7 +322,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                   title: Text(
                                     localNotifyTime == null
                                         ? "Pick Notification Time"
-                                        : "Notify at: ${localNotifyTime?.format(context)}",
+                                        : "Notify at: ${localNotifyTime!.format(context)}",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   trailing: Icon(
@@ -294,38 +379,33 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                             0,
                                         'notifyTime':
                                             localNotifyTime != null
-                                                ? localNotifyTime?.format(
-                                                  context,
-                                                )
+                                                ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
                                                 : '',
                                       });
-                                  if (mounted) {
-                                    // Fetch the updated document
-                                    final doc =
-                                        await firestore
-                                            .collection(widget.uid)
-                                            .doc(widget.docId)
-                                            .get();
-                                    setState(() {
-                                      _medication = Medications.fromMap(
-                                        doc.data()!,
-                                      );
-                                    });
-                                    Navigator.pop(context, true);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Medication updated!'),
-                                      ),
+                                  if (!mounted) return;
+                                  final doc =
+                                      await firestore
+                                          .collection(widget.uid)
+                                          .doc(widget.docId)
+                                          .get();
+                                  setState(() {
+                                    _medication = Medications.fromMap(
+                                      doc.data()!,
                                     );
-                                  }
+                                  });
+                                  Navigator.pop(context, true);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Medication updated!'),
+                                    ),
+                                  );
                                 } catch (e) {
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Failed to update: $e'),
-                                      ),
-                                    );
-                                  }
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Failed to update: $e'),
+                                    ),
+                                  );
                                 }
                               },
                               child: Text(
@@ -441,3 +521,6 @@ class _MedicationDetailsState extends State<MedicationDetails> {
     );
   }
 }
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse response) {}

@@ -4,7 +4,7 @@ class Medications {
   final double dosage;
   final String frequency;
   final double amount;
-  final String? notifyTime; // <-- Add this line
+  final String? notifyTime;
 
   Medications({
     required this.name,
@@ -12,7 +12,7 @@ class Medications {
     required this.dosage,
     required this.frequency,
     required this.amount,
-    this.notifyTime, // <-- Add this line
+    this.notifyTime,
   });
 
   factory Medications.fromMap(Map<String, dynamic> data) {
@@ -22,7 +22,7 @@ class Medications {
       dosage: (data['dosage'] ?? 0).toDouble(),
       frequency: data['frequency'] ?? '',
       amount: (data['amount'] ?? 0).toDouble(),
-      notifyTime: data['notifyTime'], // <-- Add this line
+      notifyTime: data['notifyTime'],
     );
   }
 
@@ -33,7 +33,7 @@ class Medications {
       'dosage': dosage,
       'frequency': frequency,
       'amount': amount,
-      'notifyTime': notifyTime, // <-- Add this line
+      'notifyTime': notifyTime,
     };
   }
 

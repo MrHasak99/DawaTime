@@ -101,10 +101,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               'name': nameController.text.trim(),
                               'email': emailController.text.trim(),
                             });
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(e.message ?? "Sign up failed"),
