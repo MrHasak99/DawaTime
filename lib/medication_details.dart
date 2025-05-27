@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medication_app_full/database/medications.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-Future<void> _requestIOSNotificationPermission() async {}
 
 class MedicationDetails extends StatefulWidget {
   final String uid;
@@ -33,83 +25,6 @@ class _MedicationDetailsState extends State<MedicationDetails> {
   void initState() {
     super.initState();
     _medication = widget.medications;
-    _initializeNotifications();
-    _scheduleMedicationNotification();
-    _requestIOSNotificationPermission();
-  }
-
-  Future<void> _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-          requestAlertPermission: true,
-          requestBadgePermission: true,
-          requestSoundPermission: true,
-        );
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: initializationSettingsIOS,
-        );
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        if (context.mounted) {
-          showDialog(
-            context: context,
-            builder:
-                (_) => AlertDialog(
-                  title: Text(response.payload ?? 'Notification'),
-                  content: Text('You received a notification!'),
-                ),
-          );
-        }
-      },
-      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-    );
-    tz.initializeTimeZones();
-  }
-
-  Future<void> _scheduleMedicationNotification() async {
-    if (_medication?.notifyTime == null || _medication!.notifyTime!.isEmpty) {
-      return;
-    }
-
-    final timeParts = _medication!.notifyTime!.split(':');
-    if (timeParts.length != 2) return;
-
-    final hour = int.tryParse(timeParts[0]) ?? 0;
-    final minute = int.tryParse(timeParts[1]) ?? 0;
-
-    final now = DateTime.now();
-    var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-
-    if (scheduledTime.isBefore(now)) {
-      scheduledTime = scheduledTime.add(const Duration(days: 1));
-    }
-
-    print('Scheduling medication notification for $scheduledTime');
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      _medication.hashCode,
-      'Medication Reminder',
-      'Time to take ${_medication!.name}!',
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'medication_channel',
-          'Medication Reminders',
-          channelDescription: 'Reminds you to take your medication',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
   }
 
   @override
@@ -117,6 +32,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
+        leading: BackButton(color: Colors.white),
         title: Text(
           widget.medications.name,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -434,21 +350,44 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 context: context,
                 builder:
                     (context) => AlertDialog(
-                      title: Text('Delete Medication'),
+                      backgroundColor: Colors.lightGreen,
+                      title: Text(
+                        'Delete Medication',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       content: Text(
                         'Are you sure you want to delete this medication?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context, true),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
+                            backgroundColor: Colors.white,
                           ),
-                          child: Text('Delete'),
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -508,10 +447,25 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                           "Current Amount: ${_medication!.amount}",
                           style: TextStyle(fontSize: 16),
                         ),
-                        if (_medication!.notifyTime != null)
-                          Text(
-                            "Notify at: ${_medication!.notifyTime}",
-                            style: TextStyle(fontSize: 16),
+                        if (_medication!.notifyTime != null &&
+                            _medication!.notifyTime!.isNotEmpty)
+                          Builder(
+                            builder: (context) {
+                              final parts = _medication!.notifyTime!.split(':');
+                              if (parts.length == 2) {
+                                final hour = int.tryParse(parts[0]) ?? 0;
+                                final minute = int.tryParse(parts[1]) ?? 0;
+                                final timeOfDay = TimeOfDay(
+                                  hour: hour,
+                                  minute: minute,
+                                );
+                                return Text(
+                                  "Notify at: ${timeOfDay.format(context)}",
+                                  style: TextStyle(fontSize: 16),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            },
                           ),
                       ],
                     ),
@@ -521,6 +475,3 @@ class _MedicationDetailsState extends State<MedicationDetails> {
     );
   }
 }
-
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse response) {}

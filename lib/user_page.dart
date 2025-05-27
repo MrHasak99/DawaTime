@@ -19,6 +19,7 @@ class UserPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(color: Colors.white),
         title: const Text(
           "User Info",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

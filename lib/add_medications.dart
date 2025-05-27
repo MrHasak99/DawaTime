@@ -26,6 +26,7 @@ class _AddMedicationsState extends State<AddMedications> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
+        leading: BackButton(color: Colors.white),
         title: Center(
           child: Text(
             "Add New Medication",
@@ -125,7 +126,10 @@ class _AddMedicationsState extends State<AddMedications> {
                         'frequency':
                             "${frequencyNumberController.text} $frequencyPeriod",
                         'amount': double.tryParse(amountController.text) ?? 0,
-                        'notifyTime': _selectedTime?.format(context),
+                        'notifyTime':
+                            _selectedTime != null
+                                ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                : '',
                       });
                       if (!context.mounted) return;
                       Navigator.pop(context);
