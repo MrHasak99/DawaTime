@@ -398,13 +398,13 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       .collection(widget.uid)
                       .doc(widget.docId)
                       .delete();
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pop(context);
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(SnackBar(content: Text("Medication deleted")));
                 } catch (e) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Failed to delete: $e")),
                   );

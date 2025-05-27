@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:medication_app_full/notification_utils.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
@@ -119,7 +120,7 @@ class _AddMedicationsState extends State<AddMedications> {
                       frequencyNumberController.text.isNotEmpty &&
                       amountController.text.isNotEmpty) {
                     try {
-                      await FirebaseFirestore.instance.collection(widget.uid).add({
+                      final docRef = await firestore.collection(widget.uid).add({
                         'name': nameController.text,
                         'typeOfMedication': typeOfMedicationController.text,
                         'dosage': double.tryParse(dosageController.text) ?? 0,
@@ -131,6 +132,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                 ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
                                 : '',
                       });
+                      final newDoc = await docRef.get();
+                      final newMedication = medicationFromDoc(newDoc);
+
+                      await scheduleMedicationNotification(
+                        docRef.id,
+                        newMedication,
+                      );
+
                       if (!context.mounted) return;
                       Navigator.pop(context);
                     } catch (e) {
