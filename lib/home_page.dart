@@ -3,14 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
-import 'package:medication_app_full/database/medications.dart';
 import 'package:medication_app_full/login_page.dart';
 import 'package:medication_app_full/medication_details.dart';
 import 'package:medication_app_full/user_page.dart';
-import 'package:timezone/timezone.dart' as tz;
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:medication_app_full/notification_utils.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -23,18 +19,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Medications medicationFromDoc(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Medications(
-      name: data['name'] ?? '',
-      typeOfMedication: data['typeOfMedication'] ?? '',
-      dosage: double.tryParse(data['dosage'].toString()) ?? 0,
-      frequency: data['frequency'] ?? '',
-      amount: double.tryParse(data['amount'].toString()) ?? 0,
-      notifyTime: data['notifyTime'],
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -42,50 +26,6 @@ class _HomePageState extends State<HomePage> {
 
   @pragma('vm:entry-point')
   void notificationTapBackground(NotificationResponse response) {}
-
-  Future<void> _scheduleMedicationNotification(Medications medication) async {
-    await flutterLocalNotificationsPlugin.cancel(medication.hashCode);
-    if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
-      return;
-    }
-
-    final timeParts = medication.notifyTime!.split(':');
-    if (timeParts.length != 2) return;
-
-    final hour = int.tryParse(timeParts[0]) ?? 0;
-    final minute = int.tryParse(timeParts[1]) ?? 0;
-
-    final now = DateTime.now();
-    var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-
-    if (scheduledTime.isBefore(now)) {
-      scheduledTime = scheduledTime.add(const Duration(days: 1));
-    }
-
-    print('Scheduling ${medication.name} notification for $scheduledTime');
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      medication.hashCode,
-      'Medication Reminder',
-      'Time to take ${medication.name}!',
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'medication_channel',
-          'Medication Reminders',
-          channelDescription: 'Reminds you to take your medication',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: true,
-        ),
-        iOS: DarwinNotificationDetails(presentSound: true),
-      ),
-      payload: 'Time to take ${medication.name}!',
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -502,10 +442,19 @@ class _HomePageState extends State<HomePage> {
                                                       ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
                                                       : '',
                                             });
-                                        await _scheduleMedicationNotification(
-                                          medication,
+                                        final updatedDoc =
+                                            await firestore
+                                                .collection(widget.uid!)
+                                                .doc(docs[index].id)
+                                                .get();
+                                        final updatedMedication =
+                                            medicationFromDoc(updatedDoc);
+
+                                        await scheduleMedicationNotification(
+                                          docs[index].id,
+                                          updatedMedication,
                                         );
-                                        if (!mounted) return;
+                                        if (!context.mounted) return;
                                         Navigator.pop(context, true);
                                         ScaffoldMessenger.of(
                                           context,
@@ -556,7 +505,7 @@ class _HomePageState extends State<HomePage> {
                         .doc(docs[index].id)
                         .delete();
                     await flutterLocalNotificationsPlugin.cancel(
-                      medication.hashCode,
+                      docs[index].id.hashCode,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('${medication.name} deleted!')),
