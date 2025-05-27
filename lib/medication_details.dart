@@ -103,10 +103,17 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                               children: [
                                 TextField(
                                   controller: nameController,
-                                  style: TextStyle(color: Colors.black),
+                                  textCapitalization: TextCapitalization.words,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   decoration: InputDecoration(
                                     labelText: 'Name',
-                                    labelStyle: TextStyle(color: Colors.white),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.white,
@@ -121,10 +128,16 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                 ),
                                 TextField(
                                   controller: typeController,
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   decoration: InputDecoration(
-                                    labelText: 'Type of Medication',
-                                    labelStyle: TextStyle(color: Colors.white),
+                                    labelText: 'Unit of Measurement',
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.white,
@@ -139,11 +152,17 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                 ),
                                 TextField(
                                   controller: dosageController,
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
                                     labelText: 'Dosage',
-                                    labelStyle: TextStyle(color: Colors.white),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.white,
@@ -163,11 +182,15 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                       child: TextField(
                                         controller: frequencyNumberController,
                                         keyboardType: TextInputType.number,
-                                        style: TextStyle(color: Colors.black),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                         decoration: InputDecoration(
                                           labelText: 'Times',
                                           labelStyle: TextStyle(
                                             color: Colors.white,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
@@ -185,7 +208,10 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                     const SizedBox(width: 10),
                                     const Text(
                                       'per',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(width: 10),
                                     DropdownButton<String>(
@@ -200,6 +226,8 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                                     period,
                                                     style: TextStyle(
                                                       color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
@@ -217,11 +245,17 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                 ),
                                 TextField(
                                   controller: amountController,
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
                                     labelText: 'Current Amount',
-                                    labelStyle: TextStyle(color: Colors.white),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Colors.white,
@@ -239,17 +273,79 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                     localNotifyTime == null
                                         ? "Pick Notification Time"
                                         : "Notify at: ${localNotifyTime!.format(context)}",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   trailing: Icon(
                                     Icons.access_time,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   onTap: () async {
                                     final picked = await showTimePicker(
                                       context: context,
                                       initialTime:
                                           localNotifyTime ?? TimeOfDay.now(),
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            timePickerTheme:
+                                                TimePickerThemeData(
+                                                  backgroundColor:
+                                                      Colors.lightGreen,
+                                                  hourMinuteTextColor:
+                                                      Colors.black,
+                                                  hourMinuteColor: Colors.white,
+                                                  dayPeriodTextColor:
+                                                      Colors.black,
+                                                  dayPeriodColor: Colors.white,
+                                                  dialHandColor:
+                                                      Colors.lightGreen,
+                                                  dialBackgroundColor:
+                                                      Colors.white,
+                                                  entryModeIconColor:
+                                                      Colors.white,
+                                                  helpTextStyle:
+                                                      const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                  hourMinuteTextStyle:
+                                                      const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 28,
+                                                      ),
+                                                  dayPeriodTextStyle:
+                                                      const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                  dialTextStyle:
+                                                      const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                      ),
+                                                ),
+                                            textButtonTheme:
+                                                TextButtonThemeData(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    textStyle: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                          ),
+                                          child: child!,
+                                        );
+                                      },
                                     );
                                     if (picked != null) {
                                       setState(() {

@@ -42,15 +42,52 @@ class _AddMedicationsState extends State<AddMedications> {
             children: [
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: "Name"),
+                textCapitalization: TextCapitalization.words,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Name",
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
               ),
               TextField(
                 controller: typeOfMedicationController,
-                decoration: InputDecoration(labelText: "Type of Medication"),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Unit of Measurement",
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               TextField(
                 controller: dosageController,
-                decoration: InputDecoration(labelText: "Dosage"),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Dosage",
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
               Row(
@@ -60,12 +97,34 @@ class _AddMedicationsState extends State<AddMedications> {
                     width: 60,
                     child: TextField(
                       controller: frequencyNumberController,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Times'),
+                      decoration: const InputDecoration(
+                        labelText: 'Times',
+                        labelStyle: TextStyle(
+                          color: Colors.lightGreen,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.lightGreen),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.lightGreen),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text('per'),
+                  const Text(
+                    'per',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(width: 10),
                   DropdownButton<String>(
                     value: frequencyPeriod,
@@ -74,7 +133,13 @@ class _AddMedicationsState extends State<AddMedications> {
                             .map(
                               (period) => DropdownMenuItem(
                                 value: period,
-                                child: Text(period),
+                                child: Text(
+                                  period,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             )
                             .toList(),
@@ -90,7 +155,23 @@ class _AddMedicationsState extends State<AddMedications> {
               ),
               TextField(
                 controller: amountController,
-                decoration: InputDecoration(labelText: "Current Amount"),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: "Current Amount",
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
               ListTile(
@@ -98,12 +179,57 @@ class _AddMedicationsState extends State<AddMedications> {
                   _selectedTime == null
                       ? "Pick Notification Time"
                       : "Notify at: ${_selectedTime!.format(context)}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 trailing: Icon(Icons.access_time),
                 onTap: () async {
                   final picked = await showTimePicker(
                     context: context,
                     initialTime: _selectedTime ?? TimeOfDay.now(),
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          timePickerTheme: TimePickerThemeData(
+                            backgroundColor: Colors.lightGreen,
+                            hourMinuteTextColor: Colors.black,
+                            hourMinuteColor: Colors.white,
+                            dayPeriodTextColor: Colors.black,
+                            dayPeriodColor: Colors.white,
+                            dialHandColor: Colors.lightGreen,
+                            dialBackgroundColor: Colors.white,
+                            entryModeIconColor: Colors.white,
+                            helpTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            hourMinuteTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+                            ),
+                            dayPeriodTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            dialTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          textButtonTheme: TextButtonThemeData(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                   );
                   if (picked != null) {
                     setState(() {
