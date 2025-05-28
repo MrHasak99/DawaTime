@@ -36,10 +36,17 @@ class _SignUpPageState extends State<SignUpPage> {
             children: [
               TextField(
                 controller: nameController,
-                style: const TextStyle(color: Colors.black),
+                cursorColor: Colors.lightGreen,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: "Name",
-                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),
@@ -50,11 +57,18 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               TextField(
                 controller: emailController,
+                cursorColor: Colors.lightGreen,
                 keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.black),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),
@@ -65,11 +79,18 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               TextField(
                 controller: passwordController,
+                cursorColor: Colors.lightGreen,
                 keyboardType: TextInputType.visiblePassword,
-                style: const TextStyle(color: Colors.black),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: "Password",
-                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),

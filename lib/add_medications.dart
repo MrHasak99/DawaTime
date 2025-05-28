@@ -42,6 +42,7 @@ class _AddMedicationsState extends State<AddMedications> {
             children: [
               TextField(
                 controller: nameController,
+                cursorColor: Colors.lightGreen,
                 textCapitalization: TextCapitalization.words,
                 style: TextStyle(
                   color: Colors.black,
@@ -63,6 +64,7 @@ class _AddMedicationsState extends State<AddMedications> {
               ),
               TextField(
                 controller: typeOfMedicationController,
+                cursorColor: Colors.lightGreen,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -73,10 +75,17 @@ class _AddMedicationsState extends State<AddMedications> {
                     color: Colors.lightGreen,
                     fontWeight: FontWeight.bold,
                   ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
                 ),
               ),
               TextField(
                 controller: dosageController,
+                cursorColor: Colors.lightGreen,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -86,6 +95,12 @@ class _AddMedicationsState extends State<AddMedications> {
                   labelStyle: TextStyle(
                     color: Colors.lightGreen,
                     fontWeight: FontWeight.bold,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
                   ),
                 ),
                 keyboardType: TextInputType.number,
@@ -97,6 +112,7 @@ class _AddMedicationsState extends State<AddMedications> {
                     width: 60,
                     child: TextField(
                       controller: frequencyNumberController,
+                      cursorColor: Colors.lightGreen,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -121,7 +137,7 @@ class _AddMedicationsState extends State<AddMedications> {
                   const Text(
                     'per',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.lightGreen,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -155,6 +171,7 @@ class _AddMedicationsState extends State<AddMedications> {
               ),
               TextField(
                 controller: amountController,
+                cursorColor: Colors.lightGreen,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

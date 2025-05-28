@@ -53,6 +53,7 @@ Future<void> scheduleMedicationNotification(
         importance: Importance.max,
         priority: Priority.high,
         playSound: true,
+        icon: 'ic_stat_ic_notification',
       ),
       iOS: DarwinNotificationDetails(presentSound: true),
     ),
