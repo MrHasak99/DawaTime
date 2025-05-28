@@ -35,11 +35,18 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextField(
                 controller: emailController,
+                cursorColor: Colors.lightGreen,
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),
@@ -50,9 +57,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextField(
                 controller: passwordController,
+                cursorColor: Colors.lightGreen,
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 decoration: const InputDecoration(
                   labelText: "Password",
                   focusedBorder: UnderlineInputBorder(
@@ -61,7 +72,10 @@ class _LoginPageState extends State<LoginPage> {
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.lightGreen),
                   ),
-                  labelStyle: TextStyle(color: Colors.lightGreen),
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -134,10 +148,17 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           content: TextField(
                             controller: emailController,
-                            style: TextStyle(color: Colors.black),
+                            cursorColor: Colors.white,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                             decoration: const InputDecoration(
                               labelText: 'Please enter your email',
-                              labelStyle: TextStyle(color: Colors.white),
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),

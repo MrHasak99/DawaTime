@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
-import 'package:medication_app_full/login_page.dart';
-import 'package:medication_app_full/medication_details.dart';
-import 'package:medication_app_full/user_page.dart';
+import 'package:medication_app_full/database/medications.dart';
+import 'package:medication_app_full/settings.dart';
 import 'package:medication_app_full/notification_utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,25 +38,12 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.white),
+            icon: const Icon(Icons.settings_rounded, color: Colors.white),
             tooltip: 'View Profile',
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const UserPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            tooltip: 'Logout',
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              if (!context.mounted) return;
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
+                MaterialPageRoute(builder: (_) => SettingsPage()),
               );
             },
           ),
@@ -68,7 +53,9 @@ class _HomePageState extends State<HomePage> {
         stream: firestore.collection(widget.uid!).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.lightGreen),
+            );
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(
@@ -213,6 +200,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       TextField(
                                         controller: nameController,
+                                        cursorColor: Colors.white,
                                         textCapitalization:
                                             TextCapitalization.words,
                                         style: const TextStyle(
@@ -239,6 +227,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       TextField(
                                         controller: typeController,
+                                        cursorColor: Colors.white,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -263,6 +252,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       TextField(
                                         controller: dosageController,
+                                        cursorColor: Colors.white,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -293,6 +283,7 @@ class _HomePageState extends State<HomePage> {
                                             child: TextField(
                                               controller:
                                                   frequencyNumberController,
+                                              cursorColor: Colors.white,
                                               keyboardType:
                                                   TextInputType.number,
                                               style: const TextStyle(
@@ -366,6 +357,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       TextField(
                                         controller: amountController,
+                                        cursorColor: Colors.white,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -604,17 +596,17 @@ class _HomePageState extends State<HomePage> {
                       medication.amount <= 0 ? Colors.red : Colors.lightGreen,
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MedicationDetails(
-                                uid: widget.uid!,
-                                docId: docs[index].id,
-                                medications: medication,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder:
+                            (context) => Dialog(
+                              backgroundColor: Colors.transparent,
+                              insetPadding: const EdgeInsets.all(16),
+                              child: MedicationDetailsCard(
+                                medication: medication,
                               ),
-                        ),
+                            ),
                       );
                     },
                     title: Text(
@@ -804,8 +796,126 @@ class _HomePageState extends State<HomePage> {
           );
           if (!mounted) return;
         },
-        child: const Icon(Icons.add_circle_rounded, color: Colors.white),
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 36),
       ),
+    );
+  }
+}
+
+class MedicationDetailsCard extends StatelessWidget {
+  final Medications medication;
+  const MedicationDetailsCard({super.key, required this.medication});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                medication.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.lightGreen,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            _DetailRow(
+              icon: Icons.category,
+              label: "Unit Of Measurement",
+              value: medication.typeOfMedication,
+            ),
+            const SizedBox(height: 12),
+            _DetailRow(
+              icon: Icons.medical_services,
+              label: "Dosage",
+              value: "${medication.dosage}",
+            ),
+            const SizedBox(height: 12),
+            _DetailRow(
+              icon: Icons.repeat,
+              label: "Frequency",
+              value: medication.frequency.replaceFirst(' ', ' times per '),
+            ),
+            const SizedBox(height: 12),
+            _DetailRow(
+              icon: Icons.inventory_2,
+              label: "Current Amount",
+              value: "${medication.amount}",
+            ),
+            const SizedBox(height: 12),
+            if (medication.notifyTime != null &&
+                medication.notifyTime!.isNotEmpty)
+              Builder(
+                builder: (context) {
+                  final parts = medication.notifyTime!.split(':');
+                  if (parts.length == 2) {
+                    final hour = int.tryParse(parts[0]) ?? 0;
+                    final minute = int.tryParse(parts[1]) ?? 0;
+                    final timeOfDay = TimeOfDay(hour: hour, minute: minute);
+                    return _DetailRow(
+                      icon: Icons.alarm,
+                      label: "Notify at",
+                      value: timeOfDay.format(context),
+                      valueStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.lightGreen,
+                        fontSize: 18,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final TextStyle? valueStyle;
+
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.valueStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.lightGreen),
+        const SizedBox(width: 12),
+        Text(
+          "$label: ",
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style:
+                valueStyle ??
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
