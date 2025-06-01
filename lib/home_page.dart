@@ -26,15 +26,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _scheduleUserMedications() async {
     if (widget.uid == null) return;
-    final meds =
-        await firestore
-            .collection('users')
-            .doc(widget.uid)
-            .collection('medications')
-            .get();
+    final meds = await firestore.collection(widget.uid!).get();
     for (var doc in meds.docs) {
       final medication = medicationFromDoc(doc);
-      await scheduleMedicationNotification(doc.id, medication);
+      await scheduleMedicationNotification(context, doc.id, medication);
     }
   }
 
@@ -580,6 +575,7 @@ class _HomePageState extends State<HomePage> {
                                                   medicationFromDoc(updatedDoc);
 
                                               await scheduleMedicationNotification(
+                                                context,
                                                 docs[index].id,
                                                 updatedMedication,
                                               );
@@ -601,7 +597,7 @@ class _HomePageState extends State<HomePage> {
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'Failed to update: $e',
+                                                    'Failed to update medication: $e',
                                                   ),
                                                 ),
                                               );
@@ -633,38 +629,48 @@ class _HomePageState extends State<HomePage> {
                           final deletedData =
                               docs[index].data() as Map<String, dynamic>;
 
-                          await firestore
-                              .collection(widget.uid!)
-                              .doc(deletedDocId)
-                              .delete();
-                          await flutterLocalNotificationsPlugin.cancel(
-                            deletedDocId.hashCode,
-                          );
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${medication.name} deleted!'),
-                              action: SnackBarAction(
-                                label: 'Undo',
-                                textColor: Colors.lightGreen,
-                                onPressed: () async {
-                                  await firestore
-                                      .collection(widget.uid!)
-                                      .doc(deletedDocId)
-                                      .set(deletedData);
-                                  await scheduleMedicationNotification(
-                                    deletedDocId,
-                                    medicationFromDoc(
-                                      await firestore
-                                          .collection(widget.uid!)
-                                          .doc(deletedDocId)
-                                          .get(),
-                                    ),
-                                  );
-                                },
+                          try {
+                            await firestore
+                                .collection(widget.uid!)
+                                .doc(docs[index].id)
+                                .delete();
+                            await flutterLocalNotificationsPlugin.cancel(
+                              docs[index].id.hashCode,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${medication.name} deleted!'),
                               ),
-                            ),
-                          );
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Failed to delete medication: $e',
+                                ),
+                                action: SnackBarAction(
+                                  label: 'Undo',
+                                  textColor: Colors.lightGreen,
+                                  onPressed: () async {
+                                    await firestore
+                                        .collection(widget.uid!)
+                                        .doc(deletedDocId)
+                                        .set(deletedData);
+                                    await scheduleMedicationNotification(
+                                      context,
+                                      deletedDocId,
+                                      medicationFromDoc(
+                                        await firestore
+                                            .collection(widget.uid!)
+                                            .doc(deletedDocId)
+                                            .get(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: Card(
@@ -828,7 +834,9 @@ class _HomePageState extends State<HomePage> {
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('Failed to update: $e'),
+                                        content: Text(
+                                          'Failed to update medication: $e',
+                                        ),
                                       ),
                                     );
                                   }
@@ -1033,6 +1041,7 @@ Medications medicationFromDoc(DocumentSnapshot doc) {
 }
 
 Future<void> scheduleMedicationNotification(
+  BuildContext context,
   String docId,
   Medications medication,
 ) async {
@@ -1047,26 +1056,32 @@ Future<void> scheduleMedicationNotification(
   if (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(const Duration(days: 1));
   }
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-    docId.hashCode,
-    'Medication Reminder',
-    'Time to take ${medication.name}!',
-    tz.TZDateTime.from(scheduledTime, tz.local),
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'medication_channel',
-        'Medication Reminders',
-        channelDescription: 'Reminds you to take your medication',
-        importance: Importance.max,
-        priority: Priority.high,
-        playSound: true,
-        icon: '@mipmap/ic_launcher',
+  try {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      docId.hashCode,
+      'Medication Reminder',
+      'Time to take ${medication.name}!',
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medication_channel',
+          'Medication Reminders',
+          channelDescription: 'Reminds you to take your medication',
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+          icon: '@mipmap/ic_launcher',
+        ),
+        iOS: DarwinNotificationDetails(presentSound: true),
       ),
-      iOS: DarwinNotificationDetails(presentSound: true),
-    ),
-    payload: docId,
-    uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-  );
+      payload: docId,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to schedule notification: $e')),
+    );
+  }
 }
