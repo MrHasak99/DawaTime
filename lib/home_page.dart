@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
 import 'package:medication_app_full/database/medications.dart';
+import 'package:medication_app_full/main.dart';
 import 'package:medication_app_full/settings.dart';
-import 'package:medication_app_full/notification_utils.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -18,8 +19,23 @@ class _HomePageState extends State<HomePage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scheduleUserMedications();
+  }
+
+  Future<void> _scheduleUserMedications() async {
+    if (widget.uid == null) return;
+    final meds =
+        await firestore
+            .collection('users')
+            .doc(widget.uid)
+            .collection('medications')
+            .get();
+    for (var doc in meds.docs) {
+      final medication = medicationFromDoc(doc);
+      await scheduleMedicationNotification(doc.id, medication);
+    }
   }
 
   @pragma('vm:entry-point')
@@ -49,249 +65,181 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestore.collection(widget.uid!).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.lightGreen),
-            );
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text(
-                "No Medications Found",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          }
-          final docs = snapshot.data!.docs;
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: firestore.collection(widget.uid!).snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Colors.lightGreen),
+                  );
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No Medications Found",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+                final docs = snapshot.data!.docs;
 
-          return ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: docs.length,
-            itemBuilder: (context, index) {
-              final medication = medicationFromDoc(docs[index]);
-              return Dismissible(
-                key: Key(docs[index].id),
-                direction: DismissDirection.horizontal,
-                background: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.lightBlue,
-                    size: 32,
-                  ),
-                ),
-                secondaryBackground: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.red, size: 32),
-                ),
-                confirmDismiss: (direction) async {
-                  if (direction == DismissDirection.endToStart) {
-                    return await showDialog<bool>(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            backgroundColor: Colors.lightGreen,
-                            title: const Text(
-                              'Delete Medication',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            content: Text(
-                              'Are you sure you want to delete ${medication.name}?',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: const Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                return ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final medication = medicationFromDoc(docs[index]);
+                    return Dismissible(
+                      key: Key(docs[index].id),
+                      direction: DismissDirection.horizontal,
+                      background: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Icon(
+                          Icons.edit,
+                          color: Colors.lightBlue,
+                          size: 32,
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 32,
+                        ),
+                      ),
+                      confirmDismiss: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          return await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: Colors.lightGreen,
+                                  title: const Text(
+                                    'Delete Medication',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
+                                  content: Text(
+                                    'Are you sure you want to delete ${medication.name}?',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.pop(context, false),
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed:
+                                          () => Navigator.pop(context, true),
+                                      child: const Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                    );
-                  } else if (direction == DismissDirection.startToEnd) {
-                    final nameController = TextEditingController(
-                      text: medication.name,
-                    );
-                    final typeController = TextEditingController(
-                      text: medication.typeOfMedication,
-                    );
-                    final dosageController = TextEditingController(
-                      text: medication.dosage.toString(),
-                    );
-                    final frequencyParts = medication.frequency.split(' ');
-                    final frequencyNumberController = TextEditingController(
-                      text: frequencyParts.isNotEmpty ? frequencyParts[0] : '',
-                    );
-                    final List<String> periodOptions = [
-                      'day',
-                      'week',
-                      'month',
-                      'year',
-                    ];
-                    String localFrequencyPeriod =
-                        (frequencyParts.length > 1 &&
-                                periodOptions.contains(frequencyParts[1]))
-                            ? frequencyParts[1]
-                            : 'day';
-                    final amountController = TextEditingController(
-                      text: medication.amount.toString(),
-                    );
-                    TimeOfDay? localNotifyTime;
-                    if (medication.notifyTime != null &&
-                        medication.notifyTime!.isNotEmpty) {
-                      final parts = medication.notifyTime!.split(":");
-                      if (parts.length == 2) {
-                        localNotifyTime = TimeOfDay(
-                          hour: int.tryParse(parts[0]) ?? 0,
-                          minute: int.tryParse(parts[1]) ?? 0,
-                        );
-                      }
-                    }
+                          );
+                        } else if (direction == DismissDirection.startToEnd) {
+                          final nameController = TextEditingController(
+                            text: medication.name,
+                          );
+                          final typeController = TextEditingController(
+                            text: medication.typeOfMedication,
+                          );
+                          final dosageController = TextEditingController(
+                            text: medication.dosage.toString(),
+                          );
+                          final frequencyParts = medication.frequency.split(
+                            ' ',
+                          );
+                          final frequencyNumberController =
+                              TextEditingController(
+                                text:
+                                    frequencyParts.isNotEmpty
+                                        ? frequencyParts[0]
+                                        : '',
+                              );
+                          final List<String> periodOptions = [
+                            'day',
+                            'week',
+                            'month',
+                            'year',
+                          ];
+                          String localFrequencyPeriod =
+                              (frequencyParts.length > 1 &&
+                                      periodOptions.contains(frequencyParts[1]))
+                                  ? frequencyParts[1]
+                                  : 'day';
+                          final amountController = TextEditingController(
+                            text: medication.amount.toString(),
+                          );
+                          TimeOfDay? localNotifyTime;
+                          if (medication.notifyTime != null &&
+                              medication.notifyTime!.isNotEmpty) {
+                            final parts = medication.notifyTime!.split(":");
+                            if (parts.length == 2) {
+                              localNotifyTime = TimeOfDay(
+                                hour: int.tryParse(parts[0]) ?? 0,
+                                minute: int.tryParse(parts[1]) ?? 0,
+                              );
+                            }
+                          }
 
-                    final result = await showDialog<bool>(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(
-                          builder:
-                              (context, setState) => AlertDialog(
-                                backgroundColor: Colors.lightGreen,
-                                title: const Text(
-                                  'Edit Medication',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextField(
-                                        controller: nameController,
-                                        cursorColor: Colors.white,
-                                        textCapitalization:
-                                            TextCapitalization.words,
-                                        style: const TextStyle(
-                                          color: Colors.black,
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return StatefulBuilder(
+                                builder:
+                                    (context, setState) => AlertDialog(
+                                      backgroundColor: Colors.lightGreen,
+                                      title: const Text(
+                                        'Edit Medication',
+                                        style: TextStyle(
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        decoration: const InputDecoration(
-                                          labelText: 'Name',
-                                          labelStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
                                       ),
-                                      TextField(
-                                        controller: typeController,
-                                        cursorColor: Colors.white,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        decoration: const InputDecoration(
-                                          labelText: 'Unit of Measurement',
-                                          labelStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      TextField(
-                                        controller: dosageController,
-                                        cursorColor: Colors.white,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Dosage',
-                                          labelStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 60,
-                                            child: TextField(
-                                              controller:
-                                                  frequencyNumberController,
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              controller: nameController,
                                               cursorColor: Colors.white,
-                                              keyboardType:
-                                                  TextInputType.number,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
                                               style: const TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                               decoration: const InputDecoration(
-                                                labelText: 'Times',
+                                                labelText: 'Name',
                                                 labelStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -310,478 +258,630 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          const Text(
-                                            'per',
+                                            TextField(
+                                              controller: typeController,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              decoration: const InputDecoration(
+                                                labelText:
+                                                    'Unit of Measurement',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                            TextField(
+                                              controller: dosageController,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Dosage',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 60,
+                                                  child: TextField(
+                                                    controller:
+                                                        frequencyNumberController,
+                                                    cursorColor: Colors.white,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Times',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                const Text(
+                                                  'per',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                DropdownButton<String>(
+                                                  value: localFrequencyPeriod,
+                                                  dropdownColor: Colors.white,
+                                                  items:
+                                                      periodOptions
+                                                          .map(
+                                                            (
+                                                              period,
+                                                            ) => DropdownMenuItem(
+                                                              value: period,
+                                                              child: Text(
+                                                                period,
+                                                                style: const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                          .toList(),
+                                                  onChanged: (value) {
+                                                    if (value != null) {
+                                                      setState(() {
+                                                        localFrequencyPeriod =
+                                                            value;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            TextField(
+                                              controller: amountController,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Current Amount',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: Text(
+                                                localNotifyTime == null
+                                                    ? "Pick Notification Time"
+                                                    : "Notify at: ${localNotifyTime!.format(context)}",
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              trailing: const Icon(
+                                                Icons.access_time,
+                                                color: Colors.black,
+                                              ),
+                                              onTap: () async {
+                                                final picked = await showTimePicker(
+                                                  context: context,
+                                                  initialTime:
+                                                      localNotifyTime ??
+                                                      TimeOfDay.now(),
+                                                  builder: (context, child) {
+                                                    return Theme(
+                                                      data: Theme.of(
+                                                        context,
+                                                      ).copyWith(
+                                                        timePickerTheme: TimePickerThemeData(
+                                                          backgroundColor:
+                                                              Colors.lightGreen,
+                                                          hourMinuteTextColor:
+                                                              Colors.black,
+                                                          hourMinuteColor:
+                                                              Colors.white,
+                                                          dayPeriodTextColor:
+                                                              Colors.black,
+                                                          dayPeriodColor:
+                                                              Colors.white,
+                                                          dialHandColor:
+                                                              Colors.lightGreen,
+                                                          dialBackgroundColor:
+                                                              Colors.white,
+                                                          entryModeIconColor:
+                                                              Colors.white,
+                                                          helpTextStyle:
+                                                              const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          hourMinuteTextStyle:
+                                                              const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 28,
+                                                              ),
+                                                          dayPeriodTextStyle:
+                                                              const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16,
+                                                              ),
+                                                          dialTextStyle:
+                                                              const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 20,
+                                                              ),
+                                                        ),
+                                                        textButtonTheme: TextButtonThemeData(
+                                                          style: TextButton.styleFrom(
+                                                            foregroundColor:
+                                                                Colors.white,
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      child: child!,
+                                                    );
+                                                  },
+                                                );
+                                                if (picked != null) {
+                                                  setState(() {
+                                                    localNotifyTime = picked;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () =>
+                                                  Navigator.pop(context, false),
+                                          child: const Text(
+                                            'Cancel',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(width: 10),
-                                          DropdownButton<String>(
-                                            value: localFrequencyPeriod,
-                                            dropdownColor: Colors.white,
-                                            items:
-                                                periodOptions
-                                                    .map(
-                                                      (
-                                                        period,
-                                                      ) => DropdownMenuItem(
-                                                        value: period,
-                                                        child: Text(
-                                                          period,
-                                                          style:
-                                                              const TextStyle(
-                                                                color:
-                                                                    Colors
-                                                                        .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                            onChanged: (value) {
-                                              if (value != null) {
-                                                setState(() {
-                                                  localFrequencyPeriod = value;
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      TextField(
-                                        controller: amountController,
-                                        cursorColor: Colors.white,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
                                         ),
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          labelText: 'Current Amount',
-                                          labelStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      ListTile(
-                                        title: Text(
-                                          localNotifyTime == null
-                                              ? "Pick Notification Time"
-                                              : "Notify at: ${localNotifyTime!.format(context)}",
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        trailing: const Icon(
-                                          Icons.access_time,
-                                          color: Colors.black,
-                                        ),
-                                        onTap: () async {
-                                          final picked = await showTimePicker(
-                                            context: context,
-                                            initialTime:
-                                                localNotifyTime ??
-                                                TimeOfDay.now(),
-                                            builder: (context, child) {
-                                              return Theme(
-                                                data: Theme.of(
-                                                  context,
-                                                ).copyWith(
-                                                  timePickerTheme:
-                                                      TimePickerThemeData(
-                                                        backgroundColor:
-                                                            Colors.lightGreen,
-                                                        hourMinuteTextColor:
-                                                            Colors.black,
-                                                        hourMinuteColor:
-                                                            Colors.white,
-                                                        dayPeriodTextColor:
-                                                            Colors.black,
-                                                        dayPeriodColor:
-                                                            Colors.white,
-                                                        dialHandColor:
-                                                            Colors.lightGreen,
-                                                        dialBackgroundColor:
-                                                            Colors.white,
-                                                        entryModeIconColor:
-                                                            Colors.white,
-                                                        helpTextStyle:
-                                                            const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                        hourMinuteTextStyle:
-                                                            const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 28,
-                                                            ),
-                                                        dayPeriodTextStyle:
-                                                            const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 16,
-                                                            ),
-                                                        dialTextStyle:
-                                                            const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 20,
-                                                            ),
-                                                      ),
-                                                  textButtonTheme:
-                                                      TextButtonThemeData(
-                                                        style: TextButton.styleFrom(
-                                                          foregroundColor:
-                                                              Colors.white,
-                                                          textStyle:
-                                                              const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                ),
-                                                child: child!,
-                                              );
-                                            },
-                                          );
-                                          if (picked != null) {
-                                            setState(() {
-                                              localNotifyTime = picked;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.pop(context, false),
-                                    child: const Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      try {
-                                        await firestore
-                                            .collection(widget.uid!)
-                                            .doc(docs[index].id)
-                                            .update({
-                                              'name': nameController.text,
-                                              'typeOfMedication':
-                                                  typeController.text,
-                                              'dosage':
-                                                  double.tryParse(
-                                                    dosageController.text,
-                                                  ) ??
-                                                  0,
-                                              'frequency':
-                                                  '${frequencyNumberController.text} $localFrequencyPeriod',
-                                              'amount':
-                                                  double.tryParse(
-                                                    amountController.text,
-                                                  ) ??
-                                                  0,
-                                              'notifyTime':
-                                                  localNotifyTime != null
-                                                      ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
-                                                      : '',
-                                            });
-                                        final updatedDoc =
-                                            await firestore
-                                                .collection(widget.uid!)
-                                                .doc(docs[index].id)
-                                                .get();
-                                        final updatedMedication =
-                                            medicationFromDoc(updatedDoc);
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            try {
+                                              await firestore
+                                                  .collection(widget.uid!)
+                                                  .doc(docs[index].id)
+                                                  .update({
+                                                    'name': nameController.text,
+                                                    'typeOfMedication':
+                                                        typeController.text,
+                                                    'dosage':
+                                                        double.tryParse(
+                                                          dosageController.text,
+                                                        ) ??
+                                                        0,
+                                                    'frequency':
+                                                        '${frequencyNumberController.text} $localFrequencyPeriod',
+                                                    'amount':
+                                                        double.tryParse(
+                                                          amountController.text,
+                                                        ) ??
+                                                        0,
+                                                    'notifyTime':
+                                                        localNotifyTime != null
+                                                            ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
+                                                            : '',
+                                                  });
+                                              final updatedDoc =
+                                                  await firestore
+                                                      .collection(widget.uid!)
+                                                      .doc(docs[index].id)
+                                                      .get();
+                                              final updatedMedication =
+                                                  medicationFromDoc(updatedDoc);
 
-                                        await scheduleMedicationNotification(
-                                          docs[index].id,
-                                          updatedMedication,
-                                        );
-                                        if (!context.mounted) return;
-                                        Navigator.pop(context, true);
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Medication updated!',
+                                              await scheduleMedicationNotification(
+                                                docs[index].id,
+                                                updatedMedication,
+                                              );
+                                              if (!context.mounted) return;
+                                              Navigator.pop(context, true);
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Medication updated!',
+                                                  ),
+                                                ),
+                                              );
+                                            } catch (e) {
+                                              if (!mounted) return;
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Failed to update: $e',
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: const Text(
+                                            'Save',
+                                            style: TextStyle(
+                                              color: Colors.lightGreen,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        );
-                                      } catch (e) {
-                                        if (!mounted) return;
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Failed to update: $e',
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: const Text(
-                                      'Save',
-                                      style: TextStyle(
-                                        color: Colors.lightGreen,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                        );
+                              );
+                            },
+                          );
+                          if (result == true && mounted) {
+                            setState(() {});
+                          }
+                          return false;
+                        }
+                        return false;
                       },
-                    );
-                    if (result == true && mounted) {
-                      setState(() {});
-                    }
-                    return false;
-                  }
-                  return false;
-                },
-                onDismissed: (direction) async {
-                  if (direction == DismissDirection.endToStart) {
-                    await firestore
-                        .collection(widget.uid!)
-                        .doc(docs[index].id)
-                        .delete();
-                    await flutterLocalNotificationsPlugin.cancel(
-                      docs[index].id.hashCode,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${medication.name} deleted!')),
-                    );
-                  }
-                },
-                child: Card(
-                  color:
-                      medication.amount <= 0 ? Colors.red : Colors.lightGreen,
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder:
-                            (context) => Dialog(
-                              backgroundColor: Colors.transparent,
-                              insetPadding: const EdgeInsets.all(16),
-                              child: MedicationDetailsCard(
-                                medication: medication,
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          final deletedDocId = docs[index].id;
+                          final deletedData =
+                              docs[index].data() as Map<String, dynamic>;
+
+                          await firestore
+                              .collection(widget.uid!)
+                              .doc(deletedDocId)
+                              .delete();
+                          await flutterLocalNotificationsPlugin.cancel(
+                            deletedDocId.hashCode,
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${medication.name} deleted!'),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                textColor: Colors.lightGreen,
+                                onPressed: () async {
+                                  await firestore
+                                      .collection(widget.uid!)
+                                      .doc(deletedDocId)
+                                      .set(deletedData);
+                                  await scheduleMedicationNotification(
+                                    deletedDocId,
+                                    medicationFromDoc(
+                                      await firestore
+                                          .collection(widget.uid!)
+                                          .doc(deletedDocId)
+                                          .get(),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                      );
-                    },
-                    title: Text(
-                      medication.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (medication.amount > 0)
-                          Text(
-                            "${(medication.amount).toStringAsFixed(2)} left",
+                          );
+                        }
+                      },
+                      child: Card(
+                        color:
+                            medication.amount <= 0
+                                ? Colors.red
+                                : Colors.lightGreen,
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    insetPadding: const EdgeInsets.all(16),
+                                    child: MedicationDetailsCard(
+                                      medication: medication,
+                                    ),
+                                  ),
+                            );
+                          },
+                          title: Text(
+                            medication.name,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
-                        else
-                          const Text(
-                            "Out of stock",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
                           ),
-                        if (medication.notifyTime != null &&
-                            medication.notifyTime!.isNotEmpty)
-                          Builder(
-                            builder: (context) {
-                              final parts = medication.notifyTime!.split(':');
-                              if (parts.length == 2) {
-                                final hour = int.tryParse(parts[0]) ?? 0;
-                                final minute = int.tryParse(parts[1]) ?? 0;
-                                final timeOfDay = TimeOfDay(
-                                  hour: hour,
-                                  minute: minute,
-                                );
-                                return Text(
-                                  "Notify at: ${timeOfDay.format(context)}",
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (medication.amount > 0)
+                                Text(
+                                  "${(medication.amount).toStringAsFixed(2)} left",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                );
-                              }
-                              return SizedBox.shrink();
-                            },
+                                )
+                              else
+                                const Text(
+                                  "Out of stock",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              if (medication.notifyTime != null &&
+                                  medication.notifyTime!.isNotEmpty)
+                                Builder(
+                                  builder: (context) {
+                                    final parts = medication.notifyTime!.split(
+                                      ':',
+                                    );
+                                    if (parts.length == 2) {
+                                      final hour = int.tryParse(parts[0]) ?? 0;
+                                      final minute =
+                                          int.tryParse(parts[1]) ?? 0;
+                                      final timeOfDay = TimeOfDay(
+                                        hour: hour,
+                                        minute: minute,
+                                      );
+                                      return Text(
+                                        "Notify at: ${timeOfDay.format(context)}",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    }
+                                    return SizedBox.shrink();
+                                  },
+                                ),
+                            ],
                           ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      tooltip: "Take Medication",
-                      icon: const Icon(
-                        Icons.medication_rounded,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      onPressed: () async {
-                        if (medication.amount > 0) {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder:
-                                (context) => AlertDialog(
-                                  backgroundColor: Colors.lightGreen,
-                                  title: Text(
-                                    "Take ${medication.name}?",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  content: Text(
-                                    "Did you take your medication?",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed:
-                                          () => Navigator.pop(context, false),
-                                      child: const Text(
-                                        "No",
-                                        style: TextStyle(
+                          trailing: IconButton(
+                            tooltip: "Take Medication",
+                            icon: const Icon(
+                              Icons.medication_rounded,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                            onPressed: () async {
+                              if (medication.amount > 0) {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        backgroundColor: Colors.lightGreen,
+                                        title: Text(
+                                          "Take ${medication.name}?",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          "Did you take your medication?",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: const Text(
+                                              "No",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                            ),
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  true,
+                                                ),
+                                            child: const Text(
+                                              "Yes",
+                                              style: TextStyle(
+                                                color: Colors.lightGreen,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                );
+                                if (confirm == true) {
+                                  try {
+                                    await firestore
+                                        .collection(widget.uid!)
+                                        .doc(docs[index].id)
+                                        .update({
+                                          'amount':
+                                              medication.amount -
+                                                          medication.dosage <
+                                                      0
+                                                  ? 0
+                                                  : medication.amount -
+                                                      medication.dosage,
+                                        });
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Failed to update: $e'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.lightGreen,
+                                      title: Text(
+                                        "You're out of ${medication.name}!",
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      onPressed:
-                                          () => Navigator.pop(context, true),
-                                      child: const Text(
-                                        "Yes",
-                                        style: TextStyle(
-                                          color: Colors.lightGreen,
+                                      content: Text(
+                                        "Please refill your ${medication.name}.",
+                                        style: const TextStyle(
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                          );
-                          if (confirm == true) {
-                            firestore
-                                .collection(widget.uid!)
-                                .doc(docs[index].id)
-                                .update({
-                                  'amount':
-                                      medication.amount - medication.dosage < 0
-                                          ? 0
-                                          : medication.amount -
-                                              medication.dosage,
-                                });
-                          }
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.lightGreen,
-                                title: Text(
-                                  "You're out of ${medication.name}!",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                content: Text(
-                                  "Please refill your ${medication.name}.",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                      "OK",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text(
+                                            "OK",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             },
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Add Medication",
@@ -918,4 +1018,55 @@ class _DetailRow extends StatelessWidget {
       ],
     );
   }
+}
+
+Medications medicationFromDoc(DocumentSnapshot doc) {
+  final data = doc.data() as Map<String, dynamic>;
+  return Medications(
+    name: data['name'] ?? '',
+    typeOfMedication: data['typeOfMedication'] ?? '',
+    dosage: double.tryParse(data['dosage'].toString()) ?? 0,
+    frequency: data['frequency'] ?? '',
+    amount: double.tryParse(data['amount'].toString()) ?? 0,
+    notifyTime: data['notifyTime'],
+  );
+}
+
+Future<void> scheduleMedicationNotification(
+  String docId,
+  Medications medication,
+) async {
+  if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
+  final timeParts = medication.notifyTime!.split(':');
+  if (timeParts.length != 2) return;
+  final hour = int.tryParse(timeParts[0]);
+  final minute = int.tryParse(timeParts[1]);
+  if (hour == null || minute == null) return;
+  final now = DateTime.now();
+  var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+  if (scheduledTime.isBefore(now)) {
+    scheduledTime = scheduledTime.add(const Duration(days: 1));
+  }
+  await flutterLocalNotificationsPlugin.zonedSchedule(
+    docId.hashCode,
+    'Medication Reminder',
+    'Time to take ${medication.name}!',
+    tz.TZDateTime.from(scheduledTime, tz.local),
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'medication_channel',
+        'Medication Reminders',
+        channelDescription: 'Reminds you to take your medication',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        icon: '@mipmap/ic_launcher',
+      ),
+      iOS: DarwinNotificationDetails(presentSound: true),
+    ),
+    payload: docId,
+    uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  );
 }
