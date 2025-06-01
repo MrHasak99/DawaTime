@@ -60,8 +60,9 @@ Future<void> main() async {
       final docId = response.payload;
       if (docId != null) {
         final medication = await fetchMedicationByDocId(docId);
-        if (medication != null) {
-          await scheduleMedicationNotification(docId, medication);
+        final context = navigatorKey.currentState?.overlay?.context;
+        if (medication != null && context != null) {
+          await scheduleMedicationNotification(context, docId, medication);
         }
       }
     },
