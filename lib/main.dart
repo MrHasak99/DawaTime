@@ -54,19 +54,7 @@ Future<void> main() async {
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) async {
-      final docId = response.payload;
-      if (docId != null) {
-        final medication = await fetchMedicationByDocId(docId);
-        final context = navigatorKey.currentState?.overlay?.context;
-        if (medication != null && context != null) {
-          await scheduleMedicationNotification(context, docId, medication);
-        }
-      }
-    },
-  );
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
