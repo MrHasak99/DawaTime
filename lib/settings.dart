@@ -345,8 +345,8 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: FutureBuilder<DocumentSnapshot>(
-          future: userDoc.get(),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: userDoc.snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

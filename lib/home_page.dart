@@ -7,7 +7,7 @@ import 'package:medication_app_full/add_medications.dart';
 import 'package:medication_app_full/main.dart';
 import 'package:medication_app_full/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Medications {
   final String name;
@@ -47,8 +47,6 @@ class Medications {
       'notifyTime': notifyTime,
     };
   }
-
-  static List<Medications> medications = [];
 }
 
 class HomePage extends StatefulWidget {
@@ -82,6 +80,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
@@ -146,12 +146,12 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () async {
                 final now = tz.TZDateTime.now(tz.local);
-                final scheduledTime = now.add(const Duration(seconds: 300));
+                final scheduledTime = now.add(const Duration(seconds: 60));
                 try {
                   await flutterLocalNotificationsPlugin.zonedSchedule(
                     1,
                     'Future Test Notification',
-                    'This notification was scheduled 5 minutes ago.',
+                    'This notification was scheduled 60 seconds ago.',
                     scheduledTime,
                     const NotificationDetails(
                       android: AndroidNotificationDetails(
@@ -197,7 +197,8 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: firestore.collection(widget.uid!).snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection(user!.uid).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -1189,9 +1190,6 @@ Future<void> scheduleMedicationNotification(
   if (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(const Duration(days: 1));
   }
-
-  print('Device current time: $now');
-  print('Notification scheduled for: $scheduledTime');
 
   try {
     await flutterLocalNotificationsPlugin.zonedSchedule(
