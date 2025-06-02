@@ -4,10 +4,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
-import 'package:medication_app_full/database/medications.dart';
 import 'package:medication_app_full/main.dart';
 import 'package:medication_app_full/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+
+class Medications {
+  final String name;
+  final String typeOfMedication;
+  final double dosage;
+  final String frequency;
+  final double amount;
+  final String? notifyTime;
+
+  Medications({
+    required this.name,
+    required this.typeOfMedication,
+    required this.dosage,
+    required this.frequency,
+    required this.amount,
+    this.notifyTime,
+  });
+
+  factory Medications.fromMap(Map<String, dynamic> data) {
+    return Medications(
+      name: data['name'] ?? '',
+      typeOfMedication: data['typeOfMedication'] ?? '',
+      dosage: (data['dosage'] ?? 0).toDouble(),
+      frequency: data['frequency'] ?? '',
+      amount: (data['amount'] ?? 0).toDouble(),
+      notifyTime: data['notifyTime'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'typeOfMedication': typeOfMedication,
+      'dosage': dosage,
+      'frequency': frequency,
+      'amount': amount,
+      'notifyTime': notifyTime,
+    };
+  }
+
+  static List<Medications> medications = [];
+}
 
 class HomePage extends StatefulWidget {
   final String? uid;
