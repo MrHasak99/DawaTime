@@ -12,6 +12,15 @@
 -dontwarn com.google.protobuf.**
 -dontwarn io.flutter.plugins.**
 
+# Preserve generic type signatures for Gson, Firebase, and plugins using TypeToken
+-keepattributes Signature
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class com.dexterous.flutterlocalnotifications.** { *; }
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
+
 # Keep all enums (fixes NoSuchMethodException: ...values [])
 -keepclassmembers enum * {
     public static **[] values();
