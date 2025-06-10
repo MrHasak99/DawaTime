@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
+import 'package:medication_app_full/login_page.dart';
 import 'package:medication_app_full/main.dart';
 import 'package:medication_app_full/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,7 +14,7 @@ class Medications {
   final String name;
   final String typeOfMedication;
   final double dosage;
-  final String frequency;
+  final int frequency;
   final double amount;
   final String? notifyTime;
 
@@ -31,7 +32,7 @@ class Medications {
       name: data['name'] ?? '',
       typeOfMedication: data['typeOfMedication'] ?? '',
       dosage: (data['dosage'] ?? 0).toDouble(),
-      frequency: data['frequency'] ?? '',
+      frequency: (data['frequency'] ?? 1),
       amount: (data['amount'] ?? 0).toDouble(),
       notifyTime: data['notifyTime'],
     );
@@ -82,6 +83,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    if (user == null) {
+      Future.microtask(() {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
+      });
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.lightGreen),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
@@ -110,7 +124,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton.icon(
               icon: const Icon(Icons.notifications_active),
-              label: const Text('Test Notification'),
+              label: const Text('Test Notification (Immediate)'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 foregroundColor: Colors.white,
@@ -139,7 +153,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ElevatedButton.icon(
               icon: const Icon(Icons.schedule),
-              label: const Text('Future Test Notification'),
+              label: const Text('Future Test Notification (60 seconds)'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 foregroundColor: Colors.white,
@@ -198,7 +212,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream:
-                  FirebaseFirestore.instance.collection(user!.uid).snapshots(),
+                  FirebaseFirestore.instance.collection(user.uid).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -304,27 +318,9 @@ class _HomePageState extends State<HomePage> {
                           final dosageController = TextEditingController(
                             text: medication.dosage.toString(),
                           );
-                          final frequencyParts = medication.frequency.split(
-                            ' ',
+                          final frequencyController = TextEditingController(
+                            text: medication.frequency.toString(),
                           );
-                          final frequencyNumberController =
-                              TextEditingController(
-                                text:
-                                    frequencyParts.isNotEmpty
-                                        ? frequencyParts[0]
-                                        : '',
-                              );
-                          final List<String> periodOptions = [
-                            'day',
-                            'week',
-                            'month',
-                            'year',
-                          ];
-                          String localFrequencyPeriod =
-                              (frequencyParts.length > 1 &&
-                                      periodOptions.contains(frequencyParts[1]))
-                                  ? frequencyParts[1]
-                                  : 'day';
                           final amountController = TextEditingController(
                             text: medication.amount.toString(),
                           );
@@ -444,92 +440,36 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                               ),
                                             ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 60,
-                                                  child: TextField(
-                                                    controller:
-                                                        frequencyNumberController,
-                                                    cursorColor: Colors.white,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    decoration: const InputDecoration(
-                                                      labelText: 'Times',
-                                                      labelStyle: TextStyle(
+
+                                            TextField(
+                                              controller: frequencyController,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                labelText:
+                                                    'Frequency (every x days)',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
                                                         color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
                                                       ),
-                                                      focusedBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
-                                                          ),
-                                                      enabledBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
-                                                          ),
                                                     ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 10),
-                                                const Text(
-                                                  'per',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 10),
-                                                DropdownButton<String>(
-                                                  value: localFrequencyPeriod,
-                                                  dropdownColor: Colors.white,
-                                                  items:
-                                                      periodOptions
-                                                          .map(
-                                                            (
-                                                              period,
-                                                            ) => DropdownMenuItem(
-                                                              value: period,
-                                                              child: Text(
-                                                                period,
-                                                                style: const TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          )
-                                                          .toList(),
-                                                  onChanged: (value) {
-                                                    if (value != null) {
-                                                      setState(() {
-                                                        localFrequencyPeriod =
-                                                            value;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                              ],
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                              ),
                                             ),
                                             TextField(
                                               controller: amountController,
@@ -675,63 +615,115 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
-                                            try {
-                                              await firestore
-                                                  .collection(widget.uid!)
-                                                  .doc(docs[index].id)
-                                                  .update({
-                                                    'name': nameController.text,
-                                                    'typeOfMedication':
-                                                        typeController.text,
-                                                    'dosage':
-                                                        double.tryParse(
-                                                          dosageController.text,
-                                                        ) ??
-                                                        0,
-                                                    'frequency':
-                                                        '${frequencyNumberController.text} $localFrequencyPeriod',
-                                                    'amount':
-                                                        double.tryParse(
-                                                          amountController.text,
-                                                        ) ??
-                                                        0,
-                                                    'notifyTime':
-                                                        localNotifyTime != null
-                                                            ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
-                                                            : '',
-                                                  });
-                                              final updatedDoc =
-                                                  await firestore
-                                                      .collection(widget.uid!)
-                                                      .doc(docs[index].id)
-                                                      .get();
-                                              final updatedMedication =
-                                                  medicationFromDoc(updatedDoc);
-
-                                              await scheduleMedicationNotification(
-                                                context,
-                                                docs[index].id,
-                                                updatedMedication,
-                                              );
-                                              if (!context.mounted) return;
-                                              Navigator.pop(context, true);
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'Medication updated!',
+                                            if (nameController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                typeController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                dosageController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                frequencyController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                amountController
+                                                    .text
+                                                    .isNotEmpty) {
+                                              if (dosageController.text ==
+                                                      '0' ||
+                                                  frequencyController.text ==
+                                                      '0') {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      "Dosage and Frequency must be greater than 0",
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            } catch (e) {
+                                                );
+                                                return;
+                                              }
+                                              try {
+                                                await firestore
+                                                    .collection(widget.uid!)
+                                                    .doc(docs[index].id)
+                                                    .update({
+                                                      'name':
+                                                          nameController.text,
+                                                      'typeOfMedication':
+                                                          typeController.text,
+                                                      'dosage':
+                                                          double.tryParse(
+                                                            dosageController
+                                                                .text,
+                                                          ) ??
+                                                          0,
+
+                                                      'frequency':
+                                                          int.tryParse(
+                                                            frequencyController
+                                                                .text,
+                                                          ) ??
+                                                          0,
+                                                      'amount':
+                                                          double.tryParse(
+                                                            amountController
+                                                                .text,
+                                                          ) ??
+                                                          0,
+                                                      'notifyTime':
+                                                          localNotifyTime !=
+                                                                  null
+                                                              ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
+                                                              : '',
+                                                    });
+                                                final updatedDoc =
+                                                    await firestore
+                                                        .collection(widget.uid!)
+                                                        .doc(docs[index].id)
+                                                        .get();
+                                                final updatedMedication =
+                                                    medicationFromDoc(
+                                                      updatedDoc,
+                                                    );
+
+                                                await scheduleMedicationNotification(
+                                                  context,
+                                                  docs[index].id,
+                                                  updatedMedication,
+                                                );
+                                                if (!context.mounted) return;
+                                                Navigator.pop(context, true);
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Medication updated!',
+                                                    ),
+                                                  ),
+                                                );
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Failed to add medication: $e',
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            } else {
                                               if (!mounted) return;
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'Failed to update medication: $e',
+                                                    "Please fill all fields",
                                                   ),
                                                 ),
                                               );
@@ -838,7 +830,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency}",
+                                "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -1086,7 +1078,8 @@ class MedicationDetailsCard extends StatelessWidget {
             _DetailRow(
               icon: Icons.repeat,
               label: "Frequency",
-              value: medication.frequency.replaceFirst(' ', ' times per '),
+              value:
+                  "Every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
             ),
             const SizedBox(height: 12),
             _DetailRow(
@@ -1164,14 +1157,7 @@ class _DetailRow extends StatelessWidget {
 
 Medications medicationFromDoc(DocumentSnapshot doc) {
   final data = doc.data() as Map<String, dynamic>;
-  return Medications(
-    name: data['name'] ?? '',
-    typeOfMedication: data['typeOfMedication'] ?? '',
-    dosage: double.tryParse(data['dosage'].toString()) ?? 0,
-    frequency: data['frequency'] ?? '',
-    amount: double.tryParse(data['amount'].toString()) ?? 0,
-    notifyTime: data['notifyTime'],
-  );
+  return Medications.fromMap(data);
 }
 
 Future<void> scheduleMedicationNotification(
