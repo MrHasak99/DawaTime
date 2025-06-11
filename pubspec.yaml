@@ -1,7 +1,7 @@
 name: medication_app_full
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0
+version: 1.0.2+3
 
 environment:
   sdk: ^3.7.2
@@ -17,6 +17,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   permission_handler: ^12.0.0+1
   android_intent_plus: ^5.3.0
+  package_info_plus: ^8.3.0
 
 dev_dependencies:
   flutter_test:
