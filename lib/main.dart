@@ -6,7 +6,8 @@ import 'firebase_options.dart';
 import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -18,6 +19,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Kuwait'));
 
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
@@ -111,4 +113,10 @@ Future<Medications?> fetchMedicationByDocId(String docId) async {
     return medicationFromDoc(doc);
   }
   return null;
+}
+
+Future<void> requestExactAlarmPermission() async {
+  if (await Permission.scheduleExactAlarm.isDenied) {
+    await Permission.scheduleExactAlarm.request();
+  }
 }

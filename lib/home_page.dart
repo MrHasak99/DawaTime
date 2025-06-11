@@ -9,6 +9,8 @@ import 'package:medication_app_full/main.dart';
 import 'package:medication_app_full/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Medications {
   final String name;
@@ -34,7 +36,7 @@ class Medications {
       dosage: (data['dosage'] ?? 0).toDouble(),
       frequency: (data['frequency'] ?? 1),
       amount: (data['amount'] ?? 0).toDouble(),
-      notifyTime: data['notifyTime'],
+      notifyTime: data['notifyTime']?.toString(),
     );
   }
 
@@ -153,59 +155,33 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ElevatedButton.icon(
               icon: const Icon(Icons.schedule),
-              label: const Text('Future Test Notification (60 seconds)'),
+              label: const Text('Future Test Notification (30 seconds)'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 foregroundColor: Colors.white,
               ),
               onPressed: () async {
-                final now = tz.TZDateTime.now(tz.local);
-                final scheduledTime = now.add(const Duration(seconds: 60));
-                try {
-                  await flutterLocalNotificationsPlugin.zonedSchedule(
-                    1,
-                    'Future Test Notification',
-                    'This notification was scheduled 60 seconds ago.',
-                    scheduledTime,
-                    const NotificationDetails(
-                      android: AndroidNotificationDetails(
-                        'medication_channel',
-                        'Medication Reminders',
-                        channelDescription:
-                            'Reminds you to take your medication',
-                        importance: Importance.max,
-                        priority: Priority.high,
-                        icon: '@mipmap/ic_launcher',
-                      ),
-                      iOS: DarwinNotificationDetails(presentSound: true),
+                final scheduledTime = tz.TZDateTime.now(
+                  tz.local,
+                ).add(const Duration(seconds: 30));
+                await flutterLocalNotificationsPlugin.zonedSchedule(
+                  999,
+                  'Test Scheduled',
+                  'This is a test scheduled notification',
+                  scheduledTime,
+                  const NotificationDetails(
+                    android: AndroidNotificationDetails(
+                      'test_channel',
+                      'Test Channel',
+                      channelDescription: 'Test notifications',
+                      importance: Importance.max,
+                      priority: Priority.high,
                     ),
-                    uiLocalNotificationDateInterpretation:
-                        UILocalNotificationDateInterpretation.absoluteTime,
-                    androidScheduleMode:
-                        AndroidScheduleMode.exactAllowWhileIdle,
-                  );
-                } catch (e) {
-                  if (e is PlatformException &&
-                      e.code == 'exact_alarms_not_permitted') {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'Please allow "Schedule exact alarms" in system settings.',
-                        ),
-                        action: SnackBarAction(
-                          label: 'Open Settings',
-                          onPressed: openExactAlarmSettings,
-                        ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Failed to schedule notification: $e'),
-                      ),
-                    );
-                  }
-                }
+                  ),
+                  androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+                  uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime,
+                );
               },
             ),
           ),
@@ -1032,6 +1008,24 @@ class _HomePageState extends State<HomePage> {
         },
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 36),
       ),
+      bottomNavigationBar: FutureBuilder<PackageInfo>(
+        future: PackageInfo.fromPlatform(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          final info = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Version: ${info.version} (${info.buildNumber})',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -1177,6 +1171,10 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(const Duration(days: 1));
   }
 
+  print(
+    'Scheduling notification for ${medication.name} at $scheduledTime (docId: $docId)',
+  );
+
   try {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       docId.hashCode,
@@ -1200,7 +1198,11 @@ Future<void> scheduleMedicationNotification(
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
+    print(
+      'Scheduled notification for ${medication.name} at $scheduledTime (docId: $docId)',
+    );
   } catch (e) {
+    print('Failed to schedule notification for ${medication.name}: $e');
     if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1226,4 +1228,18 @@ Future<void> openExactAlarmSettings() async {
     action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
   );
   await intent.launch();
+}
+
+Future<void> requestExactAlarmPermission() async {
+  if (await Permission.scheduleExactAlarm.isDenied) {
+    await Permission.scheduleExactAlarm.request();
+  }
+}
+
+Future<void> initializeNotifications() async {
+  await flutterLocalNotificationsPlugin.initialize(
+    InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    ),
+  );
 }
