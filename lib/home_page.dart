@@ -64,6 +64,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Medications? _recentlyDeletedMedication;
+  Map<String, dynamic>? _recentlyDeletedData;
+  String? _recentlyDeletedDocId;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -85,6 +89,49 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+
+    if (_recentlyDeletedMedication != null &&
+        _recentlyDeletedData != null &&
+        _recentlyDeletedDocId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final deletedMedication = _recentlyDeletedMedication;
+        final deletedData = _recentlyDeletedData;
+        final deletedDocId = _recentlyDeletedDocId;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${deletedMedication!.name} deleted!'),
+            action: SnackBarAction(
+              label: 'Undo',
+              textColor: Colors.lightGreen,
+              onPressed: () async {
+                try {
+                  await firestore
+                      .collection(widget.uid!)
+                      .doc(deletedDocId!)
+                      .set(deletedData!);
+                  await scheduleMedicationNotification(
+                    context,
+                    deletedDocId,
+                    deletedMedication,
+                  );
+                  if (mounted) setState(() {});
+                } catch (e) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('Undo failed: $e')));
+                }
+              },
+            ),
+          ),
+        );
+        setState(() {
+          _recentlyDeletedMedication = null;
+          _recentlyDeletedData = null;
+          _recentlyDeletedDocId = null;
+        });
+      });
+    }
 
     if (user == null) {
       Future.microtask(() {
@@ -443,7 +490,6 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                   ),
                                                 ),
-
                                                 TextField(
                                                   controller:
                                                       frequencyController,
@@ -699,7 +745,6 @@ class _HomePageState extends State<HomePage> {
                                                                     .text,
                                                               ) ??
                                                               0,
-
                                                           'frequency':
                                                               int.tryParse(
                                                                 frequencyController
@@ -835,54 +880,38 @@ class _HomePageState extends State<HomePage> {
                               final deletedDocId = docs[index].id;
                               final deletedData =
                                   docs[index].data() as Map<String, dynamic>;
+                              final deletedMedication = medicationFromDoc(
+                                docs[index],
+                              );
                               try {
                                 await firestore
                                     .collection(widget.uid!)
-                                    .doc(docs[index].id)
+                                    .doc(deletedDocId)
                                     .delete();
                                 await flutterLocalNotificationsPlugin.cancel(
-                                  docs[index].id.hashCode,
+                                  deletedDocId.hashCode,
                                 );
-                                ScaffoldMessenger.of(
-                                  scaffoldContext,
-                                ).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '${medication.name} deleted!',
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      textColor: Colors.lightGreen,
-                                      onPressed: () async {
-                                        await firestore
-                                            .collection(widget.uid!)
-                                            .doc(deletedDocId)
-                                            .set(deletedData);
-                                        await scheduleMedicationNotification(
-                                          context,
-                                          deletedDocId,
-                                          medicationFromDoc(
-                                            await firestore
-                                                .collection(widget.uid!)
-                                                .doc(deletedDocId)
-                                                .get(),
-                                          ),
-                                        );
-                                        if (mounted) setState(() {});
-                                      },
-                                    ),
-                                  ),
-                                );
+
+                                setState(() {
+                                  _recentlyDeletedMedication =
+                                      deletedMedication;
+                                  _recentlyDeletedData = deletedData;
+                                  _recentlyDeletedDocId = deletedDocId;
+                                });
                               } catch (e) {
-                                ScaffoldMessenger.of(
-                                  scaffoldContext,
-                                ).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Failed to delete medication: $e',
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  ScaffoldMessenger.of(
+                                    scaffoldContext,
+                                  ).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to delete medication: $e',
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                });
                               }
                             }
                           },
