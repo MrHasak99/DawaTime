@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_app_full/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medication_app_full/login_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
@@ -367,6 +368,23 @@ class _AddMedicationsState extends State<AddMedications> {
                     ),
                   ],
                 ),
+              ),
+            ),
+          );
+        },
+      ),bottomNavigationBar: FutureBuilder<PackageInfo>(
+        future: PackageInfo.fromPlatform(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          final info = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Version: ${info.version} (${info.buildNumber})',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
               ),
             ),
           );

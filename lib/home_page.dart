@@ -6,7 +6,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_app_full/add_medications.dart';
 import 'package:medication_app_full/login_page.dart';
 import 'package:medication_app_full/main.dart';
-import 'package:medication_app_full/settings.dart';
+import 'package:medication_app_full/settings.dart'
+    hide flutterLocalNotificationsPlugin;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -622,6 +623,9 @@ class _HomePageState extends State<HomePage> {
                                                 return;
                                               }
                                               try {
+                                                final oldData =
+                                                    docs[index].data()
+                                                        as Map<String, dynamic>;
                                                 await firestore
                                                     .collection(widget.uid!)
                                                     .doc(docs[index].id)
@@ -675,9 +679,40 @@ class _HomePageState extends State<HomePage> {
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text(
+                                                  SnackBar(
+                                                    content: const Text(
                                                       'Medication updated!',
+                                                    ),
+                                                    action: SnackBarAction(
+                                                      label: 'Undo',
+                                                      textColor:
+                                                          Colors.lightGreen,
+                                                      onPressed: () async {
+                                                        await firestore
+                                                            .collection(
+                                                              widget.uid!,
+                                                            )
+                                                            .doc(docs[index].id)
+                                                            .set(oldData);
+                                                        await scheduleMedicationNotification(
+                                                          context,
+                                                          docs[index].id,
+                                                          medicationFromDoc(
+                                                            await firestore
+                                                                .collection(
+                                                                  widget.uid!,
+                                                                )
+                                                                .doc(
+                                                                  docs[index]
+                                                                      .id,
+                                                                )
+                                                                .get(),
+                                                          ),
+                                                        );
+                                                        if (mounted) {
+                                                          setState(() {});
+                                                        }
+                                                      },
                                                     ),
                                                   ),
                                                 );
@@ -742,6 +777,27 @@ class _HomePageState extends State<HomePage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('${medication.name} deleted!'),
+                                action: SnackBarAction(
+                                  label: 'Undo',
+                                  textColor: Colors.lightGreen,
+                                  onPressed: () async {
+                                    await firestore
+                                        .collection(widget.uid!)
+                                        .doc(deletedDocId)
+                                        .set(deletedData);
+                                    await scheduleMedicationNotification(
+                                      context,
+                                      deletedDocId,
+                                      medicationFromDoc(
+                                        await firestore
+                                            .collection(widget.uid!)
+                                            .doc(deletedDocId)
+                                            .get(),
+                                      ),
+                                    );
+                                    if (mounted) setState(() {});
+                                  },
+                                ),
                               ),
                             );
                           } catch (e) {
@@ -768,6 +824,7 @@ class _HomePageState extends State<HomePage> {
                                             .get(),
                                       ),
                                     );
+                                    if (mounted) setState(() {});
                                   },
                                 ),
                               ),
@@ -853,6 +910,15 @@ class _HomePageState extends State<HomePage> {
                                     }
                                     return SizedBox.shrink();
                                   },
+                                ),
+                              if (getNextReminder(medication) != null)
+                                Text(
+                                  "Next reminder: ${TimeOfDay.fromDateTime(getNextReminder(medication)!).format(context)}"
+                                  " (${getNextReminder(medication)!.toLocal().toString().substring(0, 16)})",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                             ],
                           ),
@@ -1105,6 +1171,19 @@ class MedicationDetailsCard extends StatelessWidget {
                   return const SizedBox.shrink();
                 },
               ),
+            if (getNextReminder(medication) != null)
+              _DetailRow(
+                icon: Icons.notifications_active,
+                label: "Next Reminder",
+                value:
+                    "${TimeOfDay.fromDateTime(getNextReminder(medication)!).format(context)}"
+                    " (${getNextReminder(medication)!.toLocal().toString().substring(0, 16)})",
+                valueStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.lightGreen,
+                  fontSize: 18,
+                ),
+              ),
           ],
         ),
       ),
@@ -1171,38 +1250,59 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(const Duration(days: 1));
   }
 
-  print(
-    'Scheduling notification for ${medication.name} at $scheduledTime (docId: $docId)',
-  );
-
   try {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      docId.hashCode,
-      'Medication Reminder',
-      'Time to take ${medication.name}!',
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'medication_channel',
-          'Medication Reminders',
-          channelDescription: 'Reminds you to take your medication',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: true,
-          icon: '@mipmap/ic_launcher',
+    if (medication.frequency > 1) {
+      while (scheduledTime.isBefore(now)) {
+        scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+      }
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        docId.hashCode,
+        '9i7ati',
+        'Time to take ${medication.name}!',
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'medication_channel',
+            'Medication Reminders',
+            channelDescription: 'Reminds you to take your medication',
+            importance: Importance.max,
+            priority: Priority.high,
+            playSound: true,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(presentSound: true),
         ),
-        iOS: DarwinNotificationDetails(presentSound: true),
-      ),
-      payload: docId,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
-    print(
-      'Scheduled notification for ${medication.name} at $scheduledTime (docId: $docId)',
-    );
+        payload: docId,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    } else {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        docId.hashCode,
+        '9i7ati',
+        'Time to take ${medication.name}!',
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'medication_channel',
+            'Medication Reminders',
+            channelDescription: 'Reminds you to take your medication',
+            importance: Importance.max,
+            priority: Priority.high,
+            playSound: true,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(presentSound: true),
+        ),
+        payload: docId,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    }
   } catch (e) {
-    print('Failed to schedule notification for ${medication.name}: $e');
     if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1242,4 +1342,26 @@ Future<void> initializeNotifications() async {
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     ),
   );
+}
+
+DateTime? getNextReminder(Medications medication) {
+  if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
+    return null;
+  }
+  final timeParts = medication.notifyTime!.split(':');
+  if (timeParts.length != 2) return null;
+  final hour = int.tryParse(timeParts[0]);
+  final minute = int.tryParse(timeParts[1]);
+  if (hour == null || minute == null) return null;
+  final now = DateTime.now();
+  var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+  if (scheduledTime.isBefore(now)) {
+    scheduledTime = scheduledTime.add(const Duration(days: 1));
+  }
+  if (medication.frequency > 1) {
+    while (scheduledTime.isBefore(now)) {
+      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+    }
+  }
+  return scheduledTime;
 }

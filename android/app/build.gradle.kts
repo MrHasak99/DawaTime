@@ -26,8 +26,9 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion(23)
         targetSdkVersion(34)
-        versionCode = 3
-        versionName = "1.0.2"
+        
+        versionCode = project.findProperty("flutterVersionCode")?.toString()?.toInt() ?: 1
+        versionName = project.findProperty("flutterVersionName")?.toString() ?: "1.0.0"
     }
 
     signingConfigs {
