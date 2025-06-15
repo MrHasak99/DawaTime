@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -147,6 +148,24 @@ class _SignUpPageState extends State<SignUpPage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: FutureBuilder<PackageInfo>(
+        future: PackageInfo.fromPlatform(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          final info = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Version: ${info.version} (${info.buildNumber})',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'login_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -376,7 +381,7 @@ class SettingsPage extends StatelessWidget {
                                                 ),
                                                 decoration: const InputDecoration(
                                                   labelText:
-                                                      'Please enter your Email',
+                                                      'Please enter your email',
                                                   labelStyle: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
@@ -699,6 +704,7 @@ class SettingsPage extends StatelessWidget {
                     ),
               );
               if (confirm == true) {
+                await flutterLocalNotificationsPlugin.cancelAll();
                 await FirebaseAuth.instance.signOut();
                 if (!context.mounted) return;
                 Navigator.pushAndRemoveUntil(
@@ -795,6 +801,8 @@ class SettingsPage extends StatelessWidget {
                           );
                           if (confirm == true) {
                             try {
+                              await flutterLocalNotificationsPlugin.cancelAll();
+
                               final medsCollection = FirebaseFirestore.instance
                                   .collection(user!.uid);
                               final medsSnapshot = await medsCollection.get();
@@ -844,6 +852,24 @@ class SettingsPage extends StatelessWidget {
             );
           },
         ),
+      ),
+      bottomNavigationBar: FutureBuilder<PackageInfo>(
+        future: PackageInfo.fromPlatform(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          final info = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Version: ${info.version} (${info.buildNumber})',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
