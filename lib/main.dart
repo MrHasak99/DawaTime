@@ -32,24 +32,6 @@ Future<void> main() async {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
-        onDidReceiveLocalNotification: (id, title, body, payload) async {
-          navigatorKey.currentState?.overlay?.context != null
-              ? showDialog(
-                context: navigatorKey.currentState!.overlay!.context,
-                builder:
-                    (context) => AlertDialog(
-                      title: Text(title ?? 'Notification'),
-                      content: Text(body ?? ''),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-              )
-              : null;
-        },
       );
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,

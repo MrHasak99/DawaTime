@@ -227,8 +227,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-                  uiLocalNotificationDateInterpretation:
-                      UILocalNotificationDateInterpretation.absoluteTime,
                 );
               },
             ),
@@ -1361,8 +1359,6 @@ Future<void> scheduleMedicationNotification(
           iOS: DarwinNotificationDetails(presentSound: true),
         ),
         payload: docId,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } else {
@@ -1384,8 +1380,6 @@ Future<void> scheduleMedicationNotification(
           iOS: DarwinNotificationDetails(presentSound: true),
         ),
         payload: docId,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
       );
