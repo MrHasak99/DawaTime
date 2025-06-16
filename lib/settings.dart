@@ -754,6 +754,9 @@ class SettingsPage extends StatelessWidget {
                           backgroundColor: Colors.red,
                         ),
                         onPressed: () async {
+                          final passwordController1 = TextEditingController();
+                          final passwordController2 = TextEditingController();
+
                           final confirm = await showDialog<bool>(
                             context: context,
                             builder:
@@ -766,12 +769,71 @@ class SettingsPage extends StatelessWidget {
                                     ),
                                   ),
                                   backgroundColor: Colors.lightGreen,
-                                  content: const Text(
-                                    "Are you sure you want to delete your account? This cannot be undone.",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        "Are you sure you want to delete your account? This cannot be undone.",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      TextField(
+                                        controller: passwordController1,
+                                        obscureText: true,
+                                        cursorColor: Colors.white,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          labelText: 'Enter Your Password',
+                                          labelStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      TextField(
+                                        controller: passwordController2,
+                                        obscureText: true,
+                                        cursorColor: Colors.white,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        decoration: const InputDecoration(
+                                          labelText: 'Confirm Password',
+                                          labelStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   actions: [
                                     TextButton(
@@ -786,8 +848,35 @@ class SettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     ElevatedButton(
-                                      onPressed:
-                                          () => Navigator.pop(context, true),
+                                      onPressed: () {
+                                        if (passwordController1.text.isEmpty ||
+                                            passwordController2.text.isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Please enter your password twice.",
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        if (passwordController1.text !=
+                                            passwordController2.text) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Passwords do not match.",
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        Navigator.pop(context, true);
+                                      },
                                       child: const Text(
                                         "Delete",
                                         style: TextStyle(
@@ -799,12 +888,26 @@ class SettingsPage extends StatelessWidget {
                                   ],
                                 ),
                           );
+
                           if (confirm == true) {
                             try {
+                              final user = FirebaseAuth.instance.currentUser;
+                              final email = user?.email;
+                              final password = passwordController1.text;
+                              if (email == null) {
+                                throw Exception("No email found for user.");
+                              }
+
+                              final cred = EmailAuthProvider.credential(
+                                email: email,
+                                password: password,
+                              );
+                              await user!.reauthenticateWithCredential(cred);
+
                               await flutterLocalNotificationsPlugin.cancelAll();
 
                               final medsCollection = FirebaseFirestore.instance
-                                  .collection(user!.uid);
+                                  .collection(user.uid);
                               final medsSnapshot = await medsCollection.get();
                               for (final doc in medsSnapshot.docs) {
                                 await doc.reference.delete();
