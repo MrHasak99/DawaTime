@@ -13,6 +13,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
   bool isLoading = false;
 
@@ -101,6 +102,29 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 obscureText: true,
               ),
+              TextField(
+                controller: confirmPasswordController,
+                cursorColor: Colors.lightGreen,
+                keyboardType: TextInputType.visiblePassword,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: const InputDecoration(
+                  labelText: "Confirm Password",
+                  labelStyle: TextStyle(
+                    color: Colors.lightGreen,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightGreen),
+                  ),
+                ),
+                obscureText: true,
+              ),
               const SizedBox(height: 24),
               isLoading
                   ? const CircularProgressIndicator(color: Colors.lightGreen)
@@ -109,6 +133,15 @@ class _SignUpPageState extends State<SignUpPage> {
                       backgroundColor: Colors.lightGreen,
                     ),
                     onPressed: () async {
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Passwords do not match"),
+                          ),
+                        );
+                        return;
+                      }
                       setState(() => isLoading = true);
                       try {
                         final userCredential = await FirebaseAuth.instance
@@ -116,6 +149,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               email: emailController.text.trim(),
                               password: passwordController.text.trim(),
                             );
+                        final user = userCredential.user;
+                        if (user != null && !user.emailVerified) {
+                          await user.sendEmailVerification();
+                        }
                         final uid = userCredential.user?.uid;
                         await FirebaseFirestore.instance
                             .collection('Users')
@@ -125,6 +162,13 @@ class _SignUpPageState extends State<SignUpPage> {
                               'email': emailController.text.trim(),
                             });
                         if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Verification email sent. Please check your inbox.",
+                            ),
+                          ),
+                        );
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
                         if (!context.mounted) return;
