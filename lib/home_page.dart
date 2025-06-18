@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +15,9 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+final StreamController<NotificationResponse> selectNotificationStream =
+    StreamController<NotificationResponse>.broadcast();
 
 class Medications {
   final String name;
@@ -84,7 +90,53 @@ class _HomePageState extends State<HomePage> {
   }
 
   @pragma('vm:entry-point')
-  void notificationTapBackground(NotificationResponse response) {}
+  Future<void> notificationTapBackground(NotificationResponse response) async {
+    if (response.payload == null) return;
+
+    await Firebase.initializeApp();
+
+    final docId = response.payload!;
+    final doc =
+        await FirebaseFirestore.instance
+            .collection('medications')
+            .doc(docId)
+            .get();
+    if (doc.exists) {
+      final medication = medicationFromDoc(doc);
+      await scheduleMedicationNotification(
+        null,
+        docId,
+        medication,
+        forceNextDay: true,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectNotificationStream.stream.listen((
+      NotificationResponse response,
+    ) async {
+      if (response.payload != null && widget.uid != null) {
+        final docId = response.payload!;
+        final doc =
+            await FirebaseFirestore.instance
+                .collection(widget.uid!)
+                .doc(docId)
+                .get();
+        if (doc.exists) {
+          final medication = medicationFromDoc(doc);
+          await scheduleMedicationNotification(
+            context,
+            docId,
+            medication,
+            forceNextDay: true,
+          );
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,27 +255,22 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ElevatedButton.icon(
               icon: const Icon(Icons.schedule),
-              label: const Text('Future Test Notification (30 seconds)'),
+              label: const Text('Future Test Notification (5 seconds)'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 foregroundColor: Colors.white,
               ),
               onPressed: () async {
-                final scheduledTime = tz.TZDateTime.now(
-                  tz.local,
-                ).add(const Duration(seconds: 30));
                 await flutterLocalNotificationsPlugin.zonedSchedule(
-                  999,
-                  'Test Scheduled',
-                  'This is a test scheduled notification',
-                  scheduledTime,
+                  0,
+                  'scheduled title',
+                  'scheduled body',
+                  tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
                   const NotificationDetails(
                     android: AndroidNotificationDetails(
-                      'test_channel',
-                      'Test Channel',
-                      channelDescription: 'Test notifications',
-                      importance: Importance.max,
-                      priority: Priority.high,
+                      'your channel id',
+                      'your channel name',
+                      channelDescription: 'your channel description',
                     ),
                   ),
                   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -253,6 +300,11 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
                 final docs = snapshot.data!.docs;
+
+                for (final doc in docs) {
+                  final medication = medicationFromDoc(doc);
+                  scheduleMedicationNotification(context, doc.id, medication);
+                }
 
                 return Builder(
                   builder: (scaffoldContext) {
@@ -966,36 +1018,9 @@ class _HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  if (medication.notifyTime != null &&
-                                      medication.notifyTime!.isNotEmpty)
-                                    Builder(
-                                      builder: (context) {
-                                        final parts = medication.notifyTime!
-                                            .split(':');
-                                        if (parts.length == 2) {
-                                          final hour =
-                                              int.tryParse(parts[0]) ?? 0;
-                                          final minute =
-                                              int.tryParse(parts[1]) ?? 0;
-                                          final timeOfDay = TimeOfDay(
-                                            hour: hour,
-                                            minute: minute,
-                                          );
-                                          return Text(
-                                            "Notify at: ${timeOfDay.format(context)}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          );
-                                        }
-                                        return SizedBox.shrink();
-                                      },
-                                    ),
                                   if (getNextReminder(medication) != null)
                                     Text(
-                                      "Next reminder: ${TimeOfDay.fromDateTime(getNextReminder(medication)!).format(context)}"
-                                      " (${getNextReminder(medication)!.toLocal().toString().substring(0, 16)})",
+                                      "Next reminder: ${getNextReminder(medication)!}",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -1081,6 +1106,9 @@ class _HomePageState extends State<HomePage> {
                                                       : medication.amount -
                                                           medication.dosage,
                                             });
+                                        await cancelMedicationReminders(
+                                          docs[index].id,
+                                        );
                                       } catch (e) {
                                         ScaffoldMessenger.of(
                                           context,
@@ -1213,61 +1241,56 @@ class MedicationDetailsCard extends StatelessWidget {
               icon: Icons.category,
               label: "Unit Of Measurement",
               value: medication.typeOfMedication,
+              valueStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.lightGreen,
+                fontSize: 18,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
             _DetailRow(
               icon: Icons.medical_services,
               label: "Dosage",
               value: "${medication.dosage}",
+              valueStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.lightGreen,
+                fontSize: 18,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
             _DetailRow(
               icon: Icons.repeat,
               label: "Frequency",
               value:
                   "Every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
+              valueStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.lightGreen,
+                fontSize: 18,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
             _DetailRow(
               icon: Icons.inventory_2,
               label: "Current Amount",
               value: "${medication.amount}",
-            ),
-            const SizedBox(height: 12),
-            if (medication.notifyTime != null &&
-                medication.notifyTime!.isNotEmpty)
-              Builder(
-                builder: (context) {
-                  final parts = medication.notifyTime!.split(':');
-                  if (parts.length == 2) {
-                    final hour = int.tryParse(parts[0]) ?? 0;
-                    final minute = int.tryParse(parts[1]) ?? 0;
-                    final timeOfDay = TimeOfDay(hour: hour, minute: minute);
-                    return _DetailRow(
-                      icon: Icons.alarm,
-                      label: "Notify at",
-                      value: timeOfDay.format(context),
-                      valueStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.lightGreen,
-                        fontSize: 18,
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+              valueStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.lightGreen,
+                fontSize: 18,
               ),
+            ),
+            const SizedBox(height: 24),
             if (getNextReminder(medication) != null)
               _DetailRow(
                 icon: Icons.notifications_active,
                 label: "Next Reminder",
-                value:
-                    "${TimeOfDay.fromDateTime(getNextReminder(medication)!).format(context)}"
-                    " (${getNextReminder(medication)!.toLocal().toString().substring(0, 16)})",
+                value: getNextReminder(medication)!,
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.lightGreen,
-                  fontSize: 18,
+                  fontSize: 14,
                 ),
               ),
           ],
@@ -1320,10 +1343,12 @@ Medications medicationFromDoc(DocumentSnapshot doc) {
 }
 
 Future<void> scheduleMedicationNotification(
-  BuildContext context,
+  BuildContext? context,
   String docId,
-  Medications medication,
-) async {
+  Medications medication, {
+  bool forceNextDay = false,
+}) async {
+  await requestExactAlarmPermission();
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
   final timeParts = medication.notifyTime!.split(':');
   if (timeParts.length != 2) return;
@@ -1332,8 +1357,12 @@ Future<void> scheduleMedicationNotification(
   if (hour == null || minute == null) return;
   final now = DateTime.now();
   var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-  if (scheduledTime.isBefore(now)) {
+  if (scheduledTime.isBefore(now) || forceNextDay) {
     scheduledTime = scheduledTime.add(const Duration(days: 1));
+  }
+
+  for (int i = 0; i <= 8; i++) {
+    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
   try {
@@ -1362,46 +1391,58 @@ Future<void> scheduleMedicationNotification(
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } else {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        docId.hashCode,
-        '9i7ati',
-        'Time to take ${medication.name}!',
-        tz.TZDateTime.from(scheduledTime, tz.local),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'medication_channel',
-            'Medication Reminders',
-            channelDescription: 'Reminds you to take your medication',
-            importance: Importance.max,
-            priority: Priority.high,
-            playSound: true,
-            icon: '@mipmap/ic_launcher',
+      for (int i = 0; i <= 8; i++) {
+        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          docId.hashCode + i,
+          '9i7ati',
+          i == 0
+              ? 'Time to take ${medication.name}!'
+              : 'Reminder: Take your ${medication.name}',
+          tz.TZDateTime.from(followUpTime, tz.local),
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'medication_channel',
+              'Medication Reminders',
+              channelDescription: 'Reminds you to take your medication',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+              icon: '@mipmap/ic_launcher',
+            ),
+            iOS: DarwinNotificationDetails(presentSound: true),
           ),
-          iOS: DarwinNotificationDetails(presentSound: true),
-        ),
-        payload: docId,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
+          payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
+      }
     }
   } catch (e) {
-    if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'Please allow "Schedule exact alarms" in system settings.',
+    if (context != null) {
+      if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Please allow "Schedule exact alarms" in system settings.',
+            ),
+            action: SnackBarAction(
+              label: 'Open Settings',
+              onPressed: openExactAlarmSettings,
+            ),
           ),
-          action: SnackBarAction(
-            label: 'Open Settings',
-            onPressed: openExactAlarmSettings,
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to schedule notification: $e')),
-      );
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to schedule notification: $e')),
+        );
+      }
     }
+  }
+}
+
+Future<void> cancelMedicationReminders(String docId) async {
+  for (int i = 0; i <= 8; i++) {
+    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 }
 
@@ -1426,13 +1467,15 @@ Future<void> initializeNotifications() async {
   );
 }
 
-DateTime? getNextReminder(Medications medication) {
+/// Returns the next reminder time as a formatted 12-hour string with AM/PM.
+/// Returns null if no reminder is set.
+String? getNextReminder(Medications medication) {
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
     return null;
   }
   final timeParts = medication.notifyTime!.split(':');
   if (timeParts.length != 2) return null;
-  final hour = int.tryParse(timeParts[0]);
+  int? hour = int.tryParse(timeParts[0]);
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return null;
   final now = DateTime.now();
@@ -1445,5 +1488,11 @@ DateTime? getNextReminder(Medications medication) {
       scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
     }
   }
-  return scheduledTime;
+  final displayHour =
+      scheduledTime.hour == 0 || scheduledTime.hour == 12
+          ? 12
+          : scheduledTime.hour % 12;
+  final displayMinute = scheduledTime.minute.toString().padLeft(2, '0');
+  final period = scheduledTime.hour < 12 ? 'AM' : 'PM';
+  return '$displayHour:$displayMinute $period';
 }
