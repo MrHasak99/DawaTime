@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -19,7 +20,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   tz.initializeTimeZones();
-  tz.setLocalLocation(tz.getLocation('Asia/Kuwait'));
+  final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneName));
 
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
@@ -44,6 +46,13 @@ Future<void> main() async {
         IOSFlutterLocalNotificationsPlugin
       >()
       ?.requestPermissions(alert: true, badge: true, sound: true);
+
+  final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+      flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
+  await androidImplementation?.requestNotificationsPermission();
 
   runApp(const MainApp());
 }
