@@ -623,6 +623,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      fontSize: 14,
                                                     ),
                                                   ),
                                                   trailing: const Icon(
@@ -990,6 +991,7 @@ class _HomePageState extends State<HomePage> {
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 20,
                                 ),
                               ),
                               subtitle: Column(
@@ -1000,6 +1002,7 @@ class _HomePageState extends State<HomePage> {
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                     ),
                                   ),
                                   if (medication.amount > 0)
@@ -1008,6 +1011,7 @@ class _HomePageState extends State<HomePage> {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                       ),
                                     )
                                   else
@@ -1024,6 +1028,7 @@ class _HomePageState extends State<HomePage> {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 12,
                                       ),
                                     ),
                                 ],
@@ -1290,7 +1295,7 @@ class MedicationDetailsCard extends StatelessWidget {
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.lightGreen,
-                  fontSize: 14,
+                  fontSize: 11,
                 ),
               ),
           ],
@@ -1467,8 +1472,6 @@ Future<void> initializeNotifications() async {
   );
 }
 
-/// Returns the next reminder time as a formatted 12-hour string with AM/PM.
-/// Returns null if no reminder is set.
 String? getNextReminder(Medications medication) {
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
     return null;
@@ -1488,11 +1491,28 @@ String? getNextReminder(Medications medication) {
       scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
     }
   }
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  final month = months[scheduledTime.month - 1];
+  final day = scheduledTime.day;
+  final year = scheduledTime.year;
   final displayHour =
       scheduledTime.hour == 0 || scheduledTime.hour == 12
           ? 12
           : scheduledTime.hour % 12;
   final displayMinute = scheduledTime.minute.toString().padLeft(2, '0');
   final period = scheduledTime.hour < 12 ? 'AM' : 'PM';
-  return '$displayHour:$displayMinute $period';
+  return '$month $day, $year - $displayHour:$displayMinute $period';
 }
