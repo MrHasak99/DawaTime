@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ElevatedButton.icon(
               icon: const Icon(Icons.schedule),
-              label: const Text('Future Test Notification (5 seconds)'),
+              label: const Text('Future Test Notification (10 seconds)'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 foregroundColor: Colors.white,
@@ -263,14 +263,17 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 await flutterLocalNotificationsPlugin.zonedSchedule(
                   0,
-                  'scheduled title',
-                  'scheduled body',
-                  tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+                  'Scheduled Notification',
+                  'This is a scheduled notification set 10 seconds ago',
+                  tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10)),
                   const NotificationDetails(
                     android: AndroidNotificationDetails(
-                      'your channel id',
-                      'your channel name',
-                      channelDescription: 'your channel description',
+                      'medication_channel',
+                      'Medication Reminders',
+                      channelDescription: 'Reminds you to take your medication',
+                      importance: Importance.max,
+                      priority: Priority.high,
+                      icon: '@mipmap/ic_launcher',
                     ),
                   ),
                   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
