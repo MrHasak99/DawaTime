@@ -890,6 +890,23 @@ class SettingsPage extends StatelessWidget {
                           );
 
                           if (confirm == true) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.lightGreen,
+                                ),
+                              ),
+                            );
+
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (_) => const LoginPage()),
+                                (route) => false,
+                              );
+                            }
+
                             try {
                               final user = FirebaseAuth.instance.currentUser;
                               final email = user?.email;
@@ -906,8 +923,7 @@ class SettingsPage extends StatelessWidget {
 
                               await flutterLocalNotificationsPlugin.cancelAll();
 
-                              final medsCollection = FirebaseFirestore.instance
-                                  .collection(user.uid);
+                              final medsCollection = FirebaseFirestore.instance.collection(user.uid);
                               final medsSnapshot = await medsCollection.get();
                               for (final doc in medsSnapshot.docs) {
                                 await doc.reference.delete();
@@ -919,18 +935,9 @@ class SettingsPage extends StatelessWidget {
                               await userDoc.delete();
 
                               await user.delete();
-
-                              if (context.mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const LoginPage(),
-                                  ),
-                                  (route) => false,
-                                );
-                              }
                             } catch (e) {
                               if (context.mounted) {
+                                Navigator.of(context, rootNavigator: true).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text("Failed to delete user: $e"),
