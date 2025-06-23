@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:medication_app_full/home_page.dart';
+import 'package:dawaatime/home_page.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +14,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+bool notificationsInitialized = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,7 @@ Future<void> main() async {
     iOS: initializationSettingsIOS,
   );
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  notificationsInitialized = true;
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
