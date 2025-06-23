@@ -6,11 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:medication_app_full/add_medications.dart';
-import 'package:medication_app_full/login_page.dart';
-import 'package:medication_app_full/main.dart';
-import 'package:medication_app_full/settings.dart'
-    hide flutterLocalNotificationsPlugin;
+import 'package:dawaatime/add_medications.dart';
+import 'package:dawaatime/login_page.dart';
+import 'package:dawaatime/main.dart';
+import 'package:dawaatime/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -203,7 +202,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.lightGreen,
         title: const Center(
           child: Text(
-            "9i7ati",
+            "DawaaTime",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
@@ -1380,7 +1379,7 @@ Future<void> scheduleMedicationNotification(
       }
       await flutterLocalNotificationsPlugin.zonedSchedule(
         docId.hashCode,
-        '9i7ati',
+        'DawaaTime',
         'Time to take ${medication.name}!',
         tz.TZDateTime.from(scheduledTime, tz.local),
         const NotificationDetails(
@@ -1403,7 +1402,7 @@ Future<void> scheduleMedicationNotification(
         final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
         await flutterLocalNotificationsPlugin.zonedSchedule(
           docId.hashCode + i,
-          '9i7ati',
+          'DawaaTime',
           i == 0
               ? 'Time to take ${medication.name}!'
               : 'Reminder: Take your ${medication.name}',

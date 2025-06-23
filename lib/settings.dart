@@ -3,10 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'login_page.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:dawaatime/main.dart'
+    show flutterLocalNotificationsPlugin, notificationsInitialized;
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -893,19 +891,13 @@ class SettingsPage extends StatelessWidget {
                             showDialog(
                               context: context,
                               barrierDismissible: false,
-                              builder: (_) => const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.lightGreen,
-                                ),
-                              ),
+                              builder:
+                                  (_) => const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.lightGreen,
+                                    ),
+                                  ),
                             );
-
-                            if (context.mounted) {
-                              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                                MaterialPageRoute(builder: (_) => const LoginPage()),
-                                (route) => false,
-                              );
-                            }
 
                             try {
                               final user = FirebaseAuth.instance.currentUser;
@@ -921,9 +913,13 @@ class SettingsPage extends StatelessWidget {
                               );
                               await user!.reauthenticateWithCredential(cred);
 
-                              await flutterLocalNotificationsPlugin.cancelAll();
+                              if (notificationsInitialized) {
+                                await flutterLocalNotificationsPlugin
+                                    .cancelAll();
+                              }
 
-                              final medsCollection = FirebaseFirestore.instance.collection(user.uid);
+                              final medsCollection = FirebaseFirestore.instance
+                                  .collection(user.uid);
                               final medsSnapshot = await medsCollection.get();
                               for (final doc in medsSnapshot.docs) {
                                 await doc.reference.delete();
@@ -935,9 +931,34 @@ class SettingsPage extends StatelessWidget {
                               await userDoc.delete();
 
                               await user.delete();
+
+                              if (context.mounted) {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop();
+                              }
+
+                              if (context.mounted) {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (_) => const LoginPage(),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
                             } catch (e) {
                               if (context.mounted) {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop();
+                              }
+
+                              if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text("Failed to delete user: $e"),

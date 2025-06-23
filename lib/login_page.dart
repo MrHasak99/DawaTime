@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:medication_app_full/home_page.dart';
-import 'package:medication_app_full/signup_page.dart';
+import 'package:dawaatime/home_page.dart';
+import 'package:dawaatime/signup_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Welcome To 9i7ati",
+          "Welcome To DawaaTime",
           style: TextStyle(
             color: Colors.lightGreen,
             fontWeight: FontWeight.bold,

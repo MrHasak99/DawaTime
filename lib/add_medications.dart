@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:medication_app_full/home_page.dart';
+import 'package:dawaatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:medication_app_full/login_page.dart';
+import 'package:dawaatime/login_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AddMedications extends StatefulWidget {
@@ -372,7 +372,8 @@ class _AddMedicationsState extends State<AddMedications> {
             ),
           );
         },
-      ),bottomNavigationBar: FutureBuilder<PackageInfo>(
+      ),
+      bottomNavigationBar: FutureBuilder<PackageInfo>(
         future: PackageInfo.fromPlatform(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const SizedBox.shrink();
