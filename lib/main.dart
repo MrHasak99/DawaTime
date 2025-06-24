@@ -68,6 +68,56 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: AuthGate(),
       navigatorKey: navigatorKey,
+      theme: ThemeData(
+        fontFamily: 'Cairo',
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.lightGreen,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Cairo',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.lightGreen,
+            foregroundColor: Colors.white,
+            textStyle: const TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+          ),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          border: UnderlineInputBorder(),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.lightGreen),
+          ),
+          labelStyle: TextStyle(
+            color: Colors.lightGreen,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Cairo',
+          ),
+        ),
+        snackBarTheme: const SnackBarThemeData(
+          backgroundColor: Colors.lightGreen,
+          contentTextStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Cairo',
+          ),
+        ),
+      ),
     );
   }
 }
