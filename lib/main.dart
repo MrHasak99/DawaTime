@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:dawaatime/home_page.dart';
+import 'package:dawatime/home_page.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';

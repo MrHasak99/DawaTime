@@ -6,10 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:dawaatime/add_medications.dart';
-import 'package:dawaatime/login_page.dart';
-import 'package:dawaatime/main.dart';
-import 'package:dawaatime/settings.dart';
+import 'package:dawatime/add_medications.dart';
+import 'package:dawatime/login_page.dart';
+import 'package:dawatime/main.dart';
+import 'package:dawatime/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: const Center(
           child: Text(
-            "DawaaTime",
+            "DawaTime",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
@@ -1014,6 +1014,21 @@ class _HomePageState extends State<HomePage> {
                                   await cancelMedicationReminders(
                                     docs[index].id,
                                   );
+
+                                  final updatedDoc =
+                                      await firestore
+                                          .collection(widget.uid!)
+                                          .doc(docs[index].id)
+                                          .get();
+                                  final updatedMedication = medicationFromDoc(
+                                    updatedDoc,
+                                  );
+
+                                  await scheduleMedicationNotification(
+                                    context,
+                                    docs[index].id,
+                                    updatedMedication,
+                                  );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -1239,8 +1254,8 @@ Future<void> scheduleMedicationNotification(
   if (hour == null || minute == null) return;
   final now = DateTime.now();
   var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-  if (scheduledTime.isBefore(now) || forceNextDay) {
-    scheduledTime = scheduledTime.add(const Duration(days: 1));
+  while (scheduledTime.isBefore(now)) {
+    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
   for (int i = 0; i <= 8; i++) {
@@ -1249,35 +1264,39 @@ Future<void> scheduleMedicationNotification(
 
   try {
     if (medication.frequency > 1) {
-      while (scheduledTime.isBefore(now)) {
-        scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+      for (int i = 0; i < 5; i++) {
+        DateTime nextTime = scheduledTime.add(
+          Duration(days: medication.frequency * i),
+        );
+        if (nextTime.isAfter(now)) {
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            docId.hashCode + i,
+            'DawaTime',
+            'Time to take ${medication.name}!',
+            tz.TZDateTime.from(nextTime, tz.local),
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel',
+                'Medication Reminders',
+                channelDescription: 'Reminds you to take your medication',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+              iOS: DarwinNotificationDetails(presentSound: true),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        }
       }
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        docId.hashCode,
-        'DawaaTime',
-        'Time to take ${medication.name}!',
-        tz.TZDateTime.from(scheduledTime, tz.local),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'medication_channel',
-            'Medication Reminders',
-            channelDescription: 'Reminds you to take your medication',
-            importance: Importance.max,
-            priority: Priority.high,
-            playSound: true,
-            icon: '@mipmap/ic_launcher',
-          ),
-          iOS: DarwinNotificationDetails(presentSound: true),
-        ),
-        payload: docId,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      );
     } else {
       for (int i = 0; i <= 8; i++) {
         final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
         await flutterLocalNotificationsPlugin.zonedSchedule(
           docId.hashCode + i,
-          'DawaaTime',
+          'DawaTime',
           i == 0
               ? 'Time to take ${medication.name}!'
               : 'Reminder: Take your ${medication.name}',
@@ -1360,13 +1379,8 @@ String? getNextReminder(Medications medication) {
   if (hour == null || minute == null) return null;
   final now = DateTime.now();
   var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-  if (scheduledTime.isBefore(now)) {
-    scheduledTime = scheduledTime.add(const Duration(days: 1));
-  }
-  if (medication.frequency > 1) {
-    while (scheduledTime.isBefore(now)) {
-      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
-    }
+  while (scheduledTime.isBefore(now)) {
+    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
   const months = [
     'Jan',

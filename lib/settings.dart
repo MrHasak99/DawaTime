@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
-import 'package:dawaatime/main.dart'
+import 'package:dawatime/main.dart'
     show flutterLocalNotificationsPlugin, notificationsInitialized;
 
 class SettingsPage extends StatelessWidget {
@@ -98,6 +98,9 @@ class SettingsPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 16),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                    ),
                                     onPressed: () async {
                                       Navigator.pop(context);
 
@@ -342,13 +345,16 @@ class SettingsPage extends StatelessWidget {
                                     child: const Text(
                                       'Change Email',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.lightGreen,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 16),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                    ),
                                     onPressed: () async {
                                       Navigator.pop(context);
                                       final rootContext = context;
@@ -470,6 +476,356 @@ class SettingsPage extends StatelessWidget {
                                     },
                                     child: const Text(
                                       'Reset Password',
+                                      style: TextStyle(
+                                        color: Colors.lightGreen,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton.icon(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      final passwordController1 =
+                                          TextEditingController();
+                                      final passwordController2 =
+                                          TextEditingController();
+
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder:
+                                            (context) => AlertDialog(
+                                              title: const Text(
+                                                "Delete Account",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.lightGreen,
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    "Are you sure you want to delete your account? This cannot be undone.",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                  TextField(
+                                                    controller:
+                                                        passwordController1,
+                                                    obscureText: true,
+                                                    cursorColor: Colors.white,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    decoration: const InputDecoration(
+                                                      labelText:
+                                                          'Enter Your Password',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  TextField(
+                                                    controller:
+                                                        passwordController2,
+                                                    obscureText: true,
+                                                    cursorColor: Colors.white,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    decoration: const InputDecoration(
+                                                      labelText:
+                                                          'Confirm Password',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      ),
+                                                  onPressed: () {
+                                                    if (passwordController1
+                                                            .text
+                                                            .isEmpty ||
+                                                        passwordController2
+                                                            .text
+                                                            .isEmpty) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text(
+                                                            "Please enter your password twice.",
+                                                          ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+                                                    if (passwordController1
+                                                            .text !=
+                                                        passwordController2
+                                                            .text) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text(
+                                                            "Passwords do not match.",
+                                                          ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+                                                    Navigator.pop(
+                                                      context,
+                                                      true,
+                                                    );
+                                                  },
+                                                  child: const Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+
+                                      if (confirm == true) {
+                                        BuildContext? dialogContext;
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (ctx) {
+                                            dialogContext = ctx;
+                                            return const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.lightGreen,
+                                              ),
+                                            );
+                                          },
+                                        );
+
+                                        try {
+                                          final user =
+                                              FirebaseAuth.instance.currentUser;
+                                          final email = user?.email;
+                                          final password =
+                                              passwordController1.text;
+                                          if (email == null) {
+                                            throw Exception(
+                                              "No email found for user.",
+                                            );
+                                          }
+
+                                          final cred =
+                                              EmailAuthProvider.credential(
+                                                email: email,
+                                                password: password,
+                                              );
+                                          await user!
+                                              .reauthenticateWithCredential(
+                                                cred,
+                                              );
+
+                                          if (notificationsInitialized) {
+                                            await flutterLocalNotificationsPlugin
+                                                .cancelAll();
+                                          }
+
+                                          final medsCollection =
+                                              FirebaseFirestore.instance
+                                                  .collection(user.uid);
+                                          final medsSnapshot =
+                                              await medsCollection.get();
+                                          for (final doc in medsSnapshot.docs) {
+                                            await doc.reference.delete();
+                                          }
+
+                                          final userDoc = FirebaseFirestore
+                                              .instance
+                                              .collection('Users')
+                                              .doc(user.uid);
+                                          await userDoc.delete();
+
+                                          await user.delete();
+                                          if (dialogContext != null) {
+                                            Navigator.of(
+                                              dialogContext!,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          }
+
+                                          if (context.mounted) {
+                                            await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder:
+                                                  (alertContext) => AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.lightGreen,
+                                                    title: const Text(
+                                                      "Account Deleted",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    content: const Text(
+                                                      "Your account has been deleted successfully.",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            alertContext,
+                                                            rootNavigator: true,
+                                                          ).pop();
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pushAndRemoveUntil(
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    _,
+                                                                  ) => const LoginPage(
+                                                                    showAccountDeletedMessage:
+                                                                        true,
+                                                                  ),
+                                                            ),
+                                                            (route) => false,
+                                                          );
+                                                        },
+                                                        child: const Text(
+                                                          "OK",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
+                                          }
+                                          return;
+                                        } catch (e) {
+                                          if (dialogContext != null) {
+                                            Navigator.of(
+                                              dialogContext!,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          }
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "Failed to delete user: $e",
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    },
+                                    label: const Text(
+                                      "Delete Account",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -778,99 +1134,77 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.delete, color: Colors.white),
+                    icon: const Icon(Icons.email, color: Colors.white),
+                    label: const Text(
+                      "Contact Me",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.lightGreen,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
+                      elevation: 4,
                     ),
                     onPressed: () async {
-                      final passwordController1 = TextEditingController();
-                      final passwordController2 = TextEditingController();
-
-                      final confirm = await showDialog<bool>(
+                      final messageController = TextEditingController();
+                      final result = await showDialog<String>(
                         context: context,
                         builder:
                             (context) => AlertDialog(
+                              backgroundColor: Colors.lightGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                               title: const Text(
-                                "Delete Account",
+                                "Contact Me",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              backgroundColor: Colors.lightGreen,
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text(
-                                    "Are you sure you want to delete your account? This cannot be undone.",
-                                    style: TextStyle(
+                              content: TextField(
+                                controller: messageController,
+                                maxLines: 5,
+                                cursorColor: Colors.white,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: "Write your message here...",
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white.withValues(
+                                    alpha: 0.15,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
-                                  TextField(
-                                    controller: passwordController1,
-                                    obscureText: true,
-                                    cursorColor: Colors.white,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    decoration: const InputDecoration(
-                                      labelText: 'Enter Your Password',
-                                      labelStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      color: Colors.white,
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  TextField(
-                                    controller: passwordController2,
-                                    obscureText: true,
-                                    cursorColor: Colors.white,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    decoration: const InputDecoration(
-                                      labelText: 'Confirm Password',
-                                      labelStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed:
-                                      () => Navigator.pop(context, false),
+                                  onPressed: () => Navigator.pop(context),
                                   child: const Text(
                                     "Cancel",
                                     style: TextStyle(
@@ -882,40 +1216,20 @@ class SettingsPage extends StatelessWidget {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
+                                    foregroundColor: Colors.lightGreen,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
                                   onPressed: () {
-                                    if (passwordController1.text.isEmpty ||
-                                        passwordController2.text.isEmpty) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Please enter your password twice.",
-                                          ),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    if (passwordController1.text !=
-                                        passwordController2.text) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Passwords do not match.",
-                                          ),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    Navigator.pop(context, true);
+                                    Navigator.pop(
+                                      context,
+                                      messageController.text.trim(),
+                                    );
                                   },
                                   child: const Text(
-                                    "Delete",
+                                    "Send",
                                     style: TextStyle(
-                                      color: Colors.red,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -923,139 +1237,42 @@ class SettingsPage extends StatelessWidget {
                               ],
                             ),
                       );
-
-                      if (confirm == true) {
-                        BuildContext? dialogContext;
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (ctx) {
-                            dialogContext = ctx;
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.lightGreen,
+                      if (result != null && result.isNotEmpty) {
+                        try {
+                          await FirebaseFirestore.instance
+                              .collection('Messages')
+                              .add({
+                                'message': result,
+                                'timestamp': FieldValue.serverTimestamp(),
+                                'user':
+                                    FirebaseAuth.instance.currentUser?.email,
+                              });
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Message sent!",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                backgroundColor: Colors.lightGreen,
                               ),
                             );
-                          },
-                        );
-
-                        try {
-                          final user = FirebaseAuth.instance.currentUser;
-                          final email = user?.email;
-                          final password = passwordController1.text;
-                          if (email == null) {
-                            throw Exception("No email found for user.");
                           }
-
-                          final cred = EmailAuthProvider.credential(
-                            email: email,
-                            password: password,
-                          );
-                          await user!.reauthenticateWithCredential(cred);
-
-                          if (notificationsInitialized) {
-                            await flutterLocalNotificationsPlugin.cancelAll();
-                          }
-
-                          final medsCollection = FirebaseFirestore.instance
-                              .collection(user.uid);
-                          final medsSnapshot = await medsCollection.get();
-                          for (final doc in medsSnapshot.docs) {
-                            await doc.reference.delete();
-                          }
-
-                          final userDoc = FirebaseFirestore.instance
-                              .collection('Users')
-                              .doc(user.uid);
-                          await userDoc.delete();
-
-                          await user.delete();
-                          if (dialogContext != null) {
-                            Navigator.of(
-                              dialogContext!,
-                              rootNavigator: true,
-                            ).pop();
-                          }
-
-                          if (context.mounted) {
-                            await showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder:
-                                  (alertContext) => AlertDialog(
-                                    backgroundColor: Colors.lightGreen,
-                                    title: const Text(
-                                      "Account Deleted",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    content: const Text(
-                                      "Your account has been deleted successfully.",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(
-                                            alertContext,
-                                            rootNavigator: true,
-                                          ).pop();
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (_) => const LoginPage(
-                                                    showAccountDeletedMessage:
-                                                        true,
-                                                  ),
-                                            ),
-                                            (route) => false,
-                                          );
-                                        },
-                                        child: const Text(
-                                          "OK",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                            );
-                          }
-                          return;
                         } catch (e) {
-                          if (dialogContext != null) {
-                            Navigator.of(
-                              dialogContext!,
-                              rootNavigator: true,
-                            ).pop();
-                          }
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Failed to delete user: $e"),
+                                content: Text("Failed to send message: $e"),
+                                backgroundColor: Colors.red,
                               ),
                             );
                           }
                         }
                       }
                     },
-                    label: const Text(
-                      "Delete Account",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 ],
               ),
