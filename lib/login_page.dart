@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:dawaatime/home_page.dart';
-import 'package:dawaatime/signup_page.dart';
+import 'package:dawatime/home_page.dart';
+import 'package:dawatime/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Welcome To DawaaTime"),
+        title: const Text("Welcome To DawaTime"),
         centerTitle: true,
       ),
       body: Center(
@@ -130,7 +130,27 @@ class _LoginPageState extends State<LoginPage> {
                                   email: emailController.text.trim(),
                                   password: passwordController.text.trim(),
                                 );
-                            final uid = userCredential.user?.uid;
+                            final user = userCredential.user;
+                            if (user != null && !user.emailVerified) {
+                              await FirebaseAuth.instance.signOut();
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Please verify your email before logging in.",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.lightGreen,
+                                  ),
+                                );
+                              }
+                              setState(() => isLoading = false);
+                              return;
+                            }
+                            final uid = user?.uid;
                             if (!context.mounted) return;
                             Navigator.pushReplacement(
                               context,

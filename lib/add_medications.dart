@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:dawaatime/home_page.dart';
+import 'package:dawatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:dawaatime/login_page.dart';
+import 'package:dawatime/login_page.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
