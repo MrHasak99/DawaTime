@@ -4,14 +4,14 @@
       "android": {
         "default": {
           "projectId": "medication-cd9b8",
-          "appId": "1:173965270100:android:5d86b1f9277d21c5c8e1c1",
+          "appId": "1:173965270100:android:1d70497b7430128cc8e1c1",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "ios": {
         "default": {
           "projectId": "medication-cd9b8",
-          "appId": "1:173965270100:ios:bc0f09e9bf64e849c8e1c1",
+          "appId": "1:173965270100:ios:c60bc2b162664226c8e1c1",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
@@ -28,11 +28,8 @@
         "lib/firebase_options.dart": {
           "projectId": "medication-cd9b8",
           "configurations": {
-            "android": "1:173965270100:android:5d86b1f9277d21c5c8e1c1",
-            "ios": "1:173965270100:ios:bc0f09e9bf64e849c8e1c1",
-            "macos": "1:173965270100:ios:bc0f09e9bf64e849c8e1c1",
-            "web": "1:173965270100:web:9004dbac7b9d6632c8e1c1",
-            "windows": "1:173965270100:web:7f8b51d524a38e77c8e1c1"
+            "android": "1:173965270100:android:1d70497b7430128cc8e1c1",
+            "ios": "1:173965270100:ios:c60bc2b162664226c8e1c1"
           }
         }
       }
@@ -49,9 +46,32 @@
         "firebase-debug.*.log",
         "*.local"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
-      ]
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
     }
-  ]
+  ],
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/docs/**",
+        "destination": "https://storage.googleapis.com/medication-cd9b8.firebasestorage.app/{path}"
+      },
+      {
+        "source": "/final-test",
+        "destination": "https://firebasestorage.googleapis.com/v0/b/dawatime/o/PrivacyPolicy.pdf?alt=media&token=0d5066d3-447b-4191-a666-276c9fdf64ac"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/final-test",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=3600, public"
+          }
+        ]
+      }
+    ]
+  }
 }

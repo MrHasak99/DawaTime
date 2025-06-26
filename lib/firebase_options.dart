@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAqewZt32r_IYN59KCrrP90qYitKDz1wZE',
-    appId: '1:173965270100:android:5d86b1f9277d21c5c8e1c1',
+    appId: '1:173965270100:android:1d70497b7430128cc8e1c1',
     messagingSenderId: '173965270100',
     projectId: 'medication-cd9b8',
     storageBucket: 'medication-cd9b8.firebasestorage.app',
@@ -49,11 +49,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyABKQR0uOhrIqZ4RXV19C76EEfyzDq9CPQ',
-    appId: '1:173965270100:ios:bc0f09e9bf64e849c8e1c1',
+    appId: '1:173965270100:ios:c60bc2b162664226c8e1c1',
     messagingSenderId: '173965270100',
     projectId: 'medication-cd9b8',
     storageBucket: 'medication-cd9b8.firebasestorage.app',
-    iosBundleId: 'com.example.medicationAppFull',
+    iosBundleId: 'com.MrHasak99.dawatime',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
