@@ -10,11 +10,30 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:background_fetch/background_fetch.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 bool notificationsInitialized = false;
+
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  String taskId = task.taskId;
+  bool timeout = task.timeout;
+  if (timeout) {
+    BackgroundFetch.finish(taskId);
+    return;
+  }
+  await Firebase.initializeApp();
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    final now = DateTime.now();
+    if (now.hour == 0 && now.minute < 20) {
+      await rescheduleAllMedications(user.uid);
+    }
+  }
+  BackgroundFetch.finish(taskId);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +76,8 @@ Future<void> main() async {
   await androidImplementation?.requestNotificationsPermission();
 
   runApp(const MainApp());
+  
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MainApp extends StatelessWidget {

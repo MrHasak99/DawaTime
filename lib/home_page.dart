@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +12,7 @@ import 'package:dawatime/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:background_fetch/background_fetch.dart';
 
 final StreamController<NotificationResponse> selectNotificationStream =
     StreamController<NotificationResponse>.broadcast();
@@ -75,16 +75,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _scheduleUserMedications();
-  }
-
-  Future<void> _scheduleUserMedications() async {
-    if (widget.uid == null) return;
-    final meds = await firestore.collection(widget.uid!).get();
-    for (var doc in meds.docs) {
-      final medication = medicationFromDoc(doc);
-      await scheduleMedicationNotification(context, doc.id, medication);
-    }
   }
 
   @pragma('vm:entry-point')
@@ -113,6 +103,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initBackgroundFetch();
     selectNotificationStream.stream.listen((
       NotificationResponse response,
     ) async {
@@ -134,6 +125,37 @@ class _HomePageState extends State<HomePage> {
         }
       }
     });
+  }
+
+  void initBackgroundFetch() async {
+    BackgroundFetch.configure(
+      BackgroundFetchConfig(
+        minimumFetchInterval: 15,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        startOnBoot: true,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresStorageNotLow: false,
+        requiresDeviceIdle: false,
+        requiredNetworkType: NetworkType.NONE,
+      ),
+      (String taskId) async {
+        await Firebase.initializeApp();
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final now = DateTime.now();
+          if (now.hour == 0 && now.minute < 20) {
+            await rescheduleAllMedications(user.uid);
+          }
+        }
+        BackgroundFetch.finish(taskId);
+      },
+      (String taskId) async {
+        BackgroundFetch.finish(taskId);
+      },
+    );
+    BackgroundFetch.start();
   }
 
   @override
@@ -247,11 +269,6 @@ class _HomePageState extends State<HomePage> {
             );
           }
           final docs = snapshot.data!.docs;
-
-          for (final doc in docs) {
-            final medication = medicationFromDoc(doc);
-            scheduleMedicationNotification(context, doc.id, medication);
-          }
 
           return Builder(
             builder: (scaffoldContext) {
@@ -1406,4 +1423,12 @@ String? getNextReminder(Medications medication) {
   final displayMinute = scheduledTime.minute.toString().padLeft(2, '0');
   final period = scheduledTime.hour < 12 ? 'AM' : 'PM';
   return '$month $day, $year - $displayHour:$displayMinute $period';
+}
+
+Future<void> rescheduleAllMedications(String uid) async {
+  final meds = await FirebaseFirestore.instance.collection(uid).get();
+  for (var doc in meds.docs) {
+    final medication = medicationFromDoc(doc);
+    await scheduleMedicationNotification(null, doc.id, medication);
+  }
 }
