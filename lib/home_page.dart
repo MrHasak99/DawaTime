@@ -1275,22 +1275,25 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
-  for (int i = 0; i <= 8; i++) {
+  for (int i = 0; i < 5 * 9; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
   try {
-    if (medication.frequency > 1) {
-      for (int i = 0; i < 5; i++) {
-        DateTime nextTime = scheduledTime.add(
-          Duration(days: medication.frequency * i),
-        );
-        if (nextTime.isAfter(now)) {
+    for (int day = 0; day < 5; day++) {
+      DateTime baseTime = scheduledTime.add(
+        Duration(days: medication.frequency * day),
+      );
+      if (baseTime.isAfter(now)) {
+        for (int i = 0; i <= 8; i++) {
+          final followUpTime = baseTime.add(Duration(minutes: 15 * i));
           await flutterLocalNotificationsPlugin.zonedSchedule(
-            docId.hashCode + i,
+            docId.hashCode + day * 9 + i,
             'DawaTime',
-            'Time to take ${medication.name}!',
-            tz.TZDateTime.from(nextTime, tz.local),
+            i == 0
+                ? 'Time to take ${medication.name}!'
+                : 'Reminder: Take your ${medication.name}',
+            tz.TZDateTime.from(followUpTime, tz.local),
             const NotificationDetails(
               android: AndroidNotificationDetails(
                 'medication_channel',
@@ -1307,32 +1310,6 @@ Future<void> scheduleMedicationNotification(
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
-      }
-    } else {
-      for (int i = 0; i <= 8; i++) {
-        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          docId.hashCode + i,
-          'DawaTime',
-          i == 0
-              ? 'Time to take ${medication.name}!'
-              : 'Reminder: Take your ${medication.name}',
-          tz.TZDateTime.from(followUpTime, tz.local),
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'medication_channel',
-              'Medication Reminders',
-              channelDescription: 'Reminds you to take your medication',
-              importance: Importance.max,
-              priority: Priority.high,
-              playSound: true,
-              icon: '@mipmap/ic_launcher',
-            ),
-            iOS: DarwinNotificationDetails(presentSound: true),
-          ),
-          payload: docId,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        );
       }
     }
   } catch (e) {
