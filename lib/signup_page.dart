@@ -19,7 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool isLoading = false;
 
   bool _acceptedTerms = false;
-  final bool _acceptedPrivacy = false;
+  bool _acceptedPrivacy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 24),
                   TextField(
                     controller: nameController,
+                    textCapitalization: TextCapitalization.words,
                     cursorColor: Colors.lightGreen,
                     style: const TextStyle(
                       color: Colors.black,
@@ -147,7 +148,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       Expanded(
                         child: RichText(
-                          textAlign: TextAlign.left,
                           text: TextSpan(
                             style: const TextStyle(
                               color: Colors.black,
@@ -181,8 +181,34 @@ class _SignUpPageState extends State<SignUpPage> {
                                         }
                                       },
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: _acceptedPrivacy,
+                        onChanged: (val) {
+                          setState(() => _acceptedPrivacy = val ?? false);
+                        },
+                        activeColor: Colors.lightGreen,
+                        checkColor: Colors.white,
+                      ),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                            children: [
                               const TextSpan(
-                                text: " and ",
+                                text: "I accept the ",
                                 style: TextStyle(color: Colors.black),
                               ),
                               TextSpan(

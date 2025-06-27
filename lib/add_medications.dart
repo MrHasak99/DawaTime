@@ -62,7 +62,6 @@ class _AddMedicationsState extends State<AddMedications> {
                     children: [
                       TextField(
                         controller: nameController,
-                        textCapitalization: TextCapitalization.words,
                         decoration: InputDecoration(labelText: "Name"),
                       ),
                       const SizedBox(height: 16),
