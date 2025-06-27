@@ -1238,30 +1238,7 @@ class SettingsPage extends StatelessWidget {
                             ),
                       );
                       if (result != null && result.isNotEmpty) {
-                        try {
-                          await FirebaseFirestore.instance
-                              .collection('Messages')
-                              .add({
-                                'message': result,
-                                'timestamp': FieldValue.serverTimestamp(),
-                                'user':
-                                    FirebaseAuth.instance.currentUser?.email,
-                              });
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Message sent!",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                backgroundColor: Colors.lightGreen,
-                              ),
-                            );
-                          }
-                        } catch (e) {
+                        try {} catch (e) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

@@ -170,7 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     TapGestureRecognizer()
                                       ..onTap = () async {
                                         final url = Uri.parse(
-                                          'https://firebasestorage.googleapis.com/v0/b/medication-cd9b8.firebasestorage.app/o/Resume%20(Hamad%20AlKhalaf).pdf?alt=media&token=5ba43398-bdcc-4fda-9e47-c90c340a9711',
+                                          'https://dawatime.com/Terms&Conditions.pdf',
                                         );
                                         if (await canLaunchUrl(url)) {
                                           await launchUrl(
@@ -196,7 +196,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     TapGestureRecognizer()
                                       ..onTap = () async {
                                         final url = Uri.parse(
-                                          'https://firebasestorage.googleapis.com/v0/b/medication-cd9b8.firebasestorage.app/o/299100800434_Hamad%20_Al%20khalaf_SingleView_2025-05-07.pdf?alt=media&token=db9a331f-1d13-4b14-833c-a5a0a232b60d',
+                                          'https://dawatime.com/PrivacyPolicy.pdf',
                                         );
                                         if (await canLaunchUrl(url)) {
                                           await launchUrl(
