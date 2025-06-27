@@ -38,7 +38,6 @@
   "functions": [
     {
       "source": "functions",
-      "codebase": "default",
       "ignore": [
         "node_modules",
         ".git",
@@ -46,31 +45,22 @@
         "firebase-debug.*.log",
         "*.local"
       ],
-      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
     }
   ],
   "hosting": {
     "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
-        "source": "/docs/**",
-        "destination": "https://storage.googleapis.com/medication-cd9b8.firebasestorage.app/{path}"
-      },
-      {
-        "source": "/final-test",
-        "destination": "https://firebasestorage.googleapis.com/v0/b/dawatime/o/PrivacyPolicy.pdf?alt=media&token=0d5066d3-447b-4191-a666-276c9fdf64ac"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/final-test",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=3600, public"
-          }
-        ]
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   }

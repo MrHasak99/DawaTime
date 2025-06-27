@@ -40,42 +40,6 @@
           ]
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:173965270100:android:5d86b1f9277d21c5c8e1c1",
-        "android_client_info": {
-          "package_name": "com.example.medication_app_full"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "173965270100-1meenvt7fu5ogg9h24ilaip6o44q67r7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAqewZt32r_IYN59KCrrP90qYitKDz1wZE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "173965270100-1meenvt7fu5ogg9h24ilaip6o44q67r7.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "173965270100-6pqagrhnr6o54n887p5bs6e2cp1ql5v6.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.medicationAppFull"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"
