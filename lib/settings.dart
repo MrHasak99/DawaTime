@@ -1311,10 +1311,32 @@ class SettingsPage extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.pop(
-                                      context,
-                                      messageController.text.trim(),
-                                    );
+                                    final message =
+                                        messageController.text.trim();
+                                    if (message.isEmpty) return;
+                                    Navigator.pop(context, message);
+
+                                    final user =
+                                        FirebaseAuth.instance.currentUser;
+                                    FirebaseFirestore.instance
+                                        .collection('ContactMessages')
+                                        .add({
+                                          'userId': user?.uid,
+                                          'userEmail': user?.email,
+                                          'message': message,
+                                          'timestamp':
+                                              FieldValue.serverTimestamp(),
+                                        });
+
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Message sent!'),
+                                        ),
+                                      );
+                                    }
                                   },
                                   child: const Text(
                                     "Send",
