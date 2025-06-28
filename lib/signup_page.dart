@@ -297,7 +297,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                 .set({
                                   'name': nameController.text.trim(),
                                   'email': emailController.text.trim(),
+                                  'isVerified': user?.emailVerified ?? false,
                                 });
+                            final currentUser =
+                                FirebaseAuth.instance.currentUser;
+                            if (currentUser != null &&
+                                currentUser.emailVerified) {
+                              await FirebaseFirestore.instance
+                                  .collection('Users')
+                                  .doc(currentUser.uid)
+                                  .update({'isVerified': true});
+                            }
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

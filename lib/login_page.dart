@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:dawatime/signup_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -162,6 +163,12 @@ class _LoginPageState extends State<LoginPage> {
                               return;
                             }
                             final uid = user?.uid;
+                            if (user != null && user.emailVerified) {
+                              await FirebaseFirestore.instance
+                                  .collection('Users')
+                                  .doc(user.uid)
+                                  .update({'isVerified': true});
+                            }
                             if (!context.mounted) return;
                             Navigator.pushReplacement(
                               context,
