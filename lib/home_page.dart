@@ -1274,6 +1274,12 @@ Future<void> scheduleMedicationNotification(
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
+  final isDue =
+      scheduledTime.difference(now).inDays == 0 &&
+      scheduledTime.isBefore(now.add(const Duration(days: 1)));
+  if (!isDue && !forceNextDay) {
+    return;
+  }
 
   for (int i = 0; i < 5 * 9; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
