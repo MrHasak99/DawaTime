@@ -36,9 +36,20 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Welcome To DawaTime"),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.lightGreen,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text("Welcome To DawaTime"),
+            centerTitle: true,
+          ),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(

@@ -11,11 +11,16 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 bool notificationsInitialized = false;
+
+final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
+  ThemeMode.system,
+);
 
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
   String taskId = task.taskId;
@@ -38,6 +43,27 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final prefs = await SharedPreferences.getInstance();
+  final themeString = prefs.getString('themeMode');
+  if (themeString == 'dark') {
+    themeModeNotifier.value = ThemeMode.dark;
+  } else if (themeString == 'light') {
+    themeModeNotifier.value = ThemeMode.light;
+  } else {
+    themeModeNotifier.value = ThemeMode.system;
+  }
+
+  themeModeNotifier.addListener(() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (themeModeNotifier.value == ThemeMode.dark) {
+      await prefs.setString('themeMode', 'dark');
+    } else if (themeModeNotifier.value == ThemeMode.light) {
+      await prefs.setString('themeMode', 'light');
+    } else {
+      await prefs.setString('themeMode', 'system');
+    }
+  });
 
   tz.initializeTimeZones();
   final String timeZoneName = await FlutterTimezone.getLocalTimezone();
@@ -76,7 +102,7 @@ Future<void> main() async {
   await androidImplementation?.requestNotificationsPermission();
 
   runApp(const MainApp());
-  
+
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
@@ -85,60 +111,87 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AuthGate(),
-      navigatorKey: navigatorKey,
-      theme: ThemeData(
-        fontFamily: 'Cairo',
-        primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.lightGreen,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          titleTextStyle: TextStyle(
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: AuthGate(),
+          navigatorKey: navigatorKey,
+          theme: ThemeData(
+            brightness: Brightness.light,
             fontFamily: 'Cairo',
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.lightGreen,
-            foregroundColor: Colors.white,
-            textStyle: const TextStyle(
-              fontFamily: 'Cairo',
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+            primarySwatch: Colors.green,
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.lightGreen,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              titleTextStyle: TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightGreen,
+                foregroundColor: Colors.white,
+                textStyle: const TextStyle(
+                  fontFamily: 'Cairo',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 32,
+                ),
+              ),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+            inputDecorationTheme: const InputDecorationTheme(
+              border: UnderlineInputBorder(),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.lightGreen),
+              ),
+              labelStyle: TextStyle(
+                color: Colors.lightGreen,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
+              ),
+            ),
+            snackBarTheme: const SnackBarThemeData(
+              backgroundColor: Colors.lightGreen,
+              contentTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
+              ),
+            ),
           ),
-        ),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: UnderlineInputBorder(),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.lightGreen),
-          ),
-          labelStyle: TextStyle(
-            color: Colors.lightGreen,
-            fontWeight: FontWeight.bold,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
             fontFamily: 'Cairo',
+            primarySwatch: Colors.green,
+            scaffoldBackgroundColor: Colors.black,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              titleTextStyle: TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
           ),
-        ),
-        snackBarTheme: const SnackBarThemeData(
-          backgroundColor: Colors.lightGreen,
-          contentTextStyle: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Cairo',
-          ),
-        ),
-      ),
+          themeMode: mode,
+        );
+      },
     );
   }
 }

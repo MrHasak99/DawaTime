@@ -40,11 +40,21 @@ class _AddMedicationsState extends State<AddMedications> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
-        leading: BackButton(color: Colors.white),
-        title: const Text("Add New Medication"),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.lightGreen,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: BackButton(color: Colors.white),
+            title: const Text("Add New Medication"),
+            centerTitle: true,
+          ),
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
