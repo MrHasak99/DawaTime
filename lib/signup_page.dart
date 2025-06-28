@@ -24,10 +24,21 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(color: Colors.white),
-        title: const Text("Sign Up"),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.lightGreen,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: BackButton(color: Colors.white),
+            title: const Text("Sign Up"),
+            centerTitle: true,
+          ),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
