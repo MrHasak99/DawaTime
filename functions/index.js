@@ -34,14 +34,15 @@ const transporter = nodemailer.createTransport({
 // });
 
 exports.emailAdminsOnContactMessage = functions.firestore
-    .document("ContactMessages/{messageId}")
-    .onCreate(async (snap, context) => {
-      const data = snap.data();
-      const mailOptions = {
-        from: "admin@dawatime.com",
-        to: "help@dawatime.com",
-        subject: "New Contact Message from DawaTime App",
-        text: `User: ${data.userEmail || "Unknown"}\nMessage: ${data.message}`,
-      };
-      await transporter.sendMail(mailOptions);
-    });
+  .document("ContactMessages/{messageId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    const mailOptions = {
+      from: "admin@dawatime.com",
+      to: "help@dawatime.com",
+      replyTo: data.userEmail || "admin@dawatime.com",
+      subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
+      text: `Message: ${data.message}`,
+    };
+    await transporter.sendMail(mailOptions);
+  });
