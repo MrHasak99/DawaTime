@@ -1310,32 +1310,60 @@ class SettingsPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     final message =
                                         messageController.text.trim();
                                     if (message.isEmpty) return;
-                                    Navigator.pop(context, message);
 
                                     final user =
                                         FirebaseAuth.instance.currentUser;
-                                    FirebaseFirestore.instance
-                                        .collection('ContactMessages')
-                                        .add({
-                                          'userId': user?.uid,
-                                          'userEmail': user?.email,
-                                          'message': message,
-                                          'timestamp':
-                                              FieldValue.serverTimestamp(),
-                                        });
+                                    if (user == null) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'You must be logged in to send a message.',
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return;
+                                    }
 
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Message sent!'),
-                                        ),
-                                      );
+                                    try {
+                                      await FirebaseFirestore.instance
+                                          .collection('ContactMessages')
+                                          .add({
+                                            'userId': user.uid,
+                                            'userEmail': user.email,
+                                            'message': message,
+                                            'timestamp':
+                                                FieldValue.serverTimestamp(),
+                                          });
+                                      if (context.mounted) {
+                                        Navigator.pop(context, message);
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Message sent!'),
+                                          ),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Failed to send message: $e',
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     }
                                   },
                                   child: const Text(
