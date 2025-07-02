@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
       });
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(color: Colors.lightGreen),
+          child: CircularProgressIndicator(color: Color(0xFF8AC249)),
         ),
       );
     }
@@ -223,7 +223,7 @@ class _HomePageState extends State<HomePage> {
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.lightGreen,
+            color: Color(0xFF8AC249),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           child: AppBar(
@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(color: Colors.lightGreen),
+              child: CircularProgressIndicator(color: Color(0xFF8AC249)),
             );
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.medication, color: Colors.lightGreen, size: 64),
+                  Icon(Icons.medication, color: Color(0xFF8AC249), size: 64),
                   const SizedBox(height: 16),
                   const Text(
                     "No Medications Found",
@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                           context: context,
                           builder:
                               (context) => AlertDialog(
-                                backgroundColor: Colors.lightGreen,
+                                backgroundColor: Color(0xFF8AC249),
                                 title: const Text(
                                   'Delete Medication',
                                   style: TextStyle(
@@ -395,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                             return StatefulBuilder(
                               builder:
                                   (context, setState) => AlertDialog(
-                                    backgroundColor: Colors.lightGreen,
+                                    backgroundColor: Color(0xFF8AC249),
                                     title: const Text(
                                       'Edit Medication',
                                       style: TextStyle(
@@ -578,28 +578,30 @@ class _HomePageState extends State<HomePage> {
                                                         backgroundColor:
                                                             Colors.white,
                                                         hourMinuteTextColor:
-                                                            Colors.lightGreen,
+                                                            Color(0xFF8AC249),
                                                         hourMinuteColor: Colors
                                                             .lightGreen
                                                             .withValues(
                                                               alpha: 0.1,
                                                             ),
                                                         dayPeriodTextColor:
-                                                            Colors.lightGreen,
+                                                            Color(0xFF8AC249),
                                                         dayPeriodColor: Colors
                                                             .lightGreen
                                                             .withValues(
                                                               alpha: 0.1,
                                                             ),
-                                                        dialHandColor:
-                                                            Colors.lightGreen,
+                                                        dialHandColor: Color(
+                                                          0xFF8AC249,
+                                                        ),
                                                         dialBackgroundColor:
-                                                            Colors.lightGreen
-                                                                .withValues(
-                                                                  alpha: 0.08,
-                                                                ),
+                                                            Color(
+                                                              0xFF8AC249,
+                                                            ).withValues(
+                                                              alpha: 0.08,
+                                                            ),
                                                         entryModeIconColor:
-                                                            Colors.lightGreen,
+                                                            Color(0xFF8AC249),
                                                         helpTextStyle:
                                                             const TextStyle(
                                                               color:
@@ -646,18 +648,21 @@ class _HomePageState extends State<HomePage> {
                                                               ),
                                                         ),
                                                       ),
-                                                      textButtonTheme: TextButtonThemeData(
-                                                        style: TextButton.styleFrom(
-                                                          foregroundColor:
-                                                              Colors.lightGreen,
-                                                          textStyle:
-                                                              const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                        ),
-                                                      ),
+                                                      textButtonTheme:
+                                                          TextButtonThemeData(
+                                                            style: TextButton.styleFrom(
+                                                              foregroundColor:
+                                                                  Color(
+                                                                    0xFF8AC249,
+                                                                  ),
+                                                              textStyle:
+                                                                  const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                            ),
+                                                          ),
                                                       colorScheme:
                                                           ColorScheme.light(
                                                             primary:
@@ -845,7 +850,7 @@ class _HomePageState extends State<HomePage> {
                                         child: const Text(
                                           'Save',
                                           style: TextStyle(
-                                            color: Colors.lightGreen,
+                                            color: Color(0xFF8AC249),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -905,7 +910,7 @@ class _HomePageState extends State<HomePage> {
                       color:
                           medication.amount <= 0
                               ? Colors.red
-                              : Colors.lightGreen,
+                              : Color(0xFF8AC249),
                       margin: const EdgeInsets.all(10),
                       child: ListTile(
                         onTap: () {
@@ -981,7 +986,7 @@ class _HomePageState extends State<HomePage> {
                                 context: context,
                                 builder:
                                     (context) => AlertDialog(
-                                      backgroundColor: Colors.lightGreen,
+                                      backgroundColor: Color(0xFF8AC249),
                                       title: Text(
                                         "Take ${medication.name}?",
                                         style: const TextStyle(
@@ -1019,7 +1024,7 @@ class _HomePageState extends State<HomePage> {
                                           child: const Text(
                                             "Yes",
                                             style: TextStyle(
-                                              color: Colors.lightGreen,
+                                              color: Color(0xFF8AC249),
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -1074,7 +1079,7 @@ class _HomePageState extends State<HomePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    backgroundColor: Colors.lightGreen,
+                                    backgroundColor: Color(0xFF8AC249),
                                     title: Text(
                                       "You're out of ${medication.name}!",
                                       style: const TextStyle(
@@ -1121,7 +1126,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Add Medication",
         shape: const CircleBorder(),
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Color(0xFF8AC249),
         onPressed: () async {
           await Navigator.push(
             context,
@@ -1159,7 +1164,7 @@ class MedicationDetailsCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.lightGreen,
+                  color: Color(0xFF8AC249),
                 ),
               ),
             ),
@@ -1170,7 +1175,7 @@ class MedicationDetailsCard extends StatelessWidget {
               value: medication.typeOfMedication,
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.lightGreen,
+                color: Color(0xFF8AC249),
                 fontSize: 18,
               ),
             ),
@@ -1181,7 +1186,7 @@ class MedicationDetailsCard extends StatelessWidget {
               value: "${medication.dosage}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.lightGreen,
+                color: Color(0xFF8AC249),
                 fontSize: 18,
               ),
             ),
@@ -1193,7 +1198,7 @@ class MedicationDetailsCard extends StatelessWidget {
                   "Every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.lightGreen,
+                color: Color(0xFF8AC249),
                 fontSize: 18,
               ),
             ),
@@ -1204,7 +1209,7 @@ class MedicationDetailsCard extends StatelessWidget {
               value: "${medication.amount}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.lightGreen,
+                color: Color(0xFF8AC249),
                 fontSize: 18,
               ),
             ),
@@ -1216,7 +1221,7 @@ class MedicationDetailsCard extends StatelessWidget {
                 value: getNextReminder(medication)!,
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.lightGreen,
+                  color: Color(0xFF8AC249),
                   fontSize: 11,
                 ),
               ),
@@ -1244,7 +1249,7 @@ class _DetailRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.lightGreen),
+        Icon(icon, color: Color(0xFF8AC249)),
         const SizedBox(width: 12),
         Text(
           "$label: ",
@@ -1287,12 +1292,12 @@ Future<void> scheduleMedicationNotification(
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
-  final isDue =
-      scheduledTime.difference(now).inDays == 0 &&
-      scheduledTime.isBefore(now.add(const Duration(days: 1)));
-  if (!isDue && !forceNextDay) {
-    return;
-  }
+  // final isDue =
+  //     scheduledTime.difference(now).inDays == 0 &&
+  //     scheduledTime.isBefore(now.add(const Duration(days: 1)));
+  // if (!isDue && !forceNextDay) {
+  //   return;
+  // }
 
   for (int i = 0; i < 5 * 9; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);

@@ -28,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.lightGreen,
+            color: Color(0xFF8AC249),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           child: AppBar(
@@ -58,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   TextField(
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -66,20 +66,20 @@ class _SignUpPageState extends State<SignUpPage> {
                     decoration: const InputDecoration(
                       labelText: "Name",
                       labelStyle: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
                   ),
                   TextField(
                     controller: emailController,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(
                       color: Colors.black,
@@ -88,20 +88,20 @@ class _SignUpPageState extends State<SignUpPage> {
                     decoration: const InputDecoration(
                       labelText: "Email",
                       labelStyle: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
                   ),
                   TextField(
                     controller: passwordController,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
                     style: const TextStyle(
                       color: Colors.black,
@@ -110,21 +110,21 @@ class _SignUpPageState extends State<SignUpPage> {
                     decoration: const InputDecoration(
                       labelText: "Password",
                       labelStyle: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
                     obscureText: true,
                   ),
                   TextField(
                     controller: confirmPasswordController,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
                     style: const TextStyle(
                       color: Colors.black,
@@ -133,14 +133,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     decoration: const InputDecoration(
                       labelText: "Confirm Password",
                       labelStyle: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
                     obscureText: true,
@@ -154,7 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         onChanged: (val) {
                           setState(() => _acceptedTerms = val ?? false);
                         },
-                        activeColor: Colors.lightGreen,
+                        activeColor: Color(0xFF8AC249),
                         checkColor: Colors.white,
                       ),
                       Expanded(
@@ -174,7 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 text: "Terms & Conditions",
                                 style: const TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: Colors.lightGreen,
+                                  color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer:
@@ -206,7 +206,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         onChanged: (val) {
                           setState(() => _acceptedPrivacy = val ?? false);
                         },
-                        activeColor: Colors.lightGreen,
+                        activeColor: Color(0xFF8AC249),
                         checkColor: Colors.white,
                       ),
                       Expanded(
@@ -226,7 +226,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 text: "Privacy Policy",
                                 style: const TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: Colors.lightGreen,
+                                  color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer:
@@ -253,11 +253,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 24),
                   isLoading
                       ? const CircularProgressIndicator(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                       )
                       : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightGreen,
+                          backgroundColor: Color(0xFF8AC249),
                         ),
                         onPressed: () async {
                           if (!_acceptedTerms || !_acceptedPrivacy) {

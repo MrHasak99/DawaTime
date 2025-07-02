@@ -34,7 +34,7 @@ class _AddMedicationsState extends State<AddMedications> {
       });
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(color: Colors.lightGreen),
+          child: CircularProgressIndicator(color: Color(0xFF8AC249)),
         ),
       );
     }
@@ -44,7 +44,7 @@ class _AddMedicationsState extends State<AddMedications> {
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.lightGreen,
+            color: Color(0xFF8AC249),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           child: AppBar(
@@ -96,7 +96,7 @@ class _AddMedicationsState extends State<AddMedications> {
                           const Text(
                             'every',
                             style: TextStyle(
-                              color: Colors.lightGreen,
+                              color: Color(0xFF8AC249),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -114,7 +114,7 @@ class _AddMedicationsState extends State<AddMedications> {
                           Text(
                             'days',
                             style: TextStyle(
-                              color: Colors.lightGreen,
+                              color: Color(0xFF8AC249),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -149,34 +149,37 @@ class _AddMedicationsState extends State<AddMedications> {
                                 data: Theme.of(context).copyWith(
                                   timePickerTheme: TimePickerThemeData(
                                     backgroundColor: Colors.white,
-                                    hourMinuteTextColor: Colors.lightGreen,
-                                    hourMinuteColor: Colors.lightGreen
-                                        .withValues(alpha: 0.1),
-                                    dayPeriodTextColor: Colors.lightGreen,
-                                    dayPeriodColor: Colors.lightGreen
-                                        .withValues(alpha: 0.1),
-                                    dialHandColor: Colors.lightGreen,
-                                    dialBackgroundColor: Colors.lightGreen
-                                        .withValues(alpha: 0.08),
-                                    entryModeIconColor: Colors.lightGreen,
+                                    hourMinuteTextColor: Color(0xFF8AC249),
+                                    hourMinuteColor: Color(
+                                      0xFF8AC249,
+                                    ).withValues(alpha: 0.1),
+                                    dayPeriodTextColor: Color(0xFF8AC249),
+                                    dayPeriodColor: Color(
+                                      0xFF8AC249,
+                                    ).withValues(alpha: 0.1),
+                                    dialHandColor: Color(0xFF8AC249),
+                                    dialBackgroundColor: Color(
+                                      0xFF8AC249,
+                                    ).withValues(alpha: 0.08),
+                                    entryModeIconColor: Color(0xFF8AC249),
                                     helpTextStyle: const TextStyle(
-                                      color: Colors.lightGreen,
+                                      color: Color(0xFF8AC249),
                                       fontWeight: FontWeight.bold,
                                     ),
                                     hourMinuteTextStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 28,
-                                      color: Colors.lightGreen,
+                                      color: Color(0xFF8AC249),
                                     ),
                                     dayPeriodTextStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: Colors.lightGreen,
+                                      color: Color(0xFF8AC249),
                                     ),
                                     dialTextStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Colors.lightGreen,
+                                      color: Color(0xFF8AC249),
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
@@ -184,17 +187,17 @@ class _AddMedicationsState extends State<AddMedications> {
                                   ),
                                   textButtonTheme: TextButtonThemeData(
                                     style: TextButton.styleFrom(
-                                      foregroundColor: Colors.lightGreen,
+                                      foregroundColor: Color(0xFF8AC249),
                                       textStyle: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
                                   colorScheme: ColorScheme.light(
-                                    primary: Colors.lightGreen,
+                                    primary: Color(0xFF8AC249),
                                     onPrimary: Colors.white,
                                     surface: Colors.white,
-                                    onSurface: Colors.lightGreen,
+                                    onSurface: Color(0xFF8AC249),
                                   ),
                                 ),
                                 child: child!,
@@ -293,7 +296,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.lightGreen,
+                                backgroundColor: Color(0xFF8AC249),
                               ),
                               child: Text(
                                 "Save Medication",

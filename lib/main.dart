@@ -119,16 +119,16 @@ class MainApp extends StatelessWidget {
           home: AuthGate(),
           navigatorKey: navigatorKey,
           theme: ThemeData(
+            fontFamily: 'Nunito',
             brightness: Brightness.light,
-            fontFamily: 'Cairo',
             primarySwatch: Colors.green,
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.lightGreen,
+              backgroundColor: Color(0xFF8AC249),
               foregroundColor: Colors.white,
               elevation: 0,
               titleTextStyle: TextStyle(
-                fontFamily: 'Cairo',
+                fontFamily: 'Nunito',
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -136,10 +136,10 @@ class MainApp extends StatelessWidget {
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightGreen,
+                backgroundColor: Color(0xFF8AC249),
                 foregroundColor: Colors.white,
                 textStyle: const TextStyle(
-                  fontFamily: 'Cairo',
+                  fontFamily: 'Nunito',
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -155,26 +155,26 @@ class MainApp extends StatelessWidget {
             inputDecorationTheme: const InputDecorationTheme(
               border: UnderlineInputBorder(),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.lightGreen),
+                borderSide: BorderSide(color: Color(0xFF8AC249)),
               ),
               labelStyle: TextStyle(
-                color: Colors.lightGreen,
+                color: Color(0xFF8AC249),
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Cairo',
+                fontFamily: 'Inter',
               ),
             ),
             snackBarTheme: const SnackBarThemeData(
-              backgroundColor: Colors.lightGreen,
+              backgroundColor: Color(0xFF8AC249),
               contentTextStyle: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Cairo',
+                fontFamily: 'Inter',
               ),
             ),
           ),
           darkTheme: ThemeData(
+            fontFamily: 'Nunito',
             brightness: Brightness.dark,
-            fontFamily: 'Cairo',
             primarySwatch: Colors.green,
             scaffoldBackgroundColor: Colors.black,
             appBarTheme: const AppBarTheme(
@@ -182,7 +182,7 @@ class MainApp extends StatelessWidget {
               foregroundColor: Colors.white,
               elevation: 0,
               titleTextStyle: TextStyle(
-                fontFamily: 'Cairo',
+                fontFamily: 'Nunito',
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -207,7 +207,7 @@ class AuthGate extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(color: Colors.lightGreen),
+              child: CircularProgressIndicator(color: Color(0xFF8AC249)),
             ),
           );
         }
