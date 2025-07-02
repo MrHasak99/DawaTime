@@ -63,7 +63,7 @@ class SettingsPage extends StatelessWidget {
                           title: Row(
                             children: [
                               Image.asset(
-                                'assets/DawaTime.png',
+                                'assets/DawaTime_white.png',
                                 width: 48,
                                 height: 48,
                               ),

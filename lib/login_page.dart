@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset("assets/DawaTime.png", height: 80),
+                  Image.asset("assets/DawaTime_green.png", height: 80),
                   const SizedBox(height: 24),
                   TextField(
                     controller: emailController,
