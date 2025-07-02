@@ -64,8 +64,8 @@ class SettingsPage extends StatelessWidget {
                             children: [
                               Image.asset(
                                 'assets/DawaTime_white.png',
-                                width: 48,
-                                height: 48,
+                                width: 64,
+                                height: 64,
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -74,7 +74,7 @@ class SettingsPage extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 22,
+                                    fontSize: 32,
                                   ),
                                 ),
                               ),
@@ -94,11 +94,20 @@ class SettingsPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 12),
                               const Text(
+                                'Developed by: Hamad AlKhalaf',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
                                 'Thank you for using Dawatime!',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -1368,7 +1377,7 @@ class SettingsPage extends StatelessWidget {
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
-                                          backgroundColor: Color(0xFF8AC249),
+                                          backgroundColor: Colors.red,
                                           content: Text(
                                             'Re-authentication failed: $reauthError',
                                             style: TextStyle(

@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: const Color(0xFF8AC249),
+                                backgroundColor: Colors.red,
                                 content: Text(
                                   e.message ?? "Login failed",
                                   style: const TextStyle(
@@ -309,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              backgroundColor: const Color(0xFF8AC249),
+                              backgroundColor: Colors.red,
                               content: Text(
                                 'Failed to send reset email: $e',
                                 style: const TextStyle(

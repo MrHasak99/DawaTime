@@ -243,9 +243,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                       frequencyController.text == '0') {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        backgroundColor: const Color(
-                                          0xFF8AC249,
-                                        ),
+                                        backgroundColor: Colors.red,
                                         content: Text(
                                           "Dosage and Frequency must be greater than 0",
                                           style: const TextStyle(
@@ -301,9 +299,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        backgroundColor: const Color(
-                                          0xFF8AC249,
-                                        ),
+                                        backgroundColor: Colors.red,
                                         content: Text(
                                           'Failed to add medication: $e',
                                           style: const TextStyle(
@@ -319,7 +315,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                   if (!mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      backgroundColor: Color(0xFF8AC249),
+                                      backgroundColor: Colors.red,
                                       content: Text(
                                         "Please fill all fields",
                                         style: TextStyle(

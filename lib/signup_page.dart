@@ -339,10 +339,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: Color(0xFF8AC249),
+                                backgroundColor: Colors.red,
                                 content: Text(
                                   e.message ?? "Sign up failed",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
