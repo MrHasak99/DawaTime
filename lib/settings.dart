@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
       });
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(color: Colors.lightGreen),
+          child: CircularProgressIndicator(color: Color(0xFF8AC249)),
         ),
       );
     }
@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.lightGreen,
+            color: Color(0xFF8AC249),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           child: AppBar(
@@ -70,7 +70,7 @@ class SettingsPage extends StatelessWidget {
                           context: context,
                           builder:
                               (context) => AlertDialog(
-                                backgroundColor: Colors.lightGreen,
+                                backgroundColor: Color(0xFF8AC249),
                                 title: const Text(
                                   'Edit Profile',
                                   style: TextStyle(
@@ -126,8 +126,9 @@ class SettingsPage extends StatelessWidget {
                                             context: rootContext,
                                             builder:
                                                 (context) => AlertDialog(
-                                                  backgroundColor:
-                                                      Colors.lightGreen,
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   title: const Text(
                                                     'Change Email',
                                                     style: TextStyle(
@@ -255,8 +256,9 @@ class SettingsPage extends StatelessWidget {
                                                       child: const Text(
                                                         'Change',
                                                         style: TextStyle(
-                                                          color:
-                                                              Colors.lightGreen,
+                                                          color: Color(
+                                                            0xFF8AC249,
+                                                          ),
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
@@ -305,7 +307,7 @@ class SettingsPage extends StatelessWidget {
                                                           context,
                                                         ) => AlertDialog(
                                                           backgroundColor:
-                                                              Colors.lightGreen,
+                                                              Color(0xFF8AC249),
                                                           title: const Text(
                                                             'Email Change Requested',
                                                             style: TextStyle(
@@ -379,7 +381,7 @@ class SettingsPage extends StatelessWidget {
                                         child: const Text(
                                           'Change Email',
                                           style: TextStyle(
-                                            color: Colors.lightGreen,
+                                            color: Color(0xFF8AC249),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -401,8 +403,9 @@ class SettingsPage extends StatelessWidget {
                                             context: rootContext,
                                             builder:
                                                 (context) => AlertDialog(
-                                                  backgroundColor:
-                                                      Colors.lightGreen,
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   title: const Text(
                                                     'Reset Password',
                                                     style: TextStyle(
@@ -477,8 +480,9 @@ class SettingsPage extends StatelessWidget {
                                                       child: const Text(
                                                         'Send',
                                                         style: TextStyle(
-                                                          color:
-                                                              Colors.lightGreen,
+                                                          color: Color(
+                                                            0xFF8AC249,
+                                                          ),
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
@@ -522,7 +526,7 @@ class SettingsPage extends StatelessWidget {
                                         child: const Text(
                                           'Reset Password',
                                           style: TextStyle(
-                                            color: Colors.lightGreen,
+                                            color: Color(0xFF8AC249),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -561,8 +565,9 @@ class SettingsPage extends StatelessWidget {
                                                           FontWeight.bold,
                                                     ),
                                                   ),
-                                                  backgroundColor:
-                                                      Colors.lightGreen,
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
@@ -744,8 +749,9 @@ class SettingsPage extends StatelessWidget {
                                                 return const Center(
                                                   child:
                                                       CircularProgressIndicator(
-                                                        color:
-                                                            Colors.lightGreen,
+                                                        color: Color(
+                                                          0xFF8AC249,
+                                                        ),
                                                       ),
                                                 );
                                               },
@@ -812,8 +818,9 @@ class SettingsPage extends StatelessWidget {
                                                       (
                                                         alertContext,
                                                       ) => AlertDialog(
-                                                        backgroundColor:
-                                                            Colors.lightGreen,
+                                                        backgroundColor: Color(
+                                                          0xFF8AC249,
+                                                        ),
                                                         title: const Text(
                                                           "Account Deleted",
                                                           style: TextStyle(
@@ -926,7 +933,7 @@ class SettingsPage extends StatelessWidget {
                                     child: const Text(
                                       'Save',
                                       style: TextStyle(
-                                        color: Colors.lightGreen,
+                                        color: Color(0xFF8AC249),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -962,7 +969,7 @@ class SettingsPage extends StatelessWidget {
                                     context: context,
                                     builder:
                                         (context) => AlertDialog(
-                                          backgroundColor: Colors.lightGreen,
+                                          backgroundColor: Color(0xFF8AC249),
                                           title: const Text(
                                             'Re-authenticate',
                                             style: TextStyle(
@@ -1022,7 +1029,7 @@ class SettingsPage extends StatelessWidget {
                                               child: const Text(
                                                 'Confirm',
                                                 style: TextStyle(
-                                                  color: Colors.lightGreen,
+                                                  color: Color(0xFF8AC249),
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -1107,7 +1114,7 @@ class SettingsPage extends StatelessWidget {
                     context: context,
                     builder:
                         (context) => AlertDialog(
-                          backgroundColor: Colors.lightGreen,
+                          backgroundColor: Color(0xFF8AC249),
                           title: const Text(
                             "Log Out",
                             style: TextStyle(
@@ -1172,7 +1179,7 @@ class SettingsPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(color: Colors.lightGreen),
+                child: CircularProgressIndicator(color: Color(0xFF8AC249)),
               );
             }
             if (!snapshot.hasData || !snapshot.data!.exists) {
@@ -1202,7 +1209,7 @@ class SettingsPage extends StatelessWidget {
                           Icon(
                             Icons.account_circle,
                             size: 64,
-                            color: Colors.lightGreen,
+                            color: Color(0xFF8AC249),
                           ),
                           const SizedBox(height: 12),
                           Text(
@@ -1232,7 +1239,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightGreen,
+                      backgroundColor: Color(0xFF8AC249),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -1249,7 +1256,7 @@ class SettingsPage extends StatelessWidget {
                         context: context,
                         builder:
                             (context) => AlertDialog(
-                              backgroundColor: Colors.lightGreen,
+                              backgroundColor: Color(0xFF8AC249),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -1305,7 +1312,7 @@ class SettingsPage extends StatelessWidget {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
-                                    foregroundColor: Colors.lightGreen,
+                                    foregroundColor: Color(0xFF8AC249),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),

@@ -5,10 +5,23 @@
     <title>🤖📱🍎</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("Inter_18pt-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "Nunito";
+        src: url("Nunito-ExtraBold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
       body {
         background: #f7fafc;
         color: #222;
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Nunito", "Inter", Arial, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -16,17 +29,25 @@
         height: 100vh;
         margin: 0;
       }
+      .logo {
+        width: 307px;
+        height: 294px;
+        margin-bottom: 2rem;
+      }
       h1 {
+        font-family: "Nunito", Arial, sans-serif;
         font-size: 2.5rem;
         margin-bottom: 1rem;
       }
       p {
+        font-family: "Inter", Arial, sans-serif;
         font-size: 1.2rem;
         color: #555;
       }
     </style>
   </head>
   <body>
+    <img src="DawaTime.png" class="logo" />
     <h1>Coming soon 👀</h1>
     <p>- Hamad</p>
   </body>

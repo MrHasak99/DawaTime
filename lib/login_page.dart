@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor: Colors.lightGreen,
+            backgroundColor: Color(0xFF8AC249),
           ),
         );
       });
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.lightGreen,
+            color: Color(0xFF8AC249),
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
           ),
           child: AppBar(
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24),
                   TextField(
                     controller: emailController,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
                       color: Colors.black,
@@ -78,20 +78,20 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: const InputDecoration(
                       labelText: "Email",
                       labelStyle: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
                   ),
                   TextField(
                     controller: passwordController,
-                    cursorColor: Colors.lightGreen,
+                    cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: _obscurePassword,
                     style: TextStyle(
@@ -101,13 +101,13 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       labelText: "Password",
                       focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen),
+                        borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                       labelStyle: const TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       suffixIcon: IconButton(
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                           _obscurePassword
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.lightGreen,
+                          color: Color(0xFF8AC249),
                         ),
                         onPressed: () {
                           setState(() {
@@ -128,11 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24),
                   isLoading
                       ? const CircularProgressIndicator(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                       )
                       : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightGreen,
+                          backgroundColor: Color(0xFF8AC249),
                         ),
                         onPressed: () async {
                           setState(() => isLoading = true);
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    backgroundColor: Colors.lightGreen,
+                                    backgroundColor: Color(0xFF8AC249),
                                   ),
                                 );
                               }
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Don't have an account? Sign Up",
                       style: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -217,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         context: context,
                         builder:
                             (context) => AlertDialog(
-                              backgroundColor: Colors.lightGreen,
+                              backgroundColor: Color(0xFF8AC249),
                               title: const Text(
                                 'Reset Password',
                                 style: TextStyle(
@@ -266,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: const Text(
                                     'Send',
                                     style: TextStyle(
-                                      color: Colors.lightGreen,
+                                      color: Color(0xFF8AC249),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -298,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Forgot Password?",
                       style: TextStyle(
-                        color: Colors.lightGreen,
+                        color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
