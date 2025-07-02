@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
+                fontFamily: 'Inter',
               ),
             ),
           ),
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontFamily: 'Nunito',
+                                        fontFamily: 'Inter',
                                       ),
                                     ),
                                   ),
@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -308,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'Nunito',
+                                  fontFamily: 'Inter',
                                 ),
                               ),
                             ),
@@ -323,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: 'Nunito',
+                                  fontFamily: 'Inter',
                                 ),
                               ),
                             ),

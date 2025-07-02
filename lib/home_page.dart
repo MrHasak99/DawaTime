@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
+                fontFamily: 'Inter',
               ),
             ),
             action: SnackBarAction(
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'Nunito',
+                          fontFamily: 'Inter',
                         ),
                       ),
                     ),
@@ -873,7 +873,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Nunito',
+                                                      fontFamily: 'Inter',
                                                     ),
                                                   ),
                                                 ),
@@ -942,7 +942,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Nunito',
+                                                      fontFamily: 'Inter',
                                                     ),
                                                   ),
                                                   action: SnackBarAction(
@@ -990,7 +990,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Nunito',
+                                                      fontFamily: 'Inter',
                                                     ),
                                                   ),
                                                 ),
@@ -1010,7 +1010,7 @@ class _HomePageState extends State<HomePage> {
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Nunito',
+                                                    fontFamily: 'Inter',
                                                   ),
                                                 ),
                                               ),
@@ -1075,7 +1075,7 @@ class _HomePageState extends State<HomePage> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -1255,7 +1255,7 @@ class _HomePageState extends State<HomePage> {
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: 'Nunito',
+                                          fontFamily: 'Inter',
                                         ),
                                       ),
                                     ),
@@ -1579,7 +1579,7 @@ Future<void> scheduleMedicationNotification(
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
+                fontFamily: 'Inter',
               ),
             ),
             action: SnackBarAction(
@@ -1597,7 +1597,7 @@ Future<void> scheduleMedicationNotification(
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
+                fontFamily: 'Inter',
               ),
             ),
           ),

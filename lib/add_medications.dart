@@ -241,7 +241,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontFamily: 'Nunito',
+                                            fontFamily: 'Inter',
                                           ),
                                         ),
                                       ),
@@ -299,7 +299,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontFamily: 'Nunito',
+                                            fontFamily: 'Inter',
                                           ),
                                         ),
                                       ),
@@ -315,7 +315,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: 'Nunito',
+                                          fontFamily: 'Inter',
                                         ),
                                       ),
                                     ),
