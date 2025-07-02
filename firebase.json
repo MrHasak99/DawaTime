@@ -29,7 +29,8 @@
           "projectId": "medication-cd9b8",
           "configurations": {
             "android": "1:173965270100:android:1d70497b7430128cc8e1c1",
-            "ios": "1:173965270100:ios:c60bc2b162664226c8e1c1"
+            "ios": "1:173965270100:ios:c60bc2b162664226c8e1c1",
+            "web": "1:173965270100:web:b09f542fe0573e4cc8e1c1"
           }
         }
       }
@@ -45,24 +46,16 @@
         "firebase-debug.*.log",
         "*.local"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
-      ],
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"],
       "codebase": "default"
     }
   ],
   "hosting": {
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+      { "source": "/account-deletion", "destination": "/account-deletion.html" },
+      { "source": "**", "destination": "/index.html" }
     ]
   }
 }

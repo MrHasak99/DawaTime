@@ -227,15 +227,19 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 12),
                           Text(
                             "Name: ${data['name'] ?? ''}",
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             "Email: ${user.email ?? ''}",
-                            style: const TextStyle(fontSize: 16),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(fontSize: 16),
                           ),
                         ],
                       ),

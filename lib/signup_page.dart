@@ -59,11 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
                     cursorColor: Color(0xFF8AC249),
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -84,11 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: emailController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -109,11 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: passwordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -135,11 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: confirmPasswordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -172,25 +156,16 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
                             children: [
                               TextSpan(
                                 text: "I accept the ",
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               TextSpan(
                                 text: "Terms & Conditions",
@@ -234,25 +209,16 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
                             children: [
                               TextSpan(
                                 text: "I accept the ",
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               TextSpan(
                                 text: "Privacy Policy",

@@ -367,11 +367,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 16),
                   Text(
                     "No Medications Found",
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
@@ -1337,9 +1333,15 @@ class MedicationDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: Colors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: const BorderSide(color: Color(0xFF8AC249), width: 2),
+      ),
+      color:
+          Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF222222)
+              : Colors.white,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
         child: Column(
@@ -1349,10 +1351,11 @@ class MedicationDetailsCard extends StatelessWidget {
             Center(
               child: Text(
                 medication.name,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontSize: 26,
+                  color: const Color(0xFF8AC249),
+                  fontFamily: 'Inter',
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8AC249),
                 ),
               ),
             ),
@@ -1365,9 +1368,10 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
                 fontSize: 18,
+                fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.medical_services,
               label: "Dosage",
@@ -1376,9 +1380,10 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
                 fontSize: 18,
+                fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.repeat,
               label: "Frequency",
@@ -1388,9 +1393,10 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
                 fontSize: 18,
+                fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.inventory_2,
               label: "Current Amount",
@@ -1399,9 +1405,10 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
                 fontSize: 18,
+                fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             if (getNextReminder(medication) != null)
               _DetailRow(
                 icon: Icons.notifications_active,
@@ -1410,7 +1417,8 @@ class MedicationDetailsCard extends StatelessWidget {
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF8AC249),
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
                 ),
               ),
           ],
@@ -1441,7 +1449,10 @@ class _DetailRow extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
         Expanded(
           child: Text(

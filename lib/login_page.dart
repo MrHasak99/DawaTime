@@ -72,11 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: emailController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -98,11 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: _obscurePassword,
-                    style: TextStyle(
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
