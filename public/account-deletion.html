@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>DawaTime Account Deletion Request</title>
+    <title>Delete DawaTime Account</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
@@ -118,13 +118,35 @@
         ></textarea>
 
         <label for="password">Your DawaTime Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          placeholder="Enter your password to confirm deletion"
-        />
+        <div style="position: relative">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Enter your password to confirm deletion"
+            style="padding-right: 40px"
+          />
+          <button
+            type="button"
+            id="togglePassword"
+            style="
+              position: absolute;
+              right: 8px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              cursor: pointer;
+              color: #8ac249;
+              font-size: 1.2em;
+            "
+            tabindex="-1"
+            aria-label="Show or hide password"
+          >
+            👁️
+          </button>
+        </div>
 
         <button type="submit">Request Account Deletion</button>
         <div id="formMessage"></div>
@@ -136,6 +158,15 @@
       </p>
     </div>
     <script>
+      const passwordInput = document.getElementById("password");
+      const togglePassword = document.getElementById("togglePassword");
+      let passwordVisible = false;
+      togglePassword.addEventListener("click", function () {
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? "text" : "password";
+        togglePassword.textContent = passwordVisible ? "🙈" : "👁️";
+      });
+
       document
         .getElementById("deleteForm")
         .addEventListener("submit", async function (e) {

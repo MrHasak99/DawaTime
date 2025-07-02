@@ -607,8 +607,7 @@ class SettingsPage extends StatelessWidget {
                                                     'Failed to update email: $e',
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),
@@ -1116,16 +1115,14 @@ class SettingsPage extends StatelessWidget {
                                                         "Account Deleted",
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
                                                       ),
                                                       content: const Text(
                                                         "Your account has been deleted successfully.",
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
                                                       ),
                                                       actions: [
@@ -1188,8 +1185,7 @@ class SettingsPage extends StatelessWidget {
                                                     "Failed to delete user: $e",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),

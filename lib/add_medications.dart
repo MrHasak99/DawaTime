@@ -72,6 +72,7 @@ class _AddMedicationsState extends State<AddMedications> {
                     children: [
                       TextField(
                         controller: nameController,
+                        cursorColor: Color(0xFF8AC249),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -80,6 +81,7 @@ class _AddMedicationsState extends State<AddMedications> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: typeOfMedicationController,
+                        cursorColor: Color(0xFF8AC249),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -94,6 +96,7 @@ class _AddMedicationsState extends State<AddMedications> {
                           Expanded(
                             child: TextField(
                               controller: dosageController,
+                              cursorColor: Color(0xFF8AC249),
                               keyboardType: TextInputType.number,
                               style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
@@ -114,6 +117,7 @@ class _AddMedicationsState extends State<AddMedications> {
                           Expanded(
                             child: TextField(
                               controller: frequencyController,
+                              cursorColor: Color(0xFF8AC249),
                               keyboardType: TextInputType.number,
                               style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
@@ -135,6 +139,7 @@ class _AddMedicationsState extends State<AddMedications> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: amountController,
+                        cursorColor: Color(0xFF8AC249),
                         keyboardType: TextInputType.number,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
