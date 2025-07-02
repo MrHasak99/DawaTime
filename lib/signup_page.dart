@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset("assets/app_icon.png", height: 80),
+                  Image.asset("assets/DawaTime.png", height: 80),
                   const SizedBox(height: 24),
                   TextField(
                     controller: nameController,
