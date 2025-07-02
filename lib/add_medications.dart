@@ -159,45 +159,53 @@ class _AddMedicationsState extends State<AddMedications> {
                         ),
                         trailing: Icon(Icons.access_time),
                         onTap: () async {
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
                           final picked = await showTimePicker(
                             context: context,
                             initialTime: _selectedTime ?? TimeOfDay.now(),
                             builder: (context, child) {
+                              final primaryColor = const Color(0xFF8AC249);
+                              final surfaceColor =
+                                  isDark
+                                      ? const Color(0xFF222222)
+                                      : Colors.white;
+                              final onSurfaceColor =
+                                  isDark ? Colors.white : primaryColor;
+                              final hourMinuteBg =
+                                  isDark
+                                      ? primaryColor.withValues(alpha: 0.15)
+                                      : primaryColor.withValues(alpha: 0.08);
+
                               return Theme(
                                 data: Theme.of(context).copyWith(
                                   timePickerTheme: TimePickerThemeData(
-                                    backgroundColor: Colors.white,
-                                    hourMinuteTextColor: Color(0xFF8AC249),
-                                    hourMinuteColor: Color(
-                                      0xFF8AC249,
-                                    ).withValues(alpha: 0.1),
-                                    dayPeriodTextColor: Color(0xFF8AC249),
-                                    dayPeriodColor: Color(
-                                      0xFF8AC249,
-                                    ).withValues(alpha: 0.1),
-                                    dialHandColor: Color(0xFF8AC249),
-                                    dialBackgroundColor: Color(
-                                      0xFF8AC249,
-                                    ).withValues(alpha: 0.08),
-                                    entryModeIconColor: Color(0xFF8AC249),
-                                    helpTextStyle: const TextStyle(
-                                      color: Color(0xFF8AC249),
+                                    backgroundColor: surfaceColor,
+                                    hourMinuteTextColor: primaryColor,
+                                    hourMinuteColor: hourMinuteBg,
+                                    dayPeriodTextColor: primaryColor,
+                                    dayPeriodColor: hourMinuteBg,
+                                    dialHandColor: primaryColor,
+                                    dialBackgroundColor: hourMinuteBg,
+                                    entryModeIconColor: primaryColor,
+                                    helpTextStyle: TextStyle(
+                                      color: primaryColor,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    hourMinuteTextStyle: const TextStyle(
+                                    hourMinuteTextStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 28,
-                                      color: Color(0xFF8AC249),
+                                      color: primaryColor,
                                     ),
-                                    dayPeriodTextStyle: const TextStyle(
+                                    dayPeriodTextStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: Color(0xFF8AC249),
+                                      color: primaryColor,
                                     ),
-                                    dialTextStyle: const TextStyle(
+                                    dialTextStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Color(0xFF8AC249),
+                                      color: primaryColor,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(24),
@@ -205,17 +213,26 @@ class _AddMedicationsState extends State<AddMedications> {
                                   ),
                                   textButtonTheme: TextButtonThemeData(
                                     style: TextButton.styleFrom(
-                                      foregroundColor: Color(0xFF8AC249),
+                                      foregroundColor: primaryColor,
                                       textStyle: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                  colorScheme: ColorScheme.light(
-                                    primary: Color(0xFF8AC249),
+                                  colorScheme: ColorScheme(
+                                    brightness:
+                                        isDark
+                                            ? Brightness.dark
+                                            : Brightness.light,
+                                    primary: primaryColor,
                                     onPrimary: Colors.white,
-                                    surface: Colors.white,
-                                    onSurface: Color(0xFF8AC249),
+                                    secondary: primaryColor,
+                                    onSecondary: Colors.white,
+                                    error: Colors.red,
+                                    onError: Colors.white,
+
+                                    surface: surfaceColor,
+                                    onSurface: onSurfaceColor,
                                   ),
                                 ),
                                 child: child!,
