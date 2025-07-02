@@ -1327,8 +1327,14 @@ Future<void> scheduleMedicationNotification(
                 priority: Priority.high,
                 playSound: true,
                 icon: '@mipmap/ic_launcher',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
               ),
-              iOS: DarwinNotificationDetails(presentSound: true),
+              iOS: DarwinNotificationDetails(
+                presentSound: true,
+                sound: "notification_sound.mp3",
+              ),
             ),
             payload: docId,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
