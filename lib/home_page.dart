@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
             ),
             action: SnackBarAction(
               label: 'Undo',
-              textColor: Colors.white,
+              textColor: Colors.red,
               onPressed: () async {
                 try {
                   await firestore
@@ -943,7 +943,7 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                   action: SnackBarAction(
                                                     label: 'Undo',
-                                                    textColor: Colors.white,
+                                                    textColor: Colors.red,
                                                     onPressed: () async {
                                                       await firestore
                                                           .collection(
