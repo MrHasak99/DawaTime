@@ -596,7 +596,7 @@ class SettingsPage extends StatelessWidget {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Nunito',
+                                                      fontFamily: 'Inter',
                                                     ),
                                                   ),
                                                 ),
@@ -743,7 +743,7 @@ class SettingsPage extends StatelessWidget {
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Nunito',
+                                                    fontFamily: 'Inter',
                                                   ),
                                                 ),
                                               ),
@@ -762,7 +762,7 @@ class SettingsPage extends StatelessWidget {
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Nunito',
+                                                    fontFamily: 'Inter',
                                                   ),
                                                 ),
                                               ),
@@ -965,7 +965,7 @@ class SettingsPage extends StatelessWidget {
                                                                     FontWeight
                                                                         .bold,
                                                                 fontFamily:
-                                                                    'Nunito',
+                                                                    'Inter',
                                                               ),
                                                             ),
                                                           ),
@@ -994,7 +994,7 @@ class SettingsPage extends StatelessWidget {
                                                                     FontWeight
                                                                         .bold,
                                                                 fontFamily:
-                                                                    'Nunito',
+                                                                    'Inter',
                                                               ),
                                                             ),
                                                           ),
@@ -1177,7 +1177,7 @@ class SettingsPage extends StatelessWidget {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Nunito',
+                                                      fontFamily: 'Inter',
                                                     ),
                                                   ),
                                                 ),
@@ -1245,7 +1245,7 @@ class SettingsPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontFamily: 'Nunito',
+                                        fontFamily: 'Inter',
                                       ),
                                     ),
                                   ),
@@ -1352,7 +1352,7 @@ class SettingsPage extends StatelessWidget {
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontFamily: 'Nunito',
+                                              fontFamily: 'Inter',
                                             ),
                                           ),
                                         ),
@@ -1370,7 +1370,7 @@ class SettingsPage extends StatelessWidget {
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontFamily: 'Nunito',
+                                              fontFamily: 'Inter',
                                             ),
                                           ),
                                         ),
@@ -1388,7 +1388,7 @@ class SettingsPage extends StatelessWidget {
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: 'Nunito',
+                                          fontFamily: 'Inter',
                                         ),
                                       ),
                                     ),
@@ -1406,7 +1406,7 @@ class SettingsPage extends StatelessWidget {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
                                 ),
@@ -1423,7 +1423,7 @@ class SettingsPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -1546,7 +1546,7 @@ class SettingsPage extends StatelessWidget {
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
-                                                fontFamily: 'Nunito',
+                                                fontFamily: 'Inter',
                                               ),
                                             ),
                                           ),
@@ -1577,7 +1577,7 @@ class SettingsPage extends StatelessWidget {
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
-                                                fontFamily: 'Nunito',
+                                                fontFamily: 'Inter',
                                               ),
                                             ),
                                           ),
@@ -1595,7 +1595,7 @@ class SettingsPage extends StatelessWidget {
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
-                                                fontFamily: 'Nunito',
+                                                fontFamily: 'Inter',
                                               ),
                                             ),
                                           ),
@@ -1624,7 +1624,7 @@ class SettingsPage extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),

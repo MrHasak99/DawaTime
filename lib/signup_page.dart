@@ -301,7 +301,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -318,7 +318,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -363,7 +363,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
@@ -379,7 +379,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Nunito',
+                                    fontFamily: 'Inter',
                                   ),
                                 ),
                               ),
