@@ -135,7 +135,10 @@ class _AddMedicationsState extends State<AddMedications> {
                               ? "Pick Notification Time"
                               : "Notify at: ${_selectedTime!.format(context)}",
                           style: TextStyle(
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -229,9 +232,17 @@ class _AddMedicationsState extends State<AddMedications> {
                                   if (dosageController.text == '0' ||
                                       frequencyController.text == '0') {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
+                                        backgroundColor: const Color(
+                                          0xFF8AC249,
+                                        ),
                                         content: Text(
                                           "Dosage and Frequency must be greater than 0",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Nunito',
+                                          ),
                                         ),
                                       ),
                                     );
@@ -280,8 +291,16 @@ class _AddMedicationsState extends State<AddMedications> {
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
+                                        backgroundColor: const Color(
+                                          0xFF8AC249,
+                                        ),
                                         content: Text(
                                           'Failed to add medication: $e',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Nunito',
+                                          ),
                                         ),
                                       ),
                                     );
@@ -290,7 +309,15 @@ class _AddMedicationsState extends State<AddMedications> {
                                   if (!mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text("Please fill all fields"),
+                                      backgroundColor: Color(0xFF8AC249),
+                                      content: Text(
+                                        "Please fill all fields",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Nunito',
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }

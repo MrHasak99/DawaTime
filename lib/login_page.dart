@@ -24,14 +24,15 @@ class _LoginPageState extends State<LoginPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+            backgroundColor: Color(0xFF8AC249),
             content: Text(
               "Your account has been deleted successfully.",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
               ),
             ),
-            backgroundColor: Color(0xFF8AC249),
           ),
         );
       });
@@ -72,7 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
-                      color: Colors.black,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -95,7 +99,10 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: _obscurePassword,
                     style: TextStyle(
-                      color: Colors.black,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
@@ -148,14 +155,15 @@ class _LoginPageState extends State<LoginPage> {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
+                                    backgroundColor: Color(0xFF8AC249),
                                     content: Text(
                                       "Please verify your email before logging in.",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
+                                        fontFamily: 'Nunito',
                                       ),
                                     ),
-                                    backgroundColor: Color(0xFF8AC249),
                                   ),
                                 );
                               }
@@ -180,7 +188,15 @@ class _LoginPageState extends State<LoginPage> {
                             if (!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(e.message ?? "Login failed"),
+                                backgroundColor: const Color(0xFF8AC249),
+                                content: Text(
+                                  e.message ?? "Login failed",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
                               ),
                             );
                           } finally {
@@ -229,7 +245,11 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: emailController,
                                 cursorColor: Colors.white,
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 decoration: const InputDecoration(
@@ -282,14 +302,30 @@ class _LoginPageState extends State<LoginPage> {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Password reset email sent!'),
+                              backgroundColor: Color(0xFF8AC249),
+                              content: Text(
+                                'Password reset email sent!',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Nunito',
+                                ),
+                              ),
                             ),
                           );
                         } catch (e) {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Failed to send reset email: $e'),
+                              backgroundColor: const Color(0xFF8AC249),
+                              content: Text(
+                                'Failed to send reset email: $e',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Nunito',
+                                ),
+                              ),
                             ),
                           );
                         }

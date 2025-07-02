@@ -59,8 +59,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
                     cursorColor: Color(0xFF8AC249),
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -81,8 +84,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: emailController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -103,8 +109,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: passwordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -126,8 +135,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: confirmPasswordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
@@ -160,15 +172,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
                             children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: "I accept the ",
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                ),
                               ),
                               TextSpan(
                                 text: "Terms & Conditions",
@@ -212,15 +234,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
                             children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: "I accept the ",
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                ),
                               ),
                               TextSpan(
                                 text: "Privacy Policy",
@@ -263,8 +295,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (!_acceptedTerms || !_acceptedPrivacy) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
+                                backgroundColor: Color(0xFF8AC249),
                                 content: Text(
                                   "You must accept the Terms & Conditions and Privacy Policy.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
                                 ),
                               ),
                             );
@@ -274,7 +312,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               confirmPasswordController.text) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text("Passwords do not match"),
+                                backgroundColor: Color(0xFF8AC249),
+                                content: Text(
+                                  "Passwords do not match",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
                               ),
                             );
                             return;
@@ -311,8 +357,14 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
+                                backgroundColor: Color(0xFF8AC249),
                                 content: Text(
                                   "Verification email sent. Please check your inbox.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
                                 ),
                               ),
                             );
@@ -321,7 +373,15 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(e.message ?? "Sign up failed"),
+                                backgroundColor: Color(0xFF8AC249),
+                                content: Text(
+                                  e.message ?? "Sign up failed",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
                               ),
                             );
                           } finally {

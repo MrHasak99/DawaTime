@@ -242,19 +242,18 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // --- Edit Profile Button moved here ---
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.edit, color: Color(0xFF8AC249)),
+                    icon: const Icon(Icons.edit, color: Colors.white),
                     label: const Text(
                       "Edit Profile",
                       style: TextStyle(
-                        color: Color(0xFF8AC249),
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Color(0xFF8AC249),
+                      backgroundColor: const Color(0xFF8AC249),
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -298,8 +297,12 @@ class SettingsPage extends StatelessWidget {
                                     TextField(
                                       controller: nameController,
                                       cursorColor: Colors.white,
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style: TextStyle(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       decoration: const InputDecoration(
@@ -360,8 +363,15 @@ class SettingsPage extends StatelessWidget {
                                                       keyboardType:
                                                           TextInputType
                                                               .emailAddress,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -398,8 +408,15 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -570,8 +587,17 @@ class SettingsPage extends StatelessWidget {
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: Text(
                                                     'Failed to update email: $e',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -617,8 +643,14 @@ class SettingsPage extends StatelessWidget {
                                                 content: TextField(
                                                   controller: emailController,
                                                   cursorColor: Colors.white,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   decoration: const InputDecoration(
@@ -703,8 +735,16 @@ class SettingsPage extends StatelessWidget {
                                               context,
                                             ).showSnackBar(
                                               const SnackBar(
+                                                backgroundColor: Color(
+                                                  0xFF8AC249,
+                                                ),
                                                 content: Text(
                                                   'Password reset email sent!',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Nunito',
+                                                  ),
                                                 ),
                                               ),
                                             );
@@ -714,8 +754,16 @@ class SettingsPage extends StatelessWidget {
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
+                                                backgroundColor: Color(
+                                                  0xFF8AC249,
+                                                ),
                                                 content: Text(
                                                   'Failed to send reset email: $e',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Nunito',
+                                                  ),
                                                 ),
                                               ),
                                             );
@@ -782,8 +830,15 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController1,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -821,8 +876,15 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController2,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
+                                                      style: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -889,8 +951,22 @@ class SettingsPage extends StatelessWidget {
                                                           context,
                                                         ).showSnackBar(
                                                           const SnackBar(
+                                                            backgroundColor:
+                                                                Color(
+                                                                  0xFF8AC249,
+                                                                ),
                                                             content: Text(
                                                               "Please enter your password twice.",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Nunito',
+                                                              ),
                                                             ),
                                                           ),
                                                         );
@@ -904,8 +980,22 @@ class SettingsPage extends StatelessWidget {
                                                           context,
                                                         ).showSnackBar(
                                                           const SnackBar(
+                                                            backgroundColor:
+                                                                Color(
+                                                                  0xFF8AC249,
+                                                                ),
                                                             content: Text(
                                                               "Passwords do not match.",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Nunito',
+                                                              ),
                                                             ),
                                                           ),
                                                         );
@@ -1078,8 +1168,17 @@ class SettingsPage extends StatelessWidget {
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: Text(
                                                     "Failed to delete user: $e",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -1140,8 +1239,14 @@ class SettingsPage extends StatelessWidget {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
+                                    backgroundColor: Color(0xFF8AC249),
                                     content: Text(
                                       'Email updated! Please verify your new email address.',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Nunito',
+                                      ),
                                     ),
                                   ),
                                 );
@@ -1166,8 +1271,12 @@ class SettingsPage extends StatelessWidget {
                                           controller: passwordController,
                                           obscureText: true,
                                           cursorColor: Colors.white,
-                                          style: const TextStyle(
-                                            color: Colors.black,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: const InputDecoration(
@@ -1237,8 +1346,14 @@ class SettingsPage extends StatelessWidget {
                                         context,
                                       ).showSnackBar(
                                         const SnackBar(
+                                          backgroundColor: Color(0xFF8AC249),
                                           content: Text(
                                             'Email updated! Please verify your new email address.',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Nunito',
+                                            ),
                                           ),
                                         ),
                                       );
@@ -1249,8 +1364,14 @@ class SettingsPage extends StatelessWidget {
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
+                                          backgroundColor: Color(0xFF8AC249),
                                           content: Text(
                                             'Re-authentication failed: $reauthError',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Nunito',
+                                            ),
                                           ),
                                         ),
                                       );
@@ -1261,8 +1382,14 @@ class SettingsPage extends StatelessWidget {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      backgroundColor: Color(0xFF8AC249),
                                       content: Text(
                                         'Failed to update email: ${e.message}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Nunito',
+                                        ),
                                       ),
                                     ),
                                   );
@@ -1273,7 +1400,15 @@ class SettingsPage extends StatelessWidget {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Profile updated!'),
+                                  backgroundColor: Color(0xFF8AC249),
+                                  content: Text(
+                                    'Profile updated!',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Nunito',
+                                    ),
+                                  ),
                                 ),
                               );
                             }
@@ -1281,7 +1416,17 @@ class SettingsPage extends StatelessWidget {
                         } catch (e) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed to update: $e')),
+                              SnackBar(
+                                backgroundColor: Color(0xFF8AC249),
+                                content: Text(
+                                  'Failed to update: $e',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
+                              ),
                             );
                           }
                         }
@@ -1332,8 +1477,12 @@ class SettingsPage extends StatelessWidget {
                                 controller: messageController,
                                 maxLines: 5,
                                 cursorColor: Colors.white,
-                                style: const TextStyle(
-                                  color: Colors.black,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 decoration: InputDecoration(
@@ -1391,8 +1540,14 @@ class SettingsPage extends StatelessWidget {
                                           context,
                                         ).showSnackBar(
                                           const SnackBar(
+                                            backgroundColor: Color(0xFF8AC249),
                                             content: Text(
                                               'You must be logged in to send a message.',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Nunito',
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1416,7 +1571,15 @@ class SettingsPage extends StatelessWidget {
                                           context,
                                         ).showSnackBar(
                                           const SnackBar(
-                                            content: Text('Message sent!'),
+                                            backgroundColor: Color(0xFF8AC249),
+                                            content: Text(
+                                              'Message sent!',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Nunito',
+                                              ),
+                                            ),
                                           ),
                                         );
                                       }
@@ -1426,8 +1589,14 @@ class SettingsPage extends StatelessWidget {
                                           context,
                                         ).showSnackBar(
                                           SnackBar(
+                                            backgroundColor: Color(0xFF8AC249),
                                             content: Text(
                                               'Failed to send message: $e',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Nunito',
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1449,8 +1618,15 @@ class SettingsPage extends StatelessWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Failed to send message: $e"),
-                                backgroundColor: Colors.red,
+                                backgroundColor: Color(0xFF8AC249),
+                                content: Text(
+                                  "Failed to send message: $e",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                ),
                               ),
                             );
                           }
