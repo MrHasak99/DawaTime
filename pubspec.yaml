@@ -42,6 +42,7 @@ flutter:
         - asset: assets/fonts/Nunito-ExtraBold.ttf
   assets:
     - assets/dawatime.png
+    - assets/notification_sound.mp3
 flutter_launcher_icons:
   android: true
   ios: true
