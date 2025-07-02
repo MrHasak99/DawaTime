@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     if (widget.showAccountDeletedMessage) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Color(0xFF8AC249),
             content: Text(
               "Your account has been deleted successfully.",
@@ -197,7 +197,9 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           "Login",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -386,7 +388,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }
                     },
-                    child: const Text(
+                    child: Text(
                       "Forgot Password?",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
