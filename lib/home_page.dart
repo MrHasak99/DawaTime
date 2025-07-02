@@ -701,6 +701,31 @@ class _HomePageState extends State<HomePage> {
                                                       : Colors.black,
                                             ),
                                             onTap: () async {
+                                              final isDark =
+                                                  Theme.of(
+                                                    context,
+                                                  ).brightness ==
+                                                  Brightness.dark;
+                                              final primaryColor = const Color(
+                                                0xFF8AC249,
+                                              );
+                                              final surfaceColor =
+                                                  isDark
+                                                      ? const Color(0xFF222222)
+                                                      : Colors.white;
+                                              final onSurfaceColor =
+                                                  isDark
+                                                      ? Colors.white
+                                                      : primaryColor;
+                                              final hourMinuteBg =
+                                                  isDark
+                                                      ? primaryColor.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                      : primaryColor.withValues(
+                                                        alpha: 0.08,
+                                                      );
+
                                               final picked = await showTimePicker(
                                                 context: context,
                                                 initialTime:
@@ -713,70 +738,55 @@ class _HomePageState extends State<HomePage> {
                                                     ).copyWith(
                                                       timePickerTheme: TimePickerThemeData(
                                                         backgroundColor:
-                                                            Colors.white,
+                                                            surfaceColor,
                                                         hourMinuteTextColor:
-                                                            Color(0xFF8AC249),
-                                                        hourMinuteColor: Colors
-                                                            .lightGreen
-                                                            .withValues(
-                                                              alpha: 0.1,
-                                                            ),
+                                                            primaryColor,
+                                                        hourMinuteColor:
+                                                            hourMinuteBg,
                                                         dayPeriodTextColor:
-                                                            Color(0xFF8AC249),
-                                                        dayPeriodColor: Colors
-                                                            .lightGreen
-                                                            .withValues(
-                                                              alpha: 0.1,
-                                                            ),
-                                                        dialHandColor: Color(
-                                                          0xFF8AC249,
-                                                        ),
+                                                            primaryColor,
+                                                        dayPeriodColor:
+                                                            hourMinuteBg,
+                                                        dialHandColor:
+                                                            primaryColor,
                                                         dialBackgroundColor:
-                                                            Color(
-                                                              0xFF8AC249,
-                                                            ).withValues(
-                                                              alpha: 0.08,
-                                                            ),
+                                                            hourMinuteBg,
                                                         entryModeIconColor:
-                                                            Color(0xFF8AC249),
+                                                            primaryColor,
                                                         helpTextStyle:
-                                                            const TextStyle(
+                                                            TextStyle(
                                                               color:
-                                                                  Colors
-                                                                      .lightGreen,
+                                                                  primaryColor,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                             ),
                                                         hourMinuteTextStyle:
-                                                            const TextStyle(
+                                                            TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               fontSize: 28,
                                                               color:
-                                                                  Colors
-                                                                      .lightGreen,
+                                                                  primaryColor,
                                                             ),
                                                         dayPeriodTextStyle:
-                                                            const TextStyle(
+                                                            TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               fontSize: 16,
                                                               color:
-                                                                  Colors
-                                                                      .lightGreen,
+                                                                  primaryColor,
                                                             ),
                                                         dialTextStyle:
-                                                            const TextStyle(
+                                                            TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               fontSize: 20,
                                                               color:
-                                                                  Colors
-                                                                      .lightGreen,
+                                                                  primaryColor,
                                                             ),
                                                         shape: RoundedRectangleBorder(
                                                           borderRadius:
@@ -789,9 +799,7 @@ class _HomePageState extends State<HomePage> {
                                                           TextButtonThemeData(
                                                             style: TextButton.styleFrom(
                                                               foregroundColor:
-                                                                  Color(
-                                                                    0xFF8AC249,
-                                                                  ),
+                                                                  primaryColor,
                                                               textStyle:
                                                                   const TextStyle(
                                                                     fontWeight:
@@ -800,19 +808,24 @@ class _HomePageState extends State<HomePage> {
                                                                   ),
                                                             ),
                                                           ),
-                                                      colorScheme:
-                                                          ColorScheme.light(
-                                                            primary:
-                                                                Colors
-                                                                    .lightGreen,
-                                                            onPrimary:
-                                                                Colors.white,
-                                                            surface:
-                                                                Colors.white,
-                                                            onSurface:
-                                                                Colors
-                                                                    .lightGreen,
-                                                          ),
+                                                      colorScheme: ColorScheme(
+                                                        brightness:
+                                                            isDark
+                                                                ? Brightness
+                                                                    .dark
+                                                                : Brightness
+                                                                    .light,
+                                                        primary: primaryColor,
+                                                        onPrimary: Colors.white,
+                                                        secondary: primaryColor,
+                                                        onSecondary:
+                                                            Colors.white,
+                                                        error: Colors.red,
+                                                        onError: Colors.white,
+                                                        surface: surfaceColor,
+                                                        onSurface:
+                                                            onSurfaceColor,
+                                                      ),
                                                     ),
                                                     child: child!,
                                                   );
