@@ -41,9 +41,9 @@ flutter:
       fonts:
         - asset: assets/fonts/Nunito-ExtraBold.ttf
   assets:
-    - assets/app_icon.png
+    - assets/dawatime.png
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/app_icon.png"
+  image_path: "assets/dawatime.png"
   remove_alpha_ios: true
