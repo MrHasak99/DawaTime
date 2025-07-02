@@ -1318,7 +1318,7 @@ Future<void> scheduleMedicationNotification(
                 ? 'Time to take ${medication.name}!'
                 : 'Reminder: Take your ${medication.name}',
             tz.TZDateTime.from(followUpTime, tz.local),
-            const NotificationDetails(
+            NotificationDetails(
               android: AndroidNotificationDetails(
                 'medication_channel',
                 'Medication Reminders',
@@ -1336,7 +1336,10 @@ Future<void> scheduleMedicationNotification(
                 sound: "notification_sound.wav",
               ),
             ),
-            payload: docId,
+            payload:
+                i == 0
+                    ? 'Time to take ${medication.name}!'
+                    : 'Reminder: Take your ${medication.name}',
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
