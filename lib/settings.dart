@@ -52,20 +52,70 @@ class SettingsPage extends StatelessWidget {
                 tooltip: 'App Info',
                 onPressed: () async {
                   final info = await PackageInfo.fromPlatform();
-                  showAboutDialog(
+                  showDialog(
                     context: context,
-                    applicationName: info.appName,
-                    applicationVersion: info.version,
-                    applicationIcon: const Icon(
-                      Icons.medical_services,
-                      size: 48,
-                      color: Color(0xFF8AC249),
-                    ),
-                    children: [
-                      Text('Build Number: ${info.buildNumber}'),
-                      const SizedBox(height: 8),
-                      const Text('Thank you for using Dawatime!'),
-                    ],
+                    builder:
+                        (context) => AlertDialog(
+                          backgroundColor: const Color(0xFF8AC249),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          title: Row(
+                            children: [
+                              Image.asset(
+                                'assets/DawaTime.png',
+                                width: 48,
+                                height: 48,
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Text(
+                                  info.appName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Version: ${info.version} (Build ${info.buildNumber})',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Thank you for using Dawatime!',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                   );
                 },
               ),
