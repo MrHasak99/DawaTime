@@ -37,7 +37,13 @@ class _SignUpPageState extends State<SignUpPage> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: BackButton(color: Colors.white),
-            title: const Text("Sign Up"),
+            title: Text(
+              "Sign Up",
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             centerTitle: true,
           ),
         ),
@@ -64,16 +70,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Name",
-                      labelStyle: TextStyle(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
-                      enabledBorder: UnderlineInputBorder(
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
@@ -85,16 +91,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Email",
-                      labelStyle: TextStyle(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
-                      enabledBorder: UnderlineInputBorder(
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
                     ),
@@ -180,9 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
@@ -193,7 +197,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               TextSpan(
                                 text: "Terms & Conditions",
-                                style: const TextStyle(
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
@@ -233,9 +237,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
@@ -246,7 +248,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               TextSpan(
                                 text: "Privacy Policy",
-                                style: const TextStyle(
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
@@ -301,11 +303,11 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (passwordController.text !=
                               confirmPasswordController.text) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Color(0xFF8AC249),
+                              SnackBar(
+                                backgroundColor: Colors.red,
                                 content: Text(
                                   "Passwords do not match",
-                                  style: TextStyle(
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
@@ -378,9 +380,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (mounted) setState(() => isLoading = false);
                           }
                         },
-                        child: const Text(
+                        child: Text(
                           "Sign Up",
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

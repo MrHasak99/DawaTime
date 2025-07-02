@@ -45,7 +45,13 @@ class SettingsPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: const BackButton(color: Colors.white),
-            title: const Text("Settings"),
+            title: Text(
+              "Settings",
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.info_outline, color: Colors.white),
@@ -71,7 +77,7 @@ class SettingsPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   info.appName,
-                                  style: const TextStyle(
+                                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 32,
@@ -86,25 +92,25 @@ class SettingsPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Version: ${info.version} (Build ${info.buildNumber})',
-                                style: const TextStyle(
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
+                              Text(
                                 'Developed by: Hamad AlKhalaf',
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
+                              Text(
                                 'Thank you for using Dawatime!',
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -137,16 +143,16 @@ class SettingsPage extends StatelessWidget {
                     builder:
                         (context) => AlertDialog(
                           backgroundColor: Color(0xFF8AC249),
-                          title: const Text(
+                          title: Text(
                             "Log Out",
-                            style: TextStyle(
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          content: const Text(
+                          content: Text(
                             "Are you sure you want to log out?",
-                            style: TextStyle(
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -236,9 +242,7 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 12),
                           Text(
                             "Name: ${data['name'] ?? ''}",
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleMedium?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                             ),
@@ -246,9 +250,7 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 8),
                           Text(
                             "Email: ${user.email ?? ''}",
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
                           ),
                         ],
                       ),
@@ -257,9 +259,9 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.edit, color: Colors.white),
-                    label: const Text(
+                    label: Text(
                       "Edit Profile",
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -296,9 +298,9 @@ class SettingsPage extends StatelessWidget {
                         builder:
                             (context) => AlertDialog(
                               backgroundColor: Color(0xFF8AC249),
-                              title: const Text(
+                              title: Text(
                                 'Edit Profile',
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -310,26 +312,21 @@ class SettingsPage extends StatelessWidget {
                                     TextField(
                                       controller: nameController,
                                       cursorColor: Colors.white,
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white
-                                                : Colors.black,
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
                                         labelText: 'Name',
-                                        labelStyle: TextStyle(
+                                        labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
+                                        focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.white,
                                           ),
                                         ),
-                                        enabledBorder: UnderlineInputBorder(
+                                        enabledBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.white,
                                           ),
@@ -376,18 +373,13 @@ class SettingsPage extends StatelessWidget {
                                                       keyboardType:
                                                           TextInputType
                                                               .emailAddress,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Theme.of(
-                                                                      context,
-                                                                    ).brightness ==
-                                                                    Brightness
-                                                                        .dark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                       decoration: const InputDecoration(
                                                         labelText: 'New Email',
                                                         labelStyle: TextStyle(
@@ -421,18 +413,13 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Theme.of(
-                                                                      context,
-                                                                    ).brightness ==
-                                                                    Brightness
-                                                                        .dark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                       decoration: const InputDecoration(
                                                         labelText:
                                                             'Current Password',
@@ -474,8 +461,7 @@ class SettingsPage extends StatelessWidget {
                                                       'Cancel',
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -605,7 +591,7 @@ class SettingsPage extends StatelessWidget {
                                                   ),
                                                   content: Text(
                                                     'Failed to update email: $e',
-                                                    style: TextStyle(
+                                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                       color: Colors.white,
                                                       fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
@@ -655,16 +641,13 @@ class SettingsPage extends StatelessWidget {
                                                 content: TextField(
                                                   controller: emailController,
                                                   cursorColor: Colors.white,
-                                                  style: TextStyle(
-                                                    color:
-                                                        Theme.of(
-                                                                  context,
-                                                                ).brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                   decoration: const InputDecoration(
                                                     labelText:
                                                         'Please enter your email',
@@ -704,8 +687,7 @@ class SettingsPage extends StatelessWidget {
                                                       'Cancel',
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -814,9 +796,9 @@ class SettingsPage extends StatelessWidget {
                                           context: context,
                                           builder:
                                               (context) => AlertDialog(
-                                                title: const Text(
+                                                title: Text(
                                                   "Delete Account",
-                                                  style: TextStyle(
+                                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -842,18 +824,13 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController1,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Theme.of(
-                                                                      context,
-                                                                    ).brightness ==
-                                                                    Brightness
-                                                                        .dark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                       decoration: const InputDecoration(
                                                         labelText:
                                                             'Enter Your Password',
@@ -888,18 +865,13 @@ class SettingsPage extends StatelessWidget {
                                                           passwordController2,
                                                       obscureText: true,
                                                       cursorColor: Colors.white,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Theme.of(
-                                                                      context,
-                                                                    ).brightness ==
-                                                                    Brightness
-                                                                        .dark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                       decoration: const InputDecoration(
                                                         labelText:
                                                             'Confirm Password',
@@ -941,8 +913,7 @@ class SettingsPage extends StatelessWidget {
                                                       "Cancel",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -1195,9 +1166,9 @@ class SettingsPage extends StatelessWidget {
                                           }
                                         }
                                       },
-                                      label: const Text(
+                                      label: Text(
                                         "Delete Account",
-                                        style: TextStyle(
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -1280,12 +1251,9 @@ class SettingsPage extends StatelessWidget {
                                           controller: passwordController,
                                           obscureText: true,
                                           cursorColor: Colors.white,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: const InputDecoration(
@@ -1445,9 +1413,9 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.email, color: Colors.white),
-                    label: const Text(
+                    label: Text(
                       "Contact Me",
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1485,18 +1453,15 @@ class SettingsPage extends StatelessWidget {
                                 controller: messageController,
                                 maxLines: 5,
                                 cursorColor: Colors.white,
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                                 decoration: InputDecoration(
                                   hintText: "Write your message here...",
-                                  hintStyle: const TextStyle(
+                                  hintStyle: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.copyWith(
                                     color: Colors.white70,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                   filled: true,
                                   fillColor: Colors.white.withValues(
@@ -1644,9 +1609,11 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       'Theme',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     subtitle: ValueListenableBuilder<ThemeMode>(
                       valueListenable: themeModeNotifier,
@@ -1656,15 +1623,24 @@ class SettingsPage extends StatelessWidget {
                           items: const [
                             DropdownMenuItem(
                               value: ThemeMode.system,
-                              child: Text('System (Follow device)'),
+                              child: Text(
+                                'System (Follow device)',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                             DropdownMenuItem(
                               value: ThemeMode.light,
-                              child: Text('Light'),
+                              child: Text(
+                                'Light',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                             DropdownMenuItem(
                               value: ThemeMode.dark,
-                              child: Text('Dark'),
+                              child: Text(
+                                'Dark',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
                             ),
                           ],
                           onChanged: (ThemeMode? newMode) {

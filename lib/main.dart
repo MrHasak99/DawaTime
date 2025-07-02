@@ -227,12 +227,30 @@ class MainApp extends StatelessWidget {
               labelLarge: TextStyle(fontFamily: 'Inter', color: Colors.black),
               labelMedium: TextStyle(fontFamily: 'Inter', color: Colors.black),
               labelSmall: TextStyle(fontFamily: 'Inter', color: Colors.black),
-              displayLarge: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              displayMedium: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              displaySmall: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              headlineLarge: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              headlineMedium: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              headlineSmall: TextStyle(fontFamily: 'Nunito', color: Colors.black),
+              displayLarge: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
+              displayMedium: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
+              displaySmall: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
+              headlineLarge: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
+              headlineMedium: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
+              headlineSmall: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.black,
+              ),
             ),
           ),
           darkTheme: ThemeData(
@@ -280,12 +298,30 @@ class MainApp extends StatelessWidget {
               labelLarge: TextStyle(fontFamily: 'Inter', color: Colors.white),
               labelMedium: TextStyle(fontFamily: 'Inter', color: Colors.white),
               labelSmall: TextStyle(fontFamily: 'Inter', color: Colors.white),
-              displayLarge: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              displayMedium: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              displaySmall: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              headlineLarge: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              headlineMedium: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              headlineSmall: TextStyle(fontFamily: 'Nunito', color: Colors.white),
+              displayLarge: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
+              displayMedium: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
+              displaySmall: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
+              headlineLarge: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
+              headlineMedium: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
+              headlineSmall: TextStyle(
+                fontFamily: 'Nunito',
+                color: Colors.white,
+              ),
             ),
           ),
           themeMode: mode,

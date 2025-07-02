@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Color(0xFF8AC249),
             content: Text(
               "Your account has been deleted successfully.",
-              style: TextStyle(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Inter',
@@ -195,9 +195,9 @@ class _LoginPageState extends State<LoginPage> {
                             if (mounted) setState(() => isLoading = false);
                           }
                         },
-                        child: const Text(
+                        child: Text(
                           "Login",
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -388,7 +388,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text(
                       "Forgot Password?",
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),

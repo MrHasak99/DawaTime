@@ -76,7 +76,15 @@ class _AddMedicationsState extends State<AddMedications> {
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
-                        decoration: const InputDecoration(labelText: "Name"),
+                        decoration: InputDecoration(
+                          labelText: "Name",
+                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
@@ -85,8 +93,14 @@ class _AddMedicationsState extends State<AddMedications> {
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: "Unit of Measurement",
+                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -100,8 +114,14 @@ class _AddMedicationsState extends State<AddMedications> {
                               keyboardType: TextInputType.number,
                               style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: "Dosage",
+                                labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -121,8 +141,14 @@ class _AddMedicationsState extends State<AddMedications> {
                               keyboardType: TextInputType.number,
                               style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: "Frequency",
+                                labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -144,8 +170,14 @@ class _AddMedicationsState extends State<AddMedications> {
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: "Current Amount",
+                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -154,8 +186,9 @@ class _AddMedicationsState extends State<AddMedications> {
                           _selectedTime == null
                               ? "Pick Notification Time"
                               : "Notify at: ${_selectedTime!.format(context)}",
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         trailing: Icon(Icons.access_time),
                         onTap: () async {
@@ -268,7 +301,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                         backgroundColor: Colors.red,
                                         content: Text(
                                           "Dosage and Frequency must be greater than 0",
-                                          style: const TextStyle(
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Inter',
@@ -355,7 +388,10 @@ class _AddMedicationsState extends State<AddMedications> {
                               ),
                               child: Text(
                                 "Save Medication",
-                                style: TextStyle(color: Colors.white),
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

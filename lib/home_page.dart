@@ -422,7 +422,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 content: Text(
                                   'Are you sure you want to delete ${medication.name}?',
-                                  style: const TextStyle(
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -505,172 +505,106 @@ class _HomePageState extends State<HomePage> {
                                           TextField(
                                             controller: nameController,
                                             cursorColor: Colors.white,
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                            textCapitalization: TextCapitalization.words,
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               labelText: 'Name',
-                                              labelStyle: TextStyle(
+                                              labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                              focusedBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
+                                              enabledBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                           TextField(
                                             controller: typeController,
                                             cursorColor: Colors.white,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               labelText: 'Unit of Measurement',
-                                              labelStyle: TextStyle(
+                                              labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                              focusedBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
+                                              enabledBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                           TextField(
                                             controller: dosageController,
                                             cursorColor: Colors.white,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               labelText: 'Dosage',
-                                              labelStyle: TextStyle(
+                                              labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                              focusedBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
+                                              enabledBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                           TextField(
                                             controller: frequencyController,
                                             cursorColor: Colors.white,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               labelText:
                                                   'Frequency (every x days)',
-                                              labelStyle: TextStyle(
+                                              labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                              focusedBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
+                                              enabledBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                           TextField(
                                             controller: amountController,
                                             cursorColor: Colors.white,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               labelText: 'Current Amount',
-                                              labelStyle: TextStyle(
+                                              labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                              focusedBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
+                                              enabledBorder: const UnderlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                           ListTile(
@@ -880,8 +814,7 @@ class _HomePageState extends State<HomePage> {
                                                     "Dosage and Frequency must be greater than 0",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),
@@ -949,8 +882,7 @@ class _HomePageState extends State<HomePage> {
                                                     'Medication updated!',
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),
@@ -997,8 +929,7 @@ class _HomePageState extends State<HomePage> {
                                                     'Failed to add medication: $e',
                                                     style: const TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),
@@ -1119,7 +1050,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         title: Text(
                           medication.name,
-                          style: const TextStyle(
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -1130,7 +1061,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
-                              style: const TextStyle(
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1146,9 +1077,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               )
                             else
-                              const Text(
+                              Text(
                                 "Out of stock",
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1156,7 +1087,7 @@ class _HomePageState extends State<HomePage> {
                             if (getNextReminder(medication) != null)
                               Text(
                                 "Next reminder: ${getNextReminder(medication)!}",
-                                style: const TextStyle(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -1367,8 +1298,8 @@ class MedicationDetailsCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontSize: 26,
                   color: const Color(0xFF8AC249),
-                  fontFamily: 'Inter',
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
                 ),
               ),
             ),
@@ -1470,9 +1401,11 @@ class _DetailRow extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style:
-                valueStyle ??
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+            style: valueStyle ??
+                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
