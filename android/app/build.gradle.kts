@@ -30,7 +30,7 @@ android {
         minSdkVersion(23)
         targetSdkVersion(34)
         
-        versionCode = 3
+        versionCode = 4
         versionName = "1.0.0"
     }
 

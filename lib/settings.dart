@@ -7,6 +7,7 @@ import 'package:dawatime/main.dart'
         flutterLocalNotificationsPlugin,
         notificationsInitialized,
         themeModeNotifier;
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -46,6 +47,28 @@ class SettingsPage extends StatelessWidget {
             leading: const BackButton(color: Colors.white),
             title: const Text("Settings"),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.info_outline, color: Colors.white),
+                tooltip: 'App Info',
+                onPressed: () async {
+                  final info = await PackageInfo.fromPlatform();
+                  showAboutDialog(
+                    context: context,
+                    applicationName: info.appName,
+                    applicationVersion: info.version,
+                    applicationIcon: const Icon(
+                      Icons.medical_services,
+                      size: 48,
+                      color: Color(0xFF8AC249),
+                    ),
+                    children: [
+                      Text('Build Number: ${info.buildNumber}'),
+                      const SizedBox(height: 8),
+                      const Text('Thank you for using Dawatime!'),
+                    ],
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.logout, color: Colors.white),
                 tooltip: 'Logout',
