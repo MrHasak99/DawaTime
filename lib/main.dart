@@ -81,46 +81,6 @@ Future<void> main() async {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
-        onDidReceiveLocalNotification: (id, title, body, payload) async {
-          if (navigatorKey.currentContext != null) {
-            showDialog(
-              context: navigatorKey.currentContext!,
-              builder:
-                  (context) => AlertDialog(
-                    backgroundColor: const Color(0xFF8AC249),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    title: Text(
-                      title ?? 'Notification',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: Text(
-                      body ?? '',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-            );
-          }
-        },
       );
 
   final InitializationSettings initializationSettings = InitializationSettings(
@@ -131,98 +91,46 @@ Future<void> main() async {
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {
-      if (response.notificationResponseType ==
-              NotificationResponseType.selectedNotification ||
-          response.notificationResponseType ==
-              NotificationResponseType.selectedNotificationAction) {
-        if (navigatorKey.currentContext != null && response.payload != null) {
-          showDialog(
-            context: navigatorKey.currentContext!,
-            builder:
-                (context) => AlertDialog(
-                  backgroundColor: const Color(0xFF8AC249),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+      if (navigatorKey.currentContext != null && response.payload != null) {
+        showDialog(
+          context: navigatorKey.currentContext!,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: const Color(0xFF8AC249),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                title: const Text(
+                  'Notification',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  title: const Text(
-                    'Notification',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                content: Text(
+                  response.payload!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  content: Text(
-                    response.payload!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text(
-                        'OK',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-          );
-        }
+                  ),
+                ],
+              ),
+        );
       }
     },
   );
-
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.setOnNotificationReceivedInForeground((
-        NotificationResponse response,
-      ) async {
-        if (navigatorKey.currentContext != null && response.payload != null) {
-          showDialog(
-            context: navigatorKey.currentContext!,
-            builder:
-                (context) => AlertDialog(
-                  backgroundColor: const Color(0xFF8AC249),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  title: const Text(
-                    'Notification',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  content: Text(
-                    response.payload!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text(
-                        'OK',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-          );
-        }
-      });
 
   notificationsInitialized = true;
 

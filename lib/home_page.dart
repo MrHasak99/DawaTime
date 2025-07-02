@@ -1332,7 +1332,9 @@ Future<void> scheduleMedicationNotification(
                 ),
               ),
               iOS: DarwinNotificationDetails(
+                presentAlert: true,
                 presentSound: true,
+                presentBadge: true,
                 sound: "notification_sound.wav",
               ),
             ),
