@@ -1438,7 +1438,6 @@ class SettingsPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  // --- End Edit Profile Button ---
                   ElevatedButton.icon(
                     icon: const Icon(Icons.email, color: Colors.white),
                     label: const Text(
