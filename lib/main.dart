@@ -283,3 +283,8 @@ Future<void> requestExactAlarmPermission() async {
     await Permission.scheduleExactAlarm.request();
   }
 }
+
+bool isAppInForeground() {
+  final state = WidgetsBinding.instance.lifecycleState;
+  return state == AppLifecycleState.resumed;
+}

@@ -72,6 +72,10 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? _recentlyDeletedData;
   String? _recentlyDeletedDocId;
 
+  Timer? _medicationCheckTimer;
+
+  final Set<String> _shownNotifications = {};
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -104,6 +108,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initBackgroundFetch();
+
+    _medicationCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      _checkAndShowDueMedications();
+    });
+
     selectNotificationStream.stream.listen((
       NotificationResponse response,
     ) async {
@@ -159,6 +168,75 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    _medicationCheckTimer?.cancel();
+    super.dispose();
+  }
+
+  void _checkAndShowDueMedications() async {
+    if (!isAppInForeground()) return;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final medsSnapshot =
+        await FirebaseFirestore.instance.collection(user.uid).get();
+    final now = DateTime.now();
+
+    for (var doc in medsSnapshot.docs) {
+      final medication = medicationFromDoc(doc);
+      if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
+        continue;
+      }
+      final timeParts = medication.notifyTime!.split(':');
+      if (timeParts.length != 2) continue;
+      final hour = int.tryParse(timeParts[0]);
+      final minute = int.tryParse(timeParts[1]);
+      if (hour == null || minute == null) continue;
+
+      final notificationKey =
+          '${doc.id}_${now.year}_${now.month}_${now.day}_${now.hour}_${now.minute}';
+
+      if ((now.hour == hour && now.minute == minute) &&
+          !_shownNotifications.contains(notificationKey) &&
+          medication.amount > 0) {
+        _shownNotifications.add(notificationKey);
+
+        if (navigatorKey.currentContext != null) {
+          showDialog(
+            context: navigatorKey.currentContext!,
+            builder:
+                (context) => AlertDialog(
+                  backgroundColor: const Color(0xFF8AC249),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  title: Text(
+                    'Time to take ${medication.name}!',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        'OK',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+          );
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -172,10 +250,18 @@ class _HomePageState extends State<HomePage> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${deletedMedication!.name} deleted!'),
+            backgroundColor: const Color(0xFF8AC249),
+            content: Text(
+              '${deletedMedication!.name} deleted!',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              ),
+            ),
             action: SnackBarAction(
               label: 'Undo',
-              textColor: Colors.red,
+              textColor: Colors.white,
               onPressed: () async {
                 try {
                   await firestore
@@ -189,9 +275,19 @@ class _HomePageState extends State<HomePage> {
                   );
                   if (mounted) setState(() {});
                 } catch (e) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Undo failed: $e')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: const Color(0xFF8AC249),
+                      content: Text(
+                        'Undo failed: $e',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                        ),
+                      ),
+                    ),
+                  );
                 }
               },
             ),
@@ -269,10 +365,13 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Icon(Icons.medication, color: Color(0xFF8AC249), size: 64),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     "No Medications Found",
                     style: TextStyle(
-                      color: Colors.black,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
@@ -412,8 +511,14 @@ class _HomePageState extends State<HomePage> {
                                             cursorColor: Colors.white,
                                             textCapitalization:
                                                 TextCapitalization.words,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             decoration: const InputDecoration(
@@ -439,8 +544,14 @@ class _HomePageState extends State<HomePage> {
                                           TextField(
                                             controller: typeController,
                                             cursorColor: Colors.white,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             decoration: const InputDecoration(
@@ -466,8 +577,14 @@ class _HomePageState extends State<HomePage> {
                                           TextField(
                                             controller: dosageController,
                                             cursorColor: Colors.white,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
@@ -494,8 +611,14 @@ class _HomePageState extends State<HomePage> {
                                           TextField(
                                             controller: frequencyController,
                                             cursorColor: Colors.white,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
@@ -523,8 +646,14 @@ class _HomePageState extends State<HomePage> {
                                           TextField(
                                             controller: amountController,
                                             cursorColor: Colors.white,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             keyboardType: TextInputType.number,
@@ -553,15 +682,27 @@ class _HomePageState extends State<HomePage> {
                                               localNotifyTime == null
                                                   ? "Pick Notification Time"
                                                   : "Notify at: ${localNotifyTime!.format(context)}",
-                                              style: const TextStyle(
-                                                color: Colors.black,
+                                              style: TextStyle(
+                                                color:
+                                                    Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            trailing: const Icon(
+                                            trailing: Icon(
                                               Icons.access_time,
-                                              color: Colors.black,
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                             ),
                                             onTap: () async {
                                               final picked = await showTimePicker(
@@ -723,8 +864,17 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).showSnackBar(
                                                 const SnackBar(
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: Text(
                                                     "Dosage and Frequency must be greater than 0",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -783,12 +933,21 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
+                                                  backgroundColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: const Text(
                                                     'Medication updated!',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                   action: SnackBarAction(
                                                     label: 'Undo',
-                                                    textColor: Colors.red,
+                                                    textColor: Colors.white,
                                                     onPressed: () async {
                                                       await firestore
                                                           .collection(
@@ -822,8 +981,17 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).showSnackBar(
                                                 SnackBar(
+                                                  backgroundColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                   content: Text(
                                                     'Failed to add medication: $e',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -834,8 +1002,16 @@ class _HomePageState extends State<HomePage> {
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
+                                                backgroundColor: const Color(
+                                                  0xFF8AC249,
+                                                ),
                                                 content: Text(
                                                   "Please fill all fields",
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Nunito',
+                                                  ),
                                                 ),
                                               ),
                                             );
@@ -893,8 +1069,14 @@ class _HomePageState extends State<HomePage> {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             ScaffoldMessenger.of(scaffoldContext).showSnackBar(
                               SnackBar(
+                                backgroundColor: const Color(0xFF8AC249),
                                 content: Text(
                                   'Failed to delete medication: $e',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
                                 ),
                               ),
                             );
@@ -1067,8 +1249,14 @@ class _HomePageState extends State<HomePage> {
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      backgroundColor: const Color(0xFF8AC249),
                                       content: Text(
                                         'Failed to update medication: $e',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Nunito',
+                                        ),
                                       ),
                                     ),
                                   );
@@ -1292,12 +1480,6 @@ Future<void> scheduleMedicationNotification(
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
-  // final isDue =
-  //     scheduledTime.difference(now).inDays == 0 &&
-  //     scheduledTime.isBefore(now.add(const Duration(days: 1)));
-  // if (!isDue && !forceNextDay) {
-  //   return;
-  // }
 
   for (int i = 0; i < 5 * 9; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
@@ -1311,39 +1493,78 @@ Future<void> scheduleMedicationNotification(
       if (baseTime.isAfter(now)) {
         for (int i = 0; i <= 8; i++) {
           final followUpTime = baseTime.add(Duration(minutes: 15 * i));
-          await flutterLocalNotificationsPlugin.zonedSchedule(
-            docId.hashCode + day * 9 + i,
-            'DawaTime',
-            i == 0
-                ? 'Time to take ${medication.name}!'
-                : 'Reminder: Take your ${medication.name}',
-            tz.TZDateTime.from(followUpTime, tz.local),
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                'medication_channel',
-                'Medication Reminders',
-                channelDescription: 'Reminds you to take your medication',
-                importance: Importance.max,
-                priority: Priority.high,
-                playSound: true,
-                icon: '@mipmap/ic_launcher',
-                sound: RawResourceAndroidNotificationSound(
-                  'notification_sound',
+          final notificationMessage =
+              i == 0
+                  ? 'Time to take ${medication.name}!'
+                  : 'Reminder: Take your ${medication.name}';
+
+          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+          final nowTZ = tz.TZDateTime.now(tz.local);
+
+          if (isAppInForeground() &&
+              scheduledTZ.isBefore(nowTZ.add(const Duration(seconds: 2))) &&
+              scheduledTZ.isAfter(nowTZ.subtract(const Duration(seconds: 2)))) {
+            if (navigatorKey.currentContext != null) {
+              showDialog(
+                context: navigatorKey.currentContext!,
+                builder:
+                    (context) => AlertDialog(
+                      backgroundColor: const Color(0xFF8AC249),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      title: Text(
+                        notificationMessage,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              );
+            }
+          } else {
+            await flutterLocalNotificationsPlugin.zonedSchedule(
+              docId.hashCode + day * 9 + i,
+              'DawaTime',
+              notificationMessage,
+              scheduledTZ,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  'medication_channel',
+                  'Medication Reminders',
+                  channelDescription: 'Reminds you to take your medication',
+                  importance: Importance.max,
+                  priority: Priority.high,
+                  playSound: true,
+                  icon: '@mipmap/ic_launcher',
+                  sound: RawResourceAndroidNotificationSound(
+                    'notification_sound',
+                  ),
+                ),
+                iOS: DarwinNotificationDetails(
+                  presentAlert: true,
+                  presentSound: true,
+                  presentBadge: true,
+                  sound: "notification_sound.wav",
                 ),
               ),
-              iOS: DarwinNotificationDetails(
-                presentAlert: true,
-                presentSound: true,
-                presentBadge: true,
-                sound: "notification_sound.wav",
-              ),
-            ),
-            payload:
-                i == 0
-                    ? 'Time to take ${medication.name}!'
-                    : 'Reminder: Take your ${medication.name}',
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );
+              payload: notificationMessage,
+              androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            );
+          }
         }
       }
     }
@@ -1352,8 +1573,14 @@ Future<void> scheduleMedicationNotification(
       if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            backgroundColor: const Color(0xFF8AC249),
             content: const Text(
               'Please allow "Schedule exact alarms" in system settings.',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              ),
             ),
             action: SnackBarAction(
               label: 'Open Settings',
@@ -1363,7 +1590,17 @@ Future<void> scheduleMedicationNotification(
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to schedule notification: $e')),
+          SnackBar(
+            backgroundColor: const Color(0xFF8AC249),
+            content: Text(
+              'Failed to schedule notification: $e',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              ),
+            ),
+          ),
         );
       }
     }
