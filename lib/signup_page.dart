@@ -17,6 +17,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
   bool isLoading = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   bool _acceptedTerms = false;
   bool _acceptedPrivacy = false;
@@ -101,10 +103,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: passwordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
+                    obscureText: _obscurePassword,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Password",
                       labelStyle: TextStyle(
                         color: Color(0xFF8AC249),
@@ -116,17 +119,28 @@ class _SignUpPageState extends State<SignUpPage> {
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          color: Color(0xFF8AC249),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
                   ),
                   TextField(
                     controller: confirmPasswordController,
                     cursorColor: Color(0xFF8AC249),
                     keyboardType: TextInputType.visiblePassword,
+                    obscureText: _obscureConfirmPassword,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Confirm Password",
                       labelStyle: TextStyle(
                         color: Color(0xFF8AC249),
@@ -138,8 +152,18 @@ class _SignUpPageState extends State<SignUpPage> {
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                          color: Color(0xFF8AC249),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureConfirmPassword = !_obscureConfirmPassword;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
                   ),
                   const SizedBox(height: 16),
                   Row(
