@@ -72,12 +72,18 @@ class _AddMedicationsState extends State<AddMedications> {
                     children: [
                       TextField(
                         controller: nameController,
-                        decoration: InputDecoration(labelText: "Name"),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: const InputDecoration(labelText: "Name"),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: typeOfMedicationController,
-                        decoration: InputDecoration(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: const InputDecoration(
                           labelText: "Unit of Measurement",
                         ),
                       ),
@@ -89,7 +95,11 @@ class _AddMedicationsState extends State<AddMedications> {
                             child: TextField(
                               controller: dosageController,
                               keyboardType: TextInputType.number,
-                              decoration: InputDecoration(labelText: "Dosage"),
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              decoration: const InputDecoration(
+                                labelText: "Dosage",
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -105,6 +115,8 @@ class _AddMedicationsState extends State<AddMedications> {
                             child: TextField(
                               controller: frequencyController,
                               keyboardType: TextInputType.number,
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                               decoration: const InputDecoration(
                                 labelText: "Frequency",
                               ),
@@ -124,7 +136,10 @@ class _AddMedicationsState extends State<AddMedications> {
                       TextField(
                         controller: amountController,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: const InputDecoration(
                           labelText: "Current Amount",
                         ),
                       ),
@@ -134,13 +149,8 @@ class _AddMedicationsState extends State<AddMedications> {
                           _selectedTime == null
                               ? "Pick Notification Time"
                               : "Notify at: ${_selectedTime!.format(context)}",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(Icons.access_time),
                         onTap: () async {
