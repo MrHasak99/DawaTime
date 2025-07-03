@@ -6,8 +6,15 @@ import 'package:dawatime/login_page.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
+  final Medications? medication;
+  final String? docId;
 
-  const AddMedications({super.key, required this.uid});
+  const AddMedications({
+    super.key,
+    required this.uid,
+    this.medication,
+    this.docId,
+  });
 
   @override
   State<AddMedications> createState() => _AddMedicationsState();
@@ -21,6 +28,27 @@ class _AddMedicationsState extends State<AddMedications> {
   TextEditingController amountController = TextEditingController();
   TextEditingController frequencyController = TextEditingController();
   TimeOfDay? _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.medication != null) {
+      nameController.text = widget.medication!.name;
+      typeOfMedicationController.text = widget.medication!.typeOfMedication;
+      dosageController.text = widget.medication!.dosage.toString();
+      frequencyController.text = widget.medication!.frequency.toString();
+      amountController.text = widget.medication!.amount.toString();
+      if (widget.medication!.notifyTime != null && widget.medication!.notifyTime!.isNotEmpty) {
+        final parts = widget.medication!.notifyTime!.split(':');
+        if (parts.length == 2) {
+          _selectedTime = TimeOfDay(
+            hour: int.tryParse(parts[0]) ?? 0,
+            minute: int.tryParse(parts[1]) ?? 0,
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,43 +340,43 @@ class _AddMedicationsState extends State<AddMedications> {
                                     return;
                                   }
                                   try {
-                                    final docRef = await firestore
-                                        .collection(widget.uid)
-                                        .add({
-                                          'name': nameController.text,
-                                          'typeOfMedication':
-                                              typeOfMedicationController.text,
-                                          'dosage':
-                                              double.tryParse(
-                                                dosageController.text,
-                                              ) ??
-                                              0,
-                                          'frequency':
-                                              int.tryParse(
-                                                frequencyController.text,
-                                              ) ??
-                                              0,
-                                          'amount':
-                                              double.tryParse(
-                                                amountController.text,
-                                              ) ??
-                                              0,
-                                          'notifyTime':
-                                              _selectedTime != null
-                                                  ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                  : '',
-                                        });
-                                    final newDoc = await docRef.get();
-                                    final newMedication = medicationFromDoc(
-                                      newDoc,
-                                    );
-
-                                    await scheduleMedicationNotification(
-                                      context,
-                                      docRef.id,
-                                      newMedication,
-                                    );
-
+                                    if (widget.docId != null) {
+                                      await firestore.collection(widget.uid).doc(widget.docId).update({
+                                        'name': nameController.text,
+                                        'typeOfMedication': typeOfMedicationController.text,
+                                        'dosage': double.tryParse(dosageController.text) ?? 0,
+                                        'frequency': int.tryParse(frequencyController.text) ?? 0,
+                                        'amount': double.tryParse(amountController.text) ?? 0,
+                                        'notifyTime': _selectedTime != null
+                                            ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                            : '',
+                                      });
+                                      final updatedDoc = await firestore.collection(widget.uid).doc(widget.docId).get();
+                                      final updatedMedication = medicationFromDoc(updatedDoc);
+                                      await scheduleMedicationNotification(
+                                        context,
+                                        widget.docId!,
+                                        updatedMedication,
+                                      );
+                                    } else {
+                                      final docRef = await firestore.collection(widget.uid).add({
+                                        'name': nameController.text,
+                                        'typeOfMedication': typeOfMedicationController.text,
+                                        'dosage': double.tryParse(dosageController.text) ?? 0,
+                                        'frequency': int.tryParse(frequencyController.text) ?? 0,
+                                        'amount': double.tryParse(amountController.text) ?? 0,
+                                        'notifyTime': _selectedTime != null
+                                            ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                            : '',
+                                      });
+                                      final newDoc = await docRef.get();
+                                      final newMedication = medicationFromDoc(newDoc);
+                                      await scheduleMedicationNotification(
+                                        context,
+                                        docRef.id,
+                                        newMedication,
+                                      );
+                                    }
                                     if (!context.mounted) return;
                                     Navigator.pop(context);
                                   } catch (e) {
@@ -356,7 +384,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                       SnackBar(
                                         backgroundColor: Colors.red,
                                         content: Text(
-                                          'Failed to add medication: $e',
+                                          'Failed to save medication: $e',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
