@@ -1,4 +1,4 @@
-package com.example.medication_app_full
+package com.MrHasak99.DawaTime
 
 import io.flutter.embedding.android.FlutterActivity
 
