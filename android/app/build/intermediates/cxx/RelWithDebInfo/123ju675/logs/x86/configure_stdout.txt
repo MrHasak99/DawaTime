@@ -13,4 +13,4 @@ Not searching for unused variables given on the command line.
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/Hamad/Desktop/Coding Projects/Flutter Projects/Projects/medication_app_full/android/app/.cxx/RelWithDebInfo/123ju675/x86
+-- Build files have been written to: /Users/Hamad/Desktop/Coding Projects/Flutter Projects/Projects/DawaTime/android/app/.cxx/RelWithDebInfo/123ju675/x86
