@@ -389,8 +389,18 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(10),
                     child: Dismissible(
                       key: Key(docs[index].id),
-                      direction: DismissDirection.endToStart,
+                      direction: DismissDirection.horizontal,
                       background: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        color: Colors.blue,
+                        child: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      ),
+                      secondaryBackground: Container(
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         color: Colors.red,
@@ -401,99 +411,117 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       confirmDismiss: (direction) async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                backgroundColor: const Color(0xFF8AC249),
-                                title: Text(
-                                  'Delete Medication',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleLarge?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                        if (direction == DismissDirection.startToEnd) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => AddMedications(
+                                    uid: widget.uid!,
+                                    medication: medication,
+                                    docId: docs[index].id,
                                   ),
-                                ),
-                                content: Text(
-                                  'Are you sure you want to delete ${medication.name}?',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.pop(context, false),
-                                    child: Text(
-                                      'Cancel',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyLarge?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    onPressed:
-                                        () => Navigator.pop(context, true),
-                                    child: Text(
-                                      'Delete',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyLarge?.copyWith(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        );
-                        return confirm == true;
-                      },
-                      onDismissed: (direction) async {
-                        final deletedDocId = docs[index].id;
-                        final deletedData =
-                            docs[index].data() as Map<String, dynamic>;
-                        final deletedMedication = medicationFromDoc(
-                          docs[index],
-                        );
-                        try {
-                          await firestore
-                              .collection(widget.uid!)
-                              .doc(deletedDocId)
-                              .delete();
-                          await flutterLocalNotificationsPlugin.cancel(
-                            deletedDocId.hashCode,
-                          );
-
-                          setState(() {
-                            _recentlyDeletedMedication = deletedMedication;
-                            _recentlyDeletedData = deletedData;
-                            _recentlyDeletedDocId = deletedDocId;
-                          });
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: const Color(0xFF8AC249),
-                              content: Text(
-                                'Failed to delete medication: $e',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
                             ),
                           );
+                          return false;
+                        } else if (direction == DismissDirection.endToStart) {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: const Color(0xFF8AC249),
+                                  title: Text(
+                                    'Delete Medication',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    'Are you sure you want to delete ${medication.name}?',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.pop(context, false),
+                                      child: Text(
+                                        'Cancel',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onPressed:
+                                          () => Navigator.pop(context, true),
+                                      child: Text(
+                                        'Delete',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          );
+                          return confirm == true;
+                        }
+                        return false;
+                      },
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          final deletedDocId = docs[index].id;
+                          final deletedData =
+                              docs[index].data() as Map<String, dynamic>;
+                          final deletedMedication = medicationFromDoc(
+                            docs[index],
+                          );
+                          try {
+                            await firestore
+                                .collection(widget.uid!)
+                                .doc(deletedDocId)
+                                .delete();
+                            await flutterLocalNotificationsPlugin.cancel(
+                              deletedDocId.hashCode,
+                            );
+
+                            setState(() {
+                              _recentlyDeletedMedication = deletedMedication;
+                              _recentlyDeletedData = deletedData;
+                              _recentlyDeletedDocId = deletedDocId;
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: const Color(0xFF8AC249),
+                                content: Text(
+                                  'Failed to delete medication: $e',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: SizedBox(
@@ -1104,6 +1132,12 @@ Future<void> openExactAlarmSettings() async {
 Future<void> requestExactAlarmPermission() async {
   if (await Permission.scheduleExactAlarm.isDenied) {
     await Permission.scheduleExactAlarm.request();
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
   }
 }
 

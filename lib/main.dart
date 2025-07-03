@@ -377,3 +377,9 @@ bool isAppInForeground() {
   final state = WidgetsBinding.instance.lifecycleState;
   return state == AppLifecycleState.resumed;
 }
+
+Future<void> requestNotificationPermission() async {
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+}
