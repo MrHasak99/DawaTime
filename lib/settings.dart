@@ -34,12 +34,13 @@ class SettingsPage extends StatelessWidget {
         .doc(user.uid);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
             color: Color(0xFF8AC249),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: BorderRadius.all(Radius.circular(14)),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,

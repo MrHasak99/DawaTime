@@ -38,7 +38,8 @@ class _AddMedicationsState extends State<AddMedications> {
       dosageController.text = widget.medication!.dosage.toString();
       frequencyController.text = widget.medication!.frequency.toString();
       amountController.text = widget.medication!.amount.toString();
-      if (widget.medication!.notifyTime != null && widget.medication!.notifyTime!.isNotEmpty) {
+      if (widget.medication!.notifyTime != null &&
+          widget.medication!.notifyTime!.isNotEmpty) {
         final parts = widget.medication!.notifyTime!.split(':');
         if (parts.length == 2) {
           _selectedTime = TimeOfDay(
@@ -68,12 +69,13 @@ class _AddMedicationsState extends State<AddMedications> {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
             color: Color(0xFF8AC249),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+            borderRadius: BorderRadius.all(Radius.circular(14)),
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
@@ -106,10 +108,13 @@ class _AddMedicationsState extends State<AddMedications> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Name",
-                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                          labelStyle: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -123,10 +128,13 @@ class _AddMedicationsState extends State<AddMedications> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Unit of Measurement",
-                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                          labelStyle: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -144,10 +152,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                   ?.copyWith(fontWeight: FontWeight.bold),
                               decoration: InputDecoration(
                                 labelText: "Dosage",
-                                labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Theme.of(context).brightness == Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                                labelStyle: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.copyWith(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -171,10 +183,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                   ?.copyWith(fontWeight: FontWeight.bold),
                               decoration: InputDecoration(
                                 labelText: "Frequency",
-                                labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Theme.of(context).brightness == Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                                labelStyle: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.copyWith(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -200,10 +216,13 @@ class _AddMedicationsState extends State<AddMedications> {
                         ),
                         decoration: InputDecoration(
                           labelText: "Current Amount",
-                          labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
+                          labelStyle: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -214,9 +233,8 @@ class _AddMedicationsState extends State<AddMedications> {
                           _selectedTime == null
                               ? "Pick Notification Time"
                               : "Notify at: ${_selectedTime!.format(context)}",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(Icons.access_time),
                         onTap: () async {
@@ -329,7 +347,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                         backgroundColor: Colors.red,
                                         content: Text(
                                           "Dosage and Frequency must be greater than 0",
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Inter',
@@ -341,36 +361,76 @@ class _AddMedicationsState extends State<AddMedications> {
                                   }
                                   try {
                                     if (widget.docId != null) {
-                                      await firestore.collection(widget.uid).doc(widget.docId).update({
-                                        'name': nameController.text,
-                                        'typeOfMedication': typeOfMedicationController.text,
-                                        'dosage': double.tryParse(dosageController.text) ?? 0,
-                                        'frequency': int.tryParse(frequencyController.text) ?? 0,
-                                        'amount': double.tryParse(amountController.text) ?? 0,
-                                        'notifyTime': _selectedTime != null
-                                            ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                            : '',
-                                      });
-                                      final updatedDoc = await firestore.collection(widget.uid).doc(widget.docId).get();
-                                      final updatedMedication = medicationFromDoc(updatedDoc);
+                                      await firestore
+                                          .collection(widget.uid)
+                                          .doc(widget.docId)
+                                          .update({
+                                            'name': nameController.text,
+                                            'typeOfMedication':
+                                                typeOfMedicationController.text,
+                                            'dosage':
+                                                double.tryParse(
+                                                  dosageController.text,
+                                                ) ??
+                                                0,
+                                            'frequency':
+                                                int.tryParse(
+                                                  frequencyController.text,
+                                                ) ??
+                                                0,
+                                            'amount':
+                                                double.tryParse(
+                                                  amountController.text,
+                                                ) ??
+                                                0,
+                                            'notifyTime':
+                                                _selectedTime != null
+                                                    ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                    : '',
+                                          });
+                                      final updatedDoc =
+                                          await firestore
+                                              .collection(widget.uid)
+                                              .doc(widget.docId)
+                                              .get();
+                                      final updatedMedication =
+                                          medicationFromDoc(updatedDoc);
                                       await scheduleMedicationNotification(
                                         context,
                                         widget.docId!,
                                         updatedMedication,
                                       );
                                     } else {
-                                      final docRef = await firestore.collection(widget.uid).add({
-                                        'name': nameController.text,
-                                        'typeOfMedication': typeOfMedicationController.text,
-                                        'dosage': double.tryParse(dosageController.text) ?? 0,
-                                        'frequency': int.tryParse(frequencyController.text) ?? 0,
-                                        'amount': double.tryParse(amountController.text) ?? 0,
-                                        'notifyTime': _selectedTime != null
-                                            ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                            : '',
-                                      });
+                                      final docRef = await firestore
+                                          .collection(widget.uid)
+                                          .add({
+                                            'name': nameController.text,
+                                            'typeOfMedication':
+                                                typeOfMedicationController.text,
+                                            'dosage':
+                                                double.tryParse(
+                                                  dosageController.text,
+                                                ) ??
+                                                0,
+                                            'frequency':
+                                                int.tryParse(
+                                                  frequencyController.text,
+                                                ) ??
+                                                0,
+                                            'amount':
+                                                double.tryParse(
+                                                  amountController.text,
+                                                ) ??
+                                                0,
+                                            'notifyTime':
+                                                _selectedTime != null
+                                                    ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                    : '',
+                                          });
                                       final newDoc = await docRef.get();
-                                      final newMedication = medicationFromDoc(newDoc);
+                                      final newMedication = medicationFromDoc(
+                                        newDoc,
+                                      );
                                       await scheduleMedicationNotification(
                                         context,
                                         docRef.id,
@@ -416,7 +476,9 @@ class _AddMedicationsState extends State<AddMedications> {
                               ),
                               child: Text(
                                 "Save Medication",
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
