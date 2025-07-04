@@ -399,10 +399,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   final medication = medicationFromDoc(docs[index]);
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
+                    padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
                     child: Dismissible(
                       key: Key(docs[index].id),
                       direction: DismissDirection.horizontal,
@@ -1371,7 +1368,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Add Medication",
         shape: const CircleBorder(),
-        backgroundColor: const Color(0xFF8AC249),
+        backgroundColor: Color(0xFF8AC249),
         onPressed: () async {
           await Navigator.push(
             context,
@@ -1380,7 +1377,6 @@ class _HomePageState extends State<HomePage> {
             ),
           );
           if (!mounted) return;
-          setState(() {});
         },
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 36),
       ),
@@ -1557,90 +1553,85 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
-  for (int i = 0; i < 5 * 9; i++) {
+  for (int i = 0; i <= 8; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
   try {
-    for (int day = 0; day < 5; day++) {
-      DateTime baseTime = scheduledTime.add(
-        Duration(days: medication.frequency * day),
-      );
-      if (baseTime.isAfter(now)) {
-        for (int i = 0; i <= 8; i++) {
-          final followUpTime = baseTime.add(Duration(minutes: 15 * i));
-          final notificationMessage =
-              i == 0
-                  ? 'Time to take ${medication.name}!'
-                  : 'Reminder: Take your ${medication.name}';
+    if (scheduledTime.isAfter(now)) {
+      for (int i = 0; i <= 8; i++) {
+        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
+        final notificationMessage =
+            i == 0
+                ? 'Time to take ${medication.name}!'
+                : 'Reminder: Take your ${medication.name}';
 
-          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
-          final nowTZ = tz.TZDateTime.now(tz.local);
+        final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+        final nowTZ = tz.TZDateTime.now(tz.local);
 
-          if (isAppInForeground() &&
-              scheduledTZ.isBefore(nowTZ.add(const Duration(seconds: 2))) &&
-              scheduledTZ.isAfter(nowTZ.subtract(const Duration(seconds: 2)))) {
-            if (navigatorKey.currentContext != null) {
-              showDialog(
-                context: navigatorKey.currentContext!,
-                builder:
-                    (context) => AlertDialog(
-                      backgroundColor: const Color(0xFF8AC249),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+        if (isAppInForeground() &&
+            scheduledTZ.isBefore(nowTZ.add(const Duration(seconds: 2))) &&
+            scheduledTZ.isAfter(nowTZ.subtract(const Duration(seconds: 2)))) {
+          if (navigatorKey.currentContext != null) {
+            showDialog(
+              context: navigatorKey.currentContext!,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    title: Text(
+                      notificationMessage,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      title: Text(
-                        notificationMessage,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text(
-                            'OK',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          'OK',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    ),
-              );
-            }
-          } else {
-            await flutterLocalNotificationsPlugin.zonedSchedule(
-              docId.hashCode + day * 9 + i,
-              'DawaTime',
-              notificationMessage,
-              scheduledTZ,
-              NotificationDetails(
-                android: AndroidNotificationDetails(
-                  'medication_channel',
-                  'Medication Reminders',
-                  channelDescription: 'Reminds you to take your medication',
-                  importance: Importance.max,
-                  priority: Priority.high,
-                  playSound: true,
-                  icon: '@mipmap/ic_launcher',
-                  sound: RawResourceAndroidNotificationSound(
-                    'notification_sound',
+                      ),
+                    ],
                   ),
-                ),
-                iOS: DarwinNotificationDetails(
-                  presentAlert: true,
-                  presentSound: true,
-                  presentBadge: true,
-                  sound: "notification_sound.wav",
-                ),
-              ),
-              payload: docId,
-              androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             );
           }
+        } else {
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            docId.hashCode + i,
+            medication.name,
+            notificationMessage,
+            scheduledTZ,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel_$docId',
+                'Medication Reminders for ${medication.name}',
+                channelDescription: 'Reminds you to take ${medication.name}',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
         }
       }
     }
