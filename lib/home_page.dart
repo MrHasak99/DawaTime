@@ -75,7 +75,6 @@ class _HomePageState extends State<HomePage> {
   Timer? _medicationCheckTimer;
 
   final Set<String> _shownNotifications = {};
-  String? _firestoreName;
 
   @override
   void didChangeDependencies() {
@@ -109,7 +108,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initBackgroundFetch();
-    _fetchFirestoreName();
 
     _medicationCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       _checkAndShowDueMedications();
@@ -136,22 +134,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
     });
-  }
-
-  Future<void> _fetchFirestoreName() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('Users')
-              .doc(user.uid)
-              .get();
-      if (doc.exists && mounted) {
-        setState(() {
-          _firestoreName = doc.data()?['name'] ?? 'User';
-        });
-      }
-    }
   }
 
   void initBackgroundFetch() async {
@@ -336,22 +318,31 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF8AC249),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-          ),
+          decoration: const BoxDecoration(color: Color(0xFF8AC249)),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
-            title: Center(
-              child: Text(
-                "Hi ${_firestoreName ?? 'Friend'}, ready for your meds?",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            title: StreamBuilder<DocumentSnapshot>(
+              stream:
+                  FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(FirebaseAuth.instance.currentUser?.uid)
+                      .snapshots(),
+              builder: (context, snapshot) {
+                String name = 'Friend';
+                if (snapshot.hasData && snapshot.data!.exists) {
+                  final data = snapshot.data!.data() as Map<String, dynamic>;
+                  name = data['name'] ?? 'Friend';
+                }
+                return Text(
+                  "Hi $name, ready for your meds?",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
             actions: [
               IconButton(
@@ -1289,7 +1280,7 @@ class _HomePageState extends State<HomePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    backgroundColor: Color(0xFF8AC249),
+                                    backgroundColor: const Color(0xFF8AC249),
                                     title: Text(
                                       "You're out of ${medication.name}!",
                                       style: const TextStyle(
@@ -1336,7 +1327,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Add Medication",
         shape: const CircleBorder(),
-        backgroundColor: Color(0xFF8AC249),
+        backgroundColor: const Color(0xFF8AC249),
         onPressed: () async {
           await Navigator.push(
             context,
@@ -1345,6 +1336,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
           if (!mounted) return;
+          setState(() {});
         },
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 36),
       ),
@@ -1601,7 +1593,7 @@ Future<void> scheduleMedicationNotification(
                   sound: "notification_sound.wav",
                 ),
               ),
-              payload: notificationMessage,
+              payload: docId,
               androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             );
           }
