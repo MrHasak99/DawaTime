@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
   Timer? _medicationCheckTimer;
 
   final Set<String> _shownNotifications = {};
+  String? _firestoreName;
 
   @override
   void didChangeDependencies() {
@@ -108,6 +109,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initBackgroundFetch();
+    _fetchFirestoreName();
 
     _medicationCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       _checkAndShowDueMedications();
@@ -134,6 +136,22 @@ class _HomePageState extends State<HomePage> {
         }
       }
     });
+  }
+
+  Future<void> _fetchFirestoreName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .get();
+      if (doc.exists && mounted) {
+        setState(() {
+          _firestoreName = doc.data()?['name'] ?? 'User';
+        });
+      }
+    }
   }
 
   void initBackgroundFetch() async {
@@ -326,10 +344,10 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
-            title: const Center(
+            title: Center(
               child: Text(
-                "DawaTime",
-                style: TextStyle(
+                "Hi ${_firestoreName ?? 'Friend'}, ready for your meds?",
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
