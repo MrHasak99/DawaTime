@@ -1132,6 +1132,7 @@ class _HomePageState extends State<HomePage> {
                             await flutterLocalNotificationsPlugin.cancel(
                               deletedDocId.hashCode,
                             );
+                            await cancelMedicationReminders(deletedDocId);
 
                             setState(() {
                               _recentlyDeletedMedication = deletedMedication;
@@ -1680,7 +1681,8 @@ Future<void> scheduleMedicationNotification(
 
 Future<void> cancelMedicationReminders(String docId) async {
   for (int i = 0; i <= 8; i++) {
-    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
+    final notificationId = ('${docId}_$i').hashCode;
+    await flutterLocalNotificationsPlugin.cancel(notificationId);
   }
 }
 
