@@ -383,3 +383,12 @@ Future<void> requestNotificationPermission() async {
     await Permission.notification.request();
   }
 }
+
+Future<void> checkFirstInstallAndSignOut() async {
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstInstall = prefs.getBool('hasRunBefore') ?? false;
+  if (!isFirstInstall) {
+    await FirebaseAuth.instance.signOut();
+    await prefs.setBool('hasRunBefore', true);
+  }
+}

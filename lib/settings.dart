@@ -62,21 +62,36 @@ class SettingsPage extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder:
-                        (context) => AlertDialog(
-                          backgroundColor: const Color(0xFF8AC249),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
+                        (context) => Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 40,
                           ),
-                          title: Row(
-                            children: [
-                              Image.asset(
-                                'assets/DawaTime_white.png',
-                                width: 64,
-                                height: 64,
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Text(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF8AC249),
+                              borderRadius: BorderRadius.circular(32),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.15),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(32),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  'assets/DawaTime_white.png',
+                                  width: 128,
+                                  height: 128,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
                                   info.appName,
                                   style: Theme.of(
                                     context,
@@ -85,60 +100,77 @@ class SettingsPage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 32,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Version: ${info.version} (Build ${info.buildNumber})',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Version: ${info.version} (Build ${info.buildNumber})',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.copyWith(
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Developed by: Hamad AlKhalaf',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                const SizedBox(height: 16),
+                                Divider(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  thickness: 1,
                                 ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Thank you for using Dawatime!',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Developed by: Hamad AlKhalaf',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text(
-                                'Close',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                const SizedBox(height: 24),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: const Color(0xFF8AC249),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                    icon: const Icon(Icons.close),
+                                    label: const Text(
+                                      'Close',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                   );
                 },
