@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dawatime/home_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -162,7 +164,7 @@ class MainApp extends StatelessWidget {
       builder: (context, mode, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: AuthGate(),
+          home: const SplashScreen(),
           navigatorKey: navigatorKey,
           theme: ThemeData(
             fontFamily: 'Nunito',
@@ -390,5 +392,142 @@ Future<void> checkFirstInstallAndSignOut() async {
   if (!isFirstInstall) {
     await FirebaseAuth.instance.signOut();
     await prefs.setBool('hasRunBefore', true);
+  }
+}
+
+Future<bool> isUpdateRequired(BuildContext context) async {
+  final info = await PackageInfo.fromPlatform();
+  final platform =
+      Theme.of(context).platform == TargetPlatform.iOS ? 'ios' : 'android';
+  final doc =
+      await FirebaseFirestore.instance
+          .collection('AppConfig')
+          .doc('Version')
+          .get();
+  if (!doc.exists) return false;
+  final latestVersion = doc.data()?[platform];
+  if (latestVersion == null) return false;
+  return _isVersionLower(info.version, latestVersion);
+}
+
+bool _isVersionLower(String current, String latest) {
+  final currentParts =
+      current
+          .trim()
+          .split('.')
+          .map((e) => int.tryParse(e.trim()) ?? 0)
+          .toList();
+  final latestParts =
+      latest.trim().split('.').map((e) => int.tryParse(e.trim()) ?? 0).toList();
+  for (int i = 0; i < latestParts.length; i++) {
+    if (i >= currentParts.length || currentParts[i] < latestParts[i]) {
+      return true;
+    }
+    if (currentParts[i] > latestParts[i]) return false;
+  }
+  return false;
+}
+
+Future<void> showForceUpdateDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder:
+        (context) => AlertDialog(
+          title: const Text('Update Required'),
+          content: const Text(
+            'A new version of the app is available. Please update to continue.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Replace with your app's store URL
+                final url =
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? 'https://apps.apple.com/app/idYOUR_APP_ID'
+                        : 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME';
+                launchUrl(Uri.parse(url));
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        ),
+  );
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkUpdateAndNavigate();
+  }
+
+  Future<void> _checkUpdateAndNavigate() async {
+    try {
+      final updateNeeded = await isUpdateRequired(
+        context,
+      ).timeout(const Duration(seconds: 8), onTimeout: () => false);
+      if (updateNeeded) {
+        await showForceUpdateDialog(context);
+        return;
+      }
+    } catch (e) {
+      print('Update check error: $e');
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: const Text('Error'),
+              content: const Text(
+                'Failed to check for updates. Please try again later.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+      );
+      return;
+    }
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted) return;
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF8AC249),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset("assets/DawaTime_white.png", width: 100, height: 100),
+            const Text(
+              'Dawatime',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              ),
+            ),
+            const SizedBox(height: 16),
+            const CircularProgressIndicator(color: Colors.white),
+          ],
+        ),
+      ),
+    );
   }
 }
