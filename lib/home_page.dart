@@ -73,8 +73,7 @@ class _HomePageState extends State<HomePage> {
   String? _recentlyDeletedDocId;
 
   Timer? _medicationCheckTimer;
-
-  final Set<String> _shownNotifications = {};
+  final Set<String> _shownAlerts = {}; // Prevent duplicate alerts
 
   @override
   void didChangeDependencies() {
@@ -109,7 +108,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initBackgroundFetch();
 
-    _medicationCheckTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    // Restore foreground polling for alerts
+    _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       _checkAndShowDueMedications();
     });
 
@@ -125,6 +125,38 @@ class _HomePageState extends State<HomePage> {
                 .get();
         if (doc.exists) {
           final medication = medicationFromDoc(doc);
+
+          if (navigatorKey.currentContext != null) {
+            showDialog(
+              context: navigatorKey.currentContext!,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    title: Text(
+                      'Time to take ${medication.name}!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          'OK',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            );
+          }
           await scheduleMedicationNotification(
             context,
             docId,
@@ -174,32 +206,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _checkAndShowDueMedications() async {
-    if (!isAppInForeground()) return;
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final medsSnapshot =
-        await FirebaseFirestore.instance.collection(user.uid).get();
     final now = DateTime.now();
+    final meds = await FirebaseFirestore.instance.collection(user.uid).get();
 
-    for (var doc in medsSnapshot.docs) {
+    for (var doc in meds.docs) {
       final medication = medicationFromDoc(doc);
       if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
         continue;
       }
+
       final timeParts = medication.notifyTime!.split(':');
       if (timeParts.length != 2) continue;
       final hour = int.tryParse(timeParts[0]);
       final minute = int.tryParse(timeParts[1]);
       if (hour == null || minute == null) continue;
 
-      final notificationKey =
-          '${doc.id}_${now.year}_${now.month}_${now.day}_${now.hour}_${now.minute}';
+      var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+      while (scheduledTime.isBefore(now)) {
+        scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+      }
 
-      if ((now.hour == hour && now.minute == minute) &&
-          !_shownNotifications.contains(notificationKey) &&
-          medication.amount > 0) {
-        _shownNotifications.add(notificationKey);
+      if ((now.difference(scheduledTime).inSeconds).abs() <= 1 &&
+          !_shownAlerts.contains(doc.id)) {
+        _shownAlerts.add(doc.id);
 
         if (navigatorKey.currentContext != null) {
           showDialog(
@@ -232,6 +264,10 @@ class _HomePageState extends State<HomePage> {
                 ),
           );
         }
+      }
+
+      if (now.isBefore(scheduledTime.subtract(const Duration(seconds: 3)))) {
+        _shownAlerts.remove(doc.id);
       }
     }
   }
@@ -390,6 +426,12 @@ class _HomePageState extends State<HomePage> {
             );
           }
           final docs = snapshot.data!.docs;
+
+          docs.sort((a, b) {
+            final medA = medicationFromDoc(a);
+            final medB = medicationFromDoc(b);
+            return medA.name.toLowerCase().compareTo(medB.name.toLowerCase());
+          });
 
           return Builder(
             builder: (scaffoldContext) {
@@ -1567,72 +1609,34 @@ Future<void> scheduleMedicationNotification(
                 : 'Reminder: Take your ${medication.name}';
 
         final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
-        final nowTZ = tz.TZDateTime.now(tz.local);
+        final notificationId = ('${docId}_$i').hashCode;
 
-        if (isAppInForeground() &&
-            scheduledTZ.isBefore(nowTZ.add(const Duration(seconds: 2))) &&
-            scheduledTZ.isAfter(nowTZ.subtract(const Duration(seconds: 2)))) {
-          if (navigatorKey.currentContext != null) {
-            showDialog(
-              context: navigatorKey.currentContext!,
-              builder:
-                  (context) => AlertDialog(
-                    backgroundColor: const Color(0xFF8AC249),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    title: Text(
-                      notificationMessage,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-            );
-          }
-        } else {
-          await flutterLocalNotificationsPlugin.zonedSchedule(
-            docId.hashCode + i,
-            medication.name,
-            notificationMessage,
-            scheduledTZ,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                'medication_channel_$docId',
-                'Medication Reminders for ${medication.name}',
-                channelDescription: 'Reminds you to take ${medication.name}',
-                importance: Importance.max,
-                priority: Priority.high,
-                playSound: true,
-                icon: '@mipmap/ic_launcher',
-                sound: RawResourceAndroidNotificationSound(
-                  'notification_sound',
-                ),
-              ),
-              iOS: DarwinNotificationDetails(
-                presentAlert: true,
-                presentSound: true,
-                presentBadge: true,
-                sound: "notification_sound.wav",
-              ),
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          notificationId,
+          medication.name,
+          notificationMessage,
+          scheduledTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'medication_channel_$docId',
+              'Medication Reminders for ${medication.name}',
+              channelDescription: 'Reminds you to take ${medication.name}',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+              icon: '@mipmap/ic_launcher',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
             ),
-            payload: docId,
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );
-        }
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
+          ),
+          payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
       }
     }
   } catch (e) {
