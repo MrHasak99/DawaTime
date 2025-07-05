@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
   String? _recentlyDeletedDocId;
 
   Timer? _medicationCheckTimer;
-  final Set<String> _shownAlerts = {}; // Prevent duplicate alerts
+  final Set<String> _shownAlerts = {};
 
   @override
   void didChangeDependencies() {
@@ -108,7 +108,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initBackgroundFetch();
 
-    // Restore foreground polling for alerts
     _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       _checkAndShowDueMedications();
     });
