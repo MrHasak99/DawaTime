@@ -278,16 +278,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors:
-                Theme.of(context).brightness == Brightness.dark
-                    ? [const Color(0xFF181F13), const Color(0xFF232D1A)]
-                    : [const Color(0xFFF8FFF3), const Color(0xFFE8F5E9)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Center(
           child: SingleChildScrollView(
             child: ConstrainedBox(
@@ -323,10 +314,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           horizontal: 16,
                           vertical: 18,
                         ),
-                        color:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF232D1A)
-                                : Colors.white,
+                        color: Theme.of(context).cardColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 36,
@@ -370,77 +358,280 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               const SizedBox(height: 28),
 
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton.icon(
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    color: Color(0xFF8AC249),
-                                  ),
-                                  label: Text(
-                                    "Edit Profile",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      color: const Color(0xFF8AC249),
-                                      fontWeight: FontWeight.bold,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  ElevatedButton.icon(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Color(0xFF8AC249),
                                     ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.black
-                                            : Colors.white,
-                                    foregroundColor: const Color(0xFF8AC249),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      side: const BorderSide(
-                                        color: Color(0xFF8AC249),
-                                        width: 2,
+                                    label: Text(
+                                      "Edit Profile",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        color: const Color(0xFF8AC249),
+                                        fontWeight: FontWeight.bold,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                      foregroundColor: const Color(0xFF8AC249),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        side: const BorderSide(
+                                          color: Color(0xFF8AC249),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      elevation: 0,
+                                      alignment: Alignment.center,
                                     ),
-                                    elevation: 0,
-                                  ),
-                                  onPressed: () async {
-                                    final user =
-                                        FirebaseAuth.instance.currentUser;
-                                    if (user == null) return;
-                                    final userDoc = FirebaseFirestore.instance
-                                        .collection('Users')
-                                        .doc(user.uid);
-                                    final docSnapshot = await userDoc.get();
-                                    final data = docSnapshot.data() ?? {};
-                                    final nameController =
-                                        TextEditingController(
-                                          text: data['name'] ?? '',
-                                        );
-                                    final result = await showDialog<bool>(
-                                      context: context,
-                                      builder:
-                                          (context) => AlertDialog(
-                                            backgroundColor: const Color(
-                                              0xFF8AC249,
-                                            ),
-                                            title: Text(
-                                              'Edit Profile',
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.titleLarge?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
+                                    onPressed: () async {
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (user == null) return;
+                                      final userDoc = FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .doc(user.uid);
+                                      final docSnapshot = await userDoc.get();
+                                      final data = docSnapshot.data() ?? {};
+                                      final nameController =
+                                          TextEditingController(
+                                            text: data['name'] ?? '',
+                                          );
+                                      final result = await showDialog<bool>(
+                                        context: context,
+                                        builder:
+                                            (context) => AlertDialog(
+                                              backgroundColor: const Color(
+                                                0xFF8AC249,
                                               ),
+                                              title: Text(
+                                                'Edit Profile',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    TextField(
+                                                      controller:
+                                                          nameController,
+                                                      cursorColor: Colors.white,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                      decoration: InputDecoration(
+                                                        labelText: 'Name',
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        true,
+                                                      ),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      ),
+                                                  child: const Text(
+                                                    'Save',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF8AC249),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            content: SingleChildScrollView(
-                                              child: Column(
+                                      );
+                                      if (result == true) {
+                                        try {
+                                          await userDoc.update({
+                                            'name': nameController.text.trim(),
+                                          });
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                backgroundColor: Color(
+                                                  0xFF8AC249,
+                                                ),
+                                                content: Text(
+                                                  'Profile updated!',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Inter',
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor: const Color(
+                                                  0xFF8AC249,
+                                                ),
+                                                content: Text(
+                                                  'Failed to update: $e',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Inter',
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 14),
+
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                      foregroundColor: const Color(0xFF8AC249),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        side: const BorderSide(
+                                          color: Color(0xFF8AC249),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                    ),
+                                    child: Text(
+                                      'Change Email',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF8AC249),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onPressed: () async {
+                                      final rootContext = context;
+                                      final newEmailController =
+                                          TextEditingController();
+                                      final passwordController =
+                                          TextEditingController();
+                                      final emailResult = await showDialog<
+                                        bool
+                                      >(
+                                        context: rootContext,
+                                        builder:
+                                            (context) => AlertDialog(
+                                              backgroundColor: const Color(
+                                                0xFF8AC249,
+                                              ),
+                                              title: const Text(
+                                                'Change Email',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              content: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   TextField(
-                                                    controller: nameController,
+                                                    controller:
+                                                        newEmailController,
                                                     cursorColor: Colors.white,
+                                                    keyboardType:
+                                                        TextInputType
+                                                            .emailAddress,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyLarge
@@ -448,18 +639,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
-                                                    decoration: InputDecoration(
-                                                      labelText: 'Name',
-                                                      labelStyle: Theme.of(
-                                                            context,
-                                                          ).textTheme.bodyLarge
-                                                          ?.copyWith(
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'New Email',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                       focusedBorder:
-                                                          const UnderlineInputBorder(
+                                                          UnderlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
                                                                   color:
@@ -468,7 +656,48 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                 ),
                                                           ),
                                                       enabledBorder:
-                                                          const UnderlineInputBorder(
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  TextField(
+                                                    controller:
+                                                        passwordController,
+                                                    obscureText: true,
+                                                    cursorColor: Colors.white,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyLarge
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                    decoration: const InputDecoration(
+                                                      labelText:
+                                                          'Current Password',
+                                                      labelStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                ),
+                                                          ),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
                                                             borderSide:
                                                                 BorderSide(
                                                                   color:
@@ -480,47 +709,194 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   ),
                                                 ],
                                               ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      ),
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        true,
+                                                      ),
+                                                  child: const Text(
+                                                    'Change',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF8AC249),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      false,
+                                      );
+                                      if (emailResult == true &&
+                                          newEmailController.text
+                                              .trim()
+                                              .isNotEmpty &&
+                                          passwordController.text.isNotEmpty) {
+                                        try {
+                                          final user =
+                                              FirebaseAuth.instance.currentUser;
+                                          if (user != null &&
+                                              user.email !=
+                                                  newEmailController.text
+                                                      .trim()) {
+                                            final cred =
+                                                EmailAuthProvider.credential(
+                                                  email: user.email!,
+                                                  password:
+                                                      passwordController.text,
+                                                );
+                                            await user
+                                                .reauthenticateWithCredential(
+                                                  cred,
+                                                );
+                                            await user.verifyBeforeUpdateEmail(
+                                              newEmailController.text.trim(),
+                                            );
+                                            await user.reload();
+                                            setState(() {});
+                                            if (context.mounted) {
+                                              await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (context) => AlertDialog(
+                                                      backgroundColor:
+                                                          const Color(
+                                                            0xFF8AC249,
+                                                          ),
+                                                      title: const Text(
+                                                        'Email Change Requested',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      content: const Text(
+                                                        'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed:
+                                                              () =>
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  ),
+                                                          child: const Text(
+                                                            'OK',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                child: const Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                              );
+                                              await FirebaseAuth.instance
+                                                  .signOut();
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => const LoginPage(),
+                                                ),
+                                                (route) => false,
+                                              );
+                                            }
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor: const Color(
+                                                  0xFF8AC249,
+                                                ),
+                                                content: Text(
+                                                  'Failed to update email: $e',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Inter',
+                                                      ),
                                                 ),
                                               ),
-                                              ElevatedButton(
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      true,
-                                                    ),
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
-                                                ),
-                                                child: const Text(
-                                                  'Save',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF8AC249),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                    );
-                                    if (result == true) {
-                                      try {
-                                        await userDoc.update({
-                                          'name': nameController.text.trim(),
-                                        });
+                                            );
+                                          }
+                                        }
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                      foregroundColor: const Color(0xFF8AC249),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        side: const BorderSide(
+                                          color: Color(0xFF8AC249),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                    ),
+                                    child: Text(
+                                      'Reset Password',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF8AC249),
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onPressed: () async {
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (user == null || user.email == null) {
                                         if (context.mounted) {
                                           ScaffoldMessenger.of(
                                             context,
@@ -530,7 +906,101 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                'Profile updated!',
+                                                'No user is currently logged in.',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return;
+                                      }
+
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder:
+                                            (context) => AlertDialog(
+                                              backgroundColor: const Color(
+                                                0xFF8AC249,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              title: const Text(
+                                                "Reset Password",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              content: Text(
+                                                "A password reset email will be sent to:\n${user.email}\n\nContinue?",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      ),
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        true,
+                                                      ),
+                                                  child: const Text(
+                                                    "Send Email",
+                                                    style: TextStyle(
+                                                      color: Color(0xFF8AC249),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+
+                                      if (confirm != true) return;
+
+                                      try {
+                                        await FirebaseAuth.instance
+                                            .sendPasswordResetEmail(
+                                              email: user.email!,
+                                            );
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Color(
+                                                0xFF8AC249,
+                                              ),
+                                              content: Text(
+                                                'Password reset email sent!',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -550,7 +1020,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                'Failed to update: $e',
+                                                'Failed to send reset email: $e',
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -561,460 +1031,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                           );
                                         }
                                       }
-                                    }
-                                  },
-                                ),
-                              ),
-
-                              const SizedBox(height: 14),
-
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.black
-                                            : Colors.white,
-                                    foregroundColor: const Color(0xFF8AC249),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      side: const BorderSide(
-                                        color: Color(0xFF8AC249),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    elevation: 0,
+                                    },
                                   ),
-                                  child: Text(
-                                    'Change Email',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF8AC249),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final rootContext = context;
-                                    final newEmailController =
-                                        TextEditingController();
-                                    final passwordController =
-                                        TextEditingController();
-                                    final emailResult = await showDialog<bool>(
-                                      context: rootContext,
-                                      builder:
-                                          (context) => AlertDialog(
-                                            backgroundColor: const Color(
-                                              0xFF8AC249,
-                                            ),
-                                            title: const Text(
-                                              'Change Email',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                TextField(
-                                                  controller:
-                                                      newEmailController,
-                                                  cursorColor: Colors.white,
-                                                  keyboardType:
-                                                      TextInputType
-                                                          .emailAddress,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                  decoration: const InputDecoration(
-                                                    labelText: 'New Email',
-                                                    labelStyle: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 12),
-                                                TextField(
-                                                  controller:
-                                                      passwordController,
-                                                  obscureText: true,
-                                                  cursorColor: Colors.white,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                  decoration: const InputDecoration(
-                                                    labelText:
-                                                        'Current Password',
-                                                    labelStyle: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      false,
-                                                    ),
-                                                child: const Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
-                                                ),
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      true,
-                                                    ),
-                                                child: const Text(
-                                                  'Change',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF8AC249),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                    );
-                                    if (emailResult == true &&
-                                        newEmailController.text
-                                            .trim()
-                                            .isNotEmpty &&
-                                        passwordController.text.isNotEmpty) {
-                                      try {
-                                        final user =
-                                            FirebaseAuth.instance.currentUser;
-                                        if (user != null &&
-                                            user.email !=
-                                                newEmailController.text
-                                                    .trim()) {
-                                          final cred =
-                                              EmailAuthProvider.credential(
-                                                email: user.email!,
-                                                password:
-                                                    passwordController.text,
-                                              );
-                                          await user
-                                              .reauthenticateWithCredential(
-                                                cred,
-                                              );
-                                          await user.verifyBeforeUpdateEmail(
-                                            newEmailController.text.trim(),
-                                          );
-                                          await user.reload();
-                                          setState(() {});
-                                          if (context.mounted) {
-                                            await showDialog(
-                                              context: context,
-                                              builder:
-                                                  (context) => AlertDialog(
-                                                    backgroundColor:
-                                                        const Color(0xFF8AC249),
-                                                    title: const Text(
-                                                      'Email Change Requested',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    content: const Text(
-                                                      'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed:
-                                                            () => Navigator.pop(
-                                                              context,
-                                                            ),
-                                                        child: const Text(
-                                                          'OK',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                            );
-                                            await FirebaseAuth.instance
-                                                .signOut();
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (_) => const LoginPage(),
-                                              ),
-                                              (route) => false,
-                                            );
-                                          }
-                                        }
-                                      } catch (e) {
-                                        if (context.mounted) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              backgroundColor: const Color(
-                                                0xFF8AC249,
-                                              ),
-                                              content: Text(
-                                                'Failed to update email: $e',
-                                                style: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: 'Inter',
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  },
-                                ),
+                                ],
                               ),
-
                               const SizedBox(height: 10),
-
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.black
-                                            : Colors.white,
-                                    foregroundColor: const Color(0xFF8AC249),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      side: const BorderSide(
-                                        color: Color(0xFF8AC249),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  child: Text(
-                                    'Reset Password',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF8AC249),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final user =
-                                        FirebaseAuth.instance.currentUser;
-                                    if (user == null || user.email == null) {
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            backgroundColor: Color(0xFF8AC249),
-                                            content: Text(
-                                              'No user is currently logged in.',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return;
-                                    }
-
-                                    final confirm = await showDialog<bool>(
-                                      context: context,
-                                      builder:
-                                          (context) => AlertDialog(
-                                            backgroundColor: const Color(
-                                              0xFF8AC249,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            title: const Text(
-                                              "Reset Password",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            content: Text(
-                                              "A password reset email will be sent to:\n${user.email}\n\nContinue?",
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      false,
-                                                    ),
-                                                child: const Text(
-                                                  "Cancel",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
-                                                ),
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      true,
-                                                    ),
-                                                child: const Text(
-                                                  "Send Email",
-                                                  style: TextStyle(
-                                                    color: Color(0xFF8AC249),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                    );
-
-                                    if (confirm != true) return;
-
-                                    try {
-                                      await FirebaseAuth.instance
-                                          .sendPasswordResetEmail(
-                                            email: user.email!,
-                                          );
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            backgroundColor: Color(0xFF8AC249),
-                                            content: Text(
-                                              'Password reset email sent!',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    } catch (e) {
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: const Color(
-                                              0xFF8AC249,
-                                            ),
-                                            content: Text(
-                                              'Failed to send reset email: $e',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  },
-                                ),
-                              ),
                               const SizedBox(height: 10),
                               SizedBox(
                                 width: double.infinity,
@@ -1022,6 +1043,18 @@ class _SettingsPageState extends State<SettingsPage> {
                                   icon: const Icon(
                                     Icons.delete,
                                     color: Colors.white,
+                                    size: 24,
+                                  ),
+                                  label: Text(
+                                    "Delete Account",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      letterSpacing: 0.5,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
@@ -1030,12 +1063,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                                      vertical: 18,
                                     ),
-                                  ),
-                                  label: Text(
-                                    "Delete Account",
-                                    style: Theme.of(
+                                    elevation: 1,
+                                    alignment: Alignment.center,
+                                    textStyle: Theme.of(
                                       context,
                                     ).textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -1398,6 +1430,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   },
                                 ),
                               ),
+
                               const SizedBox(height: 18),
                               Divider(
                                 color:
