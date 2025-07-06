@@ -375,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                   name = data['name'] ?? 'Friend';
                 }
                 return Text(
-                  "Hi $name, ready for your meds?",
+                  "Welcome back, $name!",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
