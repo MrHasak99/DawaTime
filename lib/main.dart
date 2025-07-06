@@ -479,7 +479,6 @@ class _SplashScreenState extends State<SplashScreen> {
         return;
       }
     } catch (e) {
-      print('Update check error: $e');
       showDialog(
         context: context,
         builder:
