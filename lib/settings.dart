@@ -905,6 +905,70 @@ class _SettingsPageState extends State<SettingsPage> {
                                       }
                                       return;
                                     }
+
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder:
+                                          (context) => AlertDialog(
+                                            backgroundColor: const Color(
+                                              0xFF8AC249,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            title: const Text(
+                                              "Reset Password",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            content: Text(
+                                              "A password reset email will be sent to:\n${user.email}\n\nContinue?",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      false,
+                                                    ),
+                                                child: const Text(
+                                                  "Cancel",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                ),
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      true,
+                                                    ),
+                                                child: const Text(
+                                                  "Send Email",
+                                                  style: TextStyle(
+                                                    color: Color(0xFF8AC249),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                    );
+
+                                    if (confirm != true) return;
+
                                     try {
                                       await FirebaseAuth.instance
                                           .sendPasswordResetEmail(
@@ -951,9 +1015,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   },
                                 ),
                               ),
-
                               const SizedBox(height: 10),
-
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
