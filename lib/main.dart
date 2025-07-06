@@ -14,6 +14,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/services.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -44,6 +45,7 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();

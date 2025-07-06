@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <title>DawaTime Account Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="DawaTime.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="DawaTime.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="DawaTime.png" />
     <link
       href="https://fonts.googleapis.com/css?family=Nunito:700,400&display=swap"
       rel="stylesheet"
@@ -91,6 +94,15 @@
       .error {
         color: #d32f2f;
       }
+      .form-content {
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      .form-content input,
+      .form-content button {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
       @media (max-width: 500px) {
         .container {
           padding: 18px 6px;
@@ -139,13 +151,15 @@
       } else if (mode === "resetPassword") {
         mainTitle.textContent = "Reset Password";
         mainContent.innerHTML = `
-        <p>Enter your new password below to reset your DawaTime account password.</p>
-        <form id="resetForm">
-          <label for="password">New Password</label>
-          <input type="password" id="password" name="password" required minlength="6" placeholder="Enter new password" />
-          <button type="submit">Reset Password</button>
-          <div id="formMessage"></div>
-        </form>
+        <div class="form-content">
+          <p>Enter your new password below to reset your DawaTime account password.</p>
+          <form id="resetForm">
+            <label for="password">New Password</label>
+            <input type="password" id="password" name="password" required minlength="6" placeholder="Enter new password" />
+            <button type="submit">Reset Password</button>
+            <div id="formMessage"></div>
+          </form>
+        </div>
       `;
         document
           .getElementById("resetForm")
