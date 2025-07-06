@@ -286,6 +286,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 104),
                   FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                     future: userDoc.get(),
                     builder: (context, snapshot) {
