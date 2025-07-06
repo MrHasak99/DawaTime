@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '173965270100',
     projectId: 'medication-cd9b8',
     storageBucket: 'medication-cd9b8.firebasestorage.app',
-    iosBundleId: 'com.MrHasak99.dawatime',
+    iosBundleId: 'com.mrhasak99.dawatime',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '173965270100',
     projectId: 'medication-cd9b8',
     storageBucket: 'medication-cd9b8.firebasestorage.app',
-    iosBundleId: 'com.example.medicationAppFull',
+    iosBundleId: 'com.mrhasak99.dawatimeFull',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

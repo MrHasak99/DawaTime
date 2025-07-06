@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:173965270100:android:1d70497b7430128cc8e1c1",
         "android_client_info": {
-          "package_name": "com.MrHasak99.dawatime"
+          "package_name": "com.mrhasak99.dawatime"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "173965270100-6pqagrhnr6o54n887p5bs6e2cp1ql5v6.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.medicationAppFull"
+                "bundle_id": "com.mrhasak99.dawatimeFull"
               }
             }
           ]

@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.MrHasak99.dawatime</string>
+	<string>com.mrhasak99.dawatime</string>
 	<key>PROJECT_ID</key>
 	<string>medication-cd9b8</string>
 	<key>STORAGE_BUCKET</key>
