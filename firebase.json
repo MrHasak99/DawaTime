@@ -54,7 +54,11 @@
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      { "source": "/account-deletion", "destination": "/account-deletion.html" },
+      {
+        "source": "/account-deletion",
+        "destination": "/account-deletion.html"
+      },
+      { "source": "/user-management", "destination": "/user-management.html" },
       { "source": "**", "destination": "/index.html" }
     ]
   }

@@ -9,9 +9,14 @@ import 'package:dawatime/main.dart'
         themeModeNotifier;
 import 'package:package_info_plus/package_info_plus.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -579,6 +584,8 @@ class SettingsPage extends StatelessWidget {
                                                     newEmailController.text
                                                         .trim(),
                                                   );
+                                              await user.reload();
+                                              setState(() {});
                                               if (context.mounted) {
                                                 await showDialog(
                                                   context: context,
@@ -680,114 +687,37 @@ class SettingsPage extends StatelessWidget {
                                       ),
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        final rootContext = context;
-                                        await Future.delayed(
-                                          const Duration(milliseconds: 100),
-                                        );
-                                        final emailController =
-                                            TextEditingController();
-                                        final result = await showDialog<bool>(
-                                          context: rootContext,
-                                          builder:
-                                              (context) => AlertDialog(
+                                        final user =
+                                            FirebaseAuth.instance.currentUser;
+                                        if (user == null ||
+                                            user.email == null) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
                                                 backgroundColor: Color(
                                                   0xFF8AC249,
                                                 ),
-                                                title: const Text(
-                                                  'Reset Password',
+                                                content: Text(
+                                                  'No user is currently logged in.',
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Inter',
                                                   ),
                                                 ),
-                                                content: TextField(
-                                                  controller: emailController,
-                                                  cursorColor: Colors.white,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                  decoration: const InputDecoration(
-                                                    labelText:
-                                                        'Please enter your email',
-                                                    labelStyle: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed:
-                                                        () => Navigator.pop(
-                                                          context,
-                                                          false,
-                                                        ),
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style:
-                                                        ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                    onPressed:
-                                                        () => Navigator.pop(
-                                                          context,
-                                                          true,
-                                                        ),
-                                                    child: const Text(
-                                                      'Send',
-                                                      style: TextStyle(
-                                                        color: Color(
-                                                          0xFF8AC249,
-                                                        ),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
                                               ),
-                                        );
-                                        if (result == true) {
-                                          try {
-                                            await FirebaseAuth.instance
-                                                .sendPasswordResetEmail(
-                                                  email:
-                                                      emailController.text
-                                                          .trim(),
-                                                );
-                                            if (!context.mounted) return;
+                                            );
+                                          }
+                                          return;
+                                        }
+                                        try {
+                                          await FirebaseAuth.instance
+                                              .sendPasswordResetEmail(
+                                                email: user.email!,
+                                              );
+                                          if (context.mounted) {
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
@@ -805,8 +735,9 @@ class SettingsPage extends StatelessWidget {
                                                 ),
                                               ),
                                             );
-                                          } catch (e) {
-                                            if (!context.mounted) return;
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
@@ -1289,6 +1220,8 @@ class SettingsPage extends StatelessWidget {
                               await user.verifyBeforeUpdateEmail(
                                 emailController.text.trim(),
                               );
+                              await user.reload();
+                              setState(() {});
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -1391,6 +1324,8 @@ class SettingsPage extends StatelessWidget {
                                     await user.verifyBeforeUpdateEmail(
                                       emailController.text.trim(),
                                     );
+                                    await user.reload();
+                                    setState(() {});
                                     if (context.mounted) {
                                       ScaffoldMessenger.of(
                                         context,

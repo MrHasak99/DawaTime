@@ -8,17 +8,25 @@
       name="description"
       content="Request deletion of your DawaTime account and associated data from Firebase."
     />
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito:700,400&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("Inter_18pt-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "Nunito";
+        src: url("Nunito-ExtraBold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
       body {
-        font-family: "Nunito", Arial, sans-serif;
-        background: #f8f8f8;
+        background: #f7fafc;
+        color: #222;
+        font-family: "Nunito", "Inter", Arial, sans-serif;
         margin: 0;
         padding: 0;
-        color: #222;
       }
       .container {
         max-width: 420px;
@@ -28,55 +36,113 @@
         box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
         padding: 32px 24px 24px 24px;
       }
+      .logo {
+        display: block;
+        margin: 0 auto 18px auto;
+        width: 80px;
+        height: 80px;
+      }
       h1 {
         color: #8ac249;
         font-size: 2rem;
         margin-bottom: 8px;
-        font-weight: 700;
+        font-weight: bold;
+        font-family: "Nunito", Arial, sans-serif;
+        letter-spacing: 1px;
         text-align: center;
       }
-      p {
+      p.intro {
         font-size: 1rem;
         margin-bottom: 24px;
         text-align: center;
+        color: #444;
+        font-family: "Inter", Arial, sans-serif;
+      }
+      form {
+        margin: 0;
+        padding: 0;
+      }
+      .form-group {
+        margin-bottom: 18px;
+        text-align: left;
       }
       label {
-        font-weight: 700;
+        font-weight: bold;
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         color: #333;
+        font-family: "Nunito", Arial, sans-serif;
       }
       input,
       textarea {
         width: 100%;
         padding: 10px 12px;
-        margin-bottom: 18px;
         border: 1px solid #d0d0d0;
         border-radius: 8px;
         font-size: 1rem;
-        font-family: inherit;
+        font-family: "Inter", Arial, sans-serif;
         background: #fafafa;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
       }
-      button {
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #8ac249;
+        background: #f4faef;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+        max-height: 200px;
+      }
+      .password-row {
+        position: relative;
+        width: 100%;
+      }
+      .toggle-password {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #8ac249;
+        font-size: 1.2em;
+        padding: 0 6px;
+        height: 32px;
+        line-height: 1;
+      }
+      .toggle-password:focus {
+        outline: 2px solid #8ac249;
+      }
+      button[type="submit"] {
         background: #8ac249;
         color: #fff;
-        font-weight: 700;
+        font-weight: bold;
         border: none;
         border-radius: 8px;
         padding: 14px 0;
         width: 100%;
         font-size: 1.1rem;
+        font-family: "Nunito", Arial, sans-serif;
         cursor: pointer;
         transition: background 0.2s;
+        margin-top: 8px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(138, 194, 73, 0.08);
       }
-      button:hover {
+      button[type="submit"]:hover {
         background: #7bb13b;
       }
       .success,
       .error {
         text-align: center;
         margin-bottom: 16px;
-        font-weight: 700;
+        margin-top: 18px;
+        font-weight: bold;
+        font-family: "Nunito", Arial, sans-serif;
       }
       .success {
         color: #388e3c;
@@ -84,74 +150,81 @@
       .error {
         color: #d32f2f;
       }
+      .footer-note {
+        font-size: 0.95rem;
+        color: #888;
+        margin-top: 18px;
+        font-family: "Inter", Arial, sans-serif;
+        text-align: center;
+      }
       @media (max-width: 500px) {
         .container {
           padding: 18px 6px;
+        }
+        .logo {
+          width: 60px;
+          height: 60px;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Delete My DawaTime Account</h1>
-      <p>
+      <img src="DawaTime.png" class="logo" alt="DawaTime Logo" />
+      <h1>Delete DawaTime Account</h1>
+      <p class="intro">
         Fill out the form below to request deletion of your DawaTime account and
         all associated data from our Firebase servers.<br />
         This process is <b>irreversible</b>.
       </p>
-      <form id="deleteForm">
-        <label for="email">Your DawaTime Email Address</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          placeholder="you@email.com"
-        />
-
-        <label for="reason">Reason for Deletion (optional)</label>
-        <textarea
-          id="reason"
-          name="reason"
-          rows="3"
-          placeholder="Let us know why you're leaving..."
-        ></textarea>
-
-        <label for="password">Your DawaTime Password</label>
-        <div style="position: relative">
+      <form id="deleteForm" autocomplete="off">
+        <div class="form-group">
+          <label for="email">Your DawaTime Email Address</label>
           <input
-            type="password"
-            id="password"
-            name="password"
+            type="email"
+            id="email"
+            name="email"
             required
-            placeholder="Enter your password to confirm deletion"
-            style="padding-right: 40px"
+            placeholder="you@email.com"
+            autocomplete="email"
           />
-          <button
-            type="button"
-            id="togglePassword"
-            style="
-              position: absolute;
-              right: 8px;
-              top: 50%;
-              transform: translateY(-50%);
-              background: none;
-              border: none;
-              cursor: pointer;
-              color: #8ac249;
-              font-size: 1.2em;
-            "
-            tabindex="-1"
-            aria-label="Show or hide password"
-          >
-            👁️
-          </button>
         </div>
-
+        <div class="form-group">
+          <label for="reason">Reason for Deletion (optional)</label>
+          <textarea
+            id="reason"
+            name="reason"
+            rows="3"
+            placeholder="Let us know why you're leaving..."
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="password">Your DawaTime Password</label>
+          <div class="password-row">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              placeholder="Enter your password to confirm deletion"
+              style="padding-right: 40px"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              id="togglePassword"
+              class="toggle-password"
+              tabindex="-1"
+              aria-label="Show or hide password"
+            >
+              👁️
+            </button>
+          </div>
+        </div>
         <button type="submit">Request Account Deletion</button>
         <div id="formMessage"></div>
       </form>
-      <p style="font-size: 0.95rem; color: #888; margin-top: 18px">
+      <p class="footer-note">
         For privacy and security, only the account owner can request deletion.
         If you have questions, contact
         <a href="mailto:help@dawatime.com">help@dawatime.com</a>.
@@ -161,7 +234,8 @@
       const passwordInput = document.getElementById("password");
       const togglePassword = document.getElementById("togglePassword");
       let passwordVisible = false;
-      togglePassword.addEventListener("click", function () {
+      togglePassword.addEventListener("click", function (e) {
+        e.preventDefault();
         passwordVisible = !passwordVisible;
         passwordInput.type = passwordVisible ? "text" : "password";
         togglePassword.textContent = passwordVisible ? "🙈" : "👁️";
