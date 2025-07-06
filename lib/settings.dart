@@ -401,8 +401,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         backgroundColor: Colors.white,
                                       ),
                                       onPressed: () async {
-                                        Navigator.pop(context);
-
                                         final rootContext = context;
                                         final newEmailController =
                                             TextEditingController();
@@ -686,7 +684,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         backgroundColor: Colors.white,
                                       ),
                                       onPressed: () async {
-                                        Navigator.pop(context);
                                         final user =
                                             FirebaseAuth.instance.currentUser;
                                         if (user == null ||
@@ -757,6 +754,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             );
                                           }
                                         }
+                                        Navigator.pop(context);
                                       },
                                       child: const Text(
                                         'Reset Password',
