@@ -1,6 +1,30 @@
 {
   "dependencies": {
+    "express": "^5.1.0",
     "firebase": "^11.10.0",
+    "geoip-lite": "^1.4.10",
     "nodemailer": "^7.0.3"
-  }
+  },
+  "name": "dawatime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrHasak99/DawaTime.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MrHasak99/DawaTime/issues"
+  },
+  "homepage": "https://github.com/MrHasak99/DawaTime#readme"
 }

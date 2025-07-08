@@ -15,6 +15,8 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -530,5 +532,20 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+}
+
+Future<bool> isBlockedCountry() async {
+  final blockedCountries = ['IL'];
+  try {
+    Position position = await Geolocator.getCurrentPosition();
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+    String? countryCode = placemarks.first.isoCountryCode;
+    return blockedCountries.contains(countryCode);
+  } catch (e) {
+    return false;
   }
 }
