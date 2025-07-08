@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const fetch = require("node-fetch");
+const geoip = require("geoip-lite");
 
 admin.initializeApp();
 
@@ -15,38 +16,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const blockedCountries = ["IL"];
 
 exports.emailAdminsOnContactMessage = functions.firestore
-    .document("ContactMessages/{messageId}")
-    .onCreate(async (snap, context) => {
-      const data = snap.data();
-      const mailOptions = {
-        from: "admin@dawatime.com",
-        to: "help@dawatime.com",
-        replyTo: data.userEmail || "admin@dawatime.com",
-        subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
-        text: `Message: ${data.message}`,
-      };
-      await transporter.sendMail(mailOptions);
-    });
+  .document("ContactMessages/{messageId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    const mailOptions = {
+      from: "admin@dawatime.com",
+      to: "help@dawatime.com",
+      replyTo: data.userEmail || "admin@dawatime.com",
+      subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
+      text: `Message: ${data.message}`,
+    };
+    await transporter.sendMail(mailOptions);
+  });
 
 exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
@@ -57,7 +41,7 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
     return;
   }
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
-  const {email, password, reason} = req.body;
+  const { email, password, reason } = req.body;
   if (!email || !password) {
     return res.status(400).send("Email and password required");
   }
@@ -65,12 +49,12 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
   try {
     const apiKey = "AIzaSyAqewZt32r_IYN59KCrrP90qYitKDz1wZE";
     const signInResp = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({email, password, returnSecureToken: true}),
-        },
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, returnSecureToken: true }),
+      }
     );
     const signInData = await signInResp.json();
     if (!signInData.localId) {
@@ -103,13 +87,13 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
     }
 
     await admin
-        .firestore()
-        .collection("deletion_requests")
-        .add({
-          email,
-          reason: reason || "",
-          requestedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
+      .firestore()
+      .collection("deletion_requests")
+      .add({
+        email,
+        reason: reason || "",
+        requestedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
 
     return res.status(200).send("Account and data deleted");
   } catch (error) {
@@ -117,3 +101,14 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
     return res.status(500).send("Error processing deletion");
   }
 });
+
+exports.blockAccessFromCertainCountries = functions.https.onRequest(
+  (req, res) => {
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const geo = geoip.lookup(ip);
+    if (geo && blockedCountries.includes(geo.country)) {
+      return res.status(403).send("Access denied in your country.");
+    }
+    res.status(200).send("Access granted.");
+  }
+);
