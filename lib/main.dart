@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dawatime/home_page.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
@@ -474,6 +476,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkUpdateAndNavigate() async {
+    final blocked = await isBlockedCountry();
+    if (blocked) {
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder:
+            (context) => AlertDialog(
+              title: const Text('Access Denied'),
+              content: const Text('This app is not available in your country.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  child: const Text('Exit'),
+                ),
+              ],
+            ),
+      );
+      return;
+    }
+
     try {
       final updateNeeded = await isUpdateRequired(
         context,
@@ -537,15 +561,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
 Future<bool> isBlockedCountry() async {
   final blockedCountries = ['IL'];
+  bool blockedByIp = false;
+  bool blockedByGps = false;
   try {
-    Position position = await Geolocator.getCurrentPosition();
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
-    String? countryCode = placemarks.first.isoCountryCode;
-    return blockedCountries.contains(countryCode);
-  } catch (e) {
-    return false;
-  }
+    final response = await http.get(Uri.parse('https://ipapi.co/json/'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final countryCode = data['country_code'];
+      if (blockedCountries.contains(countryCode)) {
+        blockedByIp = true;
+      }
+    }
+  } catch (_) {}
+  try {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (serviceEnabled) {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always) {
+        final position = await Geolocator.getCurrentPosition();
+        final placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        final countryCode = placemarks.first.isoCountryCode;
+        if (blockedCountries.contains(countryCode)) {
+          blockedByGps = true;
+        }
+      }
+    }
+  } catch (_) {}
+
+  return blockedByIp || blockedByGps;
 }
