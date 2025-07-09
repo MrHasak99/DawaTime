@@ -26,6 +26,9 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   http: ^1.4.0
+  firebase_crashlytics: ^4.3.9
+  firebase_analytics: ^11.5.2
+  firebase_performance: ^0.10.1+9
 
 dev_dependencies:
   flutter_test:
