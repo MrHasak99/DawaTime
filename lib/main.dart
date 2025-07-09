@@ -483,14 +483,24 @@ class _SplashScreenState extends State<SplashScreen> {
         barrierDismissible: false,
         builder:
             (context) => AlertDialog(
-              title: const Text('Access Denied'),
-              content: const Text('This app is not available in your country.'),
+              backgroundColor: Colors.red,
+              title: const Text(
+                'Access Denied',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: const Text(
+                'This app is not available in your country.',
+                style: TextStyle(color: Colors.white),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
                     SystemNavigator.pop();
                   },
-                  child: const Text('Exit'),
+                  child: const Text(
+                    'Exit',
+                    style: TextStyle(color: Colors.white, fontFamily: 'Inter'),
+                  ),
                 ),
               ],
             ),
@@ -564,10 +574,10 @@ Future<bool> isBlockedCountry() async {
   bool blockedByIp = false;
   bool blockedByGps = false;
   try {
-    final response = await http.get(Uri.parse('https://ipapi.co/json/'));
+    final response = await http.get(Uri.parse('https://ipinfo.io/json'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final countryCode = data['country_code'];
+      final countryCode = data['country'];
       if (blockedCountries.contains(countryCode)) {
         blockedByIp = true;
       }
