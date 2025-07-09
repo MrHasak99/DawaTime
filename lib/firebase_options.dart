@@ -58,11 +58,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyABKQR0uOhrIqZ4RXV19C76EEfyzDq9CPQ',
-    appId: '1:173965270100:ios:bc0f09e9bf64e849c8e1c1',
+    appId: '1:173965270100:ios:e04ad7a89364b20fc8e1c1',
     messagingSenderId: '173965270100',
     projectId: 'medication-cd9b8',
     storageBucket: 'medication-cd9b8.firebasestorage.app',
-    iosBundleId: 'com.mrhasak99.dawatimeFull',
+    iosBundleId: 'com.mrhasak99.dawatime',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
