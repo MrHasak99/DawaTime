@@ -19,18 +19,18 @@ const transporter = nodemailer.createTransport({
 const blockedCountries = ["IL"];
 
 exports.emailAdminsOnContactMessage = functions.firestore
-  .document("ContactMessages/{messageId}")
-  .onCreate(async (snap, context) => {
-    const data = snap.data();
-    const mailOptions = {
-      from: "admin@dawatime.com",
-      to: "help@dawatime.com",
-      replyTo: data.userEmail || "admin@dawatime.com",
-      subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
-      text: `Message: ${data.message}`,
-    };
-    await transporter.sendMail(mailOptions);
-  });
+    .document("ContactMessages/{messageId}")
+    .onCreate(async (snap, context) => {
+      const data = snap.data();
+      const mailOptions = {
+        from: "admin@dawatime.com",
+        to: "help@dawatime.com",
+        replyTo: data.userEmail || "admin@dawatime.com",
+        subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
+        text: `Message: ${data.message}`,
+      };
+      await transporter.sendMail(mailOptions);
+    });
 
 exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
@@ -41,7 +41,7 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
     return;
   }
   if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
-  const { email, password, reason } = req.body;
+  const {email, password, reason} = req.body;
   if (!email || !password) {
     return res.status(400).send("Email and password required");
   }
@@ -49,12 +49,12 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
   try {
     const apiKey = "AIzaSyAqewZt32r_IYN59KCrrP90qYitKDz1wZE";
     const signInResp = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, returnSecureToken: true }),
-      }
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({email, password, returnSecureToken: true}),
+        },
     );
     const signInData = await signInResp.json();
     if (!signInData.localId) {
@@ -87,13 +87,13 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
     }
 
     await admin
-      .firestore()
-      .collection("deletion_requests")
-      .add({
-        email,
-        reason: reason || "",
-        requestedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+        .firestore()
+        .collection("deletion_requests")
+        .add({
+          email,
+          reason: reason || "",
+          requestedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
 
     return res.status(200).send("Account and data deleted");
   } catch (error) {
@@ -103,12 +103,12 @@ exports.requestAccountDeletion = functions.https.onRequest(async (req, res) => {
 });
 
 exports.blockAccessFromCertainCountries = functions.https.onRequest(
-  (req, res) => {
-    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    const geo = geoip.lookup(ip);
-    if (geo && blockedCountries.includes(geo.country)) {
-      return res.status(403).send("Access denied in your country.");
-    }
-    res.status(200).send("Access granted.");
-  }
+    (req, res) => {
+      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      const geo = geoip.lookup(ip);
+      if (geo && blockedCountries.includes(geo.country)) {
+        return res.status(403).send("Access denied in your country.");
+      }
+      res.status(200).send("Access granted.");
+    },
 );
