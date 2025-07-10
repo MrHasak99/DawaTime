@@ -72,7 +72,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     decoration: InputDecoration(
                       labelText: "Name",
-                      labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      labelStyle: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
@@ -93,7 +95,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     decoration: InputDecoration(
                       labelText: "Email",
-                      labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      labelStyle: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
@@ -127,7 +131,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: Color(0xFF8AC249),
                         ),
                         onPressed: () {
@@ -160,7 +166,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                          _obscureConfirmPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: Color(0xFF8AC249),
                         ),
                         onPressed: () {
@@ -186,7 +194,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
@@ -197,7 +207,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               TextSpan(
                                 text: "Terms & Conditions",
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
@@ -237,7 +249,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
@@ -248,7 +262,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               TextSpan(
                                 text: "Privacy Policy",
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: Color(0xFF8AC249),
                                   fontWeight: FontWeight.bold,
@@ -307,7 +323,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 backgroundColor: Colors.red,
                                 content: Text(
                                   "Passwords do not match",
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
@@ -367,7 +385,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(
-                                  e.message ?? "Sign up failed",
+                                  getFriendlyAuthError(e),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -382,7 +400,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                         child: Text(
                           "Sign Up",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -395,5 +415,20 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+}
+
+String getFriendlyAuthError(FirebaseAuthException e) {
+  switch (e.code) {
+    case 'email-already-in-use':
+      return "This email is already registered. Please use another email or log in.";
+    case 'invalid-email':
+      return "The email address is not valid. Please check and try again.";
+    case 'weak-password':
+      return "Your password is too weak. Please use at least 6 characters.";
+    case 'operation-not-allowed':
+      return "This sign up method is not enabled. Please contact support.";
+    default:
+      return "Sign up failed. Please try again.";
   }
 }

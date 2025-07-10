@@ -1293,7 +1293,7 @@ class _HomePageState extends State<HomePage> {
                                 SnackBar(
                                   backgroundColor: const Color(0xFF8AC249),
                                   content: Text(
-                                    'Failed to delete medication: $e',
+                                    'Could not delete this medication. Please try again.',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -1490,7 +1490,7 @@ class _HomePageState extends State<HomePage> {
                                             0xFF8AC249,
                                           ),
                                           content: Text(
-                                            'Failed to update medication: $e',
+                                            'Could not update your medication. Please try again.',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
