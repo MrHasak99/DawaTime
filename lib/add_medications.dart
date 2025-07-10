@@ -656,7 +656,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   SnackBar(
                                                     backgroundColor: Colors.red,
                                                     content: Text(
-                                                      'Failed to save medication: $e',
+                                                      'Could not save your medication. Please check your details and try again.',
                                                       style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:

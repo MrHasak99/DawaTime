@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                               SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(
-                                  e.message ?? "Login failed",
+                                  getFriendlyLoginError(e),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -403,5 +403,20 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+}
+
+String getFriendlyLoginError(FirebaseAuthException e) {
+  switch (e.code) {
+    case 'user-not-found':
+      return "No account found for this email. Please sign up first.";
+    case 'wrong-password':
+      return "Incorrect password. Please try again.";
+    case 'invalid-email':
+      return "The email address is not valid.";
+    case 'user-disabled':
+      return "This account has been disabled. Please contact support.";
+    default:
+      return "Login failed. Please check your credentials and try again.";
   }
 }
