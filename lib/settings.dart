@@ -67,13 +67,6 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: const BackButton(color: Colors.white),
             title: Row(
               children: [
-                Image.asset(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? 'assets/DawaTime_white.png'
-                      : 'assets/DawaTime_green.png',
-                  height: 36,
-                ),
-                const SizedBox(width: 12),
                 Text(
                   "Settings",
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
