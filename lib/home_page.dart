@@ -931,17 +931,80 @@ class _HomePageState extends State<HomePage> {
                                                         : Colors.black,
                                               ),
                                               onTap: () async {
+                                                final isDark =
+                                                    Theme.of(
+                                                      context,
+                                                    ).brightness ==
+                                                    Brightness.dark;
+                                                final primaryColor =
+                                                    const Color(0xFF8AC249);
+                                                final surfaceColor =
+                                                    isDark
+                                                        ? const Color(
+                                                          0xFF222222,
+                                                        )
+                                                        : Colors.white;
+                                                final onSurfaceColor =
+                                                    isDark
+                                                        ? Colors.white
+                                                        : primaryColor;
+
                                                 final now = DateTime.now();
-                                                final picked =
-                                                    await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          localStartDate ?? now,
-                                                      firstDate: now,
-                                                      lastDate: DateTime(
-                                                        now.year + 10,
+                                                final picked = await showDatePicker(
+                                                  context: context,
+                                                  initialDate:
+                                                      localStartDate ?? now,
+                                                  firstDate: now,
+                                                  lastDate: DateTime(
+                                                    now.year + 10,
+                                                  ),
+                                                  builder: (context, child) {
+                                                    return Theme(
+                                                      data: Theme.of(
+                                                        context,
+                                                      ).copyWith(
+                                                        colorScheme: ColorScheme(
+                                                          brightness:
+                                                              isDark
+                                                                  ? Brightness
+                                                                      .dark
+                                                                  : Brightness
+                                                                      .light,
+                                                          primary: primaryColor,
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          secondary:
+                                                              primaryColor,
+                                                          onSecondary:
+                                                              Colors.white,
+                                                          error: Colors.red,
+                                                          onError: Colors.white,
+                                                          surface: surfaceColor,
+                                                          onSurface:
+                                                              onSurfaceColor,
+                                                        ),
+                                                        textButtonTheme: TextButtonThemeData(
+                                                          style: TextButton.styleFrom(
+                                                            foregroundColor:
+                                                                primaryColor,
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        dialogTheme:
+                                                            DialogThemeData(
+                                                              backgroundColor:
+                                                                  surfaceColor,
+                                                            ),
                                                       ),
+                                                      child: child!,
                                                     );
+                                                  },
+                                                );
                                                 if (picked != null) {
                                                   setState(() {
                                                     localStartDate = picked;
