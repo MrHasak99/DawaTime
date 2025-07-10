@@ -8,6 +8,7 @@ import 'package:dawatime/main.dart'
         notificationsInitialized,
         themeModeNotifier;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -173,6 +174,51 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ],
                                 ),
                                 const SizedBox(height: 24),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        launchUrl(
+                                          Uri.parse(
+                                            'https://dawatime.web.app/PrivacyPolicy.pdf',
+                                          ),
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Privacy Policy',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        launchUrl(
+                                          Uri.parse(
+                                            'https://dawatime.web.app/Terms&Conditions.pdf',
+                                          ),
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Terms & Conditions',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton.icon(
@@ -330,7 +376,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: Icon(
                                   Icons.account_circle,
                                   size: 72,
-                                  color: Colors.white,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 22),
