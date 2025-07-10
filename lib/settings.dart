@@ -182,7 +182,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         Navigator.pop(context);
                                         launchUrl(
                                           Uri.parse(
-                                            'https://dawatime.web.app/PrivacyPolicy.pdf',
+                                            'https://dawatime.com/PrivacyPolicy.pdf',
                                           ),
                                           mode: LaunchMode.externalApplication,
                                         );
@@ -202,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         Navigator.pop(context);
                                         launchUrl(
                                           Uri.parse(
-                                            'https://dawatime.web.app/Terms&Conditions.pdf',
+                                            'https://dawatime.com/Terms&Conditions.pdf',
                                           ),
                                           mode: LaunchMode.externalApplication,
                                         );
@@ -379,8 +379,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                   color:
                                       Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
+                                          ? Colors.black
+                                          : Colors.white,
                                 ),
                               ),
                               const SizedBox(height: 22),
