@@ -65,18 +65,16 @@ class _SettingsPageState extends State<SettingsPage> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: const BackButton(color: Colors.white),
-            title: Row(
-              children: [
-                Text(
-                  "Settings",
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ],
+            centerTitle: true,
+            title: Text(
+              "Settings",
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+                letterSpacing: 1.2,
+              ),
+              textAlign: TextAlign.center,
             ),
             actions: [
               IconButton(
@@ -159,6 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                         ),
@@ -185,6 +184,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         style: TextStyle(
                                           color: Colors.white,
                                           decoration: TextDecoration.underline,
+                                          decorationColor: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -205,6 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         style: TextStyle(
                                           color: Colors.white,
                                           decoration: TextDecoration.underline,
+                                          decorationColor: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -226,7 +227,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ),
                                       elevation: 0,
                                     ),
-                                    icon: const Icon(Icons.close),
                                     label: const Text(
                                       'Close',
                                       style: TextStyle(
@@ -311,7 +311,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ],
-            centerTitle: false,
           ),
         ),
       ),
@@ -369,11 +368,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: Icon(
                                   Icons.account_circle,
                                   size: 72,
-                                  color:
-                                      Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.white,
+                                  color: Theme.of(context).cardColor,
                                 ),
                               ),
                               const SizedBox(height: 22),
