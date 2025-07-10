@@ -24,6 +24,7 @@ class Medications {
   final int frequency;
   final double amount;
   final String? notifyTime;
+  final DateTime? startDate;
 
   Medications({
     required this.name,
@@ -32,6 +33,7 @@ class Medications {
     required this.frequency,
     required this.amount,
     this.notifyTime,
+    this.startDate,
   });
 
   factory Medications.fromMap(Map<String, dynamic> data) {
@@ -42,6 +44,10 @@ class Medications {
       frequency: (data['frequency'] ?? 1),
       amount: (data['amount'] ?? 0).toDouble(),
       notifyTime: data['notifyTime']?.toString(),
+      startDate:
+          data['startDate'] != null
+              ? DateTime.tryParse(data['startDate'])
+              : null,
     );
   }
 
@@ -53,6 +59,7 @@ class Medications {
       'frequency': frequency,
       'amount': amount,
       'notifyTime': notifyTime,
+      'startDate': startDate?.toIso8601String(),
     };
   }
 }
@@ -107,6 +114,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initBackgroundFetch();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      rescheduleAllMedications(user.uid);
+    }
 
     _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       _checkAndShowDueMedications();
@@ -542,6 +554,8 @@ class _HomePageState extends State<HomePage> {
                             }
                           }
 
+                          DateTime? localStartDate = medication.startDate;
+
                           final result = await showDialog<bool>(
                             context: context,
                             builder: (context) {
@@ -889,6 +903,52 @@ class _HomePageState extends State<HomePage> {
                                                 }
                                               },
                                             ),
+                                            ListTile(
+                                              title: Text(
+                                                localStartDate == null
+                                                    ? "Pick Schedule Start Date"
+                                                    : "Start Date: ${localStartDate!.day.toString().padLeft(2, '0')}-${localStartDate!.month.toString().padLeft(2, '0')}-${localStartDate!.year}",
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              trailing: Icon(
+                                                Icons.calendar_today,
+                                                color:
+                                                    Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                              ),
+                                              onTap: () async {
+                                                final now = DateTime.now();
+                                                final picked =
+                                                    await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          localStartDate ?? now,
+                                                      firstDate: now,
+                                                      lastDate: DateTime(
+                                                        now.year + 10,
+                                                      ),
+                                                    );
+                                                if (picked != null) {
+                                                  setState(() {
+                                                    localStartDate = picked;
+                                                  });
+                                                }
+                                              },
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -946,6 +1006,27 @@ class _HomePageState extends State<HomePage> {
                                                 );
                                                 return;
                                               }
+                                              if (localStartDate == null) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    backgroundColor: Color(
+                                                      0xFF8AC249,
+                                                    ),
+                                                    content: Text(
+                                                      "Please pick a schedule start date",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Inter',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                                return;
+                                              }
                                               try {
                                                 final oldData =
                                                     docs[index].data()
@@ -981,6 +1062,9 @@ class _HomePageState extends State<HomePage> {
                                                                   null
                                                               ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
                                                               : '',
+                                                      'startDate':
+                                                          localStartDate!
+                                                              .toIso8601String(),
                                                     });
                                                 final updatedDoc =
                                                     await firestore
@@ -1353,6 +1437,45 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       );
                                     }
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: const Color(
+                                            0xFF8AC249,
+                                          ),
+                                          title: Text(
+                                            "You're out of ${medication.name}!",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          content: Text(
+                                            "Please refill your ${medication.name}.",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text(
+                                                "OK",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   }
                                 } else {
                                   showDialog(
@@ -1590,7 +1713,19 @@ Future<void> scheduleMedicationNotification(
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return;
   final now = DateTime.now();
-  var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+
+  DateTime baseDate =
+      medication.startDate != null
+          ? DateTime(
+            medication.startDate!.year,
+            medication.startDate!.month,
+            medication.startDate!.day,
+            hour,
+            minute,
+          )
+          : DateTime(now.year, now.month, now.day, hour, minute);
+
+  var scheduledTime = baseDate;
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
@@ -1716,7 +1851,18 @@ String? getNextReminder(Medications medication) {
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return null;
   final now = DateTime.now();
-  var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+  DateTime baseDate =
+      medication.startDate != null
+          ? DateTime(
+            medication.startDate!.year,
+            medication.startDate!.month,
+            medication.startDate!.day,
+            hour,
+            minute,
+          )
+          : DateTime(now.year, now.month, now.day, hour, minute);
+
+  var scheduledTime = baseDate;
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
