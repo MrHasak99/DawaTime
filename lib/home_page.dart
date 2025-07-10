@@ -583,6 +583,7 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
                                               decoration: InputDecoration(
                                                 labelText: 'Name',
@@ -613,6 +614,7 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
                                               decoration: InputDecoration(
                                                 labelText:
@@ -644,6 +646,7 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
                                               keyboardType:
                                                   TextInputType.number,
@@ -676,6 +679,7 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
                                               keyboardType:
                                                   TextInputType.number,
@@ -709,6 +713,7 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                color: Colors.white,
                                               ),
                                               keyboardType:
                                                   TextInputType.number,
@@ -740,26 +745,14 @@ class _HomePageState extends State<HomePage> {
                                                     ? "Pick Notification Time"
                                                     : "Notify at: ${localNotifyTime!.format(context)}",
                                                 style: TextStyle(
-                                                  color:
-                                                      Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                 ),
                                               ),
                                               trailing: Icon(
                                                 Icons.access_time,
-                                                color:
-                                                    Theme.of(
-                                                              context,
-                                                            ).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black,
+                                                color: Colors.white,
                                               ),
                                               onTap: () async {
                                                 final isDark =
@@ -909,26 +902,14 @@ class _HomePageState extends State<HomePage> {
                                                     ? "Pick Schedule Start Date"
                                                     : "Start Date: ${localStartDate!.day.toString().padLeft(2, '0')}-${localStartDate!.month.toString().padLeft(2, '0')}-${localStartDate!.year}",
                                                 style: TextStyle(
-                                                  color:
-                                                      Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                                  color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                 ),
                                               ),
                                               trailing: Icon(
                                                 Icons.calendar_today,
-                                                color:
-                                                    Theme.of(
-                                                              context,
-                                                            ).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black,
+                                                color: Colors.white,
                                               ),
                                               onTap: () async {
                                                 final isDark =

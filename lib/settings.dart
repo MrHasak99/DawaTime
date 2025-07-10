@@ -18,6 +18,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool _obscureEmailPassword = true;
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -400,21 +402,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  ElevatedButton.icon(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Color(0xFF8AC249),
-                                    ),
-                                    label: Text(
-                                      "Edit Profile",
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyLarge?.copyWith(
-                                        color: const Color(0xFF8AC249),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                  ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
                                           Theme.of(context).brightness ==
@@ -605,6 +593,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                         }
                                       }
                                     },
+                                    child: Text(
+                                      "Edit Profile",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        color: const Color(0xFF8AC249),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                   const SizedBox(height: 14),
 
@@ -650,141 +648,184 @@ class _SettingsPageState extends State<SettingsPage> {
                                       >(
                                         context: rootContext,
                                         builder:
-                                            (context) => AlertDialog(
-                                              backgroundColor: const Color(
-                                                0xFF8AC249,
-                                              ),
-                                              title: const Text(
-                                                'Change Email',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  TextField(
-                                                    controller:
-                                                        newEmailController,
-                                                    cursorColor: Colors.white,
-                                                    keyboardType:
-                                                        TextInputType
-                                                            .emailAddress,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                    decoration: const InputDecoration(
-                                                      labelText: 'New Email',
-                                                      labelStyle: TextStyle(
+                                            (context) => StatefulBuilder(
+                                              builder:
+                                                  (
+                                                    context,
+                                                    setDialogState,
+                                                  ) => AlertDialog(
+                                                    backgroundColor:
+                                                        const Color(0xFF8AC249),
+                                                    title: const Text(
+                                                      'Change Email',
+                                                      style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
-                                                      focusedBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
-                                                          ),
-                                                      enabledBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
-                                                          ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(height: 12),
-                                                  TextField(
-                                                    controller:
-                                                        passwordController,
-                                                    obscureText: true,
-                                                    cursorColor: Colors.white,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                    content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TextField(
+                                                          controller:
+                                                              newEmailController,
+                                                          cursorColor:
+                                                              Colors.white,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .emailAddress,
+                                                          style: Theme.of(
+                                                                context,
+                                                              )
+                                                              .textTheme
+                                                              .bodyLarge
+                                                              ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          decoration: const InputDecoration(
+                                                            labelText:
+                                                                'New Email',
+                                                            labelStyle:
+                                                                TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                            focusedBorder:
+                                                                UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
+                                                                ),
+                                                            enabledBorder:
+                                                                UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
+                                                                ),
+                                                          ),
                                                         ),
-                                                    decoration: const InputDecoration(
-                                                      labelText:
-                                                          'Current Password',
-                                                      labelStyle: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                      focusedBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
+                                                        const SizedBox(
+                                                          height: 12,
+                                                        ),
+                                                        TextField(
+                                                          controller:
+                                                              passwordController,
+                                                          obscureText:
+                                                              _obscureEmailPassword,
+                                                          cursorColor:
+                                                              Colors.white,
+                                                          style: Theme.of(
+                                                                context,
+                                                              )
+                                                              .textTheme
+                                                              .bodyLarge
+                                                              ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          decoration: InputDecoration(
+                                                            labelText:
+                                                                'Current Password',
+                                                            labelStyle:
+                                                                const TextStyle(
                                                                   color:
                                                                       Colors
                                                                           .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                            suffixIcon: IconButton(
+                                                              icon: Icon(
+                                                                _obscureEmailPassword
+                                                                    ? Icons
+                                                                        .visibility_off
+                                                                    : Icons
+                                                                        .visibility,
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                              onPressed: () {
+                                                                setDialogState(() {
+                                                                  _obscureEmailPassword =
+                                                                      !_obscureEmailPassword;
+                                                                });
+                                                              },
+                                                            ),
+                                                            focusedBorder:
+                                                                const UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
+                                                                ),
+                                                            enabledBorder:
+                                                                const UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
                                                                 ),
                                                           ),
-                                                      enabledBorder:
-                                                          UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed:
+                                                            () => Navigator.pop(
+                                                              context,
+                                                              false,
+                                                            ),
+                                                        child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.pop(
-                                                        context,
-                                                        false,
+                                                        ),
                                                       ),
-                                                  child: const Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                            Colors.white,
+                                                      ElevatedButton(
+                                                        style:
+                                                            ElevatedButton.styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                            ),
+                                                        onPressed:
+                                                            () => Navigator.pop(
+                                                              context,
+                                                              true,
+                                                            ),
+                                                        child: const Text(
+                                                          'Change',
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                              0xFF8AC249,
+                                                            ),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
-                                                  onPressed:
-                                                      () => Navigator.pop(
-                                                        context,
-                                                        true,
-                                                      ),
-                                                  child: const Text(
-                                                    'Change',
-                                                    style: TextStyle(
-                                                      color: Color(0xFF8AC249),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
                                             ),
                                       );
                                       if (emailResult == true &&
