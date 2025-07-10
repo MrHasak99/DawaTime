@@ -28,6 +28,7 @@ class _AddMedicationsState extends State<AddMedications> {
   TextEditingController amountController = TextEditingController();
   TextEditingController frequencyController = TextEditingController();
   TimeOfDay? _selectedTime;
+  DateTime? _selectedStartDate;
 
   @override
   void initState() {
@@ -47,6 +48,9 @@ class _AddMedicationsState extends State<AddMedications> {
             minute: int.tryParse(parts[1]) ?? 0,
           );
         }
+      }
+      if (widget.medication!.startDate != null) {
+        _selectedStartDate = widget.medication!.startDate;
       }
     }
   }
@@ -400,6 +404,34 @@ class _AddMedicationsState extends State<AddMedications> {
                                     },
                                   ),
                                   const SizedBox(height: 16),
+                                  ListTile(
+                                    title: Text(
+                                      _selectedStartDate == null
+                                          ? "Pick Schedule Start Date"
+                                          : "Start Date: ${_selectedStartDate!.day.toString().padLeft(2, '0')}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.year}",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.calendar_today),
+                                    onTap: () async {
+                                      final now = DateTime.now();
+                                      final picked = await showDatePicker(
+                                        context: context,
+                                        initialDate: _selectedStartDate ?? now,
+                                        firstDate: now,
+                                        lastDate: DateTime(now.year + 10),
+                                      );
+                                      if (picked != null) {
+                                        setState(() {
+                                          _selectedStartDate = picked;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 16),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -447,6 +479,25 @@ class _AddMedicationsState extends State<AddMedications> {
                                                 );
                                                 return;
                                               }
+                                              if (_selectedStartDate == null) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    backgroundColor: Colors.red,
+                                                    content: Text(
+                                                      "Please pick a schedule start date",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Inter',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                                return;
+                                              }
                                               try {
                                                 if (widget.docId != null) {
                                                   await firestore
@@ -481,6 +532,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                     null
                                                                 ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
                                                                 : '',
+                                                        'startDate':
+                                                            _selectedStartDate!
+                                                                .toIso8601String(),
                                                       });
                                                   final updatedDoc =
                                                       await firestore
@@ -530,6 +584,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                     null
                                                                 ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
                                                                 : '',
+                                                        'startDate':
+                                                            _selectedStartDate!
+                                                                .toIso8601String(),
                                                       });
                                                   final newDoc =
                                                       await docRef.get();
