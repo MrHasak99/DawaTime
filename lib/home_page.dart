@@ -13,6 +13,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final StreamController<NotificationResponse> selectNotificationStream =
     StreamController<NotificationResponse>.broadcast();
@@ -82,6 +83,8 @@ class _HomePageState extends State<HomePage> {
   Timer? _medicationCheckTimer;
   final Set<String> _shownAlerts = {};
 
+  bool _showIntroGuide = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -114,6 +117,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initBackgroundFetch();
+    _checkIntroGuide();
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -175,6 +179,81 @@ class _HomePageState extends State<HomePage> {
             forceNextDay: true,
           );
         }
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_showIntroGuide && mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: const Color(0xFF8AC249),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                title: const Text(
+                  'Welcome to DawaTime!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Here’s how to get started:',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        '• Add your medications using the "+" button.\n'
+                        '• Set reminders for each medication so you never miss a dose.\n'
+                        '• Tap a medication to view details or edit it.\n'
+                        '• Swipe left to delete or right to edit a medication.\n'
+                        '• Check your upcoming reminders on the home screen.\n'
+                        '• Manage your profile and settings from the top right.',
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'You’ll receive notifications when it’s time to take your medication—even if the app is closed!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('seenIntroGuide', true);
+                      setState(() {
+                        _showIntroGuide = false;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Got it!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        );
       }
     });
   }
@@ -280,6 +359,88 @@ class _HomePageState extends State<HomePage> {
       if (now.isBefore(scheduledTime.subtract(const Duration(seconds: 3)))) {
         _shownAlerts.remove(doc.id);
       }
+    }
+  }
+
+  Future<void> _checkIntroGuide() async {
+    final prefs = await SharedPreferences.getInstance();
+    final seenGuide = prefs.getBool('seenIntroGuide') ?? false;
+    if (!seenGuide && mounted) {
+      setState(() {
+        _showIntroGuide = true;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: const Color(0xFF8AC249),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                title: const Text(
+                  'Welcome to DawaTime!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Here’s how to get started:',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        '• Add your medications using the "+" button.\n'
+                        '• Set reminders for each medication so you never miss a dose.\n'
+                        '• Tap a medication to view details or edit it.\n'
+                        '• Swipe left to delete or right to edit a medication.\n'
+                        '• Check your upcoming reminders on the home screen.\n'
+                        '• Manage your profile and settings from the top right.',
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'You’ll receive notifications when it’s time to take your medication—even if the app is closed!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('seenIntroGuide', true);
+                      setState(() {
+                        _showIntroGuide = false;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Got it!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        );
+      });
     }
   }
 
