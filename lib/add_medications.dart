@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dawatime/login_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
@@ -53,6 +54,52 @@ class _AddMedicationsState extends State<AddMedications> {
         _selectedStartDate = widget.medication!.startDate;
       }
     }
+    selectNotificationStream.stream.listen((
+      NotificationResponse response,
+    ) async {
+      if (response.payload != null && context.mounted) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final doc =
+              await FirebaseFirestore.instance
+                  .collection(user.uid)
+                  .doc(response.payload!)
+                  .get();
+          if (doc.exists) {
+            final medication = medicationFromDoc(doc);
+            showDialog(
+              context: context,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    title: Text(
+                      'Time to take ${medication.name}!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          'OK',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            );
+          }
+        }
+      }
+    });
   }
 
   @override

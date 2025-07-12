@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dawatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'login_page.dart';
 import 'package:dawatime/main.dart'
     show
@@ -19,6 +21,57 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _obscureEmailPassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    selectNotificationStream.stream.listen((
+      NotificationResponse response,
+    ) async {
+      if (response.payload != null && context.mounted) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final doc =
+              await FirebaseFirestore.instance
+                  .collection(user.uid)
+                  .doc(response.payload!)
+                  .get();
+          if (doc.exists) {
+            final medication = medicationFromDoc(doc);
+            showDialog(
+              context: context,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    title: Text(
+                      'Time to take ${medication.name}!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          'OK',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            );
+          }
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

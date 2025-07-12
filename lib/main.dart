@@ -101,6 +101,7 @@ Future<void> main() async {
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {
+      selectNotificationStream.add(response);
       if (navigatorKey.currentContext != null && response.payload != null) {
         showDialog(
           context: navigatorKey.currentContext!,
