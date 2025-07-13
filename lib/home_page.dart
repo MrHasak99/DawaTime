@@ -84,6 +84,34 @@ class _HomePageState extends State<HomePage> {
   final Set<String> _shownAlerts = {};
 
   bool _showIntroGuide = false;
+  int _introStep = 0;
+
+  final List<Map<String, String>> _introSteps = [
+    {
+      'title': 'Welcome to DawaTime!',
+      'body':
+          'DawaTime helps you manage your medications and reminders with ease.',
+    },
+    {
+      'title': 'Add Medications',
+      'body':
+          'Tap the "+" button to add a new medication and set up reminders.',
+    },
+    {
+      'title': 'Edit & Delete',
+      'body':
+          'Swipe right to edit or left to delete a medication from your list.',
+    },
+    {
+      'title': 'Notifications',
+      'body':
+          "You'll get notified when it's time to take your medication—even if the app is closed!",
+    },
+    {
+      'title': 'Profile & Settings',
+      'body': 'Manage your profile and app settings from the top right corner.',
+    },
+  ];
 
   @override
   void didChangeDependencies() {
@@ -205,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'Here’s how to get started:',
+                        "Here's how to get started:",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -223,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        'You’ll receive notifications when it’s time to take your medication—even if the app is closed!',
+                        "You'll receive notifications when it's time to take your medication — even if the app is closed!",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -368,80 +396,92 @@ class _HomePageState extends State<HomePage> {
     if (!seenGuide && mounted) {
       setState(() {
         _showIntroGuide = true;
+        _introStep = 0;
       });
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-          context: context,
-          barrierDismissible: true,
+        _showInteractiveGuide();
+      });
+    }
+  }
+
+  void _showInteractiveGuide() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
           builder:
-              (context) => AlertDialog(
+              (context, setState) => AlertDialog(
                 backgroundColor: const Color(0xFF8AC249),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                title: const Text(
-                  'Welcome to DawaTime!',
-                  style: TextStyle(
+                title: Text(
+                  _introSteps[_introStep]['title']!,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Here’s how to get started:',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        '• Add your medications using the "+" button.\n'
-                        '• Set reminders for each medication so you never miss a dose.\n'
-                        '• Tap a medication to view details or edit it.\n'
-                        '• Swipe left to delete or right to edit a medication.\n'
-                        '• Check your upcoming reminders on the home screen.\n'
-                        '• Manage your profile and settings from the top right.',
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'You’ll receive notifications when it’s time to take your medication—even if the app is closed!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
+                content: Text(
+                  _introSteps[_introStep]['body']!,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 actions: [
-                  TextButton(
-                    onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool('seenIntroGuide', true);
-                      setState(() {
-                        _showIntroGuide = false;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      'Got it!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                  if (_introStep > 0)
+                    TextButton(
+                      onPressed:
+                          () => setState(() {
+                            _introStep--;
+                          }),
+                      child: Text(
+                        'Back',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
-                  ),
+                  if (_introStep < _introSteps.length - 1)
+                    TextButton(
+                      onPressed:
+                          () => setState(() {
+                            _introStep++;
+                          }),
+                      child: Text(
+                        'Next',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  if (_introStep == _introSteps.length - 1)
+                    TextButton(
+                      onPressed: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('seenIntroGuide', true);
+                        setState(() {
+                          _showIntroGuide = false;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Finish',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
                 ],
               ),
         );
-      });
-    }
+      },
+    );
   }
 
   @override
