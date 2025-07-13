@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +16,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:background_fetch/background_fetch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
@@ -31,28 +31,40 @@ final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
   ThemeMode.system,
 );
 
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  String taskId = task.taskId;
-  bool timeout = task.timeout;
-  if (timeout) {
-    BackgroundFetch.finish(taskId);
-    return;
-  }
-  await Firebase.initializeApp();
-  final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    final now = DateTime.now();
-    if (now.hour == 0 && now.minute < 20) {
-      await rescheduleAllMedications(user.uid);
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await Firebase.initializeApp();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final now = DateTime.now();
+      if (now.hour == 0 && now.minute < 20) {
+        await rescheduleAllMedications(user.uid);
+      }
     }
-  }
-  BackgroundFetch.finish(taskId);
+    return Future.value(true);
+  });
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+
+  Workmanager().registerPeriodicTask(
+    "medicationRescheduleTask",
+    "medicationRescheduleTask",
+    frequency: Duration(hours: 1),
+    initialDelay: Duration(minutes: 1),
+    constraints: Constraints(
+      networkType: NetworkType.notRequired,
+      requiresCharging: false,
+      requiresDeviceIdle: false,
+      requiresBatteryNotLow: false,
+      requiresStorageNotLow: false,
+    ),
+  );
 
   final prefs = await SharedPreferences.getInstance();
   final themeString = prefs.getString('themeMode');
@@ -170,8 +182,6 @@ Future<void> main() async {
   };
 
   runApp(const MainApp());
-
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MainApp extends StatelessWidget {

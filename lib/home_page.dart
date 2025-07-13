@@ -12,7 +12,6 @@ import 'package:dawatime/settings.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:background_fetch/background_fetch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final StreamController<NotificationResponse> selectNotificationStream =
@@ -144,7 +143,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    initBackgroundFetch();
     _checkIntroGuide();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -284,37 +282,6 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
-  }
-
-  void initBackgroundFetch() async {
-    BackgroundFetch.configure(
-      BackgroundFetchConfig(
-        minimumFetchInterval: 15,
-        stopOnTerminate: false,
-        enableHeadless: true,
-        startOnBoot: true,
-        requiresBatteryNotLow: false,
-        requiresCharging: false,
-        requiresStorageNotLow: false,
-        requiresDeviceIdle: false,
-        requiredNetworkType: NetworkType.NONE,
-      ),
-      (String taskId) async {
-        await Firebase.initializeApp();
-        final user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          final now = DateTime.now();
-          if (now.hour == 0 && now.minute < 20) {
-            await rescheduleAllMedications(user.uid);
-          }
-        }
-        BackgroundFetch.finish(taskId);
-      },
-      (String taskId) async {
-        BackgroundFetch.finish(taskId);
-      },
-    );
-    BackgroundFetch.start();
   }
 
   @override

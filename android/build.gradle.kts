@@ -2,6 +2,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
+        maven { url = uri("https://maven.transistorsoft.com/repository/background-fetch") }
     }
 }
 

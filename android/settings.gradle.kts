@@ -13,6 +13,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://maven.transistorsoft.com/repository/background-fetch") }
     }
 }
 
@@ -24,7 +25,7 @@ plugins {
     id("com.google.firebase.firebase-perf") version("1.4.1") apply false
     id("com.google.firebase.crashlytics") version("2.8.1") apply false
     // END: FlutterFire Configuration
-    id("org.jetbrains.kotlin.android") version "1.8.22" apply false
+    id("org.jetbrains.kotlin.android") version "2.2.0" apply false
 }
 
 include(":app")
