@@ -1593,6 +1593,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                   );
                                   if (confirm == true) {
+                                    final previousAmount = medication.amount;
                                     try {
                                       await firestore
                                           .collection(widget.uid!)
@@ -1664,6 +1665,50 @@ class _HomePageState extends State<HomePage> {
                                           },
                                         );
                                       }
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: const Color(
+                                            0xFF8AC249,
+                                          ),
+                                          content: Text(
+                                            'Marked ${medication.name} as taken!',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Inter',
+                                            ),
+                                          ),
+                                          action: SnackBarAction(
+                                            label: 'Undo',
+                                            textColor: Colors.red,
+                                            onPressed: () async {
+                                              await firestore
+                                                  .collection(widget.uid!)
+                                                  .doc(docs[index].id)
+                                                  .update({
+                                                    'amount': previousAmount,
+                                                  });
+                                              final restoredDoc =
+                                                  await firestore
+                                                      .collection(widget.uid!)
+                                                      .doc(docs[index].id)
+                                                      .get();
+                                              final restoredMedication =
+                                                  medicationFromDoc(
+                                                    restoredDoc,
+                                                  );
+                                              await scheduleMedicationNotification(
+                                                context,
+                                                docs[index].id,
+                                                restoredMedication,
+                                              );
+                                              if (mounted) setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      );
                                     } catch (e) {
                                       ScaffoldMessenger.of(
                                         context,
