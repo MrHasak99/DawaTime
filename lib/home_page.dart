@@ -1623,6 +1623,47 @@ class _HomePageState extends State<HomePage> {
                                         docs[index].id,
                                         updatedMedication,
                                       );
+                                      if (updatedMedication.amount <= 0) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              backgroundColor: const Color(
+                                                0xFF8AC249,
+                                              ),
+                                              title: Text(
+                                                "You're out of ${medication.name}!",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              content: Text(
+                                                "Please refill your ${medication.name}.",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text(
+                                                    "OK",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     } catch (e) {
                                       ScaffoldMessenger.of(
                                         context,
@@ -1642,45 +1683,6 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       );
                                     }
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          backgroundColor: const Color(
-                                            0xFF8AC249,
-                                          ),
-                                          title: Text(
-                                            "You're out of ${medication.name}!",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          content: Text(
-                                            "Please refill your ${medication.name}.",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text(
-                                                "OK",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
                                   }
                                 } else {
                                   showDialog(
