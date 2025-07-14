@@ -1,10 +1,8 @@
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
     id("com.google.gms.google-services")
     id("com.google.firebase.firebase-perf")
     id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -25,15 +23,12 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.mrhasak99.dawatime"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion(23)
         targetSdkVersion(34)
         
         versionCode = 4
-        versionName = "1.0.0"
+        versionName = "1.0.1"
     }
 
     signingConfigs {
@@ -62,6 +57,5 @@ flutter {
 }
 
 dependencies {
-    // ...existing dependencies...
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
