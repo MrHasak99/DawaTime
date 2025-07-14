@@ -182,7 +182,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Version: ${info.version} (Build ${info.buildNumber})',
+                                  'Version: ${info.version}',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyLarge?.copyWith(
