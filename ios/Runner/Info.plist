@@ -57,5 +57,7 @@
 		<string>DawaTime needs your location to check country restrictions and provide location-based medication reminders.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>DawaTime needs your location to check country restrictions and provide location-based medication reminders.</string>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
 	</dict>
 </plist>
