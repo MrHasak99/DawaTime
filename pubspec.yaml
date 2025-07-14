@@ -29,6 +29,7 @@ dependencies:
   firebase_analytics: ^11.5.2
   firebase_performance: ^0.10.1+9
   workmanager: ^0.8.0
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
@@ -57,3 +58,6 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/DawaTime.png"
   remove_alpha_ios: true
+flutter_native_splash:
+  image: assets/DawaTime.png
+  color: "#8AC249"
