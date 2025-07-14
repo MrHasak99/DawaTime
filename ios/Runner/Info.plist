@@ -53,5 +53,9 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>DawaTime needs your location to check country restrictions and provide location-based medication reminders.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>DawaTime needs your location to check country restrictions and provide location-based medication reminders.</string>
 	</dict>
 </plist>
