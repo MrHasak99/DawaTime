@@ -471,11 +471,10 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
           actions: [
             TextButton(
               onPressed: () {
-                // Replace with your app's store URL
                 final url =
                     Theme.of(context).platform == TargetPlatform.iOS
-                        ? 'https://apps.apple.com/app/idYOUR_APP_ID'
-                        : 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME';
+                        ? 'https://apps.apple.com/app/6748280994'
+                        : 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime';
                 launchUrl(Uri.parse(url));
               },
               child: const Text('Update'),
@@ -597,7 +596,7 @@ Future<bool> isBlockedCountry() async {
   final blockedCountries = ['IL'];
   bool blockedByIp = false;
   bool blockedByGps = false;
-  try {
+  try { 
     final response = await http.get(Uri.parse('https://ipinfo.io/json'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
