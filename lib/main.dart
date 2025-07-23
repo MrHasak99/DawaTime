@@ -575,7 +575,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset("assets/DawaTime_white.png", width: 100, height: 100),
             const Text(
-              'Dawatime',
+              'DawaTime',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -596,7 +596,7 @@ Future<bool> isBlockedCountry() async {
   final blockedCountries = ['IL'];
   bool blockedByIp = false;
   bool blockedByGps = false;
-  try { 
+  try {
     final response = await http.get(Uri.parse('https://ipinfo.io/json'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
