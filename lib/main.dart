@@ -59,9 +59,9 @@ Future<void> main() async {
     initialDelay: Duration(minutes: 1),
     constraints: Constraints(
       networkType: NetworkType.notRequired,
+      requiresBatteryNotLow: false,
       requiresCharging: false,
       requiresDeviceIdle: false,
-      requiresBatteryNotLow: false,
       requiresStorageNotLow: false,
     ),
   );
@@ -495,7 +495,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _handleFirstInstall();
     _checkUpdateAndNavigate();
+  }
+
+  Future<void> _handleFirstInstall() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstInstall = prefs.getBool('hasRunBefore') ?? false;
+    if (!isFirstInstall) {
+      await FirebaseAuth.instance.signOut();
+      await prefs.setBool('hasRunBefore', true);
+    }
   }
 
   Future<void> _checkUpdateAndNavigate() async {

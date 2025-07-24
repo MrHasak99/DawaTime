@@ -2018,7 +2018,7 @@ Future<void> scheduleMedicationNotification(
               importance: Importance.max,
               priority: Priority.high,
               playSound: true,
-              icon: '@mipmap/ic_launcher',
+              icon: 'ic_stat_ic_notification',
               sound: RawResourceAndroidNotificationSound('notification_sound'),
             ),
             iOS: DarwinNotificationDetails(
@@ -2095,7 +2095,7 @@ Future<void> requestExactAlarmPermission() async {
 Future<void> initializeNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(
     InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('ic_stat_ic_notification'),
     ),
   );
 }
