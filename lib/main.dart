@@ -49,6 +49,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
@@ -96,7 +97,7 @@ Future<void> main() async {
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('ic_stat_ic_notification');
 
   final DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings(
@@ -416,15 +417,6 @@ Future<void> requestNotificationPermission() async {
   }
 }
 
-Future<void> checkFirstInstallAndSignOut() async {
-  final prefs = await SharedPreferences.getInstance();
-  final isFirstInstall = prefs.getBool('hasRunBefore') ?? false;
-  if (!isFirstInstall) {
-    await FirebaseAuth.instance.signOut();
-    await prefs.setBool('hasRunBefore', true);
-  }
-}
-
 Future<bool> isUpdateRequired(BuildContext context) async {
   final info = await PackageInfo.fromPlatform();
   final platform =
@@ -503,7 +495,6 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     final isFirstInstall = prefs.getBool('hasRunBefore') ?? false;
     if (!isFirstInstall) {
-      await FirebaseAuth.instance.signOut();
       await prefs.setBool('hasRunBefore', true);
     }
   }
@@ -540,17 +531,13 @@ class _SplashScreenState extends State<SplashScreen> {
       );
       return;
     }
-
+    bool updateNeeded = false;
     try {
-      final updateNeeded = await isUpdateRequired(
+      updateNeeded = await isUpdateRequired(
         context,
       ).timeout(const Duration(seconds: 8), onTimeout: () => false);
-      if (updateNeeded) {
-        await showForceUpdateDialog(context);
-        return;
-      }
     } catch (e) {
-      showDialog(
+      await showDialog(
         context: context,
         builder:
             (context) => AlertDialog(
@@ -566,13 +553,20 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
       );
+    }
+    if (updateNeeded) {
+      await showForceUpdateDialog(context);
       return;
     }
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+      }
+    });
   }
 
   @override
