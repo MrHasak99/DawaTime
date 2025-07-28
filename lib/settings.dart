@@ -224,44 +224,54 @@ class _SettingsPageState extends State<SettingsPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        launchUrl(
-                                          Uri.parse(
-                                            'https://dawatime.com/PrivacyPolicy.pdf',
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          launchUrl(
+                                            Uri.parse(
+                                              'https://dawatime.com/PrivacyPolicy.pdf',
+                                            ),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        },
+                                        child: const Text(
+                                          'Privacy Policy',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor: Colors.white,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          mode: LaunchMode.externalApplication,
-                                        );
-                                      },
-                                      child: const Text(
-                                        'Privacy Policy',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          decoration: TextDecoration.underline,
-                                          decorationColor: Colors.white,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 12),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        launchUrl(
-                                          Uri.parse(
-                                            'https://dawatime.com/Terms&Conditions.pdf',
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          launchUrl(
+                                            Uri.parse(
+                                              'https://dawatime.com/Terms&Conditions.pdf',
+                                            ),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        },
+                                        child: const Text(
+                                          'Terms & Conditions',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor: Colors.white,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          mode: LaunchMode.externalApplication,
-                                        );
-                                      },
-                                      child: const Text(
-                                        'Terms & Conditions',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          decoration: TextDecoration.underline,
-                                          decorationColor: Colors.white,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),

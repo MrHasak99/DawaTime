@@ -1531,7 +1531,7 @@ class _HomePageState extends State<HomePage> {
                                     ).textTheme.bodySmall?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 16,
                                     ),
                                   ),
                               ],

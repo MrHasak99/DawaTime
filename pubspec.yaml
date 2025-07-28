@@ -51,6 +51,7 @@ flutter:
   assets:
     - assets/DawaTime.png
     - assets/DawaTime_white.png
+    - assets/DawaTime_green.png
     - assets/notification_sound.wav
 flutter_launcher_icons:
   android: true
