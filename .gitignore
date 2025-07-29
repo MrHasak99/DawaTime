@@ -32,6 +32,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+build/
+android/app/build/
+*.apk
+*.bin
 
 # Symbolication related
 app.*.symbols
