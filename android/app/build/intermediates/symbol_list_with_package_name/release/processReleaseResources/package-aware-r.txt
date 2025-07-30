@@ -783,6 +783,7 @@ drawable common_google_signin_btn_text_light
 drawable common_google_signin_btn_text_light_focused
 drawable common_google_signin_btn_text_light_normal
 drawable common_google_signin_btn_text_light_normal_background
+drawable dawatime_notification
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_arrow_down_24dp
@@ -795,7 +796,6 @@ drawable ic_call_decline_low
 drawable ic_other_sign_in
 drawable ic_passkey
 drawable ic_password
-drawable ic_stat_ic_notification
 drawable launch_background
 drawable notification_action_background
 drawable notification_bg

@@ -794,7 +794,7 @@ int drawable ic_call_decline_low 0x7f070073
 int drawable ic_other_sign_in 0x7f070074
 int drawable ic_passkey 0x7f070075
 int drawable ic_password 0x7f070076
-int drawable ic_stat_ic_notification 0x7f070077
+int drawable dawatime_notification 0x7f070077
 int drawable launch_background 0x7f070078
 int drawable notification_action_background 0x7f070079
 int drawable notification_bg 0x7f07007a

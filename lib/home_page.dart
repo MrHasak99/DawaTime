@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
     {
       'title': 'Notifications',
       'body':
-          "You'll get notified when it's time to take your medication—even if the app is closed!",
+          "You'll get notified when it's time to take your medication — even if the app is closed!",
     },
     {
       'title': 'Profile & Settings',
@@ -2018,7 +2018,7 @@ Future<void> scheduleMedicationNotification(
               importance: Importance.max,
               priority: Priority.high,
               playSound: true,
-              icon: 'ic_stat_ic_notification',
+              icon: '@mipmap/ic_launcher',
               sound: RawResourceAndroidNotificationSound('notification_sound'),
             ),
             iOS: DarwinNotificationDetails(
@@ -2095,7 +2095,7 @@ Future<void> requestExactAlarmPermission() async {
 Future<void> initializeNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(
     InitializationSettings(
-      android: AndroidInitializationSettings('ic_stat_ic_notification'),
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     ),
   );
 }
