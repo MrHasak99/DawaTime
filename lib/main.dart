@@ -97,7 +97,7 @@ Future<void> main() async {
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('dawatime_foreground');
+      AndroidInitializationSettings('dawatime_notify');
 
   final DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings(

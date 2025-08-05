@@ -2018,8 +2018,9 @@ Future<void> scheduleMedicationNotification(
               importance: Importance.max,
               priority: Priority.high,
               playSound: true,
-              icon: 'dawatime_foreground',
+              icon: 'dawatime_notify',
               sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFF8AC249),
             ),
             iOS: DarwinNotificationDetails(
               presentAlert: true,
@@ -2095,7 +2096,7 @@ Future<void> requestExactAlarmPermission() async {
 Future<void> initializeNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(
     InitializationSettings(
-      android: AndroidInitializationSettings('dawatime_foreground'),
+      android: AndroidInitializationSettings('dawatime_notify'),
     ),
   );
 }
