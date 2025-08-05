@@ -21,6 +21,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -96,7 +97,7 @@ Future<void> main() async {
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('dawatime_foreground');
 
   final DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings(
@@ -181,7 +182,9 @@ Future<void> main() async {
     return true;
   };
 
-  await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  if (kIsWeb) {
+    await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  }
 
   runApp(const MainApp());
 }

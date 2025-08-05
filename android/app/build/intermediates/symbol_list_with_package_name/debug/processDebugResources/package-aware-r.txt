@@ -499,6 +499,7 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
+color ic_launcher_background
 color material_blue_grey_800
 color material_blue_grey_900
 color material_blue_grey_950
@@ -783,6 +784,8 @@ drawable common_google_signin_btn_text_light
 drawable common_google_signin_btn_text_light_focused
 drawable common_google_signin_btn_text_light_normal
 drawable common_google_signin_btn_text_light_normal_background
+drawable dawatime_foreground
+drawable dawatime_notification
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_arrow_down_24dp
@@ -795,7 +798,6 @@ drawable ic_call_decline_low
 drawable ic_other_sign_in
 drawable ic_passkey
 drawable ic_password
-drawable dawatime_notification
 drawable launch_background
 drawable notification_action_background
 drawable notification_bg
@@ -811,7 +813,6 @@ drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
 drawable preference_list_divider_material
-drawable splash
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -1144,7 +1145,6 @@ layout support_simple_spinner_dropdown_item
 mipmap dawatime
 mipmap dawatime_background
 mipmap dawatime_foreground
-mipmap dawatime_monochrome
 mipmap ic_launcher
 raw firebase_common_keep
 raw firebase_crashlytics_keep
