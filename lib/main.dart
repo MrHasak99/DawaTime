@@ -508,31 +508,13 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     final isFirstInstall = prefs.getBool('hasRunBefore');
     if (isFirstInstall == null) {
-      // if (FirebaseAuth.instance.currentUser != null) {
-      //   await FirebaseAuth.instance.signOut();
-      // }
       await prefs.setBool('hasRunBefore', true);
     }
   }
 
   Future<void> _checkUpdateAndNavigate() async {
-    print('Splash: Starting checks...');
-    bool blocked = false;
-    try {
-      blocked = await isBlockedCountry().timeout(
-        const Duration(seconds: 8),
-        onTimeout: () {
-          print('Splash: isBlockedCountry timed out');
-          return false;
-        },
-      );
-      print('Splash: isBlockedCountry result: $blocked');
-    } catch (e, st) {
-      print('Splash: isBlockedCountry error: $e\n$st');
-      blocked = false;
-    }
+    final blocked = await isBlockedCountry();
     if (blocked) {
-      print('Splash: Blocked country detected');
       await showDialog(
         context: context,
         barrierDismissible: false,
@@ -564,20 +546,14 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     try {
-      final updateNeeded = await isUpdateRequired(context).timeout(
-        const Duration(seconds: 8),
-        onTimeout: () {
-          print('Splash: isUpdateRequired timed out');
-          return false;
-        },
-      );
-      print('Splash: isUpdateRequired result: $updateNeeded');
+      final updateNeeded = await isUpdateRequired(
+        context,
+      ).timeout(const Duration(seconds: 8), onTimeout: () => false);
       if (updateNeeded) {
         await showForceUpdateDialog(context);
         return;
       }
-    } catch (e, st) {
-      print('Splash: isUpdateRequired error: $e\n$st');
+    } catch (e) {
       showDialog(
         context: context,
         builder:
@@ -603,7 +579,6 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
-    print('Splash: Navigating to AuthGate');
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
