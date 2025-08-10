@@ -584,6 +584,71 @@ class _SplashScreenState extends State<SplashScreen> {
     ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
   }
 
+  void _showIntroGuide() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF8AC249),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            title: const Text(
+              'Welcome to DawaTime!',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Here's how to get started:",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    '• Add your medications using the "+" button.\n'
+                    '• Set reminders for each medication so you never miss a dose.\n'
+                    '• Tap a medication to view details or edit it.\n'
+                    '• Swipe left to delete or right to edit a medication.\n'
+                    '• Check your upcoming reminders on the home screen.\n'
+                    '• Manage your profile and settings from the top right.',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "You'll receive notifications when it's time to take your medication — even if the app is closed!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(
+                  'Got it!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -604,6 +669,54 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 16),
             const CircularProgressIndicator(color: Colors.white),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+              onPressed: _showIntroGuide,
+              child: const Text(
+                "App Guide",
+                style: TextStyle(
+                  color: Color(0xFF8AC249),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    launchUrl(
+                      Uri.parse('https://dawatime.com/PrivacyPolicy.pdf'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  child: const Text(
+                    'Privacy Policy',
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                TextButton(
+                  onPressed: () {
+                    launchUrl(
+                      Uri.parse('https://dawatime.com/Terms&Conditions.pdf'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  child: const Text(
+                    'Terms & Conditions',
+                    style: TextStyle(
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

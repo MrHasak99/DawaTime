@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:dawatime/signup_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -17,6 +18,71 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   bool isLoading = false;
   bool _obscurePassword = true;
+
+  void _showIntroGuide() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF8AC249),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            title: const Text(
+              'Welcome to DawaTime!',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Here's how to get started:",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    '• Add your medications using the "+" button.\n'
+                    '• Set reminders for each medication so you never miss a dose.\n'
+                    '• Tap a medication to view details or edit it.\n'
+                    '• Swipe left to delete or right to edit a medication.\n'
+                    '• Check your upcoming reminders on the home screen.\n'
+                    '• Manage your profile and settings from the top right.',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "You'll receive notifications when it's time to take your medication — even if the app is closed!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(
+                  'Got it!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +461,58 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF8AC249),
+                    ),
+                    onPressed: _showIntroGuide,
+                    child: const Text(
+                      "App Guide",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          launchUrl(
+                            Uri.parse('https://dawatime.com/PrivacyPolicy.pdf'),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        },
+                        child: const Text(
+                          'Privacy Policy',
+                          style: TextStyle(
+                            color: Color(0xFF8AC249),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      TextButton(
+                        onPressed: () {
+                          launchUrl(
+                            Uri.parse(
+                              'https://dawatime.com/Terms&Conditions.pdf',
+                            ),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        },
+                        child: const Text(
+                          'Terms & Conditions',
+                          style: TextStyle(
+                            color: Color(0xFF8AC249),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
