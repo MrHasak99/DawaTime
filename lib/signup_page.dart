@@ -1,3 +1,4 @@
+import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
             elevation: 0,
             leading: BackButton(color: Colors.white),
             title: Text(
-              "Sign Up",
+              AppLocalizations.of(context)!.signUp,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -71,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Name",
+                      labelText: AppLocalizations.of(context)!.name,
                       labelStyle: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(
@@ -94,7 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Email",
+                      labelText: AppLocalizations.of(context)!.email,
                       labelStyle: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(
@@ -118,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: AppLocalizations.of(context)!.password,
                       labelStyle: TextStyle(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
@@ -153,7 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Confirm Password",
+                      labelText: AppLocalizations.of(context)!.confirmPassword,
                       labelStyle: TextStyle(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
@@ -202,11 +203,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: "I accept the ",
+                                text: AppLocalizations.of(context)!.accept,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               TextSpan(
-                                text: "Terms & Conditions",
+                                text: AppLocalizations.of(context)!.terms,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodyMedium?.copyWith(
@@ -257,11 +258,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: "I accept the ",
+                                text: AppLocalizations.of(context)!.accept,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               TextSpan(
-                                text: "Privacy Policy",
+                                text: AppLocalizations.of(context)!.privacy,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodyMedium?.copyWith(
@@ -302,10 +303,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: () async {
                           if (!_acceptedTerms || !_acceptedPrivacy) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 backgroundColor: Color(0xFF8AC249),
                                 content: Text(
-                                  "You must accept the Terms & Conditions and Privacy Policy.",
+                                  AppLocalizations.of(context)!.mustAccept,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -322,7 +323,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(
-                                  "Passwords do not match",
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.passwordsDontMatch,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyLarge?.copyWith(
@@ -366,10 +369,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 backgroundColor: Color(0xFF8AC249),
                                 content: Text(
-                                  "Verification email sent. Please check your inbox.",
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.verificationSent,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -399,7 +404,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           }
                         },
                         child: Text(
-                          "Sign Up",
+                          AppLocalizations.of(context)!.signUp,
                           style: Theme.of(
                             context,
                           ).textTheme.bodyLarge?.copyWith(

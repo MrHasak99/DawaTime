@@ -6,11 +6,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'login_page.dart';
 import 'package:dawatime/main.dart'
     show
+        MainApp,
         flutterLocalNotificationsPlugin,
         notificationsInitialized,
-        themeModeNotifier;
+        themeModeNotifier,
+        localeNotifier;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dawatime/l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -1910,6 +1913,61 @@ class _SettingsPageState extends State<SettingsPage> {
                                           }
                                         },
                                       );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 18),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white10
+                                          : const Color(0xFFF1F8E9),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: const Icon(
+                                    Icons.language,
+                                    color: Color(0xFF8AC249),
+                                  ),
+                                  title: Text(
+                                    'Language',
+                                    style: Theme.of(context).textTheme.bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: DropdownButton<Locale?>(
+                                    value: localeNotifier.value,
+                                    items: [
+                                      DropdownMenuItem(
+                                        value: null,
+                                        child: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.systemTheme,
+                                        ), // "System"
+                                      ),
+                                      DropdownMenuItem(
+                                        value: const Locale('en'),
+                                        child: Text('English'),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: const Locale('ar'),
+                                        child: Text('العربية'),
+                                      ),
+                                    ],
+                                    onChanged: (Locale? locale) {
+                                      MainApp.setLocale(
+                                        context,
+                                        locale ?? Locale('en'),
+                                      );
+                                      localeNotifier.value = locale;
                                     },
                                   ),
                                 ),

@@ -4,6 +4,7 @@ import 'package:dawatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dawatime/login_page.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:dawatime/l10n/app_localizations.dart';
 
 class AddMedications extends StatefulWidget {
   final String uid;
@@ -142,7 +143,7 @@ class _AddMedicationsState extends State<AddMedications> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   leading: BackButton(color: Colors.white),
-                  title: const Text("Add New Medication"),
+                  title: Text(AppLocalizations.of(context)!.addNewMedication),
                   centerTitle: true,
                 ),
               ),
@@ -158,7 +159,9 @@ class _AddMedicationsState extends State<AddMedications> {
                             Icon(Icons.warning, color: Colors.red, size: 64),
                             const SizedBox(height: 16),
                             Text(
-                              "You can only have up to 7 medications.",
+                              AppLocalizations.of(
+                                context,
+                              )!.youCanOnlyHaveUpTo7Medications,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleMedium?.copyWith(
@@ -209,7 +212,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: InputDecoration(
-                                            labelText: "Name",
+                                            labelText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.name,
                                             labelStyle: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -235,7 +241,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: InputDecoration(
-                                            labelText: "Unit of Measurement",
+                                            labelText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.unitOfMeasurement,
                                             labelStyle: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -267,7 +276,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                                 decoration: InputDecoration(
-                                                  labelText: "Dosage",
+                                                  labelText:
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.dosage,
                                                   labelStyle: Theme.of(
                                                     context,
                                                   ).textTheme.bodyLarge?.copyWith(
@@ -304,7 +316,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                                 decoration: InputDecoration(
-                                                  labelText: "Frequency",
+                                                  labelText:
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.frequency,
                                                   labelStyle: Theme.of(
                                                     context,
                                                   ).textTheme.bodyLarge?.copyWith(
@@ -341,7 +356,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: InputDecoration(
-                                            labelText: "Current Amount",
+                                            labelText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.currentAmount,
                                             labelStyle: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -360,8 +378,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                         ListTile(
                                           title: Text(
                                             _selectedTime == null
-                                                ? "Pick Notification Time"
-                                                : "Notify at: ${_selectedTime!.format(context)}",
+                                                ? AppLocalizations.of(
+                                                  context,
+                                                )!.pickNotificationTime
+                                                : "${AppLocalizations.of(context)!.notifyAt}: ${_selectedTime!.format(context)}",
                                             style: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -500,8 +520,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                         ListTile(
                                           title: Text(
                                             _selectedStartDate == null
-                                                ? "Pick Schedule Start Date"
-                                                : "Start Date: ${_selectedStartDate!.day.toString().padLeft(2, '0')}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.year}",
+                                                ? AppLocalizations.of(
+                                                  context,
+                                                )!.pickScheduleStartDate
+                                                : "${AppLocalizations.of(context)!.startDate}: ${_selectedStartDate!.day.toString().padLeft(2, '0')}-${_selectedStartDate!.month.toString().padLeft(2, '0')}-${_selectedStartDate!.year}",
                                             style: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -618,7 +640,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                           backgroundColor:
                                                               Colors.red,
                                                           content: Text(
-                                                            "Dosage and Frequency must be greater than 0",
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.dosageFrequencyGreaterThanZero,
                                                             style: Theme.of(
                                                                   context,
                                                                 )
@@ -644,11 +668,13 @@ class _AddMedicationsState extends State<AddMedications> {
                                                       ScaffoldMessenger.of(
                                                         context,
                                                       ).showSnackBar(
-                                                        const SnackBar(
+                                                        SnackBar(
                                                           backgroundColor:
                                                               Colors.red,
                                                           content: Text(
-                                                            "Please pick a schedule start date",
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.pleasePickScheduleStartDate,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -782,7 +808,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                           backgroundColor:
                                                               Colors.red,
                                                           content: Text(
-                                                            'Could not save your medication. Please check your details and try again.',
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.couldNotSaveMedication,
                                                             style:
                                                                 const TextStyle(
                                                                   color:
@@ -803,11 +831,13 @@ class _AddMedicationsState extends State<AddMedications> {
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
-                                                      const SnackBar(
+                                                      SnackBar(
                                                         backgroundColor:
                                                             Colors.red,
                                                         content: Text(
-                                                          "Please fill all fields",
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.pleaseFillAllFields,
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -825,7 +855,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   ),
                                                 ),
                                                 child: Text(
-                                                  "Save Medication",
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.saveMedication,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyLarge

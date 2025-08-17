@@ -4,6 +4,7 @@ import 'package:dawatime/home_page.dart';
 import 'package:dawatime/signup_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dawatime/l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -114,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: const Text("Welcome To DawaTime"),
+            title: Text(AppLocalizations.of(context)!.welcomeToDawaTime),
             centerTitle: true,
           ),
         ),
@@ -141,8 +142,8 @@ class _LoginPageState extends State<LoginPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    decoration: const InputDecoration(
-                      labelText: "Email",
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.email,
                       labelStyle: TextStyle(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
@@ -164,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: AppLocalizations.of(context)!.password,
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF8AC249)),
                       ),
@@ -262,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         child: Text(
-                          "Login",
+                          AppLocalizations.of(context)!.login,
                           style: Theme.of(
                             context,
                           ).textTheme.bodyLarge?.copyWith(
@@ -278,8 +279,8 @@ class _LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(builder: (_) => const SignUpPage()),
                       );
                     },
-                    child: const Text(
-                      "Don't have an account? Sign Up",
+                    child: Text(
+                      AppLocalizations.of(context)!.dontHaveAccountSignUp,
                       style: TextStyle(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
@@ -298,12 +299,10 @@ class _LoginPageState extends State<LoginPage> {
                               builder:
                                   (context, setState) => AlertDialog(
                                     backgroundColor: Color(0xFF8AC249),
-                                    title: const Text(
-                                      'Reset Password',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    title: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.resetPassword,
                                     ),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -319,10 +318,12 @@ class _LoginPageState extends State<LoginPage> {
                                                     : Colors.black,
                                             fontWeight: FontWeight.bold,
                                           ),
-                                          decoration: const InputDecoration(
+                                          decoration: InputDecoration(
                                             labelText:
-                                                'Please enter your email',
-                                            labelStyle: TextStyle(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.pleaseEnterYourEmail,
+                                            labelStyle: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -352,7 +353,10 @@ class _LoginPageState extends State<LoginPage> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           decoration: InputDecoration(
-                                            labelText: 'Enter your password',
+                                            labelText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.enterYourPassword,
                                             labelStyle: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -391,12 +395,8 @@ class _LoginPageState extends State<LoginPage> {
                                       TextButton(
                                         onPressed:
                                             () => Navigator.pop(context, false),
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.cancel,
                                         ),
                                       ),
                                       ElevatedButton(
@@ -405,12 +405,8 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         onPressed:
                                             () => Navigator.pop(context, true),
-                                        child: const Text(
-                                          'Send',
-                                          style: TextStyle(
-                                            color: Color(0xFF8AC249),
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.send,
                                         ),
                                       ),
                                     ],
@@ -455,7 +451,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: Text(
-                      "Forgot Password?",
+                      AppLocalizations.of(context)!.forgotPassword,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
@@ -468,13 +464,7 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Color(0xFF8AC249),
                     ),
                     onPressed: _showIntroGuide,
-                    child: const Text(
-                      "App Guide",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Text(AppLocalizations.of(context)!.appGuide),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -486,12 +476,8 @@ class _LoginPageState extends State<LoginPage> {
                             mode: LaunchMode.externalApplication,
                           );
                         },
-                        child: const Text(
-                          'Privacy Policy',
-                          style: TextStyle(
-                            color: Color(0xFF8AC249),
-                            decoration: TextDecoration.underline,
-                          ),
+                        child: Text(
+                          AppLocalizations.of(context)!.privacyPolicy,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -504,12 +490,8 @@ class _LoginPageState extends State<LoginPage> {
                             mode: LaunchMode.externalApplication,
                           );
                         },
-                        child: const Text(
-                          'Terms & Conditions',
-                          style: TextStyle(
-                            color: Color(0xFF8AC249),
-                            decoration: TextDecoration.underline,
-                          ),
+                        child: Text(
+                          AppLocalizations.of(context)!.termsAndConditions,
                         ),
                       ),
                     ],

@@ -13,6 +13,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dawatime/l10n/app_localizations.dart';
 
 final StreamController<NotificationResponse> selectNotificationStream =
     StreamController<NotificationResponse>.broadcast();
@@ -475,7 +476,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             action: SnackBarAction(
-              label: 'Undo',
+              label: AppLocalizations.of(context)!.undo,
               textColor: Colors.red,
               onPressed: () async {
                 try {
@@ -555,7 +556,7 @@ class _HomePageState extends State<HomePage> {
                   name = data['name'] ?? 'Friend';
                 }
                 return Text(
-                  "Welcome back, $name!",
+                  "${AppLocalizations.of(context)!.welcomeBack}, $name!",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -594,7 +595,7 @@ class _HomePageState extends State<HomePage> {
                   Icon(Icons.medication, color: Color(0xFF8AC249), size: 64),
                   const SizedBox(height: 16),
                   Text(
-                    "No Medications Found",
+                    AppLocalizations.of(context)!.noMedicationsFound,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -649,15 +650,13 @@ class _HomePageState extends State<HomePage> {
                             builder:
                                 (context) => AlertDialog(
                                   backgroundColor: Color(0xFF8AC249),
-                                  title: const Text(
-                                    'Delete Medication',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  title: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.deleteMedication,
                                   ),
                                   content: Text(
-                                    'Are you sure you want to delete ${medication.name}?',
+                                    "${AppLocalizations.of(context)!.areYouSureDeleteMedication} ${medication.name}?",
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyLarge?.copyWith(
@@ -731,12 +730,10 @@ class _HomePageState extends State<HomePage> {
                                 builder:
                                     (context, setState) => AlertDialog(
                                       backgroundColor: Color(0xFF8AC249),
-                                      title: const Text(
-                                        'Edit Medication',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      title: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.editMedication,
                                       ),
                                       content: SingleChildScrollView(
                                         child: Column(
@@ -754,7 +751,10 @@ class _HomePageState extends State<HomePage> {
                                                 color: Colors.white,
                                               ),
                                               decoration: InputDecoration(
-                                                labelText: 'Name',
+                                                labelText:
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.name,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -786,7 +786,9 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               decoration: InputDecoration(
                                                 labelText:
-                                                    'Unit of Measurement',
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.unitOfMeasurement,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -819,7 +821,10 @@ class _HomePageState extends State<HomePage> {
                                               keyboardType:
                                                   TextInputType.number,
                                               decoration: InputDecoration(
-                                                labelText: 'Dosage',
+                                                labelText:
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.dosage,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -853,7 +858,9 @@ class _HomePageState extends State<HomePage> {
                                                   TextInputType.number,
                                               decoration: InputDecoration(
                                                 labelText:
-                                                    'Frequency (every x days)',
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.frequency,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -886,7 +893,10 @@ class _HomePageState extends State<HomePage> {
                                               keyboardType:
                                                   TextInputType.number,
                                               decoration: InputDecoration(
-                                                labelText: 'Current Amount',
+                                                labelText:
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.currentAmount,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -1313,7 +1323,10 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     action: SnackBarAction(
-                                                      label: 'Undo',
+                                                      label:
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.undo,
                                                       textColor: Colors.red,
                                                       onPressed: () async {
                                                         await firestore
@@ -1551,18 +1564,14 @@ class _HomePageState extends State<HomePage> {
                                         (context) => AlertDialog(
                                           backgroundColor: Color(0xFF8AC249),
                                           title: Text(
-                                            "Take ${medication.name}?",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.takeMedication,
                                           ),
                                           content: Text(
-                                            "Did you take your medication?",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.didYouTakeYourMedication,
                                           ),
                                           actions: [
                                             TextButton(
@@ -1640,14 +1649,18 @@ class _HomePageState extends State<HomePage> {
                                                 0xFF8AC249,
                                               ),
                                               title: Text(
-                                                "You're out of ${medication.name}!",
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.youreOutOfMedication,
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               content: Text(
-                                                "Please refill your ${medication.name}.",
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.pleaseRefillYourMedication,
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1688,7 +1701,10 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           action: SnackBarAction(
-                                            label: 'Undo',
+                                            label:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.undo,
                                             textColor: Colors.red,
                                             onPressed: () async {
                                               await firestore
@@ -1745,14 +1761,18 @@ class _HomePageState extends State<HomePage> {
                                           0xFF8AC249,
                                         ),
                                         title: Text(
-                                          "You're out of ${medication.name}!",
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.youreOutOfMedication,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         content: Text(
-                                          "Please refill your ${medication.name}.",
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.pleaseRefillYourMedication,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,

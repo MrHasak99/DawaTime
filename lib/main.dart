@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -31,6 +33,8 @@ bool notificationsInitialized = false;
 final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
   ThemeMode.system,
 );
+
+final ValueNotifier<Locale?> localeNotifier = ValueNotifier(null);
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -192,26 +196,42 @@ Future<void> main() async {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static void setLocale(BuildContext context, Locale newLocale) {
+    localeNotifier.value = newLocale;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeModeNotifier,
-      builder: (context, mode, _) {
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeNotifier,
+      builder: (context, locale, _) {
+        final currentLocale =
+            locale ?? WidgetsBinding.instance.platformDispatcher.locale;
+        final isArabic = currentLocale.languageCode == 'ar';
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: const SplashScreen(),
           navigatorKey: navigatorKey,
+          supportedLocales: const [Locale('en'), Locale('ar')],
+          locale: locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           theme: ThemeData(
-            fontFamily: 'Nunito',
+            fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
             brightness: Brightness.light,
             primarySwatch: Colors.green,
             scaffoldBackgroundColor: Colors.white,
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF8AC249),
+            appBarTheme: AppBarTheme(
+              backgroundColor: const Color(0xFF8AC249),
               foregroundColor: Colors.white,
               elevation: 0,
               titleTextStyle: TextStyle(
-                fontFamily: 'Nunito',
+                fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -219,10 +239,10 @@ class MainApp extends StatelessWidget {
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF8AC249),
+                backgroundColor: const Color(0xFF8AC249),
                 foregroundColor: Colors.white,
-                textStyle: const TextStyle(
-                  fontFamily: 'Nunito',
+                textStyle: TextStyle(
+                  fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -254,53 +274,21 @@ class MainApp extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              bodyMedium: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              bodySmall: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              titleLarge: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              titleMedium: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              titleSmall: TextStyle(fontFamily: 'Nunito', color: Colors.black),
-              labelLarge: TextStyle(fontFamily: 'Inter', color: Colors.black),
-              labelMedium: TextStyle(fontFamily: 'Inter', color: Colors.black),
-              labelSmall: TextStyle(fontFamily: 'Inter', color: Colors.black),
-              displayLarge: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
-              displayMedium: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
-              displaySmall: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
-              headlineLarge: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
-              headlineMedium: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
-              headlineSmall: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.black,
-              ),
+            textTheme: ThemeData.light().textTheme.apply(
+              fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
             ),
           ),
           darkTheme: ThemeData(
-            fontFamily: 'Nunito',
+            fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
             brightness: Brightness.dark,
             primarySwatch: Colors.green,
             scaffoldBackgroundColor: Colors.black,
-            appBarTheme: const AppBarTheme(
+            appBarTheme: AppBarTheme(
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
               elevation: 0,
               titleTextStyle: TextStyle(
-                fontFamily: 'Nunito',
+                fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -325,43 +313,11 @@ class MainApp extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              bodyMedium: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              bodySmall: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              titleLarge: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              titleMedium: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              titleSmall: TextStyle(fontFamily: 'Nunito', color: Colors.white),
-              labelLarge: TextStyle(fontFamily: 'Inter', color: Colors.white),
-              labelMedium: TextStyle(fontFamily: 'Inter', color: Colors.white),
-              labelSmall: TextStyle(fontFamily: 'Inter', color: Colors.white),
-              displayLarge: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
-              displayMedium: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
-              displaySmall: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
-              headlineLarge: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
-              headlineMedium: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
-              headlineSmall: TextStyle(
-                fontFamily: 'Nunito',
-                color: Colors.white,
-              ),
+            textTheme: ThemeData.dark().textTheme.apply(
+              fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
             ),
           ),
-          themeMode: mode,
+          themeMode: themeModeNotifier.value,
         );
       },
     );
