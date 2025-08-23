@@ -37,7 +37,7 @@
   "startDate": "تاريخ البدء",
   "saveMedication": "حفظ الدواء",
   "pleaseFillAllFields": "يرجى تعبئة جميع الحقول.",
-  "dosageFrequencyGreaterThanZero": "يجب أن تكون الجرعة والتكرار أكبر من الصفر.",
+  "dosageFrequencyGreaterThanZero": "يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر.",
   "pleasePickScheduleStartDate": "يرجى اختيار تاريخ بدء الجدول.",
   "couldNotSaveMedication": "تعذر حفظ الدواء. يرجى المحاولة مرة أخرى.",
   "youCanOnlyHaveUpTo7Medications": "يمكنك إضافة حتى 7 أدوية فقط.",
@@ -74,4 +74,6 @@
   "contactMeTitle": "تواصل معي",
   "contactMeSent": "تم إرسال الرسالة بنجاح!",
   "contactMeFailed": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى."
+  "notifications": "التنبيهات",
+  "profileAndSettings": "الملف الشخصي والإعدادات",
 }

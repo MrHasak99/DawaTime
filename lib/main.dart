@@ -36,6 +36,7 @@ final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
 
 final ValueNotifier<Locale?> localeNotifier = ValueNotifier(null);
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Firebase.initializeApp();
@@ -55,7 +56,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  Workmanager().initialize(callbackDispatcher);
 
   Workmanager().registerPeriodicTask(
     "medicationRescheduleTask",
@@ -318,6 +319,12 @@ class MainApp extends StatelessWidget {
             ),
           ),
           themeMode: themeModeNotifier.value,
+          builder: (context, child) {
+            return Directionality(
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              child: child!,
+            );
+          },
         );
       },
     );

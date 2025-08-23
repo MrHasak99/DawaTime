@@ -74,5 +74,7 @@
   "contactMeTitle": "Contact Me",
   "contactMeSent": "Message sent successfully!",
   "contactMeFailed": "Failed to send message. Please try again."
+  "notifications": "Notifications",
+  "profileAndSettings": "Profile & Settings",
 }
 

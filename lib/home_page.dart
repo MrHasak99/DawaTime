@@ -86,32 +86,16 @@ class _HomePageState extends State<HomePage> {
   bool _showIntroGuide = false;
   int _introStep = 0;
 
-  final List<Map<String, String>> _introSteps = [
-    {
-      'title': 'Welcome to DawaTime!',
-      'body':
-          'DawaTime helps you manage your medications and reminders with ease.',
-    },
-    {
-      'title': 'Add Medications',
-      'body':
-          'Tap the "+" button to add a new medication and set up reminders.',
-    },
-    {
-      'title': 'Edit & Delete',
-      'body':
-          'Swipe right to edit or left to delete a medication from your list.',
-    },
-    {
-      'title': 'Notifications',
-      'body':
-          "You'll get notified when it's time to take your medication — even if the app is closed!",
-    },
-    {
-      'title': 'Profile & Settings',
-      'body': 'Manage your profile and app settings from the top right corner.',
-    },
-  ];
+  List<Map<String, String>> get _introSteps {
+    final loc = AppLocalizations.of(context)!;
+    return [
+      {'title': loc.welcomeToDawaTime, 'body': loc.appGuide},
+      {'title': loc.addMedication, 'body': loc.addNewMedication},
+      {'title': loc.editMedication, 'body': loc.editMedication},
+      {'title': loc.nextReminder, 'body': loc.nextReminder},
+      {'title': loc.editProfile, 'body': loc.editProfile},
+    ];
+  }
 
   @override
   void didChangeDependencies() {
@@ -140,6 +124,8 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
+
+  late VoidCallback _localeListener;
 
   @override
   void initState() {
@@ -283,11 +269,16 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
+    _localeListener = () {
+      if (mounted) setState(() {});
+    };
+    localeNotifier.addListener(_localeListener);
   }
 
   @override
   void dispose() {
     _medicationCheckTimer?.cancel();
+    localeNotifier.removeListener(_localeListener);
     super.dispose();
   }
 
@@ -373,6 +364,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showInteractiveGuide() {
+    final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -403,7 +395,7 @@ class _HomePageState extends State<HomePage> {
                             _introStep--;
                           }),
                       child: Text(
-                        'Back',
+                        loc.cancel,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -418,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                             _introStep++;
                           }),
                       child: Text(
-                        'Next',
+                        loc.nextReminder,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -437,7 +429,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.of(context).pop();
                       },
                       child: Text(
-                        'Finish',
+                        loc.close,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -1211,12 +1203,12 @@ class _HomePageState extends State<HomePage> {
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
-                                                  const SnackBar(
-                                                    backgroundColor: Color(
-                                                      0xFF8AC249,
-                                                    ),
+                                                  SnackBar(
+                                                    backgroundColor: Colors.red,
                                                     content: Text(
-                                                      "Dosage and Frequency must be greater than 0",
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.dosageFrequencyGreaterThanZero,
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -1508,7 +1500,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${medication.dosage} ${medication.typeOfMedication} every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
+                                  "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.frequency}: ${medication.frequency}",
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyMedium?.copyWith(
@@ -1519,7 +1511,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 if (medication.amount > 0)
                                   Text(
-                                    "${(medication.amount).toStringAsFixed(2)} left",
+                                    "${(medication.amount).toStringAsFixed(2)} ${AppLocalizations.of(context)!.currentAmount}",
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -1528,7 +1520,7 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 else
                                   Text(
-                                    "Out of stock",
+                                    AppLocalizations.of(context)!.outOfStock,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyMedium?.copyWith(
@@ -1538,7 +1530,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 if (getNextReminder(medication) != null)
                                   Text(
-                                    "Next reminder: ${getNextReminder(medication)!}",
+                                    "${AppLocalizations.of(context)!.nextReminder}: ${getNextReminder(medication)!}",
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodySmall?.copyWith(
@@ -1834,6 +1826,7 @@ class MedicationDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -1864,7 +1857,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 24),
             _DetailRow(
               icon: Icons.category,
-              label: "Unit Of Measurement",
+              label: loc.unitOfMeasurement,
               value: medication.typeOfMedication,
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -1876,7 +1869,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.medical_services,
-              label: "Dosage",
+              label: loc.dosage,
               value: "${medication.dosage}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -1888,9 +1881,9 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.repeat,
-              label: "Frequency",
+              label: loc.frequency,
               value:
-                  "Every ${medication.frequency} ${medication.frequency == 1 ? 'day' : 'days'}",
+                  "${loc.frequency}: ${medication.frequency} ${medication.frequency == 1 ? loc.frequency : loc.frequency}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
@@ -1901,7 +1894,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.inventory_2,
-              label: "Current Amount",
+              label: loc.currentAmount,
               value: "${medication.amount}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -1914,7 +1907,7 @@ class MedicationDetailsCard extends StatelessWidget {
             if (getNextReminder(medication) != null)
               _DetailRow(
                 icon: Icons.notifications_active,
-                label: "Next Reminder",
+                label: loc.nextReminder,
                 value: getNextReminder(medication)!,
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,

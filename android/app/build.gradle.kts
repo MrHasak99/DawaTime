@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mrhasak99.dawatime"
-        minSdkVersion(23)
+        minSdkVersion(24)
         targetSdkVersion(34)
         
         versionCode = 1
