@@ -692,45 +692,46 @@ class _AddMedicationsState extends State<AddMedications> {
                                                     try {
                                                       if (widget.docId !=
                                                           null) {
-                                                        await firestore
-                                                            .collection(
-                                                              widget.uid,
-                                                            )
-                                                            .doc(widget.docId)
-                                                            .update({
-                                                              'name':
-                                                                  nameController
+                                                        await firestore.collection(widget.uid).doc(widget.docId).update({
+                                                          'name':
+                                                              nameController
+                                                                  .text,
+                                                          'typeOfMedication':
+                                                              typeOfMedicationController
+                                                                  .text,
+                                                          'dosage':
+                                                              double.tryParse(
+                                                                convertArabicNumerals(
+                                                                  dosageController
                                                                       .text,
-                                                              'typeOfMedication':
-                                                                  typeOfMedicationController
+                                                                ),
+                                                              ) ??
+                                                              0,
+                                                          'frequency':
+                                                              int.tryParse(
+                                                                convertArabicNumerals(
+                                                                  frequencyController
                                                                       .text,
-                                                              'dosage':
-                                                                  double.tryParse(
-                                                                    dosageController
-                                                                        .text,
-                                                                  ) ??
-                                                                  0,
-                                                              'frequency':
-                                                                  int.tryParse(
-                                                                    frequencyController
-                                                                        .text,
-                                                                  ) ??
-                                                                  0,
-                                                              'amount':
-                                                                  double.tryParse(
-                                                                    amountController
-                                                                        .text,
-                                                                  ) ??
-                                                                  0,
-                                                              'notifyTime':
-                                                                  _selectedTime !=
-                                                                          null
-                                                                      ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                                      : '',
-                                                              'startDate':
-                                                                  _selectedStartDate!
-                                                                      .toIso8601String(),
-                                                            });
+                                                                ),
+                                                              ) ??
+                                                              0,
+                                                          'amount':
+                                                              double.tryParse(
+                                                                convertArabicNumerals(
+                                                                  amountController
+                                                                      .text,
+                                                                ),
+                                                              ) ??
+                                                              0,
+                                                          'notifyTime':
+                                                              _selectedTime !=
+                                                                      null
+                                                                  ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                                  : '',
+                                                          'startDate':
+                                                              _selectedStartDate!
+                                                                  .toIso8601String(),
+                                                        });
                                                         final updatedDoc =
                                                             await firestore
                                                                 .collection(
@@ -759,20 +760,26 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                   .text,
                                                           'dosage':
                                                               double.tryParse(
-                                                                dosageController
-                                                                    .text,
+                                                                convertArabicNumerals(
+                                                                  dosageController
+                                                                      .text,
+                                                                ),
                                                               ) ??
                                                               0,
                                                           'frequency':
                                                               int.tryParse(
-                                                                frequencyController
-                                                                    .text,
+                                                                convertArabicNumerals(
+                                                                  frequencyController
+                                                                      .text,
+                                                                ),
                                                               ) ??
                                                               0,
                                                           'amount':
                                                               double.tryParse(
-                                                                amountController
-                                                                    .text,
+                                                                convertArabicNumerals(
+                                                                  amountController
+                                                                      .text,
+                                                                ),
                                                               ) ??
                                                               0,
                                                           'notifyTime':
@@ -885,5 +892,13 @@ class _AddMedicationsState extends State<AddMedications> {
         );
       },
     );
+  }
+
+  String convertArabicNumerals(String input) {
+    const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    for (int i = 0; i < arabicNums.length; i++) {
+      input = input.replaceAll(arabicNums[i], i.toString());
+    }
+    return input;
   }
 }

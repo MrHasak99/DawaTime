@@ -3,6 +3,7 @@ import 'package:dawatime/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 import 'package:dawatime/main.dart'
     show
@@ -1951,7 +1952,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           AppLocalizations.of(
                                             context,
                                           )!.systemTheme,
-                                        ), // "System"
+                                        ),
                                       ),
                                       DropdownMenuItem(
                                         value: const Locale('en'),
@@ -1962,12 +1963,18 @@ class _SettingsPageState extends State<SettingsPage> {
                                         child: Text('العربية'),
                                       ),
                                     ],
-                                    onChanged: (Locale? locale) {
+                                    onChanged: (Locale? locale) async {
                                       MainApp.setLocale(
                                         context,
-                                        locale ?? Locale('en'),
+                                        locale ?? const Locale('en'),
                                       );
                                       localeNotifier.value = locale;
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setString(
+                                        'preferredLanguage',
+                                        locale?.languageCode ?? 'en',
+                                      );
                                     },
                                   ),
                                 ),

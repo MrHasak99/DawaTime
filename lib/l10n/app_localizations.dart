@@ -275,6 +275,12 @@ abstract class AppLocalizations {
   /// **'Dosage'**
   String get dosage;
 
+  /// No description provided for @every.
+  ///
+  /// In en, this message translates to:
+  /// **'every'**
+  String get every;
+
   /// No description provided for @frequency.
   ///
   /// In en, this message translates to:
@@ -344,7 +350,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeBack.
   ///
   /// In en, this message translates to:
-  /// **'Welcome back'**
+  /// **'Welcome back,'**
   String get welcomeBack;
 
   /// No description provided for @noMedicationsFound.
@@ -398,8 +404,8 @@ abstract class AppLocalizations {
   /// No description provided for @areYouSureDeleteMedication.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete'**
-  String get areYouSureDeleteMedication;
+  /// **'Are you sure you want to delete {medication}?'**
+  String areYouSureDeleteMedication(Object medication);
 
   /// No description provided for @changeEmail.
   ///
@@ -494,8 +500,8 @@ abstract class AppLocalizations {
   /// No description provided for @markedAsTaken.
   ///
   /// In en, this message translates to:
-  /// **'Marked as taken!'**
-  String get markedAsTaken;
+  /// **'Marked {medication} as taken!'**
+  String markedAsTaken(Object medication);
 
   /// No description provided for @couldNotUpdateMedication.
   ///
@@ -538,6 +544,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to send message. Please try again.'**
   String get contactMeFailed;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @profileAndSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile & Settings'**
+  String get profileAndSettings;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @timeToTakeMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to take {medication}!'**
+  String timeToTakeMedication(Object medication);
+
+  /// No description provided for @medicationUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication updated!'**
+  String get medicationUpdated;
+
+  /// No description provided for @reminderTakeMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder: Take your {medication}'**
+  String reminderTakeMedication(Object medication);
+
+  /// No description provided for @medicationDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{medication} deleted!'**
+  String medicationDeleted(Object medication);
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'no'**
+  String get no;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

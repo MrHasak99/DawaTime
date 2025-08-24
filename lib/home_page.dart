@@ -164,7 +164,9 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     title: Text(
-                      'Time to take ${medication.name}!',
+                      AppLocalizations.of(
+                        context,
+                      )!.timeToTakeMedication(medication.name),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -206,9 +208,9 @@ class _HomePageState extends State<HomePage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                title: const Text(
-                  'Welcome to DawaTime!',
-                  style: TextStyle(
+                title: Text(
+                  AppLocalizations.of(context)!.welcomeToDawaTime,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -256,9 +258,9 @@ class _HomePageState extends State<HomePage> {
                       });
                       Navigator.of(context).pop();
                     },
-                    child: const Text(
-                      'Got it!',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.close,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -320,7 +322,9 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   title: Text(
-                    'Time to take ${medication.name}!',
+                    AppLocalizations.of(
+                      context,
+                    )!.timeToTakeMedication(medication.name),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -460,7 +464,9 @@ class _HomePageState extends State<HomePage> {
           SnackBar(
             backgroundColor: const Color(0xFF8AC249),
             content: Text(
-              '${deletedMedication!.name} deleted!',
+              AppLocalizations.of(
+                context,
+              )!.medicationDeleted(deletedMedication!.name),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -487,7 +493,7 @@ class _HomePageState extends State<HomePage> {
                     SnackBar(
                       backgroundColor: const Color(0xFF8AC249),
                       content: Text(
-                        'Undo failed: $e',
+                        '${AppLocalizations.of(context)!.couldNotUpdateMedication} $e',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -548,7 +554,7 @@ class _HomePageState extends State<HomePage> {
                   name = data['name'] ?? 'Friend';
                 }
                 return Text(
-                  "${AppLocalizations.of(context)!.welcomeBack}, $name!",
+                  "${AppLocalizations.of(context)!.welcomeBack} $name!",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -612,29 +618,60 @@ class _HomePageState extends State<HomePage> {
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
                   final medication = medicationFromDoc(docs[index]);
+                  final isRTL = Directionality.of(context) == TextDirection.rtl;
                   return Padding(
                     padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
                     child: Dismissible(
                       key: Key(docs[index].id),
                       direction: DismissDirection.horizontal,
-                      background: Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.lightBlue,
-                          size: 32,
-                        ),
-                      ),
-                      secondaryBackground: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 32,
-                        ),
-                      ),
+                      background:
+                          isRTL
+                              ? Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.lightBlue,
+                                  size: 32,
+                                ),
+                              )
+                              : Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.lightBlue,
+                                  size: 32,
+                                ),
+                              ),
+                      secondaryBackground:
+                          isRTL
+                              ? Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                  size: 32,
+                                ),
+                              )
+                              : Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                  size: 32,
+                                ),
+                              ),
                       confirmDismiss: (direction) async {
                         if (direction == DismissDirection.endToStart) {
                           return await showDialog<bool>(
@@ -646,9 +683,17 @@ class _HomePageState extends State<HomePage> {
                                     AppLocalizations.of(
                                       context,
                                     )!.deleteMedication,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   content: Text(
-                                    "${AppLocalizations.of(context)!.areYouSureDeleteMedication} ${medication.name}?",
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.areYouSureDeleteMedication(
+                                      medication.name,
+                                    ),
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyLarge?.copyWith(
@@ -660,9 +705,9 @@ class _HomePageState extends State<HomePage> {
                                     TextButton(
                                       onPressed:
                                           () => Navigator.pop(context, false),
-                                      child: const Text(
-                                        'Cancel',
-                                        style: TextStyle(
+                                      child: Text(
+                                        AppLocalizations.of(context)!.cancel,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -674,9 +719,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       onPressed:
                                           () => Navigator.pop(context, true),
-                                      child: const Text(
-                                        'Delete',
-                                        style: TextStyle(
+                                      child: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.deleteMedication,
+                                        style: const TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -726,6 +773,9 @@ class _HomePageState extends State<HomePage> {
                                         AppLocalizations.of(
                                           context,
                                         )!.editMedication,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       content: SingleChildScrollView(
                                         child: Column(
@@ -912,8 +962,10 @@ class _HomePageState extends State<HomePage> {
                                             ListTile(
                                               title: Text(
                                                 localNotifyTime == null
-                                                    ? "Pick Notification Time"
-                                                    : "Notify at: ${localNotifyTime!.format(context)}",
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.pickNotificationTime
+                                                    : "${AppLocalizations.of(context)!.notifyAt}: ${localNotifyTime!.format(context)}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1069,8 +1121,10 @@ class _HomePageState extends State<HomePage> {
                                             ListTile(
                                               title: Text(
                                                 localStartDate == null
-                                                    ? "Pick Schedule Start Date"
-                                                    : "Start Date: ${localStartDate!.day.toString().padLeft(2, '0')}-${localStartDate!.month.toString().padLeft(2, '0')}-${localStartDate!.year}",
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.pickScheduleStartDate
+                                                    : "${AppLocalizations.of(context)!.startDate}: ${localStartDate!.day.toString().padLeft(2, '0')}-${localStartDate!.month.toString().padLeft(2, '0')}-${localStartDate!.year}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1101,10 +1155,16 @@ class _HomePageState extends State<HomePage> {
                                                         : primaryColor;
 
                                                 final now = DateTime.now();
+                                                final safeInitialDate =
+                                                    (localStartDate != null &&
+                                                            localStartDate!
+                                                                .isAfter(now))
+                                                        ? localStartDate!
+                                                        : now;
+
                                                 final picked = await showDatePicker(
                                                   context: context,
-                                                  initialDate:
-                                                      localStartDate ?? now,
+                                                  initialDate: safeInitialDate,
                                                   firstDate: now,
                                                   lastDate: DateTime(
                                                     now.year + 10,
@@ -1171,9 +1231,11 @@ class _HomePageState extends State<HomePage> {
                                           onPressed:
                                               () =>
                                                   Navigator.pop(context, false),
-                                          child: const Text(
-                                            'Cancel',
-                                            style: TextStyle(
+                                          child: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.cancel,
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -1224,12 +1286,14 @@ class _HomePageState extends State<HomePage> {
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
-                                                  const SnackBar(
+                                                  SnackBar(
                                                     backgroundColor: Color(
                                                       0xFF8AC249,
                                                     ),
                                                     content: Text(
-                                                      "Please pick a schedule start date",
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.pleasePickScheduleStartDate,
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -1255,20 +1319,26 @@ class _HomePageState extends State<HomePage> {
                                                           typeController.text,
                                                       'dosage':
                                                           double.tryParse(
-                                                            dosageController
-                                                                .text,
+                                                            convertArabicNumerals(
+                                                              dosageController
+                                                                  .text,
+                                                            ),
                                                           ) ??
                                                           0,
                                                       'frequency':
                                                           int.tryParse(
-                                                            frequencyController
-                                                                .text,
+                                                            convertArabicNumerals(
+                                                              frequencyController
+                                                                  .text,
+                                                            ),
                                                           ) ??
                                                           0,
                                                       'amount':
                                                           double.tryParse(
-                                                            amountController
-                                                                .text,
+                                                            convertArabicNumerals(
+                                                              amountController
+                                                                  .text,
+                                                            ),
                                                           ) ??
                                                           0,
                                                       'notifyTime':
@@ -1305,8 +1375,10 @@ class _HomePageState extends State<HomePage> {
                                                   SnackBar(
                                                     backgroundColor:
                                                         const Color(0xFF8AC249),
-                                                    content: const Text(
-                                                      'Medication updated!',
+                                                    content: Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.medicationUpdated,
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -1378,7 +1450,9 @@ class _HomePageState extends State<HomePage> {
                                                     0xFF8AC249,
                                                   ),
                                                   content: Text(
-                                                    "Please fill all fields",
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseFillAllFields,
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -1390,15 +1464,14 @@ class _HomePageState extends State<HomePage> {
                                               );
                                             }
                                           },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                WidgetStateProperty.all<Color>(
-                                                  Colors.white,
-                                                ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
                                           ),
-                                          child: const Text(
-                                            'Save',
-                                            style: TextStyle(
+                                          child: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.saveMedication,
+                                            style: const TextStyle(
                                               color: Color(0xFF8AC249),
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -1447,7 +1520,9 @@ class _HomePageState extends State<HomePage> {
                                 SnackBar(
                                   backgroundColor: const Color(0xFF8AC249),
                                   content: Text(
-                                    'Could not delete this medication. Please try again.',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.couldNotUpdateMedication,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -1500,7 +1575,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.frequency}: ${medication.frequency}",
+                                  "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyMedium?.copyWith(
@@ -1511,7 +1586,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 if (medication.amount > 0)
                                   Text(
-                                    "${(medication.amount).toStringAsFixed(2)} ${AppLocalizations.of(context)!.currentAmount}",
+                                    "${AppLocalizations.of(context)!.currentAmount}: ${(medication.amount).toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -1559,11 +1634,19 @@ class _HomePageState extends State<HomePage> {
                                             AppLocalizations.of(
                                               context,
                                             )!.takeMedication,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           content: Text(
                                             AppLocalizations.of(
                                               context,
                                             )!.didYouTakeYourMedication,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           actions: [
                                             TextButton(
@@ -1572,9 +1655,11 @@ class _HomePageState extends State<HomePage> {
                                                     context,
                                                     false,
                                                   ),
-                                              child: const Text(
-                                                "No",
-                                                style: TextStyle(
+                                              child: Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.no,
+                                                style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -1589,8 +1674,10 @@ class _HomePageState extends State<HomePage> {
                                                     context,
                                                     true,
                                                   ),
-                                              child: const Text(
-                                                "Yes",
+                                              child: Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.yes,
                                                 style: TextStyle(
                                                   color: Color(0xFF8AC249),
                                                   fontWeight: FontWeight.bold,
@@ -1685,7 +1772,9 @@ class _HomePageState extends State<HomePage> {
                                             0xFF8AC249,
                                           ),
                                           content: Text(
-                                            'Marked ${medication.name} as taken!',
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.markedAsTaken(medication.name),
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -1802,7 +1891,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: "Add Medication",
+        tooltip: AppLocalizations.of(context)!.addMedication,
         shape: const CircleBorder(),
         backgroundColor: Color(0xFF8AC249),
         onPressed: () async {
@@ -1882,8 +1971,7 @@ class MedicationDetailsCard extends StatelessWidget {
             _DetailRow(
               icon: Icons.repeat,
               label: loc.frequency,
-              value:
-                  "${loc.frequency}: ${medication.frequency} ${medication.frequency == 1 ? loc.frequency : loc.frequency}",
+              value: "${loc.every} ${medication.frequency} ${loc.day}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
@@ -2012,8 +2100,12 @@ Future<void> scheduleMedicationNotification(
         final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
         final notificationMessage =
             i == 0
-                ? 'Time to take ${medication.name}!'
-                : 'Reminder: Take your ${medication.name}';
+                ? AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.timeToTakeMedication(medication.name)
+                : AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.reminderTakeMedication(medication.name);
 
         final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
         final notificationId = ('${docId}_$i').hashCode;
@@ -2139,20 +2231,43 @@ String? getNextReminder(Medications medication) {
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+
+  final contextToUse = navigatorKey.currentContext;
+  final isArabic =
+      contextToUse != null
+          ? Localizations.localeOf(contextToUse).languageCode == 'ar'
+          : WidgetsBinding.instance.platformDispatcher.locale.languageCode ==
+              'ar';
+  final months =
+      isArabic
+          ? [
+            'يناير',
+            'فبراير',
+            'مارس',
+            'أبريل',
+            'مايو',
+            'يونيو',
+            'يوليو',
+            'أغسطس',
+            'سبتمبر',
+            'أكتوبر',
+            'نوفمبر',
+            'ديسمبر',
+          ]
+          : [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ];
   final month = months[scheduledTime.month - 1];
   final day = scheduledTime.day;
   final year = scheduledTime.year;
@@ -2161,8 +2276,14 @@ String? getNextReminder(Medications medication) {
           ? 12
           : scheduledTime.hour % 12;
   final displayMinute = scheduledTime.minute.toString().padLeft(2, '0');
-  final period = scheduledTime.hour < 12 ? 'AM' : 'PM';
-  return '$month $day, $year - $displayHour:$displayMinute $period';
+  final period =
+      isArabic
+          ? (scheduledTime.hour < 12 ? 'ص' : 'م')
+          : (scheduledTime.hour < 12 ? 'AM' : 'PM');
+
+  return isArabic
+      ? '$day $month $year - $displayHour:$displayMinute $period'
+      : '$month $day, $year - $displayHour:$displayMinute $period';
 }
 
 Future<void> rescheduleAllMedications(String uid) async {
@@ -2171,4 +2292,12 @@ Future<void> rescheduleAllMedications(String uid) async {
     final medication = medicationFromDoc(doc);
     await scheduleMedicationNotification(null, doc.id, medication);
   }
+}
+
+String convertArabicNumerals(String input) {
+  const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  for (int i = 0; i < arabicNums.length; i++) {
+    input = input.replaceAll(arabicNums[i], i.toString());
+  }
+  return input;
 }

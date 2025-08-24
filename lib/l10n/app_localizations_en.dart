@@ -99,6 +99,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dosage => 'Dosage';
 
   @override
+  String get every => 'every';
+
+  @override
   String get frequency => 'Frequency';
 
   @override
@@ -132,7 +135,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youCanOnlyHaveUpTo7Medications => 'You can only have up to 7 medications.';
 
   @override
-  String get welcomeBack => 'Welcome back';
+  String get welcomeBack => 'Welcome back,';
 
   @override
   String get noMedicationsFound => 'No medications found.';
@@ -159,7 +162,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteMedication => 'Delete Medication';
 
   @override
-  String get areYouSureDeleteMedication => 'Are you sure you want to delete';
+  String areYouSureDeleteMedication(Object medication) {
+    return 'Are you sure you want to delete $medication?';
+  }
 
   @override
   String get changeEmail => 'Change Email';
@@ -207,7 +212,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nextReminder => 'Next reminder';
 
   @override
-  String get markedAsTaken => 'Marked as taken!';
+  String markedAsTaken(Object medication) {
+    return 'Marked $medication as taken!';
+  }
 
   @override
   String get couldNotUpdateMedication => 'Could not update your medication. Please try again.';
@@ -229,4 +236,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contactMeFailed => 'Failed to send message. Please try again.';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get profileAndSettings => 'Profile & Settings';
+
+  @override
+  String get day => 'day';
+
+  @override
+  String timeToTakeMedication(Object medication) {
+    return 'Time to take $medication!';
+  }
+
+  @override
+  String get medicationUpdated => 'Medication updated!';
+
+  @override
+  String reminderTakeMedication(Object medication) {
+    return 'Reminder: Take your $medication';
+  }
+
+  @override
+  String medicationDeleted(Object medication) {
+    return '$medication deleted!';
+  }
+
+  @override
+  String get yes => 'yes';
+
+  @override
+  String get no => 'no';
 }

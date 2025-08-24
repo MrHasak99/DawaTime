@@ -92,6 +92,10 @@ Future<void> main() async {
       await prefs.setString('themeMode', 'system');
     }
   });
+  final preferredLang = prefs.getString('preferredLanguage');
+  if (preferredLang != null) {
+    localeNotifier.value = Locale(preferredLang);
+  }
 
   tz.initializeTimeZones();
   final String timeZoneName = await FlutterTimezone.getLocalTimezone();

@@ -99,6 +99,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dosage => 'الجرعة';
 
   @override
+  String get every => 'كل';
+
+  @override
   String get frequency => 'التكرار';
 
   @override
@@ -120,7 +123,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول.';
 
   @override
-  String get dosageFrequencyGreaterThanZero => 'يجب أن تكون الجرعة والتكرار أكبر من الصفر.';
+  String get dosageFrequencyGreaterThanZero => 'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر.';
 
   @override
   String get pleasePickScheduleStartDate => 'يرجى اختيار تاريخ بدء الجدول.';
@@ -132,7 +135,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط.';
 
   @override
-  String get welcomeBack => 'مرحبًا بعودتك';
+  String get welcomeBack => 'مرحبًا بعودتك،';
 
   @override
   String get noMedicationsFound => 'لم يتم العثور على أدوية.';
@@ -159,7 +162,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteMedication => 'حذف الدواء';
 
   @override
-  String get areYouSureDeleteMedication => 'هل أنت متأكد أنك تريد حذف';
+  String areYouSureDeleteMedication(Object medication) {
+    return 'هل أنت متأكد أنك تريد حذف$medication؟';
+  }
 
   @override
   String get changeEmail => 'تغيير البريد الإلكتروني';
@@ -207,7 +212,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nextReminder => 'التنبيه القادم';
 
   @override
-  String get markedAsTaken => 'تم التحديد كمأخوذ!';
+  String markedAsTaken(Object medication) {
+    return 'تم التحديد $medication كمأخوذ!';
+  }
 
   @override
   String get couldNotUpdateMedication => 'تعذر تحديث الدواء. يرجى المحاولة مرة أخرى.';
@@ -216,7 +223,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteAccountTitle => 'حذف الحساب';
 
   @override
-  String get deleteAccountConfirm => 'هل أنت متأكد أنك تريد حذف حسابك؟';
+  String get deleteAccountConfirm => 'هل أنت   متأكد أنك تريد حذف حسابك؟';
 
   @override
   String get writeYourMessageHere => 'اكتب رسالتك هنا...';
@@ -229,4 +236,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get contactMeFailed => 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get notifications => 'التنبيهات';
+
+  @override
+  String get profileAndSettings => 'الملف الشخصي والإعدادات';
+
+  @override
+  String get day => 'يوم';
+
+  @override
+  String timeToTakeMedication(Object medication) {
+    return 'حان وقت تناول $medication!';
+  }
+
+  @override
+  String get medicationUpdated => '!تم تحديث الدواء';
+
+  @override
+  String reminderTakeMedication(Object medication) {
+    return 'تذكير: تناول دوائك $medication';
+  }
+
+  @override
+  String medicationDeleted(Object medication) {
+    return 'تم حذف $medication!';
+  }
+
+  @override
+  String get yes => 'نعم';
+
+  @override
+  String get no => 'لا';
 }
