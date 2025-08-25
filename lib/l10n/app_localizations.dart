@@ -994,6 +994,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This sign up method is not enabled, please contact support'**
   String get emailMethod;
+
+  /// No description provided for @friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend'**
+  String get friend;
+
+  /// No description provided for @viewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View Profile'**
+  String get viewProfile;
+
+  /// No description provided for @addMedicationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add medication:'**
+  String get addMedicationFailed;
+
+  /// No description provided for @allowSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please allow \"Schedule exact alarms\" in system settings'**
+  String get allowSettings;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

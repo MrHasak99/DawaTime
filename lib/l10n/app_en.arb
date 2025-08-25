@@ -149,5 +149,9 @@
   "emailAlreadyRegistered": "This email is already registered, please use another email or log in",
   "emailInvalid": "The email address is not valid, please check and try again",
   "weakPassword": "Your password is too weak, please use at least 6 characters",
-  "emailMethod": "This sign up method is not enabled, please contact support"
+  "emailMethod": "This sign up method is not enabled, please contact support",
+  "friend": "Friend",
+  "viewProfile": "View Profile",
+  "addMedicationFailed": "Failed to add medication:",
+  "allowSettings": "Please allow \"Schedule exact alarms\" in system settings"
 }

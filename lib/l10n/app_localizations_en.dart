@@ -471,4 +471,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emailMethod => 'This sign up method is not enabled, please contact support';
+
+  @override
+  String get friend => 'Friend';
+
+  @override
+  String get viewProfile => 'View Profile';
+
+  @override
+  String get addMedicationFailed => 'Failed to add medication:';
+
+  @override
+  String get allowSettings => 'Please allow \"Schedule exact alarms\" in system settings';
 }

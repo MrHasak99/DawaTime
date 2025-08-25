@@ -471,4 +471,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get emailMethod => 'طريقة التسجيل هذه غير مفعّلة، الرجاء التواصل مع الدعم الفني';
+
+  @override
+  String get friend => 'صديقي';
+
+  @override
+  String get viewProfile => 'عرض الملف الشخصي';
+
+  @override
+  String get addMedicationFailed => 'تعذّر إضافة الدواء:';
+
+  @override
+  String get allowSettings => 'الرجاء السماح بإذن \"المنبهات والتذكيرات\" من إعدادات النظام';
 }

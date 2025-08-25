@@ -218,9 +218,9 @@ class _HomePageState extends State<HomePage> {
                 content: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        "Here's how to get started:",
+                        AppLocalizations.of(context)!.getStarted,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -228,17 +228,17 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        '• Add your medications using the "+" button.\n'
-                        '• Set reminders for each medication so you never miss a dose.\n'
-                        '• Tap a medication to view details or edit it.\n'
-                        '• Swipe left to delete or right to edit a medication.\n'
-                        '• Check your upcoming reminders on the home screen.\n'
-                        '• Manage your profile and settings from the top right.',
+                        '${AppLocalizations.of(context)!.addMedicationBody2}\n'
+                        '${AppLocalizations.of(context)!.setReminders}\n'
+                        '${AppLocalizations.of(context)!.viewDetails}\n'
+                        '${AppLocalizations.of(context)!.swipe}\n'
+                        '${AppLocalizations.of(context)!.checkReminders}\n'
+                        '${AppLocalizations.of(context)!.manageProfile}.\n',
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "You'll receive notifications when it's time to take your medication — even if the app is closed!",
+                        AppLocalizations.of(context)!.medicationNotifications,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -548,10 +548,10 @@ class _HomePageState extends State<HomePage> {
                       .doc(FirebaseAuth.instance.currentUser?.uid)
                       .snapshots(),
               builder: (context, snapshot) {
-                String name = 'Friend';
+                String name = AppLocalizations.of(context)!.friend;
                 if (snapshot.hasData && snapshot.data!.exists) {
                   final data = snapshot.data!.data() as Map<String, dynamic>;
-                  name = data['name'] ?? 'Friend';
+                  name = data['name'] ?? AppLocalizations.of(context)!.friend;
                 }
                 return Text(
                   "${AppLocalizations.of(context)!.welcomeBack} $name!",
@@ -565,7 +565,7 @@ class _HomePageState extends State<HomePage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings_rounded, color: Colors.white),
-                tooltip: 'View Profile',
+                tooltip: AppLocalizations.of(context)!.viewProfile,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -1443,7 +1443,7 @@ class _HomePageState extends State<HomePage> {
                                                     backgroundColor:
                                                         const Color(0xFF8AC249),
                                                     content: Text(
-                                                      'Failed to add medication: $e',
+                                                      '${AppLocalizations.of(context)!.addMedicationFailed} $e',
                                                       style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -1645,7 +1645,8 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             trailing: IconButton(
-                              tooltip: "Take Medication",
+                              tooltip:
+                                  AppLocalizations.of(context)!.takeMedication,
                               icon: const Icon(
                                 Icons.medication_rounded,
                                 color: Colors.white,
@@ -1856,7 +1857,9 @@ class _HomePageState extends State<HomePage> {
                                             0xFF8AC249,
                                           ),
                                           content: Text(
-                                            'Could not update your medication. Please try again.',
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.couldNotUpdateMedication,
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -2183,8 +2186,8 @@ Future<void> scheduleMedicationNotification(
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: const Color(0xFF8AC249),
-            content: const Text(
-              'Please allow "Schedule exact alarms" in system settings.',
+            content: Text(
+              AppLocalizations.of(context)!.allowSettings,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
