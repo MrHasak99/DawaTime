@@ -446,7 +446,7 @@ abstract class AppLocalizations {
   /// No description provided for @systemTheme.
   ///
   /// In en, this message translates to:
-  /// **'System'**
+  /// **'System Default'**
   String get systemTheme;
 
   /// No description provided for @lightTheme.
@@ -658,6 +658,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @continueConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue?'**
+  String get continueConfirmation;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @developed.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed By'**
+  String get developed;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Hamad AlKhalaf'**
+  String get developer;
+
+  /// No description provided for @appInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'App Info'**
+  String get appInfo;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @failedToLoadUserData.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load user data.'**
+  String get failedToLoadUserData;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @newEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'New Email'**
+  String get newEmail;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @emailChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Change Requested'**
+  String get emailChange;
+
+  /// No description provided for @verifyNewEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.'**
+  String get verifyNewEmail;
+
+  /// No description provided for @updateEmailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update email:'**
+  String get updateEmailFailed;
+
+  /// No description provided for @noUser.
+  ///
+  /// In en, this message translates to:
+  /// **'No user is currently logged in.'**
+  String get noUser;
+
+  /// No description provided for @sendEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Email'**
+  String get sendEmail;
+
+  /// No description provided for @resetEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent!'**
+  String get resetEmailSent;
+
+  /// No description provided for @resetEmailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send reset email:'**
+  String get resetEmailFailed;
+
+  /// No description provided for @enterPasswordTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password twice.'**
+  String get enterPasswordTwice;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @noUserEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'No email found for user.'**
+  String get noUserEmail;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Deleted'**
+  String get accountDeleted;
+
+  /// No description provided for @accountDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted successfully.'**
+  String get accountDeletedSuccess;
+
+  /// No description provided for @accountDeletedFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete user:'**
+  String get accountDeletedFailed;
+
+  /// No description provided for @mustBeLoggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be logged in to send a message.'**
+  String get mustBeLoggedIn;
+
+  /// No description provided for @messageSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Message sent!'**
+  String get messageSent;
+
+  /// No description provided for @messageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send message:'**
+  String get messageFailed;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s how to get started:'**
+  String get getStarted;
+
+  /// No description provided for @addMedicationBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'• Add your medications using the \"+\" button.\n'**
+  String get addMedicationBody2;
+
+  /// No description provided for @setReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'• Set reminders for each medication so you never miss a dose.\n'**
+  String get setReminders;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'• Tap a medication to view details.\n'**
+  String get viewDetails;
+
+  /// No description provided for @swipe.
+  ///
+  /// In en, this message translates to:
+  /// **'• Swipe left to delete or right to edit a medication.\n'**
+  String get swipe;
+
+  /// No description provided for @checkReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'• Check your upcoming reminders on the home screen.\n'**
+  String get checkReminders;
+
+  /// No description provided for @manageProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'• Manage your profile and settings from the top right.\n'**
+  String get manageProfile;
+
+  /// No description provided for @medicationNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll receive notifications when it\'s time to take your medication — even if the app is closed!'**
+  String get medicationNotifications;
+
+  /// No description provided for @notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get notification;
+
+  /// No description provided for @updateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequired;
+
+  /// No description provided for @pleaseUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available. Please update to continue.'**
+  String get pleaseUpdate;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Denied'**
+  String get accessDenied;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is not available in your country.'**
+  String get notAvailable;
+
+  /// No description provided for @failedUpdateCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check for updates. Please try again later.'**
+  String get failedUpdateCheck;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get gotIt;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

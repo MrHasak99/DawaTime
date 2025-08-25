@@ -1,3 +1,4 @@
+import 'package:dawatime/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart';
@@ -29,8 +30,8 @@ class _LoginPageState extends State<LoginPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
-            title: const Text(
-              'Welcome to DawaTime!',
+            title: Text(
+              AppLocalizations.of(context)!.welcomeToDawaTime,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -39,27 +40,28 @@ class _LoginPageState extends State<LoginPage> {
             content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    "Here's how to get started:",
+                    AppLocalizations.of(context)!.getStarted,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
                   SizedBox(height: 12),
                   Text(
-                    '• Add your medications using the "+" button.\n'
-                    '• Set reminders for each medication so you never miss a dose.\n'
-                    '• Tap a medication to view details or edit it.\n'
-                    '• Swipe left to delete or right to edit a medication.\n'
-                    '• Check your upcoming reminders on the home screen.\n'
-                    '• Manage your profile and settings from the top right.',
+                    '${AppLocalizations.of(context)!.addMedicationBody2}\n'
+                    '${AppLocalizations.of(context)!.setReminders}\n'
+                    '${AppLocalizations.of(context)!.viewDetails}\n'
+                    '${AppLocalizations.of(context)!.swipe}\n'
+                    '${AppLocalizations.of(context)!.checkReminders}\n'
+                    '${AppLocalizations.of(context)!.manageProfile}.\n',
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "You'll receive notifications when it's time to take your medication — even if the app is closed!",
+                    AppLocalizations.of(context)!.medicationNotifications,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -72,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'Got it!',
+                child: Text(
+                  AppLocalizations.of(context)!.gotIt,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -93,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(
             backgroundColor: Color(0xFF8AC249),
             content: Text(
-              "Your account has been deleted successfully.",
+              AppLocalizations.of(context)!.accountDeleted,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -133,6 +135,48 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            localeNotifier.value = const Locale('en');
+                          },
+                          child: Text(
+                            'English',
+                            style: TextStyle(
+                              color:
+                                  localeNotifier.value?.languageCode == 'en'
+                                      ? const Color(0xFF8AC249)
+                                      : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text('|', style: TextStyle(color: Colors.grey)),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: () {
+                            localeNotifier.value = const Locale('ar');
+                          },
+                          child: Text(
+                            'العربية',
+                            style: TextStyle(
+                              color:
+                                  localeNotifier.value?.languageCode == 'ar'
+                                      ? const Color(0xFF8AC249)
+                                      : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   Image.asset("assets/DawaTime_green.png", height: 80),
                   const SizedBox(height: 24),
                   TextField(
@@ -303,6 +347,10 @@ class _LoginPageState extends State<LoginPage> {
                                       AppLocalizations.of(
                                         context,
                                       )!.resetPassword,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -397,6 +445,10 @@ class _LoginPageState extends State<LoginPage> {
                                             () => Navigator.pop(context, false),
                                         child: Text(
                                           AppLocalizations.of(context)!.cancel,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                       ElevatedButton(
@@ -407,6 +459,10 @@ class _LoginPageState extends State<LoginPage> {
                                             () => Navigator.pop(context, true),
                                         child: Text(
                                           AppLocalizations.of(context)!.send,
+                                          style: TextStyle(
+                                            color: Color(0xFF8AC249),
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -464,7 +520,13 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Color(0xFF8AC249),
                     ),
                     onPressed: _showIntroGuide,
-                    child: Text(AppLocalizations.of(context)!.appGuide),
+                    child: Text(
+                      AppLocalizations.of(context)!.appGuide,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -478,6 +540,10 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           AppLocalizations.of(context)!.privacyPolicy,
+                          style: TextStyle(
+                            color: Color(0xFF8AC249),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -492,6 +558,10 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           AppLocalizations.of(context)!.termsAndConditions,
+                          style: TextStyle(
+                            color: Color(0xFF8AC249),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

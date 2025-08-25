@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: const BackButton(color: Colors.white),
             centerTitle: true,
             title: Text(
-              "Settings",
+              AppLocalizations.of(context)!.settings,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.info_outline, color: Colors.white),
-                tooltip: 'App Info',
+                tooltip: AppLocalizations.of(context)!.appInfo,
                 onPressed: () async {
                   final info = await PackageInfo.fromPlatform();
                   showDialog(
@@ -186,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Version: ${info.version}',
+                                  '${AppLocalizations.of(context)!.version}: ${info.version}',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyLarge?.copyWith(
@@ -212,7 +212,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
-                                        'Developed by: Hamad AlKhalaf',
+                                        '${AppLocalizations.of(context)!.developed}: ${AppLocalizations.of(context)!.developer}',
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
@@ -240,8 +240,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 LaunchMode.externalApplication,
                                           );
                                         },
-                                        child: const Text(
-                                          'Privacy Policy',
+                                        child: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.privacyPolicy,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
@@ -266,8 +268,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 LaunchMode.externalApplication,
                                           );
                                         },
-                                        child: const Text(
-                                          'Terms & Conditions',
+                                        child: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.termsAndConditions,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
@@ -296,8 +300,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ),
                                       elevation: 0,
                                     ),
-                                    label: const Text(
-                                      'Close',
+                                    label: Text(
+                                      AppLocalizations.of(context)!.close,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -315,7 +319,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               IconButton(
                 icon: const Icon(Icons.logout, color: Colors.white),
-                tooltip: 'Logout',
+                tooltip: AppLocalizations.of(context)!.logOut,
                 onPressed: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
@@ -323,7 +327,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         (context) => AlertDialog(
                           backgroundColor: Color(0xFF8AC249),
                           title: Text(
-                            "Log Out",
+                            AppLocalizations.of(context)!.logOut,
                             style: Theme.of(
                               context,
                             ).textTheme.titleLarge?.copyWith(
@@ -332,7 +336,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                           content: Text(
-                            "Are you sure you want to log out?",
+                            AppLocalizations.of(context)!.areYouSureLogOut,
                             style: Theme.of(
                               context,
                             ).textTheme.bodyLarge?.copyWith(
@@ -343,8 +347,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              child: const Text(
-                                "Cancel",
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -356,8 +360,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                               ),
-                              child: const Text(
-                                "Log Out",
+                              child: Text(
+                                AppLocalizations.of(context)!.logOut,
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold,
@@ -407,7 +411,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (snapshot.hasError) {
                         return Center(
                           child: Text(
-                            'Failed to load user data.',
+                            AppLocalizations.of(context)!.failedToLoadUserData,
                             style: TextStyle(color: Colors.red),
                           ),
                         );
@@ -442,7 +446,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               const SizedBox(height: 22),
                               Text(
-                                "Name: ${data['name'] ?? ''}",
+                                "${AppLocalizations.of(context)!.name}: ${data['name'] ?? ''}",
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleLarge?.copyWith(
@@ -452,7 +456,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "Email: ${user.email ?? ''}",
+                                "${AppLocalizations.of(context)!.email}: ${user.email ?? ''}",
                                 style: Theme.of(
                                   context,
                                 ).textTheme.bodyMedium?.copyWith(
@@ -511,7 +515,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               title: Text(
-                                                'Edit Profile',
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.editProfile,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -538,7 +544,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                 FontWeight.bold,
                                                           ),
                                                       decoration: InputDecoration(
-                                                        labelText: 'Name',
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.name,
                                                         labelStyle: Theme.of(
                                                               context,
                                                             )
@@ -581,8 +590,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         context,
                                                         false,
                                                       ),
-                                                  child: const Text(
-                                                    'Cancel',
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.cancel,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -601,10 +612,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         backgroundColor:
                                                             Colors.white,
                                                       ),
-                                                  child: const Text(
-                                                    'Save',
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.save,
                                                     style: TextStyle(
-                                                      color: Color(0xFF8AC249),
+                                                      color: const Color(
+                                                        0xFF8AC249,
+                                                      ),
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -661,7 +676,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       }
                                     },
                                     child: Text(
-                                      "Edit Profile",
+                                      AppLocalizations.of(context)!.editProfile,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge?.copyWith(
@@ -695,7 +710,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       alignment: Alignment.center,
                                     ),
                                     child: Text(
-                                      'Change Email',
+                                      AppLocalizations.of(context)!.changeEmail,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge?.copyWith(
@@ -723,9 +738,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   ) => AlertDialog(
                                                     backgroundColor:
                                                         const Color(0xFF8AC249),
-                                                    title: const Text(
-                                                      'Change Email',
-                                                      style: TextStyle(
+                                                    title: Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.changeEmail,
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -753,9 +770,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                     FontWeight
                                                                         .bold,
                                                               ),
-                                                          decoration: const InputDecoration(
+                                                          decoration: InputDecoration(
                                                             labelText:
-                                                                'New Email',
+                                                                AppLocalizations.of(
+                                                                  context,
+                                                                )!.newEmail,
                                                             labelStyle:
                                                                 TextStyle(
                                                                   color:
@@ -805,7 +824,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                                               ),
                                                           decoration: InputDecoration(
                                                             labelText:
-                                                                'Current Password',
+                                                                AppLocalizations.of(
+                                                                  context,
+                                                                )!.currentPassword,
                                                             labelStyle:
                                                                 const TextStyle(
                                                                   color:
@@ -860,8 +881,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                               context,
                                                               false,
                                                             ),
-                                                        child: const Text(
-                                                          'Cancel',
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.cancel,
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -880,10 +903,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                                               context,
                                                               true,
                                                             ),
-                                                        child: const Text(
-                                                          'Change',
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.change,
                                                           style: TextStyle(
-                                                            color: Color(
+                                                            color: const Color(
                                                               0xFF8AC249,
                                                             ),
                                                             fontWeight:
@@ -931,16 +956,20 @@ class _SettingsPageState extends State<SettingsPage> {
                                                           const Color(
                                                             0xFF8AC249,
                                                           ),
-                                                      title: const Text(
-                                                        'Email Change Requested',
+                                                      title: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.emailChange,
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
                                                       ),
-                                                      content: const Text(
-                                                        'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.',
+                                                      content: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.verifyNewEmail,
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
@@ -954,8 +983,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                   Navigator.pop(
                                                                     context,
                                                                   ),
-                                                          child: const Text(
-                                                            'OK',
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.ok,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -990,7 +1021,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   0xFF8AC249,
                                                 ),
                                                 content: Text(
-                                                  'Failed to update email: $e',
+                                                  '${AppLocalizations.of(context)!.updateEmailFailed} $e',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyLarge
@@ -1031,7 +1062,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       alignment: Alignment.center,
                                     ),
                                     child: Text(
-                                      'Reset Password',
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.resetPasswordButton,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge?.copyWith(
@@ -1048,12 +1081,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                           ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
-                                            const SnackBar(
+                                            SnackBar(
                                               backgroundColor: Color(
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                'No user is currently logged in.',
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.noUser,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1077,15 +1112,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
-                                              title: const Text(
-                                                "Reset Password",
+                                              title: Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.resetPassword,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               content: Text(
-                                                "A password reset email will be sent to:\n${user.email}\n\nContinue?",
+                                                "${AppLocalizations.of(context)!.resetPassword} ${user.email}\n\n${AppLocalizations.of(context)!.continueConfirmation}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1098,8 +1135,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         context,
                                                         false,
                                                       ),
-                                                  child: const Text(
-                                                    "Cancel",
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.cancel,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -1118,8 +1157,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         context,
                                                         true,
                                                       ),
-                                                  child: const Text(
-                                                    "Send Email",
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.sendEmail,
                                                     style: TextStyle(
                                                       color: Color(0xFF8AC249),
                                                       fontWeight:
@@ -1142,12 +1183,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                           ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
-                                            const SnackBar(
+                                            SnackBar(
                                               backgroundColor: Color(
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                'Password reset email sent!',
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.resetEmailSent,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1167,7 +1210,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                'Failed to send reset email: $e',
+                                                '${AppLocalizations.of(context)!.resetEmailFailed} $e',
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1193,7 +1236,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     size: 24,
                                   ),
                                   label: Text(
-                                    "Delete Account",
+                                    AppLocalizations.of(context)!.deleteAccount,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyLarge?.copyWith(
@@ -1232,7 +1275,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       builder:
                                           (context) => AlertDialog(
                                             title: Text(
-                                              "Delete Account",
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.deleteAccountTitle,
                                               style: Theme.of(
                                                 context,
                                               ).textTheme.titleLarge?.copyWith(
@@ -1246,9 +1291,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                             content: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                const Text(
-                                                  "Are you sure you want to delete your account? This cannot be undone.",
-                                                  style: TextStyle(
+                                                Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.deleteAccountConfirm,
+                                                  style: const TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -1266,9 +1313,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
-                                                  decoration: const InputDecoration(
+                                                  decoration: InputDecoration(
                                                     labelText:
-                                                        'Enter Your Password',
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.enterYourPassword,
                                                     labelStyle: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -1307,9 +1356,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
-                                                  decoration: const InputDecoration(
+                                                  decoration: InputDecoration(
                                                     labelText:
-                                                        'Confirm Password',
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.confirmPassword,
                                                     labelStyle: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -1344,8 +1395,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       context,
                                                       false,
                                                     ),
-                                                child: const Text(
-                                                  "Cancel",
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.cancel,
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
@@ -1366,12 +1419,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
-                                                      const SnackBar(
+                                                      SnackBar(
                                                         backgroundColor: Color(
                                                           0xFF8AC249,
                                                         ),
                                                         content: Text(
-                                                          "Please enter your password twice.",
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.enterPasswordTwice,
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -1390,12 +1445,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
-                                                      const SnackBar(
+                                                      SnackBar(
                                                         backgroundColor: Color(
                                                           0xFF8AC249,
                                                         ),
                                                         content: Text(
-                                                          "Passwords do not match.",
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.passwordsDontMatch,
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -1409,8 +1466,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   }
                                                   Navigator.pop(context, true);
                                                 },
-                                                child: const Text(
-                                                  "Delete",
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.delete,
                                                   style: TextStyle(
                                                     color: Colors.red,
                                                     fontWeight: FontWeight.bold,
@@ -1444,7 +1503,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                             passwordController1.text;
                                         if (email == null) {
                                           throw Exception(
-                                            "No email found for user.",
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.noUserEmail,
                                           );
                                         }
 
@@ -1493,16 +1554,20 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   backgroundColor: const Color(
                                                     0xFF8AC249,
                                                   ),
-                                                  title: const Text(
-                                                    "Account Deleted",
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.accountDeleted,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
-                                                  content: const Text(
-                                                    "Your account has been deleted successfully.",
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.accountDeletedSuccess,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -1532,8 +1597,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                           (route) => false,
                                                         );
                                                       },
-                                                      child: const Text(
-                                                        "OK",
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.ok,
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
@@ -1562,7 +1629,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                "Failed to delete user: $e",
+                                                "${AppLocalizations.of(context)!.accountDeletedFailed} $e",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1598,7 +1665,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     color: Colors.white,
                                   ),
                                   label: Text(
-                                    "Contact Me",
+                                    AppLocalizations.of(context)!.contactMe,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.bodyLarge?.copyWith(
@@ -1629,8 +1696,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                             ),
-                                            title: const Text(
-                                              "Contact Me",
+                                            title: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.contactMe,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -1647,7 +1716,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                               ),
                                               decoration: InputDecoration(
                                                 hintText:
-                                                    "Write your message here...",
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.writeYourMessageHere,
                                                 hintStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -1686,8 +1757,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 onPressed:
                                                     () =>
                                                         Navigator.pop(context),
-                                                child: const Text(
-                                                  "Cancel",
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.cancel,
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
@@ -1722,11 +1795,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       ScaffoldMessenger.of(
                                                         context,
                                                       ).showSnackBar(
-                                                        const SnackBar(
+                                                        SnackBar(
                                                           backgroundColor:
                                                               Color(0xFF8AC249),
                                                           content: Text(
-                                                            'You must be logged in to send a message.',
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.mustBeLoggedIn,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -1765,11 +1840,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       ScaffoldMessenger.of(
                                                         context,
                                                       ).showSnackBar(
-                                                        const SnackBar(
+                                                        SnackBar(
                                                           backgroundColor:
                                                               Color(0xFF8AC249),
                                                           content: Text(
-                                                            'Message sent!',
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.messageSent,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -1792,7 +1869,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                           backgroundColor:
                                                               Color(0xFF8AC249),
                                                           content: Text(
-                                                            'Failed to send message: $e',
+                                                            '${AppLocalizations.of(context)!.messageFailed} $e',
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -1808,8 +1885,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     }
                                                   }
                                                 },
-                                                child: const Text(
-                                                  "Send",
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.send,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -1829,7 +1908,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 0xFF8AC249,
                                               ),
                                               content: Text(
-                                                "Failed to send message: $e",
+                                                '${AppLocalizations.of(context)!.messageFailed} $e',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1865,7 +1944,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     color: Color(0xFF8AC249),
                                   ),
                                   title: Text(
-                                    'Theme',
+                                    AppLocalizations.of(context)!.theme,
                                     style: Theme.of(context).textTheme.bodyLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
@@ -1880,7 +1959,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                           DropdownMenuItem(
                                             value: ThemeMode.system,
                                             child: Text(
-                                              'System (Follow device)',
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.systemTheme,
                                               style:
                                                   Theme.of(
                                                     context,
@@ -1890,7 +1971,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                           DropdownMenuItem(
                                             value: ThemeMode.light,
                                             child: Text(
-                                              'Light',
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.light,
                                               style:
                                                   Theme.of(
                                                     context,
@@ -1900,7 +1983,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                           DropdownMenuItem(
                                             value: ThemeMode.dark,
                                             child: Text(
-                                              'Dark',
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.dark,
                                               style:
                                                   Theme.of(
                                                     context,
@@ -1939,7 +2024,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     color: Color(0xFF8AC249),
                                   ),
                                   title: Text(
-                                    'Language',
+                                    AppLocalizations.of(context)!.language,
                                     style: Theme.of(context).textTheme.bodyLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),

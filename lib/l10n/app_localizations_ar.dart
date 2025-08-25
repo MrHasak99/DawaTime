@@ -183,13 +183,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contactMe => 'تواصل معي';
 
   @override
-  String get theme => 'السمة';
+  String get theme => 'المظهر';
 
   @override
   String get language => 'اللغة';
 
   @override
-  String get systemTheme => 'النظام';
+  String get systemTheme => 'حسب النظام';
 
   @override
   String get lightTheme => 'فاتح';
@@ -227,7 +227,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteAccountTitle => 'حذف الحساب';
 
   @override
-  String get deleteAccountConfirm => 'هل أنت   متأكد أنك تريد حذف حسابك؟';
+  String get deleteAccountConfirm => 'هل أنت متأكد أنك تريد حذف حسابك؟';
 
   @override
   String get writeYourMessageHere => 'اكتب رسالتك هنا...';
@@ -303,4 +303,142 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get back => 'الرجوع';
+
+  @override
+  String get continueConfirmation => 'هل تريد المتابعة؟';
+
+  @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get developed => 'من تطوير';
+
+  @override
+  String get developer => 'حمد الخلف';
+
+  @override
+  String get appInfo => 'معلومات التطبيق';
+
+  @override
+  String get light => 'فاتح';
+
+  @override
+  String get dark => 'داكن';
+
+  @override
+  String get failedToLoadUserData => 'فشل تحميل بيانات المستخدم';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get change => 'تأكيد';
+
+  @override
+  String get newEmail => 'البريد الإلكتروني الجديد';
+
+  @override
+  String get currentPassword => 'كلمة المرور الحالية';
+
+  @override
+  String get emailChange => 'تم تغيير البريد الإلكتروني';
+
+  @override
+  String get verifyNewEmail => 'تم إرسال رسالة تحقق إلى عنوان بريدك الإلكتروني الجديد. يرجى التحقق منه، ثم قم بتسجيل الدخول مرة أخرى باستخدام بريدك الإلكتروني الجديد.';
+
+  @override
+  String get updateEmailFailed => 'فشل تحديث البريد الإلكتروني:';
+
+  @override
+  String get noUser => 'لا يوجد مستخدم مسجل الدخول حالياً.';
+
+  @override
+  String get sendEmail => 'أرسل البريد الإلكتروني';
+
+  @override
+  String get resetEmailSent => 'تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور!';
+
+  @override
+  String get resetEmailFailed => 'فشل إرسال البريد إلكتروني لإعادة تعيين كلمة المرور:';
+
+  @override
+  String get enterPasswordTwice => 'يرجى إدخال كلمة المرور مرتين.';
+
+  @override
+  String get delete => 'امسح';
+
+  @override
+  String get noUserEmail => 'لا يوجد بريد إلكتروني للمستخدم';
+
+  @override
+  String get accountDeleted => 'تم مسح الحساب';
+
+  @override
+  String get accountDeletedSuccess => 'تم مسح الحساب بنجاح';
+
+  @override
+  String get accountDeletedFailed => 'فشل مسح الحساب:';
+
+  @override
+  String get mustBeLoggedIn => 'يجب أن تكون مسجلاً للدخول لإرسال رسالة.';
+
+  @override
+  String get messageSent => 'تم إرسال الرسالة بنجاح!';
+
+  @override
+  String get messageFailed => 'فشل إرسال الرسالة:';
+
+  @override
+  String get getStarted => 'إليك كيفية البدء:';
+
+  @override
+  String get addMedicationBody2 => '• اضف أدويتك بإستخدام زر \"+\".\n';
+
+  @override
+  String get setReminders => '• قم بضبط منبهات لكل دواء حتى لا تفوتك أي جرعة.\n';
+
+  @override
+  String get viewDetails => '• اضغط على الدواء لرؤية التفاصيل\n';
+
+  @override
+  String get swipe => '• اسحب الدواء لليسار لحذفه أو لليمين لتعديله.\n';
+
+  @override
+  String get checkReminders => '• تفقد تذكيراتك القادمة على الشاشة الرئيسية.\n';
+
+  @override
+  String get manageProfile => '• قم بإدارة ملفك الشخصي والإعدادات من الزاوية العلوية اليمنى.\n';
+
+  @override
+  String get medicationNotifications => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+
+  @override
+  String get notification => 'تنبيه';
+
+  @override
+  String get updateRequired => 'تحديث مطلوب';
+
+  @override
+  String get pleaseUpdate => 'يتوفر إصدار جديد من التطبيق. الرجاء التحديث للمتابعة.';
+
+  @override
+  String get update => 'حدّث';
+
+  @override
+  String get accessDenied => 'الوصول مرفوض';
+
+  @override
+  String get notAvailable => 'هذا التطبيق غير متاح في بلدك.';
+
+  @override
+  String get failedUpdateCheck => 'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get error => 'خطأ';
+
+  @override
+  String get gotIt => 'حسناً!';
 }

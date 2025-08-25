@@ -133,8 +133,8 @@ Future<void> main() async {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                title: const Text(
-                  'Notification',
+                title: Text(
+                  AppLocalizations.of(context)!.notification,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -150,8 +150,8 @@ Future<void> main() async {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text(
-                      'OK',
+                    child: Text(
+                      AppLocalizations.of(context)!.ok,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -207,126 +207,133 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Locale?>(
-      valueListenable: localeNotifier,
-      builder: (context, locale, _) {
-        final currentLocale =
-            locale ?? WidgetsBinding.instance.platformDispatcher.locale;
-        final isArabic = currentLocale.languageCode == 'ar';
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (context, themeMode, _) {
+        return ValueListenableBuilder<Locale?>(
+          valueListenable: localeNotifier,
+          builder: (context, locale, _) {
+            final currentLocale =
+                locale ?? WidgetsBinding.instance.platformDispatcher.locale;
+            final isArabic = currentLocale.languageCode == 'ar';
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: const SplashScreen(),
-          navigatorKey: navigatorKey,
-          supportedLocales: const [Locale('en'), Locale('ar')],
-          locale: locale,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          theme: ThemeData(
-            fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-            brightness: Brightness.light,
-            primarySwatch: Colors.green,
-            scaffoldBackgroundColor: Colors.white,
-            appBarTheme: AppBarTheme(
-              backgroundColor: const Color(0xFF8AC249),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              titleTextStyle: TextStyle(
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: const SplashScreen(),
+              navigatorKey: navigatorKey,
+              supportedLocales: const [Locale('en'), Locale('ar')],
+              locale: locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              theme: ThemeData(
                 fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8AC249),
-                foregroundColor: Colors.white,
-                textStyle: TextStyle(
+                brightness: Brightness.light,
+                primarySwatch: Colors.green,
+                scaffoldBackgroundColor: Colors.white,
+                appBarTheme: AppBarTheme(
+                  backgroundColor: const Color(0xFF8AC249),
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  titleTextStyle: TextStyle(
+                    fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF8AC249),
+                    foregroundColor: Colors.white,
+                    textStyle: TextStyle(
+                      fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 32,
+                    ),
+                  ),
+                ),
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: UnderlineInputBorder(),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF8AC249)),
+                  ),
+                  labelStyle: TextStyle(
+                    color: Color(0xFF8AC249),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                snackBarTheme: const SnackBarThemeData(
+                  backgroundColor: Color(0xFF8AC249),
+                  contentTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                textTheme: ThemeData.light().textTheme.apply(
                   fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 32,
                 ),
               ),
-            ),
-            inputDecorationTheme: const InputDecorationTheme(
-              border: UnderlineInputBorder(),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF8AC249)),
-              ),
-              labelStyle: TextStyle(
-                color: Color(0xFF8AC249),
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            snackBarTheme: const SnackBarThemeData(
-              backgroundColor: Color(0xFF8AC249),
-              contentTextStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            textTheme: ThemeData.light().textTheme.apply(
-              fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-            ),
-          ),
-          darkTheme: ThemeData(
-            fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-            brightness: Brightness.dark,
-            primarySwatch: Colors.green,
-            scaffoldBackgroundColor: Colors.black,
-            appBarTheme: AppBarTheme(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              titleTextStyle: TextStyle(
+              darkTheme: ThemeData(
                 fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
+                brightness: Brightness.dark,
+                primarySwatch: Colors.green,
+                scaffoldBackgroundColor: Colors.black,
+                appBarTheme: AppBarTheme(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  titleTextStyle: TextStyle(
+                    fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                snackBarTheme: const SnackBarThemeData(
+                  backgroundColor: Color(0xFF8AC249),
+                  contentTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: UnderlineInputBorder(),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF8AC249)),
+                  ),
+                  labelStyle: TextStyle(
+                    color: Color(0xFF8AC249),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                textTheme: ThemeData.dark().textTheme.apply(
+                  fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
+                ),
               ),
-            ),
-            snackBarTheme: const SnackBarThemeData(
-              backgroundColor: Color(0xFF8AC249),
-              contentTextStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            inputDecorationTheme: const InputDecorationTheme(
-              border: UnderlineInputBorder(),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF8AC249)),
-              ),
-              labelStyle: TextStyle(
-                color: Color(0xFF8AC249),
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            textTheme: ThemeData.dark().textTheme.apply(
-              fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
-            ),
-          ),
-          themeMode: themeModeNotifier.value,
-          builder: (context, child) {
-            return Directionality(
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              child: child!,
+              themeMode:
+                  themeMode, // <-- Use themeMode from ValueListenableBuilder
+              builder: (context, child) {
+                return Directionality(
+                  textDirection:
+                      isArabic ? TextDirection.rtl : TextDirection.ltr,
+                  child: child!,
+                );
+              },
             );
           },
         );
@@ -436,10 +443,8 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
     barrierDismissible: false,
     builder:
         (context) => AlertDialog(
-          title: const Text('Update Required'),
-          content: const Text(
-            'A new version of the app is available. Please update to continue.',
-          ),
+          title: Text(AppLocalizations.of(context)!.updateRequired),
+          content: Text(AppLocalizations.of(context)!.pleaseUpdate),
           actions: [
             TextButton(
               onPressed: () {
@@ -449,7 +454,7 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
                         : 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime';
                 launchUrl(Uri.parse(url));
               },
-              child: const Text('Update'),
+              child: Text(AppLocalizations.of(context)!.update),
             ),
           ],
         ),
@@ -488,12 +493,12 @@ class _SplashScreenState extends State<SplashScreen> {
         builder:
             (context) => AlertDialog(
               backgroundColor: Colors.red,
-              title: const Text(
-                'Access Denied',
+              title: Text(
+                AppLocalizations.of(context)!.accessDenied,
                 style: TextStyle(color: Colors.white),
               ),
-              content: const Text(
-                'This app is not available in your country.',
+              content: Text(
+                AppLocalizations.of(context)!.notAvailable,
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
@@ -526,16 +531,19 @@ class _SplashScreenState extends State<SplashScreen> {
         builder:
             (context) => AlertDialog(
               backgroundColor: Colors.red,
-              title: const Text('Error', style: TextStyle(color: Colors.white)),
-              content: const Text(
-                'Failed to check for updates. Please try again later.',
+              title: Text(
+                AppLocalizations.of(context)!.error,
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Text(
+                AppLocalizations.of(context)!.failedUpdateCheck,
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'OK',
+                  child: Text(
+                    AppLocalizations.of(context)!.ok,
                     style: TextStyle(color: Colors.white, fontFamily: 'Inter'),
                   ),
                 ),
@@ -560,8 +568,8 @@ class _SplashScreenState extends State<SplashScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
-            title: const Text(
-              'Welcome to DawaTime!',
+            title: Text(
+              AppLocalizations.of(context)!.appGuide,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -570,9 +578,9 @@ class _SplashScreenState extends State<SplashScreen> {
             content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    "Here's how to get started:",
+                    AppLocalizations.of(context)!.getStarted,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -580,17 +588,17 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    '• Add your medications using the "+" button.\n'
-                    '• Set reminders for each medication so you never miss a dose.\n'
-                    '• Tap a medication to view details or edit it.\n'
-                    '• Swipe left to delete or right to edit a medication.\n'
-                    '• Check your upcoming reminders on the home screen.\n'
-                    '• Manage your profile and settings from the top right.',
+                    '${AppLocalizations.of(context)!.addMedicationBody2}\n'
+                    '${AppLocalizations.of(context)!.setReminders}\n'
+                    '${AppLocalizations.of(context)!.viewDetails}\n'
+                    '${AppLocalizations.of(context)!.swipe}\n'
+                    '${AppLocalizations.of(context)!.checkReminders}\n'
+                    '${AppLocalizations.of(context)!.manageProfile}.\n',
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "You'll receive notifications when it's time to take your medication — even if the app is closed!",
+                    AppLocalizations.of(context)!.medicationNotifications,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -603,8 +611,8 @@ class _SplashScreenState extends State<SplashScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'Got it!',
+                child: Text(
+                  AppLocalizations.of(context)!.gotIt,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -625,8 +633,8 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("assets/DawaTime_white.png", width: 100, height: 100),
-            const Text(
-              'DawaTime',
+            Text(
+              AppLocalizations.of(context)!.appTitle,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
@@ -640,8 +648,8 @@ class _SplashScreenState extends State<SplashScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
               onPressed: _showIntroGuide,
-              child: const Text(
-                "App Guide",
+              child: Text(
+                AppLocalizations.of(context)!.appGuide,
                 style: TextStyle(
                   color: Color(0xFF8AC249),
                   fontWeight: FontWeight.bold,
@@ -658,12 +666,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: const Text(
-                    'Privacy Policy',
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.underline,
-                    ),
+                  child: Text(
+                    AppLocalizations.of(context)!.privacyPolicy,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -674,12 +679,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: const Text(
-                    'Terms & Conditions',
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.underline,
-                    ),
+                  child: Text(
+                    AppLocalizations.of(context)!.termsAndConditions,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

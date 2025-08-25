@@ -189,7 +189,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get systemTheme => 'System';
+  String get systemTheme => 'System Default';
 
   @override
   String get lightTheme => 'Light';
@@ -303,4 +303,142 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get back => 'Back';
+
+  @override
+  String get continueConfirmation => 'Continue?';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get developed => 'Developed By';
+
+  @override
+  String get developer => 'Hamad AlKhalaf';
+
+  @override
+  String get appInfo => 'App Info';
+
+  @override
+  String get light => 'Light';
+
+  @override
+  String get dark => 'Dark';
+
+  @override
+  String get failedToLoadUserData => 'Failed to load user data.';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get newEmail => 'New Email';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get emailChange => 'Email Change Requested';
+
+  @override
+  String get verifyNewEmail => 'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.';
+
+  @override
+  String get updateEmailFailed => 'Failed to update email:';
+
+  @override
+  String get noUser => 'No user is currently logged in.';
+
+  @override
+  String get sendEmail => 'Send Email';
+
+  @override
+  String get resetEmailSent => 'Password reset email sent!';
+
+  @override
+  String get resetEmailFailed => 'Failed to send reset email:';
+
+  @override
+  String get enterPasswordTwice => 'Please enter your password twice.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get noUserEmail => 'No email found for user.';
+
+  @override
+  String get accountDeleted => 'Account Deleted';
+
+  @override
+  String get accountDeletedSuccess => 'Your account has been deleted successfully.';
+
+  @override
+  String get accountDeletedFailed => 'Failed to delete user:';
+
+  @override
+  String get mustBeLoggedIn => 'You must be logged in to send a message.';
+
+  @override
+  String get messageSent => 'Message sent!';
+
+  @override
+  String get messageFailed => 'Failed to send message:';
+
+  @override
+  String get getStarted => 'Here\'s how to get started:';
+
+  @override
+  String get addMedicationBody2 => '• Add your medications using the \"+\" button.\n';
+
+  @override
+  String get setReminders => '• Set reminders for each medication so you never miss a dose.\n';
+
+  @override
+  String get viewDetails => '• Tap a medication to view details.\n';
+
+  @override
+  String get swipe => '• Swipe left to delete or right to edit a medication.\n';
+
+  @override
+  String get checkReminders => '• Check your upcoming reminders on the home screen.\n';
+
+  @override
+  String get manageProfile => '• Manage your profile and settings from the top right.\n';
+
+  @override
+  String get medicationNotifications => 'You\'ll receive notifications when it\'s time to take your medication — even if the app is closed!';
+
+  @override
+  String get notification => 'Notification';
+
+  @override
+  String get updateRequired => 'Update Required';
+
+  @override
+  String get pleaseUpdate => 'A new version of the app is available. Please update to continue.';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get accessDenied => 'Access Denied';
+
+  @override
+  String get notAvailable => 'This app is not available in your country.';
+
+  @override
+  String get failedUpdateCheck => 'Failed to check for updates. Please try again later.';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get gotIt => 'Got it!';
 }
