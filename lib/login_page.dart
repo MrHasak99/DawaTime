@@ -257,10 +257,12 @@ class _LoginPageState extends State<LoginPage> {
                               await FirebaseAuth.instance.signOut();
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
+                                  SnackBar(
                                     backgroundColor: Color(0xFF8AC249),
                                     content: Text(
-                                      "Please verify your email before logging in.",
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.pleaseVerfiy,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -293,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
                               SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(
-                                  getFriendlyLoginError(e),
+                                  getFriendlyLoginError(context, e),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -476,10 +478,10 @@ class _LoginPageState extends State<LoginPage> {
                           );
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
+                            SnackBar(
                               backgroundColor: Color(0xFF8AC249),
                               content: Text(
-                                'Password reset email sent!',
+                                AppLocalizations.of(context)!.resetEmailSent,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -494,7 +496,7 @@ class _LoginPageState extends State<LoginPage> {
                             SnackBar(
                               backgroundColor: Colors.red,
                               content: Text(
-                                'Failed to send reset email: $e',
+                                '${AppLocalizations.of(context)!.resetEmailFailed} $e',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -576,17 +578,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-String getFriendlyLoginError(FirebaseAuthException e) {
+String getFriendlyLoginError(BuildContext context, FirebaseAuthException e) {
   switch (e.code) {
     case 'user-not-found':
-      return "No account found for this email. Please sign up first.";
+      return AppLocalizations.of(context)!.noAccount;
     case 'wrong-password':
-      return "Incorrect password. Please try again.";
+      return AppLocalizations.of(context)!.incorrectPassword;
     case 'invalid-email':
-      return "The email address is not valid.";
+      return AppLocalizations.of(context)!.invalidEmail;
     case 'user-disabled':
-      return "This account has been disabled. Please contact support.";
+      return AppLocalizations.of(context)!.disabledAccount;
     default:
-      return "Login failed. Please check your credentials and try again.";
+      return AppLocalizations.of(context)!.loginFailed;
   }
 }

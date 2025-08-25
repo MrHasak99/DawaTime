@@ -934,6 +934,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it!'**
   String get gotIt;
+
+  /// No description provided for @pleaseVerfiy.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email before logging in.'**
+  String get pleaseVerfiy;
+
+  /// No description provided for @noAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found for this email, please sign up first'**
+  String get noAccount;
+
+  /// No description provided for @incorrectPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password, please try again'**
+  String get incorrectPassword;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address is not valid.'**
+  String get invalidEmail;
+
+  /// No description provided for @disabledAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled, please contact support.'**
+  String get disabledAccount;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed, please check your credentials and try again.'**
+  String get loginFailed;
+
+  /// No description provided for @emailAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered, please use another email or log in'**
+  String get emailAlreadyRegistered;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address is not valid, please check and try again'**
+  String get emailInvalid;
+
+  /// No description provided for @weakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password is too weak, please use at least 6 characters'**
+  String get weakPassword;
+
+  /// No description provided for @emailMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'This sign up method is not enabled, please contact support'**
+  String get emailMethod;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

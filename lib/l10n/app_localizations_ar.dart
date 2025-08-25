@@ -51,7 +51,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verificationSent => 'تم إرسال بريد التحقق، يرجى مراجعة بريدك';
 
   @override
-  String get signupFailed => 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى';
+  String get signupFailed => 'فشل إنشاء الحساب، يرجى المحاولة مرة أخرى';
 
   @override
   String get welcomeToDawaTime => 'مرحبًا بك في دواء تايم!';
@@ -129,10 +129,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleasePickScheduleStartDate => 'يرجى اختيار تاريخ بدء الجدول.';
 
   @override
-  String get couldNotSaveMedication => 'تعذر حفظ الدواء. يرجى المحاولة مرة أخرى.';
+  String get couldNotSaveMedication => 'تعذر حفظ الدواء، يرجى المحاولة مرة أخرى';
 
   @override
-  String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط.';
+  String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط';
 
   @override
   String get welcomeBack => 'مرحبًا بعودتك،';
@@ -159,7 +159,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String pleaseRefillYourMedication(Object medication) {
-    return 'يرجى إعادة تعبئة $medication.';
+    return 'يرجى إعادة تعبئة $medication';
   }
 
   @override
@@ -221,7 +221,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get couldNotUpdateMedication => 'تعذر تحديث الدواء. يرجى المحاولة مرة أخرى.';
+  String get couldNotUpdateMedication => 'تعذر تحديث الدواء، يرجى المحاولة مرة أخرى';
 
   @override
   String get deleteAccountTitle => 'حذف الحساب';
@@ -239,7 +239,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contactMeSent => 'تم إرسال الرسالة بنجاح!';
 
   @override
-  String get contactMeFailed => 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.';
+  String get contactMeFailed => 'فشل إرسال الرسالة، يرجى المحاولة مرة أخرى';
 
   @override
   String get notifications => 'التنبيهات';
@@ -347,7 +347,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailChange => 'تم تغيير البريد الإلكتروني';
 
   @override
-  String get verifyNewEmail => 'تم إرسال رسالة تحقق إلى عنوان بريدك الإلكتروني الجديد. يرجى التحقق منه، ثم قم بتسجيل الدخول مرة أخرى باستخدام بريدك الإلكتروني الجديد.';
+  String get verifyNewEmail => 'تم إرسال رسالة تحقق إلى عنوان بريدك الإلكتروني الجديد. يرجى التحقق منه، ثم قم بتسجيل الدخول مرة أخرى باستخدام بريدك الإلكتروني الجديد';
 
   @override
   String get updateEmailFailed => 'فشل تحديث البريد الإلكتروني:';
@@ -422,7 +422,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateRequired => 'تحديث مطلوب';
 
   @override
-  String get pleaseUpdate => 'يتوفر إصدار جديد من التطبيق. الرجاء التحديث للمتابعة.';
+  String get pleaseUpdate => 'يتوفر إصدار جديد من التطبيق، الرجاء التحديث للمتابعة';
 
   @override
   String get update => 'حدّث';
@@ -431,14 +431,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accessDenied => 'الوصول مرفوض';
 
   @override
-  String get notAvailable => 'هذا التطبيق غير متاح في بلدك.';
+  String get notAvailable => 'هذا التطبيق غير متاح في بلدك';
 
   @override
-  String get failedUpdateCheck => 'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً.';
+  String get failedUpdateCheck => 'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً';
 
   @override
   String get error => 'خطأ';
 
   @override
   String get gotIt => 'حسناً!';
+
+  @override
+  String get pleaseVerfiy => 'الرجاء التحقق من بريدك الإلكتروني قبل تسجيل الدخول';
+
+  @override
+  String get noAccount => 'لم يتم العثور على حساب مرتبط بهذا البريد الإلكتروني، الرجاء إنشاء حساب أولاً';
+
+  @override
+  String get incorrectPassword => 'كلمة المرور غير صحيحة، الرجاء المحاولة مرة أخرى';
+
+  @override
+  String get invalidEmail => 'عنوان البريد الإلكتروني غير صحيح';
+
+  @override
+  String get disabledAccount => 'هذا الحساب معطل، يرجى التواصل مع فريق الدعم';
+
+  @override
+  String get loginFailed => 'فشل تسجيل الدخول، الرجاء التأكد من بيانات الدخول والمحاولة مرة أخرى';
+
+  @override
+  String get emailAlreadyRegistered => 'هذا البريد الإلكتروني مسجل بالفعل، الرجاء استخدام بريد إلكتروني آخر أو تسجيل الدخول';
+
+  @override
+  String get emailInvalid => 'عنوان البريد الإلكتروني غير صحيح، يرجى التأكد منه وإعادة المحاولة';
+
+  @override
+  String get weakPassword => 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل';
+
+  @override
+  String get emailMethod => 'طريقة التسجيل هذه غير مفعّلة، الرجاء التواصل مع الدعم الفني';
 }

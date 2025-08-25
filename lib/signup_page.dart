@@ -304,7 +304,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (!_acceptedTerms || !_acceptedPrivacy) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: Color(0xFF8AC249),
+                                backgroundColor: Colors.red,
                                 content: Text(
                                   AppLocalizations.of(context)!.mustAccept,
                                   style: TextStyle(
@@ -390,7 +390,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(
-                                  getFriendlyAuthError(e),
+                                  getFriendlyAuthError(context, e),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -423,17 +423,17 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 }
 
-String getFriendlyAuthError(FirebaseAuthException e) {
+String getFriendlyAuthError(BuildContext context, FirebaseAuthException e) {
   switch (e.code) {
     case 'email-already-in-use':
-      return "This email is already registered. Please use another email or log in.";
+      return AppLocalizations.of(context)!.emailAlreadyRegistered;
     case 'invalid-email':
-      return "The email address is not valid. Please check and try again.";
+      return AppLocalizations.of(context)!.emailInvalid;
     case 'weak-password':
-      return "Your password is too weak. Please use at least 6 characters.";
+      return AppLocalizations.of(context)!.weakPassword;
     case 'operation-not-allowed':
-      return "This sign up method is not enabled. Please contact support.";
+      return AppLocalizations.of(context)!.emailMethod;
     default:
-      return "Sign up failed. Please try again.";
+      return AppLocalizations.of(context)!.signupFailed;
   }
 }

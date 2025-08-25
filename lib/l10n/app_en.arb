@@ -139,6 +139,15 @@
   "notAvailable": "This app is not available in your country.",
   "failedUpdateCheck": "Failed to check for updates. Please try again later.",
   "error": "Error",
-  "gotIt": "Got it!"
+  "gotIt": "Got it!",
+  "pleaseVerfiy": "Please verify your email before logging in.",
+  "noAccount": "No account found for this email, please sign up first",
+  "incorrectPassword": "Incorrect password, please try again",
+  "invalidEmail": "The email address is not valid.",
+  "disabledAccount": "This account has been disabled, please contact support.",
+  "loginFailed": "Login failed, please check your credentials and try again.",
+  "emailAlreadyRegistered": "This email is already registered, please use another email or log in",
+  "emailInvalid": "The email address is not valid, please check and try again",
+  "weakPassword": "Your password is too weak, please use at least 6 characters",
+  "emailMethod": "This sign up method is not enabled, please contact support"
 }
-

@@ -441,4 +441,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gotIt => 'Got it!';
+
+  @override
+  String get pleaseVerfiy => 'Please verify your email before logging in.';
+
+  @override
+  String get noAccount => 'No account found for this email, please sign up first';
+
+  @override
+  String get incorrectPassword => 'Incorrect password, please try again';
+
+  @override
+  String get invalidEmail => 'The email address is not valid.';
+
+  @override
+  String get disabledAccount => 'This account has been disabled, please contact support.';
+
+  @override
+  String get loginFailed => 'Login failed, please check your credentials and try again.';
+
+  @override
+  String get emailAlreadyRegistered => 'This email is already registered, please use another email or log in';
+
+  @override
+  String get emailInvalid => 'The email address is not valid, please check and try again';
+
+  @override
+  String get weakPassword => 'Your password is too weak, please use at least 6 characters';
+
+  @override
+  String get emailMethod => 'This sign up method is not enabled, please contact support';
 }
