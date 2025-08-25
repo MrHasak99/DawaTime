@@ -42,16 +42,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacy => 'Privacy Policy';
 
   @override
-  String get mustAccept => 'You must accept the Terms & Conditions and Privacy Policy.';
+  String get mustAccept => 'You must accept the Terms & Conditions and Privacy Policy';
 
   @override
   String get passwordsDontMatch => 'Passwords do not match';
 
   @override
-  String get verificationSent => 'Verification email sent. Please check your inbox.';
+  String get verificationSent => 'Verification email sent, please check your inbox';
 
   @override
-  String get signupFailed => 'Sign up failed. Please try again.';
+  String get signupFailed => 'Sign up failed, please try again';
 
   @override
   String get welcomeToDawaTime => 'Welcome to DawaTime!';
@@ -123,22 +123,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseFillAllFields => 'Please fill all fields.';
 
   @override
-  String get dosageFrequencyGreaterThanZero => 'Dosage and frequency must be greater than zero.';
+  String get dosageFrequencyGreaterThanZero => 'Dosage and frequency must be greater than zero';
 
   @override
-  String get pleasePickScheduleStartDate => 'Please pick a schedule start date.';
+  String get pleasePickScheduleStartDate => 'Please pick a schedule start date';
 
   @override
-  String get couldNotSaveMedication => 'Could not save medication. Please try again.';
+  String get couldNotSaveMedication => 'Could not save medication. Please try again';
 
   @override
-  String get youCanOnlyHaveUpTo7Medications => 'You can only have up to 7 medications.';
+  String get youCanOnlyHaveUpTo7Medications => 'You can only have up to 7 medications';
 
   @override
   String get welcomeBack => 'Welcome back,';
 
   @override
-  String get noMedicationsFound => 'No medications found.';
+  String get noMedicationsFound => 'No medications found';
 
   @override
   String get undo => 'Undo';
@@ -153,10 +153,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get didYouTakeYourMedication => 'Did you take your medication?';
 
   @override
-  String get youreOutOfMedication => 'You\'re out of medication!';
+  String youreOutOfMedication(Object medication) {
+    return 'You\'re out of $medication!';
+  }
 
   @override
-  String get pleaseRefillYourMedication => 'Please refill your medication.';
+  String pleaseRefillYourMedication(Object medication) {
+    return 'Please refill your $medication.';
+  }
 
   @override
   String get deleteMedication => 'Delete Medication';
@@ -217,7 +221,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get couldNotUpdateMedication => 'Could not update your medication. Please try again.';
+  String get couldNotUpdateMedication => 'Could not update your medication, please try again';
 
   @override
   String get deleteAccountTitle => 'Delete Account';
@@ -235,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactMeSent => 'Message sent successfully!';
 
   @override
-  String get contactMeFailed => 'Failed to send message. Please try again.';
+  String get contactMeFailed => 'Failed to send message, please try again';
 
   @override
   String get notifications => 'Notifications';
@@ -269,4 +273,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no => 'no';
+
+  @override
+  String get ok => 'ok';
+
+  @override
+  String get welcomeBody => 'DawaTime helps you manage your medications and reminders with ease.';
+
+  @override
+  String get addMedicationTitle => 'Add Medications';
+
+  @override
+  String get addMedicationBody => 'Tap the \"+\" button to add a new medication and set up reminders.';
+
+  @override
+  String get editDeleteTitle => 'Edit & Delete';
+
+  @override
+  String get editDeleteBody => 'Swipe right to edit or left to delete a medication from your list.';
+
+  @override
+  String get notificationsBody => 'You\'ll get notified when it\'s time to take your medication — even if the app is closed!';
+
+  @override
+  String get profileAndSettingsBody => 'Manage your profile and app settings from the top right corner.';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get back => 'Back';
 }

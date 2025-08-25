@@ -164,7 +164,7 @@ abstract class AppLocalizations {
   /// No description provided for @mustAccept.
   ///
   /// In en, this message translates to:
-  /// **'You must accept the Terms & Conditions and Privacy Policy.'**
+  /// **'You must accept the Terms & Conditions and Privacy Policy'**
   String get mustAccept;
 
   /// No description provided for @passwordsDontMatch.
@@ -176,13 +176,13 @@ abstract class AppLocalizations {
   /// No description provided for @verificationSent.
   ///
   /// In en, this message translates to:
-  /// **'Verification email sent. Please check your inbox.'**
+  /// **'Verification email sent, please check your inbox'**
   String get verificationSent;
 
   /// No description provided for @signupFailed.
   ///
   /// In en, this message translates to:
-  /// **'Sign up failed. Please try again.'**
+  /// **'Sign up failed, please try again'**
   String get signupFailed;
 
   /// No description provided for @welcomeToDawaTime.
@@ -326,25 +326,25 @@ abstract class AppLocalizations {
   /// No description provided for @dosageFrequencyGreaterThanZero.
   ///
   /// In en, this message translates to:
-  /// **'Dosage and frequency must be greater than zero.'**
+  /// **'Dosage and frequency must be greater than zero'**
   String get dosageFrequencyGreaterThanZero;
 
   /// No description provided for @pleasePickScheduleStartDate.
   ///
   /// In en, this message translates to:
-  /// **'Please pick a schedule start date.'**
+  /// **'Please pick a schedule start date'**
   String get pleasePickScheduleStartDate;
 
   /// No description provided for @couldNotSaveMedication.
   ///
   /// In en, this message translates to:
-  /// **'Could not save medication. Please try again.'**
+  /// **'Could not save medication. Please try again'**
   String get couldNotSaveMedication;
 
   /// No description provided for @youCanOnlyHaveUpTo7Medications.
   ///
   /// In en, this message translates to:
-  /// **'You can only have up to 7 medications.'**
+  /// **'You can only have up to 7 medications'**
   String get youCanOnlyHaveUpTo7Medications;
 
   /// No description provided for @welcomeBack.
@@ -356,7 +356,7 @@ abstract class AppLocalizations {
   /// No description provided for @noMedicationsFound.
   ///
   /// In en, this message translates to:
-  /// **'No medications found.'**
+  /// **'No medications found'**
   String get noMedicationsFound;
 
   /// No description provided for @undo.
@@ -386,14 +386,14 @@ abstract class AppLocalizations {
   /// No description provided for @youreOutOfMedication.
   ///
   /// In en, this message translates to:
-  /// **'You\'re out of medication!'**
-  String get youreOutOfMedication;
+  /// **'You\'re out of {medication}!'**
+  String youreOutOfMedication(Object medication);
 
   /// No description provided for @pleaseRefillYourMedication.
   ///
   /// In en, this message translates to:
-  /// **'Please refill your medication.'**
-  String get pleaseRefillYourMedication;
+  /// **'Please refill your {medication}.'**
+  String pleaseRefillYourMedication(Object medication);
 
   /// No description provided for @deleteMedication.
   ///
@@ -506,7 +506,7 @@ abstract class AppLocalizations {
   /// No description provided for @couldNotUpdateMedication.
   ///
   /// In en, this message translates to:
-  /// **'Could not update your medication. Please try again.'**
+  /// **'Could not update your medication, please try again'**
   String get couldNotUpdateMedication;
 
   /// No description provided for @deleteAccountTitle.
@@ -542,7 +542,7 @@ abstract class AppLocalizations {
   /// No description provided for @contactMeFailed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to send message. Please try again.'**
+  /// **'Failed to send message, please try again'**
   String get contactMeFailed;
 
   /// No description provided for @notifications.
@@ -598,6 +598,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'no'**
   String get no;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'ok'**
+  String get ok;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'DawaTime helps you manage your medications and reminders with ease.'**
+  String get welcomeBody;
+
+  /// No description provided for @addMedicationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Medications'**
+  String get addMedicationTitle;
+
+  /// No description provided for @addMedicationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the \"+\" button to add a new medication and set up reminders.'**
+  String get addMedicationBody;
+
+  /// No description provided for @editDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit & Delete'**
+  String get editDeleteTitle;
+
+  /// No description provided for @editDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right to edit or left to delete a medication from your list.'**
+  String get editDeleteBody;
+
+  /// No description provided for @notificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll get notified when it\'s time to take your medication — even if the app is closed!'**
+  String get notificationsBody;
+
+  /// No description provided for @profileAndSettingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your profile and app settings from the top right corner.'**
+  String get profileAndSettingsBody;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

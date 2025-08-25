@@ -296,8 +296,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                               ),
                                             ),
                                             const SizedBox(width: 10),
-                                            const Text(
-                                              'every',
+                                            Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.every,
                                               style: TextStyle(
                                                 color: Color(0xFF8AC249),
                                                 fontWeight: FontWeight.bold,
@@ -337,7 +339,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                             ),
                                             const SizedBox(width: 10),
                                             Text(
-                                              'days',
+                                              AppLocalizations.of(context)!.day,
                                               style: TextStyle(
                                                 color: Color(0xFF8AC249),
                                                 fontWeight: FontWeight.bold,
@@ -628,10 +630,20 @@ class _AddMedicationsState extends State<AddMedications> {
                                                       amountController
                                                           .text
                                                           .isNotEmpty) {
-                                                    if (dosageController.text ==
-                                                            '0' ||
-                                                        frequencyController
-                                                                .text ==
+                                                    if (convertArabicNumerals(
+                                                          dosageController.text,
+                                                        ).isEmpty ||
+                                                        convertArabicNumerals(
+                                                          frequencyController
+                                                              .text,
+                                                        ).isEmpty ||
+                                                        convertArabicNumerals(
+                                                          amountController.text,
+                                                        ).isEmpty ||
+                                                        convertArabicNumerals(
+                                                              dosageController
+                                                                  .text,
+                                                            ) ==
                                                             '0') {
                                                       ScaffoldMessenger.of(
                                                         context,

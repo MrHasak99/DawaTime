@@ -89,11 +89,11 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, String>> get _introSteps {
     final loc = AppLocalizations.of(context)!;
     return [
-      {'title': loc.welcomeToDawaTime, 'body': loc.appGuide},
-      {'title': loc.addMedication, 'body': loc.addNewMedication},
-      {'title': loc.editMedication, 'body': loc.editMedication},
-      {'title': loc.nextReminder, 'body': loc.nextReminder},
-      {'title': loc.editProfile, 'body': loc.editProfile},
+      {'title': loc.welcomeToDawaTime, 'body': loc.welcomeBody},
+      {'title': loc.addMedicationTitle, 'body': loc.addMedicationBody},
+      {'title': loc.editDeleteTitle, 'body': loc.editDeleteBody},
+      {'title': loc.notifications, 'body': loc.notificationsBody},
+      {'title': loc.profileAndSettings, 'body': loc.profileAndSettingsBody},
     ];
   }
 
@@ -175,9 +175,9 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -333,9 +333,9 @@ class _HomePageState extends State<HomePage> {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text(
-                        'OK',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.ok,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                             _introStep--;
                           }),
                       child: Text(
-                        loc.cancel,
+                        loc.back,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -414,7 +414,7 @@ class _HomePageState extends State<HomePage> {
                             _introStep++;
                           }),
                       child: Text(
-                        loc.nextReminder,
+                        loc.next,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -792,6 +792,13 @@ class _HomePageState extends State<HomePage> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
+                                              textDirection:
+                                                  Localizations.localeOf(
+                                                            context,
+                                                          ).languageCode ==
+                                                          'ar'
+                                                      ? TextDirection.rtl
+                                                      : TextDirection.ltr,
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -826,6 +833,13 @@ class _HomePageState extends State<HomePage> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
+                                              textDirection:
+                                                  Localizations.localeOf(
+                                                            context,
+                                                          ).languageCode ==
+                                                          'ar'
+                                                      ? TextDirection.rtl
+                                                      : TextDirection.ltr,
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -1563,6 +1577,13 @@ class _HomePageState extends State<HomePage> {
                             },
                             title: Text(
                               medication.name,
+                              textDirection:
+                                  Localizations.localeOf(
+                                            context,
+                                          ).languageCode ==
+                                          'ar'
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleLarge?.copyWith(
@@ -1576,6 +1597,13 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
+                                  textDirection:
+                                      Localizations.localeOf(
+                                                context,
+                                              ).languageCode ==
+                                              'ar'
+                                          ? TextDirection.rtl
+                                          : TextDirection.ltr,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodyMedium?.copyWith(
@@ -1730,7 +1758,9 @@ class _HomePageState extends State<HomePage> {
                                               title: Text(
                                                 AppLocalizations.of(
                                                   context,
-                                                )!.youreOutOfMedication,
+                                                )!.youreOutOfMedication(
+                                                  medication.name,
+                                                ),
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1739,7 +1769,9 @@ class _HomePageState extends State<HomePage> {
                                               content: Text(
                                                 AppLocalizations.of(
                                                   context,
-                                                )!.pleaseRefillYourMedication,
+                                                )!.pleaseRefillYourMedication(
+                                                  medication.name,
+                                                ),
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1750,9 +1782,11 @@ class _HomePageState extends State<HomePage> {
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                   },
-                                                  child: const Text(
-                                                    "OK",
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.ok,
+                                                    style: const TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -1844,7 +1878,9 @@ class _HomePageState extends State<HomePage> {
                                         title: Text(
                                           AppLocalizations.of(
                                             context,
-                                          )!.youreOutOfMedication,
+                                          )!.youreOutOfMedication(
+                                            medication.name,
+                                          ),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -1853,7 +1889,9 @@ class _HomePageState extends State<HomePage> {
                                         content: Text(
                                           AppLocalizations.of(
                                             context,
-                                          )!.pleaseRefillYourMedication,
+                                          )!.pleaseRefillYourMedication(
+                                            medication.name,
+                                          ),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -1864,8 +1902,8 @@ class _HomePageState extends State<HomePage> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: const Text(
-                                              "OK",
+                                            child: Text(
+                                              AppLocalizations.of(context)!.ok,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,

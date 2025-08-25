@@ -42,16 +42,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get privacy => 'سياسة الخصوصية';
 
   @override
-  String get mustAccept => 'يجب عليك قبول الشروط والأحكام وسياسة الخصوصية.';
+  String get mustAccept => 'يجب عليك قبول الشروط والأحكام وسياسة الخصوصية';
 
   @override
   String get passwordsDontMatch => 'كلمات المرور غير متطابقة';
 
   @override
-  String get verificationSent => 'تم إرسال بريد التحقق. يرجى مراجعة بريدك.';
+  String get verificationSent => 'تم إرسال بريد التحقق، يرجى مراجعة بريدك';
 
   @override
-  String get signupFailed => 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.';
+  String get signupFailed => 'فشل إنشاء الحساب. يرجى المحاولة مرة أخرى';
 
   @override
   String get welcomeToDawaTime => 'مرحبًا بك في دواء تايم!';
@@ -120,10 +120,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startDate => 'تاريخ البدء';
 
   @override
-  String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول.';
+  String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول';
 
   @override
-  String get dosageFrequencyGreaterThanZero => 'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر.';
+  String get dosageFrequencyGreaterThanZero => 'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر';
 
   @override
   String get pleasePickScheduleStartDate => 'يرجى اختيار تاريخ بدء الجدول.';
@@ -153,10 +153,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get didYouTakeYourMedication => 'هل تناولت دوائك؟';
 
   @override
-  String get youreOutOfMedication => 'لقد نفدت أدويتك!';
+  String youreOutOfMedication(Object medication) {
+    return 'لقد نفدت $medication!';
+  }
 
   @override
-  String get pleaseRefillYourMedication => 'يرجى إعادة تعبئة الدواء.';
+  String pleaseRefillYourMedication(Object medication) {
+    return 'يرجى إعادة تعبئة $medication.';
+  }
 
   @override
   String get deleteMedication => 'حذف الدواء';
@@ -252,7 +256,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get medicationUpdated => '!تم تحديث الدواء';
+  String get medicationUpdated => 'تم تحديث الدواء!';
 
   @override
   String reminderTakeMedication(Object medication) {
@@ -269,4 +273,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get no => 'لا';
+
+  @override
+  String get ok => 'حسناً';
+
+  @override
+  String get welcomeBody => 'دواء تايم يساعدك على إدارة أدويتك ومواعيدها بكل سهولة.';
+
+  @override
+  String get addMedicationTitle => 'إضافة أدوية';
+
+  @override
+  String get addMedicationBody => 'اضغط على زر \"+\" لإضافة دواء جديد وضبط المنبهات.';
+
+  @override
+  String get editDeleteTitle => 'تعديل وحذف';
+
+  @override
+  String get editDeleteBody => 'اسحب لليمين للتعديل أو لليسار لحذف الدواء من القائمة.';
+
+  @override
+  String get notificationsBody => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+
+  @override
+  String get profileAndSettingsBody => 'قم بإدارة ملفك الشخصي وإعدادات التطبيق من الزاوية العلوية اليمنى.';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get back => 'الرجوع';
 }
