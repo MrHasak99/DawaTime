@@ -51,7 +51,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     title: Text(
-                      'Time to take ${medication.name}!',
+                      AppLocalizations.of(
+                        context,
+                      )!.timeToTakeMedication(medication.name),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -60,9 +62,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -637,12 +639,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
-                                              const SnackBar(
+                                              SnackBar(
                                                 backgroundColor: Color(
                                                   0xFF8AC249,
                                                 ),
                                                 content: Text(
-                                                  'Profile updated!',
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.profileUpdated,
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
@@ -662,7 +666,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   0xFF8AC249,
                                                 ),
                                                 content: Text(
-                                                  'Failed to update: $e',
+                                                  '${AppLocalizations.of(context)!.updateFailed} $e',
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,

@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startDate => 'Start Date';
 
   @override
-  String get pleaseFillAllFields => 'Please fill all fields.';
+  String get pleaseFillAllFields => 'Please fill all fields';
 
   @override
   String get dosageFrequencyGreaterThanZero => 'Dosage and frequency must be greater than zero';
@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pleaseRefillYourMedication(Object medication) {
-    return 'Please refill your $medication.';
+    return 'Please refill your $medication';
   }
 
   @override
@@ -329,7 +329,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dark => 'Dark';
 
   @override
-  String get failedToLoadUserData => 'Failed to load user data.';
+  String get failedToLoadUserData => 'Failed to load user data';
 
   @override
   String get save => 'Save';
@@ -347,13 +347,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailChange => 'Email Change Requested';
 
   @override
-  String get verifyNewEmail => 'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.';
+  String get verifyNewEmail => 'A verification email has been sent to your new email address. Please verify it, then log in again with your new email';
 
   @override
   String get updateEmailFailed => 'Failed to update email:';
 
   @override
-  String get noUser => 'No user is currently logged in.';
+  String get noUser => 'No user is currently logged in';
 
   @override
   String get sendEmail => 'Send Email';
@@ -365,25 +365,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetEmailFailed => 'Failed to send reset email:';
 
   @override
-  String get enterPasswordTwice => 'Please enter your password twice.';
+  String get enterPasswordTwice => 'Please enter your password twice';
 
   @override
   String get delete => 'Delete';
 
   @override
-  String get noUserEmail => 'No email found for user.';
+  String get noUserEmail => 'No email found for user';
 
   @override
   String get accountDeleted => 'Account Deleted';
 
   @override
-  String get accountDeletedSuccess => 'Your account has been deleted successfully.';
+  String get accountDeletedSuccess => 'Your account has been deleted successfully';
 
   @override
   String get accountDeletedFailed => 'Failed to delete user:';
 
   @override
-  String get mustBeLoggedIn => 'You must be logged in to send a message.';
+  String get mustBeLoggedIn => 'You must be logged in to send a message';
 
   @override
   String get messageSent => 'Message sent!';
@@ -422,7 +422,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateRequired => 'Update Required';
 
   @override
-  String get pleaseUpdate => 'A new version of the app is available. Please update to continue.';
+  String get pleaseUpdate => 'A new version of the app is available, please update to continue';
 
   @override
   String get update => 'Update';
@@ -431,10 +431,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accessDenied => 'Access Denied';
 
   @override
-  String get notAvailable => 'This app is not available in your country.';
+  String get notAvailable => 'This app is not available in your country';
 
   @override
-  String get failedUpdateCheck => 'Failed to check for updates. Please try again later.';
+  String get failedUpdateCheck => 'Failed to check for updates, please try again later';
 
   @override
   String get error => 'Error';
@@ -443,7 +443,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gotIt => 'Got it!';
 
   @override
-  String get pleaseVerfiy => 'Please verify your email before logging in.';
+  String get pleaseVerfiy => 'Please verify your email before logging in';
 
   @override
   String get noAccount => 'No account found for this email, please sign up first';
@@ -455,10 +455,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'The email address is not valid.';
 
   @override
-  String get disabledAccount => 'This account has been disabled, please contact support.';
+  String get disabledAccount => 'This account has been disabled, please contact support';
 
   @override
-  String get loginFailed => 'Login failed, please check your credentials and try again.';
+  String get loginFailed => 'Login failed, please check your credentials and try again';
 
   @override
   String get emailAlreadyRegistered => 'This email is already registered, please use another email or log in';
@@ -483,4 +483,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allowSettings => 'Please allow \"Schedule exact alarms\" in system settings';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get scheduleMedicationFailure => 'Failed to schedule notification:';
+
+  @override
+  String get profileUpdated => 'Profile updated!';
+
+  @override
+  String get updateFailed => 'Failed to update:';
 }

@@ -353,7 +353,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateEmailFailed => 'فشل تحديث البريد الإلكتروني:';
 
   @override
-  String get noUser => 'لا يوجد مستخدم مسجل الدخول حالياً.';
+  String get noUser => 'لا يوجد مستخدم مسجل الدخول حالياً';
 
   @override
   String get sendEmail => 'أرسل البريد الإلكتروني';
@@ -383,7 +383,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountDeletedFailed => 'فشل مسح الحساب:';
 
   @override
-  String get mustBeLoggedIn => 'يجب أن تكون مسجلاً للدخول لإرسال رسالة.';
+  String get mustBeLoggedIn => 'يجب أن تكون مسجلاً للدخول لإرسال رسالة';
 
   @override
   String get messageSent => 'تم إرسال الرسالة بنجاح!';
@@ -483,4 +483,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get allowSettings => 'الرجاء السماح بإذن \"المنبهات والتذكيرات\" من إعدادات النظام';
+
+  @override
+  String get openSettings => 'افتح الإعدادات';
+
+  @override
+  String get scheduleMedicationFailure => 'فشل في جدولة الإشعار:';
+
+  @override
+  String get profileUpdated => 'تم تحديث الملف الشخصي!';
+
+  @override
+  String get updateFailed => 'فشل التحديث:';
 }

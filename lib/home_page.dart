@@ -2195,7 +2195,7 @@ Future<void> scheduleMedicationNotification(
               ),
             ),
             action: SnackBarAction(
-              label: 'Open Settings',
+              label: AppLocalizations.of(context)!.openSettings,
               onPressed: openExactAlarmSettings,
             ),
           ),
@@ -2205,7 +2205,7 @@ Future<void> scheduleMedicationNotification(
           SnackBar(
             backgroundColor: const Color(0xFF8AC249),
             content: Text(
-              'Failed to schedule notification: $e',
+              '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

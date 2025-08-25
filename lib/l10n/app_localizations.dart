@@ -320,7 +320,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseFillAllFields.
   ///
   /// In en, this message translates to:
-  /// **'Please fill all fields.'**
+  /// **'Please fill all fields'**
   String get pleaseFillAllFields;
 
   /// No description provided for @dosageFrequencyGreaterThanZero.
@@ -392,7 +392,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseRefillYourMedication.
   ///
   /// In en, this message translates to:
-  /// **'Please refill your {medication}.'**
+  /// **'Please refill your {medication}'**
   String pleaseRefillYourMedication(Object medication);
 
   /// No description provided for @deleteMedication.
@@ -710,7 +710,7 @@ abstract class AppLocalizations {
   /// No description provided for @failedToLoadUserData.
   ///
   /// In en, this message translates to:
-  /// **'Failed to load user data.'**
+  /// **'Failed to load user data'**
   String get failedToLoadUserData;
 
   /// No description provided for @save.
@@ -746,7 +746,7 @@ abstract class AppLocalizations {
   /// No description provided for @verifyNewEmail.
   ///
   /// In en, this message translates to:
-  /// **'A verification email has been sent to your new email address. Please verify it, then log in again with your new email.'**
+  /// **'A verification email has been sent to your new email address. Please verify it, then log in again with your new email'**
   String get verifyNewEmail;
 
   /// No description provided for @updateEmailFailed.
@@ -758,7 +758,7 @@ abstract class AppLocalizations {
   /// No description provided for @noUser.
   ///
   /// In en, this message translates to:
-  /// **'No user is currently logged in.'**
+  /// **'No user is currently logged in'**
   String get noUser;
 
   /// No description provided for @sendEmail.
@@ -782,7 +782,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterPasswordTwice.
   ///
   /// In en, this message translates to:
-  /// **'Please enter your password twice.'**
+  /// **'Please enter your password twice'**
   String get enterPasswordTwice;
 
   /// No description provided for @delete.
@@ -794,7 +794,7 @@ abstract class AppLocalizations {
   /// No description provided for @noUserEmail.
   ///
   /// In en, this message translates to:
-  /// **'No email found for user.'**
+  /// **'No email found for user'**
   String get noUserEmail;
 
   /// No description provided for @accountDeleted.
@@ -806,7 +806,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeletedSuccess.
   ///
   /// In en, this message translates to:
-  /// **'Your account has been deleted successfully.'**
+  /// **'Your account has been deleted successfully'**
   String get accountDeletedSuccess;
 
   /// No description provided for @accountDeletedFailed.
@@ -818,7 +818,7 @@ abstract class AppLocalizations {
   /// No description provided for @mustBeLoggedIn.
   ///
   /// In en, this message translates to:
-  /// **'You must be logged in to send a message.'**
+  /// **'You must be logged in to send a message'**
   String get mustBeLoggedIn;
 
   /// No description provided for @messageSent.
@@ -896,7 +896,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseUpdate.
   ///
   /// In en, this message translates to:
-  /// **'A new version of the app is available. Please update to continue.'**
+  /// **'A new version of the app is available, please update to continue'**
   String get pleaseUpdate;
 
   /// No description provided for @update.
@@ -914,13 +914,13 @@ abstract class AppLocalizations {
   /// No description provided for @notAvailable.
   ///
   /// In en, this message translates to:
-  /// **'This app is not available in your country.'**
+  /// **'This app is not available in your country'**
   String get notAvailable;
 
   /// No description provided for @failedUpdateCheck.
   ///
   /// In en, this message translates to:
-  /// **'Failed to check for updates. Please try again later.'**
+  /// **'Failed to check for updates, please try again later'**
   String get failedUpdateCheck;
 
   /// No description provided for @error.
@@ -938,7 +938,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseVerfiy.
   ///
   /// In en, this message translates to:
-  /// **'Please verify your email before logging in.'**
+  /// **'Please verify your email before logging in'**
   String get pleaseVerfiy;
 
   /// No description provided for @noAccount.
@@ -962,13 +962,13 @@ abstract class AppLocalizations {
   /// No description provided for @disabledAccount.
   ///
   /// In en, this message translates to:
-  /// **'This account has been disabled, please contact support.'**
+  /// **'This account has been disabled, please contact support'**
   String get disabledAccount;
 
   /// No description provided for @loginFailed.
   ///
   /// In en, this message translates to:
-  /// **'Login failed, please check your credentials and try again.'**
+  /// **'Login failed, please check your credentials and try again'**
   String get loginFailed;
 
   /// No description provided for @emailAlreadyRegistered.
@@ -1018,6 +1018,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please allow \"Schedule exact alarms\" in system settings'**
   String get allowSettings;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @scheduleMedicationFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to schedule notification:'**
+  String get scheduleMedicationFailure;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated!'**
+  String get profileUpdated;
+
+  /// No description provided for @updateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update:'**
+  String get updateFailed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

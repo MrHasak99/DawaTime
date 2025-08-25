@@ -77,7 +77,9 @@ class _AddMedicationsState extends State<AddMedications> {
                       borderRadius: BorderRadius.circular(24),
                     ),
                     title: Text(
-                      'Time to take ${medication.name}!',
+                      AppLocalizations.of(
+                        context,
+                      )!.timeToTakeMedication(medication.name),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -86,9 +88,9 @@ class _AddMedicationsState extends State<AddMedications> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

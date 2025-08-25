@@ -325,8 +325,7 @@ class MainApp extends StatelessWidget {
                   fontFamily: isArabic ? 'NotoKufiArabic' : 'Nunito',
                 ),
               ),
-              themeMode:
-                  themeMode, // <-- Use themeMode from ValueListenableBuilder
+              themeMode: themeMode,
               builder: (context, child) {
                 return Directionality(
                   textDirection:
