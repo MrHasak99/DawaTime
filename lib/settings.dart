@@ -307,6 +307,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
+                                        color: Color(0xFF8AC249),
                                       ),
                                     ),
                                     onPressed: () => Navigator.pop(context),
@@ -545,6 +546,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
+                                                      textDirection: null,
                                                       decoration: InputDecoration(
                                                         labelText:
                                                             AppLocalizations.of(
@@ -636,6 +638,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             'name': nameController.text.trim(),
                                           });
                                           if (context.mounted) {
+                                            setState(() {});
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
@@ -773,6 +776,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
+                                                                color:
+                                                                    Colors
+                                                                        .white,
                                                               ),
                                                           decoration: InputDecoration(
                                                             labelText:
@@ -825,6 +831,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
+                                                                color:
+                                                                    Colors
+                                                                        .white,
                                                               ),
                                                           decoration: InputDecoration(
                                                             labelText:
