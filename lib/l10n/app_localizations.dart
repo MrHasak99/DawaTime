@@ -1042,6 +1042,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to update:'**
   String get updateFailed;
+
+  /// No description provided for @passwordEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'A password reset email will be sent to:'**
+  String get passwordEmail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -157,5 +157,6 @@
   "openSettings": "افتح الإعدادات",
   "scheduleMedicationFailure": "فشل في جدولة الإشعار:",
   "profileUpdated": "تم تحديث الملف الشخصي!",
-  "updateFailed": "فشل التحديث:"
+  "updateFailed": "فشل التحديث:",
+  "passwordEmail": "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:"
 }

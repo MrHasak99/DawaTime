@@ -1135,7 +1135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 ),
                                               ),
                                               content: Text(
-                                                "${AppLocalizations.of(context)!.resetPassword} ${user.email}\n\n${AppLocalizations.of(context)!.continueConfirmation}",
+                                                "${AppLocalizations.of(context)!.passwordEmail} ${user.email}\n\n${AppLocalizations.of(context)!.continueConfirmation}",
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,

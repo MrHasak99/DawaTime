@@ -495,4 +495,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateFailed => 'فشل التحديث:';
+
+  @override
+  String get passwordEmail => 'سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:';
 }

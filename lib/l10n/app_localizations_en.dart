@@ -495,4 +495,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateFailed => 'Failed to update:';
+
+  @override
+  String get passwordEmail => 'A password reset email will be sent to:';
 }
