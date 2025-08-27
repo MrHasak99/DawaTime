@@ -484,7 +484,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkUpdateAndNavigate() async {
-    final blocked = await isBlockedCountry();
+    bool blocked = false;
+    try {
+      blocked = await isBlockedCountry().timeout(
+        const Duration(seconds: 8),
+        onTimeout: () => false,
+      );
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+    }
     if (blocked) {
       await showDialog(
         context: context,
@@ -522,10 +530,16 @@ class _SplashScreenState extends State<SplashScreen> {
       ).timeout(const Duration(seconds: 8), onTimeout: () => false);
       if (updateNeeded) {
         await showForceUpdateDialog(context);
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const AuthGate()),
+          );
+        }
         return;
       }
-    } catch (e) {
-      showDialog(
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+      await showDialog(
         context: context,
         builder:
             (context) => AlertDialog(
@@ -549,6 +563,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
       );
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+      }
       return;
     }
     await Future.delayed(const Duration(milliseconds: 800));
@@ -697,7 +716,9 @@ Future<bool> isBlockedCountry() async {
   bool blockedByIp = false;
   bool blockedByGps = false;
   try {
-    final response = await http.get(Uri.parse('https://ipinfo.io/json'));
+    final response = await http
+        .get(Uri.parse('https://ipinfo.io/json'))
+        .timeout(const Duration(seconds: 5));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final countryCode = data['country'];
