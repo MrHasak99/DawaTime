@@ -68,4 +68,6 @@ flutter_launcher_icons:
   image_path: "assets/DawaTime.png"
   remove_alpha_ios: true
 flutter_native_splash:
+  color: "#8AC249"
   image: assets/DawaTime.png
+  ios: true
