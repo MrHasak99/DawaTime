@@ -1645,8 +1645,9 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             trailing: IconButton(
-                              tooltip:
-                                  AppLocalizations.of(context)!.takeMedication,
+                              tooltip: AppLocalizations.of(
+                                context,
+                              )!.takeMedication(medication.name),
                               icon: const Icon(
                                 Icons.medication_rounded,
                                 color: Colors.white,
@@ -1662,7 +1663,7 @@ class _HomePageState extends State<HomePage> {
                                           title: Text(
                                             AppLocalizations.of(
                                               context,
-                                            )!.takeMedication,
+                                            )!.takeMedication(medication.name),
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -1671,7 +1672,9 @@ class _HomePageState extends State<HomePage> {
                                           content: Text(
                                             AppLocalizations.of(
                                               context,
-                                            )!.didYouTakeYourMedication,
+                                            )!.didYouTakeYourMedication(
+                                              medication.name,
+                                            ),
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,

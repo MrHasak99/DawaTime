@@ -147,10 +147,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editMedication => 'Edit Medication';
 
   @override
-  String get takeMedication => 'Take Medication';
+  String takeMedication(Object medication) {
+    return 'Take $medication';
+  }
 
   @override
-  String get didYouTakeYourMedication => 'Did you take your medication?';
+  String didYouTakeYourMedication(Object medication) {
+    return 'Did you take your $medication?';
+  }
 
   @override
   String youreOutOfMedication(Object medication) {

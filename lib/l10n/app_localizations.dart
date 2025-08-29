@@ -374,14 +374,14 @@ abstract class AppLocalizations {
   /// No description provided for @takeMedication.
   ///
   /// In en, this message translates to:
-  /// **'Take Medication'**
-  String get takeMedication;
+  /// **'Take {medication}'**
+  String takeMedication(Object medication);
 
   /// No description provided for @didYouTakeYourMedication.
   ///
   /// In en, this message translates to:
-  /// **'Did you take your medication?'**
-  String get didYouTakeYourMedication;
+  /// **'Did you take your {medication}?'**
+  String didYouTakeYourMedication(Object medication);
 
   /// No description provided for @youreOutOfMedication.
   ///

@@ -442,8 +442,15 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
     barrierDismissible: false,
     builder:
         (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.updateRequired),
-          content: Text(AppLocalizations.of(context)!.pleaseUpdate),
+          backgroundColor: Colors.red,
+          title: Text(
+            AppLocalizations.of(context)!.updateRequired,
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            AppLocalizations.of(context)!.pleaseUpdate,
+            style: TextStyle(color: Colors.white),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -453,7 +460,10 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
                         : 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime';
                 launchUrl(Uri.parse(url));
               },
-              child: Text(AppLocalizations.of(context)!.update),
+              child: Text(
+                AppLocalizations.of(context)!.update,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -530,11 +540,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ).timeout(const Duration(seconds: 8), onTimeout: () => false);
       if (updateNeeded) {
         await showForceUpdateDialog(context);
-        if (mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const AuthGate()),
-          );
-        }
+        SystemNavigator.pop();
         return;
       }
     } catch (e, stack) {
