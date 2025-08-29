@@ -26,6 +26,7 @@ class Medications {
   final double amount;
   final String? notifyTime;
   final DateTime? startDate;
+  final List<int>? daysOfWeek;
 
   Medications({
     required this.name,
@@ -35,9 +36,23 @@ class Medications {
     required this.amount,
     this.notifyTime,
     this.startDate,
+    this.daysOfWeek,
   });
 
   factory Medications.fromMap(Map<String, dynamic> data) {
+    List<int>? daysOfWeek;
+    if (data['daysOfWeek'] != null) {
+      if (data['daysOfWeek'] is String) {
+        daysOfWeek =
+            (data['daysOfWeek'] as String)
+                .split(',')
+                .map((e) => int.tryParse(e.trim()))
+                .whereType<int>()
+                .toList();
+      } else if (data['daysOfWeek'] is List) {
+        daysOfWeek = List<int>.from(data['daysOfWeek']);
+      }
+    }
     return Medications(
       name: data['name'] ?? '',
       typeOfMedication: data['typeOfMedication'] ?? '',
@@ -49,6 +64,7 @@ class Medications {
           data['startDate'] != null
               ? DateTime.tryParse(data['startDate'])
               : null,
+      daysOfWeek: daysOfWeek,
     );
   }
 
@@ -61,6 +77,7 @@ class Medications {
       'amount': amount,
       'notifyTime': notifyTime,
       'startDate': startDate?.toIso8601String(),
+      'daysOfWeek': daysOfWeek,
     };
   }
 }
@@ -1959,7 +1976,20 @@ class MedicationDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final daysAr = [
+      'الأحد',
+      'الاثنين',
+      'الثلاثاء',
+      'الأربعاء',
+      'الخميس',
+      'الجمعة',
+      'السبت',
+    ];
+    final days = medication.daysOfWeek
+        ?.map((d) => isArabic ? daysAr[d % 7] : daysEn[d % 7])
+        .join(', ');
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -1990,7 +2020,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 24),
             _DetailRow(
               icon: Icons.category,
-              label: loc.unitOfMeasurement,
+              label: AppLocalizations.of(context)!.unitOfMeasurement,
               value: medication.typeOfMedication,
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -2002,7 +2032,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.medical_services,
-              label: loc.dosage,
+              label: AppLocalizations.of(context)!.dosage,
               value: "${medication.dosage}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -2014,8 +2044,9 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.repeat,
-              label: loc.frequency,
-              value: "${loc.every} ${medication.frequency} ${loc.day}",
+              label: AppLocalizations.of(context)!.frequency,
+              value:
+                  "${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8AC249),
@@ -2026,7 +2057,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.inventory_2,
-              label: loc.currentAmount,
+              label: AppLocalizations.of(context)!.currentAmount,
               value: "${medication.amount}",
               valueStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -2036,10 +2067,22 @@ class MedicationDetailsCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 18),
+            if (days != null && days.isNotEmpty)
+              _DetailRow(
+                icon: Icons.calendar_today,
+                label: AppLocalizations.of(context)!.selectDaysOfWeek,
+                value: days,
+                valueStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8AC249),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
+              ),
             if (getNextReminder(medication) != null)
               _DetailRow(
                 icon: Icons.notifications_active,
-                label: loc.nextReminder,
+                label: AppLocalizations.of(context)!.nextReminder,
                 value: getNextReminder(medication)!,
                 valueStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -2116,7 +2159,64 @@ Future<void> scheduleMedicationNotification(
   final hour = int.tryParse(timeParts[0]);
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return;
+
+  for (int i = 0; i <= 8; i++) {
+    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
+  }
+
   final now = DateTime.now();
+  final daysOfWeek = medication.daysOfWeek ?? [];
+
+  if (daysOfWeek.isNotEmpty) {
+    for (int i = 0; i < 14; i++) {
+      final date = now.add(Duration(days: i));
+      if (daysOfWeek.contains(date.weekday)) {
+        final scheduledTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          hour,
+          minute,
+        );
+        if (scheduledTime.isAfter(now)) {
+          final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);
+          final notificationId = ('${docId}_${date.weekday}_$i').hashCode;
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            notificationId,
+            medication.name,
+            AppLocalizations.of(
+              context ?? navigatorKey.currentContext!,
+            )!.timeToTakeMedication(medication.name),
+            scheduledTZ,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel_$docId',
+                'Medication Reminders for ${medication.name}',
+                channelDescription: 'Reminds you to take ${medication.name}',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFF8AC249),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        }
+      }
+    }
+    return;
+  }
 
   DateTime baseDate =
       medication.startDate != null
@@ -2132,10 +2232,6 @@ Future<void> scheduleMedicationNotification(
   var scheduledTime = baseDate;
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
-  }
-
-  for (int i = 0; i <= 8; i++) {
-    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
   try {

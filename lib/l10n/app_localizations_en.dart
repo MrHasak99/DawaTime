@@ -502,4 +502,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordEmail => 'A password reset email will be sent to:';
+
+  @override
+  String get selectDaysOfWeek => 'Select days of the week';
 }

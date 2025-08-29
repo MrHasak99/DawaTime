@@ -1048,6 +1048,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A password reset email will be sent to:'**
   String get passwordEmail;
+
+  /// No description provided for @selectDaysOfWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Select days of the week'**
+  String get selectDaysOfWeek;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

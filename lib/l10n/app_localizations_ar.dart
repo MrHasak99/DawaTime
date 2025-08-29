@@ -502,4 +502,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordEmail => 'سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:';
+
+  @override
+  String get selectDaysOfWeek => 'اختر أيام الأسبوع';
 }

@@ -158,6 +158,6 @@
   "scheduleMedicationFailure": "Failed to schedule notification:",
   "profileUpdated": "Profile updated!",
   "updateFailed": "Failed to update:",
-  "passwordEmail": "A password reset email will be sent to:"
-  
+  "passwordEmail": "A password reset email will be sent to:",
+  "selectDaysOfWeek": "Select days of the week"
 }

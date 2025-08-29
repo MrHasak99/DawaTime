@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dawatime/main.dart';
 import 'package:flutter/material.dart';
-import 'package:dawatime/home_page.dart';
+import 'package:dawatime/home_page.dart' hide requestExactAlarmPermission;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dawatime/login_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class AddMedications extends StatefulWidget {
   final String uid;
@@ -31,6 +34,7 @@ class _AddMedicationsState extends State<AddMedications> {
   TextEditingController frequencyController = TextEditingController();
   TimeOfDay? _selectedTime;
   DateTime? _selectedStartDate;
+  List<int> _selectedDaysOfWeek = [];
 
   @override
   void initState() {
@@ -53,6 +57,22 @@ class _AddMedicationsState extends State<AddMedications> {
       }
       if (widget.medication!.startDate != null) {
         _selectedStartDate = widget.medication!.startDate;
+      }
+      if (widget.medication!.daysOfWeek != null &&
+          widget.medication!.daysOfWeek!.isNotEmpty) {
+        if (widget.medication!.daysOfWeek is String) {
+          final days = (widget.medication!.daysOfWeek as String).split(',');
+          _selectedDaysOfWeek =
+              days
+                  .map((day) => int.tryParse(day.trim()) ?? 0)
+                  .where((day) => day > 0 && day < 8)
+                  .toList();
+        } else if (widget.medication!.daysOfWeek is List) {
+          _selectedDaysOfWeek =
+              List<int>.from(
+                widget.medication!.daysOfWeek!,
+              ).where((day) => day > 0 && day < 8).toList();
+        }
       }
     }
     selectNotificationStream.stream.listen((
@@ -609,6 +629,21 @@ class _AddMedicationsState extends State<AddMedications> {
                                           },
                                         ),
                                         const SizedBox(height: 16),
+                                        Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.selectDaysOfWeek,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        _buildWeekdayPicker(),
+                                        const SizedBox(height: 16),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -745,6 +780,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                           'startDate':
                                                               _selectedStartDate!
                                                                   .toIso8601String(),
+                                                          'daysOfWeek':
+                                                              _selectedDaysOfWeek
+                                                                  .join(','),
                                                         });
                                                         final updatedDoc =
                                                             await firestore
@@ -804,6 +842,9 @@ class _AddMedicationsState extends State<AddMedications> {
                                                           'startDate':
                                                               _selectedStartDate!
                                                                   .toIso8601String(),
+                                                          'daysOfWeek':
+                                                              _selectedDaysOfWeek
+                                                                  .join(','),
                                                         });
                                                         final newDoc =
                                                             await docRef.get();
@@ -914,5 +955,212 @@ class _AddMedicationsState extends State<AddMedications> {
       input = input.replaceAll(arabicNums[i], i.toString());
     }
     return input;
+  }
+
+  Widget _buildWeekdayPicker() {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final daysAr = [
+      'الأحد',
+      'الاثنين',
+      'الثلاثاء',
+      'الأربعاء',
+      'الخميس',
+      'الجمعة',
+      'السبت',
+    ];
+    final days = isArabic ? daysAr : daysEn;
+    return Wrap(
+      spacing: 8,
+      children: List.generate(7, (i) {
+        final dayNum = i == 0 ? 7 : i;
+        return FilterChip(
+          label: Text(days[i]),
+          selected: _selectedDaysOfWeek.contains(dayNum),
+          onSelected: (selected) {
+            setState(() {
+              if (selected) {
+                _selectedDaysOfWeek.add(dayNum);
+              } else {
+                _selectedDaysOfWeek.remove(dayNum);
+              }
+            });
+          },
+        );
+      }),
+    );
+  }
+}
+
+Future<void> scheduleMedicationNotification(
+  BuildContext? context,
+  String docId,
+  Medications medication, {
+  bool forceNextDay = false,
+}) async {
+  await requestExactAlarmPermission();
+  if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
+  final timeParts = medication.notifyTime!.split(':');
+  if (timeParts.length != 2) return;
+  final hour = int.tryParse(timeParts[0]);
+  final minute = int.tryParse(timeParts[1]);
+  if (hour == null || minute == null) return;
+
+  for (int i = 0; i <= 8; i++) {
+    await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
+  }
+
+  final now = DateTime.now();
+  final daysOfWeek = medication.daysOfWeek ?? [];
+
+  if (daysOfWeek.isNotEmpty) {
+    // Schedule for next 2 weeks on selected weekdays
+    for (int i = 0; i < 14; i++) {
+      final date = now.add(Duration(days: i));
+      if (daysOfWeek.contains(date.weekday)) {
+        final scheduledTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          hour,
+          minute,
+        );
+        if (scheduledTime.isAfter(now)) {
+          final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);
+          final notificationId = ('${docId}_${date.weekday}_$i').hashCode;
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            notificationId,
+            medication.name,
+            AppLocalizations.of(
+              context ?? navigatorKey.currentContext!,
+            )!.timeToTakeMedication(medication.name),
+            scheduledTZ,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel_$docId',
+                'Medication Reminders for ${medication.name}',
+                channelDescription: 'Reminds you to take ${medication.name}',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFF8AC249),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        }
+      }
+    }
+    return;
+  }
+
+  DateTime baseDate =
+      medication.startDate != null
+          ? DateTime(
+            medication.startDate!.year,
+            medication.startDate!.month,
+            medication.startDate!.day,
+            hour,
+            minute,
+          )
+          : DateTime(now.year, now.month, now.day, hour, minute);
+
+  var scheduledTime = baseDate;
+  while (scheduledTime.isBefore(now)) {
+    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+  }
+
+  try {
+    if (scheduledTime.isAfter(now)) {
+      for (int i = 0; i <= 8; i++) {
+        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
+        final notificationMessage =
+            i == 0
+                ? AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.timeToTakeMedication(medication.name)
+                : AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.reminderTakeMedication(medication.name);
+
+        final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+        final notificationId = ('${docId}_$i').hashCode;
+
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          notificationId,
+          medication.name,
+          notificationMessage,
+          scheduledTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'medication_channel_$docId',
+              'Medication Reminders for ${medication.name}',
+              channelDescription: 'Reminds you to take ${medication.name}',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+              icon: 'dawatime_notify',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFF8AC249),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
+          ),
+          payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
+      }
+    }
+  } catch (e) {
+    if (context != null) {
+      if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color(0xFF8AC249),
+            content: Text(
+              AppLocalizations.of(context)!.allowSettings,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+              ),
+            ),
+            action: SnackBarAction(
+              label: AppLocalizations.of(context)!.openSettings,
+              onPressed: openExactAlarmSettings,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color(0xFF8AC249),
+            content: Text(
+              '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        );
+      }
+    }
   }
 }
