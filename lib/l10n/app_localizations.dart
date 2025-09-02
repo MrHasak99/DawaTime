@@ -560,7 +560,7 @@ abstract class AppLocalizations {
   /// No description provided for @day.
   ///
   /// In en, this message translates to:
-  /// **'day'**
+  /// **'day(s)'**
   String get day;
 
   /// No description provided for @timeToTakeMedication.
@@ -572,8 +572,8 @@ abstract class AppLocalizations {
   /// No description provided for @medicationUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Medication updated!'**
-  String get medicationUpdated;
+  /// **'{medication} updated!'**
+  String medicationUpdated(Object medication);
 
   /// No description provided for @reminderTakeMedication.
   ///
@@ -1052,8 +1052,14 @@ abstract class AppLocalizations {
   /// No description provided for @selectDaysOfWeek.
   ///
   /// In en, this message translates to:
-  /// **'Select days of the week'**
+  /// **'Days of the week'**
   String get selectDaysOfWeek;
+
+  /// No description provided for @everyXDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Every X days'**
+  String get everyXDays;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

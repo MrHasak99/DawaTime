@@ -252,7 +252,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileAndSettings => 'Profile & Settings';
 
   @override
-  String get day => 'day';
+  String get day => 'day(s)';
 
   @override
   String timeToTakeMedication(Object medication) {
@@ -260,7 +260,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get medicationUpdated => 'Medication updated!';
+  String medicationUpdated(Object medication) {
+    return '$medication updated!';
+  }
 
   @override
   String reminderTakeMedication(Object medication) {
@@ -504,5 +506,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordEmail => 'A password reset email will be sent to:';
 
   @override
-  String get selectDaysOfWeek => 'Select days of the week';
+  String get selectDaysOfWeek => 'Days of the week';
+
+  @override
+  String get everyXDays => 'Every X days';
 }

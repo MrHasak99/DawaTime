@@ -77,9 +77,9 @@
   "contactMeFailed": "Failed to send message, please try again",
   "notifications": "Notifications",
   "profileAndSettings": "Profile & Settings",
-  "day": "day",
+  "day": "day(s)",
   "timeToTakeMedication": "Time to take {medication}!",
-  "medicationUpdated": "Medication updated!",
+  "medicationUpdated": "{medication} updated!",
   "reminderTakeMedication": "Reminder: Take your {medication}",
   "medicationDeleted": "{medication} deleted!",
   "yes": "yes",
@@ -159,5 +159,6 @@
   "profileUpdated": "Profile updated!",
   "updateFailed": "Failed to update:",
   "passwordEmail": "A password reset email will be sent to:",
-  "selectDaysOfWeek": "Select days of the week"
+  "selectDaysOfWeek": "Days of the week",
+  "everyXDays": "Every X days"
 }

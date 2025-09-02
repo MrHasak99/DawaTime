@@ -9,6 +9,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+enum FrequencyType { everyXDays, daysOfWeek }
+
 class AddMedications extends StatefulWidget {
   final String uid;
   final Medications? medication;
@@ -35,6 +37,7 @@ class _AddMedicationsState extends State<AddMedications> {
   TimeOfDay? _selectedTime;
   DateTime? _selectedStartDate;
   List<int> _selectedDaysOfWeek = [];
+  FrequencyType _frequencyType = FrequencyType.everyXDays;
 
   @override
   void initState() {
@@ -282,92 +285,33 @@ class _AddMedicationsState extends State<AddMedications> {
                                           ),
                                         ),
                                         const SizedBox(height: 16),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: TextField(
-                                                controller: dosageController,
-                                                cursorColor: Color(0xFF8AC249),
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                style: Theme.of(
+                                        TextField(
+                                          controller: dosageController,
+                                          cursorColor: Color(0xFF8AC249),
+                                          keyboardType: TextInputType.number,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(
                                                   context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  labelText:
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.dosage,
-                                                  labelStyle: Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyLarge?.copyWith(
-                                                    color:
-                                                        Theme.of(
-                                                                  context,
-                                                                ).brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
+                                                )!.dosage,
+                                            labelStyle: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!.every,
-                                              style: TextStyle(
-                                                color: Color(0xFF8AC249),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: TextField(
-                                                controller: frequencyController,
-                                                cursorColor: Color(0xFF8AC249),
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                style: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  labelText:
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.frequency,
-                                                  labelStyle: Theme.of(
-                                                    context,
-                                                  ).textTheme.bodyLarge?.copyWith(
-                                                    color:
-                                                        Theme.of(
-                                                                  context,
-                                                                ).brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              AppLocalizations.of(context)!.day,
-                                              style: TextStyle(
-                                                color: Color(0xFF8AC249),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                         const SizedBox(height: 16),
                                         TextField(
@@ -629,20 +573,121 @@ class _AddMedicationsState extends State<AddMedications> {
                                           },
                                         ),
                                         const SizedBox(height: 16),
-                                        Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.selectDaysOfWeek,
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Radio<FrequencyType>(
+                                                value: FrequencyType.everyXDays,
+                                                groupValue: _frequencyType,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _frequencyType = val!;
+                                                  });
+                                                },
+                                                activeColor: const Color(
+                                                  0xFF8AC249,
+                                                ),
+                                              ),
+                                              Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.everyXDays,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Radio<FrequencyType>(
+                                                value: FrequencyType.daysOfWeek,
+                                                groupValue: _frequencyType,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _frequencyType = val!;
+                                                  });
+                                                },
+                                                activeColor: const Color(
+                                                  0xFF8AC249,
+                                                ),
+                                              ),
+                                              Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.selectDaysOfWeek,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 8),
-                                        _buildWeekdayPicker(),
+                                        _frequencyType ==
+                                                FrequencyType.daysOfWeek
+                                            ? Column(
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.selectDaysOfWeek,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                _buildWeekdayPicker(),
+                                              ],
+                                            )
+                                            : TextField(
+                                              controller: frequencyController,
+                                              cursorColor: Color(0xFF8AC249),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodyLarge?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.frequency,
+                                                labelStyle: Theme.of(
+                                                  context,
+                                                ).textTheme.bodyLarge?.copyWith(
+                                                  color:
+                                                      Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
                                         const SizedBox(height: 16),
                                         Row(
                                           mainAxisAlignment:
@@ -652,7 +697,15 @@ class _AddMedicationsState extends State<AddMedications> {
                                               width: 200,
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  if (nameController
+                                                  final isEveryXDays =
+                                                      _frequencyType ==
+                                                      FrequencyType.everyXDays;
+                                                  final isDaysOfWeek =
+                                                      _frequencyType ==
+                                                      FrequencyType.daysOfWeek;
+
+                                                  final allFieldsFilled =
+                                                      nameController
                                                           .text
                                                           .isNotEmpty &&
                                                       typeOfMedicationController
@@ -661,235 +714,21 @@ class _AddMedicationsState extends State<AddMedications> {
                                                       dosageController
                                                           .text
                                                           .isNotEmpty &&
-                                                      frequencyController
-                                                          .text
-                                                          .isNotEmpty &&
                                                       amountController
                                                           .text
-                                                          .isNotEmpty) {
-                                                    if (convertArabicNumerals(
-                                                          dosageController.text,
-                                                        ).isEmpty ||
-                                                        convertArabicNumerals(
-                                                          frequencyController
-                                                              .text,
-                                                        ).isEmpty ||
-                                                        convertArabicNumerals(
-                                                          amountController.text,
-                                                        ).isEmpty ||
-                                                        convertArabicNumerals(
-                                                              dosageController
-                                                                  .text,
-                                                            ) ==
-                                                            '0') {
-                                                      ScaffoldMessenger.of(
-                                                        context,
-                                                      ).showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          content: Text(
-                                                            AppLocalizations.of(
-                                                              context,
-                                                            )!.dosageFrequencyGreaterThanZero,
-                                                            style: Theme.of(
-                                                                  context,
-                                                                )
-                                                                .textTheme
-                                                                .bodyLarge
-                                                                ?.copyWith(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                      return;
-                                                    }
-                                                    if (_selectedStartDate ==
-                                                        null) {
-                                                      ScaffoldMessenger.of(
-                                                        context,
-                                                      ).showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          content: Text(
-                                                            AppLocalizations.of(
-                                                              context,
-                                                            )!.pleasePickScheduleStartDate,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontFamily:
-                                                                  'Inter',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                      return;
-                                                    }
-                                                    try {
-                                                      if (widget.docId !=
-                                                          null) {
-                                                        await firestore.collection(widget.uid).doc(widget.docId).update({
-                                                          'name':
-                                                              nameController
-                                                                  .text,
-                                                          'typeOfMedication':
-                                                              typeOfMedicationController
-                                                                  .text,
-                                                          'dosage':
-                                                              double.tryParse(
-                                                                convertArabicNumerals(
-                                                                  dosageController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'frequency':
-                                                              int.tryParse(
-                                                                convertArabicNumerals(
-                                                                  frequencyController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'amount':
-                                                              double.tryParse(
-                                                                convertArabicNumerals(
-                                                                  amountController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'notifyTime':
-                                                              _selectedTime !=
-                                                                      null
-                                                                  ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                                  : '',
-                                                          'startDate':
-                                                              _selectedStartDate!
-                                                                  .toIso8601String(),
-                                                          'daysOfWeek':
+                                                          .isNotEmpty &&
+                                                      _selectedTime != null &&
+                                                      _selectedStartDate !=
+                                                          null &&
+                                                      ((isEveryXDays &&
+                                                              frequencyController
+                                                                  .text
+                                                                  .isNotEmpty) ||
+                                                          (isDaysOfWeek &&
                                                               _selectedDaysOfWeek
-                                                                  .join(','),
-                                                        });
-                                                        final updatedDoc =
-                                                            await firestore
-                                                                .collection(
-                                                                  widget.uid,
-                                                                )
-                                                                .doc(
-                                                                  widget.docId,
-                                                                )
-                                                                .get();
-                                                        final updatedMedication =
-                                                            medicationFromDoc(
-                                                              updatedDoc,
-                                                            );
-                                                        await scheduleMedicationNotification(
-                                                          context,
-                                                          widget.docId!,
-                                                          updatedMedication,
-                                                        );
-                                                      } else {
-                                                        final docRef = await firestore.collection(widget.uid).add({
-                                                          'name':
-                                                              nameController
-                                                                  .text,
-                                                          'typeOfMedication':
-                                                              typeOfMedicationController
-                                                                  .text,
-                                                          'dosage':
-                                                              double.tryParse(
-                                                                convertArabicNumerals(
-                                                                  dosageController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'frequency':
-                                                              int.tryParse(
-                                                                convertArabicNumerals(
-                                                                  frequencyController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'amount':
-                                                              double.tryParse(
-                                                                convertArabicNumerals(
-                                                                  amountController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              0,
-                                                          'notifyTime':
-                                                              _selectedTime !=
-                                                                      null
-                                                                  ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                                  : '',
-                                                          'startDate':
-                                                              _selectedStartDate!
-                                                                  .toIso8601String(),
-                                                          'daysOfWeek':
-                                                              _selectedDaysOfWeek
-                                                                  .join(','),
-                                                        });
-                                                        final newDoc =
-                                                            await docRef.get();
-                                                        final newMedication =
-                                                            medicationFromDoc(
-                                                              newDoc,
-                                                            );
-                                                        await scheduleMedicationNotification(
-                                                          context,
-                                                          docRef.id,
-                                                          newMedication,
-                                                        );
-                                                      }
-                                                      if (!context.mounted) {
-                                                        return;
-                                                      }
-                                                      Navigator.pop(context);
-                                                    } catch (e) {
-                                                      ScaffoldMessenger.of(
-                                                        context,
-                                                      ).showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          content: Text(
-                                                            AppLocalizations.of(
-                                                              context,
-                                                            )!.couldNotSaveMedication,
-                                                            style:
-                                                                const TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  } else {
-                                                    if (!mounted) return;
+                                                                  .isNotEmpty));
+
+                                                  if (!allFieldsFilled) {
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
@@ -906,6 +745,235 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                 FontWeight.bold,
                                                             fontFamily: 'Inter',
                                                           ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                    return;
+                                                  }
+
+                                                  if (convertArabicNumerals(
+                                                        dosageController.text,
+                                                      ).isEmpty ||
+                                                      convertArabicNumerals(
+                                                        amountController.text,
+                                                      ).isEmpty ||
+                                                      convertArabicNumerals(
+                                                            dosageController
+                                                                .text,
+                                                          ) ==
+                                                          '0' ||
+                                                      (isEveryXDays &&
+                                                          (convertArabicNumerals(
+                                                                frequencyController
+                                                                    .text,
+                                                              ).isEmpty ||
+                                                              convertArabicNumerals(
+                                                                    frequencyController
+                                                                        .text,
+                                                                  ) ==
+                                                                  '0'))) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.dosageFrequencyGreaterThanZero,
+                                                          style: Theme.of(
+                                                                context,
+                                                              )
+                                                              .textTheme
+                                                              .bodyLarge
+                                                              ?.copyWith(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                    return;
+                                                  }
+                                                  if (_selectedStartDate ==
+                                                      null) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.pleasePickScheduleStartDate,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontFamily: 'Inter',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                    return;
+                                                  }
+                                                  try {
+                                                    if (widget.docId != null) {
+                                                      await firestore.collection(widget.uid).doc(widget.docId).update({
+                                                        'name':
+                                                            nameController.text,
+                                                        'typeOfMedication':
+                                                            typeOfMedicationController
+                                                                .text,
+                                                        'dosage':
+                                                            double.tryParse(
+                                                              convertArabicNumerals(
+                                                                dosageController
+                                                                    .text,
+                                                              ),
+                                                            ) ??
+                                                            0,
+                                                        'frequency':
+                                                            _frequencyType ==
+                                                                    FrequencyType
+                                                                        .everyXDays
+                                                                ? int.tryParse(
+                                                                      convertArabicNumerals(
+                                                                        frequencyController
+                                                                            .text,
+                                                                      ),
+                                                                    ) ??
+                                                                    0
+                                                                : 0,
+                                                        'amount':
+                                                            double.tryParse(
+                                                              convertArabicNumerals(
+                                                                amountController
+                                                                    .text,
+                                                              ),
+                                                            ) ??
+                                                            0,
+                                                        'notifyTime':
+                                                            _selectedTime !=
+                                                                    null
+                                                                ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                                : '',
+                                                        'startDate':
+                                                            _selectedStartDate!
+                                                                .toIso8601String(),
+                                                        'daysOfWeek':
+                                                            _frequencyType ==
+                                                                    FrequencyType
+                                                                        .daysOfWeek
+                                                                ? _selectedDaysOfWeek
+                                                                    .join(',')
+                                                                : '',
+                                                      });
+                                                      final updatedDoc =
+                                                          await firestore
+                                                              .collection(
+                                                                widget.uid,
+                                                              )
+                                                              .doc(widget.docId)
+                                                              .get();
+                                                      final updatedMedication =
+                                                          medicationFromDoc(
+                                                            updatedDoc,
+                                                          );
+                                                      await scheduleMedicationNotification(
+                                                        context,
+                                                        widget.docId!,
+                                                        updatedMedication,
+                                                      );
+                                                    } else {
+                                                      final docRef = await firestore.collection(widget.uid).add({
+                                                        'name':
+                                                            nameController.text,
+                                                        'typeOfMedication':
+                                                            typeOfMedicationController
+                                                                .text,
+                                                        'dosage':
+                                                            double.tryParse(
+                                                              convertArabicNumerals(
+                                                                dosageController
+                                                                    .text,
+                                                              ),
+                                                            ) ??
+                                                            0,
+                                                        'frequency':
+                                                            int.tryParse(
+                                                              convertArabicNumerals(
+                                                                frequencyController
+                                                                    .text,
+                                                              ),
+                                                            ) ??
+                                                            0,
+                                                        'amount':
+                                                            double.tryParse(
+                                                              convertArabicNumerals(
+                                                                amountController
+                                                                    .text,
+                                                              ),
+                                                            ) ??
+                                                            0,
+                                                        'notifyTime':
+                                                            _selectedTime !=
+                                                                    null
+                                                                ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                                : '',
+                                                        'startDate':
+                                                            _selectedStartDate!
+                                                                .toIso8601String(),
+                                                        'daysOfWeek':
+                                                            _selectedDaysOfWeek
+                                                                .join(','),
+                                                      });
+                                                      final newDoc =
+                                                          await docRef.get();
+                                                      final newMedication =
+                                                          medicationFromDoc(
+                                                            newDoc,
+                                                          );
+                                                      await scheduleMedicationNotification(
+                                                        context,
+                                                        docRef.id,
+                                                        newMedication,
+                                                      );
+                                                    }
+                                                    if (!context.mounted) {
+                                                      return;
+                                                    }
+                                                    Navigator.pop(context);
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.couldNotSaveMedication,
+                                                          style:
+                                                              const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
                                                         ),
                                                       ),
                                                     );
@@ -975,8 +1043,42 @@ class _AddMedicationsState extends State<AddMedications> {
       children: List.generate(7, (i) {
         final dayNum = i == 0 ? 7 : i;
         return FilterChip(
-          label: Text(days[i]),
+          label: Text(
+            days[i],
+            style: TextStyle(
+              color:
+                  _selectedDaysOfWeek.contains(dayNum)
+                      ? const Color(0xFF8AC249)
+                      : Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
           selected: _selectedDaysOfWeek.contains(dayNum),
+          backgroundColor:
+              Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF222222)
+                  : Colors.white,
+          selectedColor:
+              Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF8AC249).withValues(alpha: 0.25)
+                  : const Color(0xFF8AC249).withValues(alpha: 0.12),
+          checkmarkColor: const Color(0xFF8AC249),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color:
+                  _selectedDaysOfWeek.contains(dayNum)
+                      ? const Color(0xFF8AC249)
+                      : Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white24
+                      : Colors.black12,
+              width: _selectedDaysOfWeek.contains(dayNum) ? 2 : 1,
+            ),
+          ),
+          elevation: _selectedDaysOfWeek.contains(dayNum) ? 4 : 0,
           onSelected: (selected) {
             setState(() {
               if (selected) {
@@ -1014,7 +1116,6 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
-    // Schedule for next 2 weeks on selected weekdays
     for (int i = 0; i < 14; i++) {
       final date = now.add(Duration(days: i));
       if (daysOfWeek.contains(date.weekday)) {

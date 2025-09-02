@@ -79,7 +79,7 @@
   "profileAndSettings": "الملف الشخصي والإعدادات",
   "day": "يوم",
   "timeToTakeMedication": "حان وقت تناول {medication}!",
-  "medicationUpdated": "تم تحديث الدواء!",
+  "medicationUpdated": "تم تحديث {medication}!",
   "reminderTakeMedication": "تذكير: تناول دوائك {medication}",
   "medicationDeleted": "تم حذف {medication}!",
   "yes": "نعم",
@@ -159,5 +159,6 @@
   "profileUpdated": "تم تحديث الملف الشخصي!",
   "updateFailed": "فشل التحديث:",
   "passwordEmail": "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:",
-  "selectDaysOfWeek": "اختر أيام الأسبوع"
+  "selectDaysOfWeek": "أيام الأسبوع",
+  "everyXDays": "كل X يوم"
 }

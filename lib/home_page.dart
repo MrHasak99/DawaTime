@@ -1409,7 +1409,9 @@ class _HomePageState extends State<HomePage> {
                                                     content: Text(
                                                       AppLocalizations.of(
                                                         context,
-                                                      )!.medicationUpdated,
+                                                      )!.medicationUpdated(
+                                                        medication.name,
+                                                      ),
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
