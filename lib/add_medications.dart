@@ -1116,25 +1116,36 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
-    for (int i = 0; i < 14; i++) {
-      final date = now.add(Duration(days: i));
-      if (daysOfWeek.contains(date.weekday)) {
-        final scheduledTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          hour,
-          minute,
-        );
-        if (scheduledTime.isAfter(now)) {
-          final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);
-          final notificationId = ('${docId}_${date.weekday}_$i').hashCode;
+    final now = DateTime.now();
+    for (final weekday in daysOfWeek) {
+      int daysUntil = (weekday - now.weekday) % 7;
+      if (daysUntil <= 0) daysUntil += 7;
+      final nextDate = now.add(Duration(days: daysUntil));
+      final scheduledTime = DateTime(
+        nextDate.year,
+        nextDate.month,
+        nextDate.day,
+        hour,
+        minute,
+      );
+      if (scheduledTime.isAfter(now)) {
+        for (int j = 0; j <= 8; j++) {
+          final followUpTime = scheduledTime.add(Duration(minutes: 15 * j));
+          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+          final notificationId = ('${docId}_${weekday}_$j').hashCode;
+          final notificationMessage =
+              j == 0
+                  ? AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.timeToTakeMedication(medication.name)
+                  : AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.reminderTakeMedication(medication.name);
+
           await flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
             medication.name,
-            AppLocalizations.of(
-              context ?? navigatorKey.currentContext!,
-            )!.timeToTakeMedication(medication.name),
+            notificationMessage,
             scheduledTZ,
             NotificationDetails(
               android: AndroidNotificationDetails(
