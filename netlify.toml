@@ -1,0 +1,29 @@
+[build]
+  publish = "build/web"
+  command = "flutter build web --release"
+
+[build.environment]
+  FLUTTER_ROOT = "/opt/buildhome/.flutter"
+  FLUTTER_WEB = "true"
+
+# Redirect netlify domain to custom subdomain
+[[redirects]]
+  from = "https://dawatime.netlify.app/*"
+  to = "https://webapp.dawatime.com/:splat"
+  status = 301
+  force = true
+
+# Handle all traffic to serve Flutter web app (since this site only serves the webapp)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  FLUTTER_WEB = "true"
+
+[context.deploy-preview.environment]
+  FLUTTER_WEB = "true"
+
+[context.branch-deploy.environment]
+  FLUTTER_WEB = "true"

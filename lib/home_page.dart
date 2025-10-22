@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 final StreamController<NotificationResponse> selectNotificationStream =
     StreamController<NotificationResponse>.broadcast();
@@ -149,70 +150,72 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _checkIntroGuide();
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      rescheduleAllMedications(user.uid);
-    }
+    if (!kIsWeb) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        rescheduleAllMedications(user.uid);
+      }
 
-    _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _checkAndShowDueMedications();
-    });
+      _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        _checkAndShowDueMedications();
+      });
 
-    selectNotificationStream.stream.listen((
-      NotificationResponse response,
-    ) async {
-      if (response.payload != null && widget.uid != null) {
-        final docId = response.payload!;
-        final doc =
-            await FirebaseFirestore.instance
-                .collection(widget.uid!)
-                .doc(docId)
-                .get();
-        if (doc.exists) {
-          final medication = medicationFromDoc(doc);
+      selectNotificationStream.stream.listen((
+        NotificationResponse response,
+      ) async {
+        if (response.payload != null && widget.uid != null) {
+          final docId = response.payload!;
+          final doc =
+              await FirebaseFirestore.instance
+                  .collection(widget.uid!)
+                  .doc(docId)
+                  .get();
+          if (doc.exists) {
+            final medication = medicationFromDoc(doc);
 
-          if (navigatorKey.currentContext != null) {
-            showDialog(
-              context: navigatorKey.currentContext!,
-              builder:
-                  (context) => AlertDialog(
-                    backgroundColor: const Color(0xFF8AC249),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    title: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.timeToTakeMedication(medication.name),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+            if (navigatorKey.currentContext != null) {
+              showDialog(
+                context: navigatorKey.currentContext!,
+                builder:
+                    (context) => AlertDialog(
+                      backgroundColor: const Color(0xFF8AC249),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(
-                          AppLocalizations.of(context)!.ok,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      title: Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.timeToTakeMedication(medication.name),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            AppLocalizations.of(context)!.ok,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              );
+            }
+            await scheduleMedicationNotification(
+              context,
+              docId,
+              medication,
+              forceNextDay: true,
             );
           }
-          await scheduleMedicationNotification(
-            context,
-            docId,
-            medication,
-            forceNextDay: true,
-          );
         }
-      }
-    });
+      });
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_showIntroGuide && mounted) {
@@ -750,12 +753,19 @@ class _HomePageState extends State<HomePage> {
                                 ),
                           );
                         } else if (direction == DismissDirection.startToEnd) {
+                          FrequencyType editFrequencyType =
+                              (medication.daysOfWeek != null &&
+                                      medication.daysOfWeek!.isNotEmpty)
+                                  ? FrequencyType.daysOfWeek
+                                  : FrequencyType.everyXDays;
+
                           final nameController = TextEditingController(
                             text: medication.name,
                           );
-                          final typeController = TextEditingController(
-                            text: medication.typeOfMedication,
-                          );
+                          final typeOfMedicationController =
+                              TextEditingController(
+                                text: medication.typeOfMedication,
+                              );
                           final dosageController = TextEditingController(
                             text: medication.dosage.toString(),
                           );
@@ -765,19 +775,23 @@ class _HomePageState extends State<HomePage> {
                           final amountController = TextEditingController(
                             text: medication.amount.toString(),
                           );
-                          TimeOfDay? localNotifyTime;
+                          TimeOfDay? selectedTime;
                           if (medication.notifyTime != null &&
                               medication.notifyTime!.isNotEmpty) {
                             final parts = medication.notifyTime!.split(":");
                             if (parts.length == 2) {
-                              localNotifyTime = TimeOfDay(
+                              selectedTime = TimeOfDay(
                                 hour: int.tryParse(parts[0]) ?? 0,
                                 minute: int.tryParse(parts[1]) ?? 0,
                               );
                             }
                           }
 
-                          DateTime? localStartDate = medication.startDate;
+                          DateTime? selectedStartDate = medication.startDate;
+                          List<int> selectedDaysOfWeek =
+                              medication.daysOfWeek != null
+                                  ? List<int>.from(medication.daysOfWeek!)
+                                  : [];
 
                           final result = await showDialog<bool>(
                             context: context,
@@ -842,7 +856,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             TextField(
-                                              controller: typeController,
+                                              controller:
+                                                  typeOfMedicationController,
                                               cursorColor: Colors.white,
                                               style: Theme.of(
                                                 context,
@@ -992,11 +1007,11 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             ListTile(
                                               title: Text(
-                                                localNotifyTime == null
+                                                selectedTime == null
                                                     ? AppLocalizations.of(
                                                       context,
                                                     )!.pickNotificationTime
-                                                    : "${AppLocalizations.of(context)!.notifyAt}: ${localNotifyTime!.format(context)}",
+                                                    : "${AppLocalizations.of(context)!.notifyAt}: ${selectedTime!.format(context)}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1039,7 +1054,7 @@ class _HomePageState extends State<HomePage> {
                                                 final picked = await showTimePicker(
                                                   context: context,
                                                   initialTime:
-                                                      localNotifyTime ??
+                                                      selectedTime ??
                                                       TimeOfDay.now(),
                                                   builder: (context, child) {
                                                     return Theme(
@@ -1144,18 +1159,18 @@ class _HomePageState extends State<HomePage> {
                                                 );
                                                 if (picked != null) {
                                                   setState(() {
-                                                    localNotifyTime = picked;
+                                                    selectedTime = picked;
                                                   });
                                                 }
                                               },
                                             ),
                                             ListTile(
                                               title: Text(
-                                                localStartDate == null
+                                                selectedStartDate == null
                                                     ? AppLocalizations.of(
                                                       context,
                                                     )!.pickScheduleStartDate
-                                                    : "${AppLocalizations.of(context)!.startDate}: ${localStartDate!.day.toString().padLeft(2, '0')}-${localStartDate!.month.toString().padLeft(2, '0')}-${localStartDate!.year}",
+                                                    : "${AppLocalizations.of(context)!.startDate}: ${selectedStartDate!.day.toString().padLeft(2, '0')}-${selectedStartDate!.month.toString().padLeft(2, '0')}-${selectedStartDate!.year}",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -1187,10 +1202,11 @@ class _HomePageState extends State<HomePage> {
 
                                                 final now = DateTime.now();
                                                 final safeInitialDate =
-                                                    (localStartDate != null &&
-                                                            localStartDate!
+                                                    (selectedStartDate !=
+                                                                null &&
+                                                            selectedStartDate!
                                                                 .isAfter(now))
-                                                        ? localStartDate!
+                                                        ? selectedStartDate!
                                                         : now;
 
                                                 final picked = await showDatePicker(
@@ -1249,7 +1265,7 @@ class _HomePageState extends State<HomePage> {
                                                 );
                                                 if (picked != null) {
                                                   setState(() {
-                                                    localStartDate = picked;
+                                                    selectedStartDate = picked;
                                                   });
                                                 }
                                               },
@@ -1274,10 +1290,91 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
+                                            final isEveryXDays =
+                                                editFrequencyType ==
+                                                FrequencyType.everyXDays;
+                                            final isDaysOfWeek =
+                                                editFrequencyType ==
+                                                FrequencyType.daysOfWeek;
+
+                                            final allFieldsFilled =
+                                                nameController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                typeOfMedicationController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                dosageController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                amountController
+                                                    .text
+                                                    .isNotEmpty &&
+                                                selectedTime != null &&
+                                                selectedStartDate != null &&
+                                                ((isEveryXDays &&
+                                                        frequencyController
+                                                            .text
+                                                            .isNotEmpty) ||
+                                                    (isDaysOfWeek &&
+                                                        selectedDaysOfWeek
+                                                            .isNotEmpty));
+
+                                            if (!allFieldsFilled) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor: Colors.red,
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseFillAllFields,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Inter',
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                              return;
+                                            }
+
+                                            if (isEveryXDays &&
+                                                (convertArabicNumerals(
+                                                      frequencyController.text,
+                                                    ).isEmpty ||
+                                                    convertArabicNumerals(
+                                                          frequencyController
+                                                              .text,
+                                                        ) ==
+                                                        '0')) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor: Colors.red,
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.dosageFrequencyGreaterThanZero,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Inter',
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                              return;
+                                            }
                                             if (nameController
                                                     .text
                                                     .isNotEmpty &&
-                                                typeController
+                                                typeOfMedicationController
                                                     .text
                                                     .isNotEmpty &&
                                                 dosageController
@@ -1313,7 +1410,7 @@ class _HomePageState extends State<HomePage> {
                                                 );
                                                 return;
                                               }
-                                              if (localStartDate == null) {
+                                              if (selectedStartDate == null) {
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -1347,7 +1444,8 @@ class _HomePageState extends State<HomePage> {
                                                       'name':
                                                           nameController.text,
                                                       'typeOfMedication':
-                                                          typeController.text,
+                                                          typeOfMedicationController
+                                                              .text,
                                                       'dosage':
                                                           double.tryParse(
                                                             convertArabicNumerals(
@@ -1373,12 +1471,11 @@ class _HomePageState extends State<HomePage> {
                                                           ) ??
                                                           0,
                                                       'notifyTime':
-                                                          localNotifyTime !=
-                                                                  null
-                                                              ? '${localNotifyTime!.hour.toString().padLeft(2, '0')}:${localNotifyTime!.minute.toString().padLeft(2, '0')}'
+                                                          selectedTime != null
+                                                              ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
                                                               : '',
                                                       'startDate':
-                                                          localStartDate!
+                                                          selectedStartDate!
                                                               .toIso8601String(),
                                                     });
                                                 final updatedDoc =
@@ -1614,27 +1711,35 @@ class _HomePageState extends State<HomePage> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
-                                  textDirection:
-                                      Localizations.localeOf(
-                                                context,
-                                              ).languageCode ==
-                                              'ar'
-                                          ? TextDirection.rtl
-                                          : TextDirection.ltr,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                if (medication.daysOfWeek != null &&
+                                    medication.daysOfWeek!.isNotEmpty)
+                                  Text(
+                                    "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every}: ${_getDaysOfWeekString(context, medication.daysOfWeek!)}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
                                 if (medication.amount > 0)
                                   Text(
                                     "${AppLocalizations.of(context)!.currentAmount}: ${(medication.amount).toStringAsFixed(2)}",
-                                    style: const TextStyle(
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1989,9 +2094,17 @@ class MedicationDetailsCard extends StatelessWidget {
       'الجمعة',
       'السبت',
     ];
-    final days = medication.daysOfWeek
-        ?.map((d) => isArabic ? daysAr[d % 7] : daysEn[d % 7])
-        .join(', ');
+    final hasDaysOfWeek =
+        medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty;
+    final days =
+        hasDaysOfWeek
+            ? medication.daysOfWeek!
+                .map(
+                  (d) => isArabic ? daysAr[(d - 1) % 7] : daysEn[(d - 1) % 7],
+                )
+                .join(isArabic ? '، ' : ', ')
+            : null;
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -2043,19 +2156,22 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 18),
-            _DetailRow(
-              icon: Icons.repeat,
-              label: AppLocalizations.of(context)!.frequency,
-              value:
-                  "${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
-              valueStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF8AC249),
-                fontSize: 18,
-                fontFamily: 'Inter',
+            if (medication.daysOfWeek == null ||
+                medication.daysOfWeek!.isEmpty) ...[
+              const SizedBox(height: 18),
+              _DetailRow(
+                icon: Icons.repeat,
+                label: AppLocalizations.of(context)!.frequency,
+                value:
+                    "${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
+                valueStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8AC249),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                ),
               ),
-            ),
+            ],
             const SizedBox(height: 18),
             _DetailRow(
               icon: Icons.inventory_2,
@@ -2068,8 +2184,8 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
-            const SizedBox(height: 18),
-            if (days != null && days.isNotEmpty)
+            if (hasDaysOfWeek && days != null && days.isNotEmpty) ...[
+              const SizedBox(height: 18),
               _DetailRow(
                 icon: Icons.calendar_today,
                 label: AppLocalizations.of(context)!.selectDaysOfWeek,
@@ -2081,6 +2197,8 @@ class MedicationDetailsCard extends StatelessWidget {
                   fontFamily: 'Inter',
                 ),
               ),
+            ],
+            const SizedBox(height: 18),
             if (getNextReminder(medication) != null)
               _DetailRow(
                 icon: Icons.notifications_active,
@@ -2154,6 +2272,9 @@ Future<void> scheduleMedicationNotification(
   Medications medication, {
   bool forceNextDay = false,
 }) async {
+  // Skip notification scheduling on web
+  if (kIsWeb) return;
+
   await requestExactAlarmPermission();
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
   final timeParts = medication.notifyTime!.split(':');
@@ -2219,7 +2340,9 @@ Future<void> scheduleMedicationNotification(
     }
     return;
   }
-
+  if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
+    return;
+  }
   DateTime baseDate =
       medication.startDate != null
           ? DateTime(
@@ -2335,6 +2458,9 @@ Future<void> openExactAlarmSettings() async {
 }
 
 Future<void> requestExactAlarmPermission() async {
+  // Skip permission requests on web
+  if (kIsWeb) return;
+
   if (await Permission.scheduleExactAlarm.isDenied) {
     await Permission.scheduleExactAlarm.request();
   }
@@ -2369,12 +2495,91 @@ String? getNextReminder(Medications medication) {
           )
           : DateTime(now.year, now.month, now.day, hour, minute);
 
+  // Declare contextToUse at the top
+  final contextToUse = navigatorKey.currentContext;
+
+  if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
+    // Calculate next day from daysOfWeek
+    final hour = baseDate.hour;
+    final minute = baseDate.minute;
+    for (int i = 0; i < 7; i++) {
+      final date = now.add(Duration(days: i));
+      if (medication.daysOfWeek!.contains(date.weekday)) {
+        final scheduledTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          hour,
+          minute,
+        );
+        if (scheduledTime.isAfter(now)) {
+          // Format and return as before
+          final isArabic =
+              contextToUse != null
+                  ? Localizations.localeOf(contextToUse).languageCode == 'ar'
+                  : WidgetsBinding
+                          .instance
+                          .platformDispatcher
+                          .locale
+                          .languageCode ==
+                      'ar';
+          final months =
+              isArabic
+                  ? [
+                    'يناير',
+                    'فبراير',
+                    'مارس',
+                    'أبريل',
+                    'مايو',
+                    'يونيو',
+                    'يوليو',
+                    'أغسطس',
+                    'سبتمبر',
+                    'أكتوبر',
+                    'نوفمبر',
+                    'ديسمبر',
+                  ]
+                  : [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                  ];
+          final month = months[scheduledTime.month - 1];
+          final day = scheduledTime.day;
+          final year = scheduledTime.year;
+          final displayHour =
+              scheduledTime.hour == 0 || scheduledTime.hour == 12
+                  ? 12
+                  : scheduledTime.hour % 12;
+          final displayMinute = scheduledTime.minute.toString().padLeft(2, '0');
+          final period =
+              isArabic
+                  ? (scheduledTime.hour < 12 ? 'ص' : 'م')
+                  : (scheduledTime.hour < 12 ? 'AM' : 'PM');
+          return isArabic
+              ? '$day $month $year - $displayHour:$displayMinute $period'
+              : '$month $day, $year - $displayHour:$displayMinute $period';
+        }
+      }
+    }
+    return null;
+  }
+
+  // Only use frequency logic if daysOfWeek is empty or null
   var scheduledTime = baseDate;
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
-  final contextToUse = navigatorKey.currentContext;
   final isArabic =
       contextToUse != null
           ? Localizations.localeOf(contextToUse).languageCode == 'ar'
@@ -2429,6 +2634,9 @@ String? getNextReminder(Medications medication) {
 }
 
 Future<void> rescheduleAllMedications(String uid) async {
+  // Skip notification rescheduling on web
+  if (kIsWeb) return;
+
   final meds = await FirebaseFirestore.instance.collection(uid).get();
   for (var doc in meds.docs) {
     final medication = medicationFromDoc(doc);
@@ -2442,4 +2650,21 @@ String convertArabicNumerals(String input) {
     input = input.replaceAll(arabicNums[i], i.toString());
   }
   return input;
+}
+
+String _getDaysOfWeekString(BuildContext context, List<int> daysOfWeek) {
+  final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+  final daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  final daysAr = [
+    'الأحد',
+    'الاثنين',
+    'الثلاثاء',
+    'الأربعاء',
+    'الخميس',
+    'الجمعة',
+    'السبت',
+  ];
+  final days = isArabic ? daysAr : daysEn;
+  final separator = isArabic ? '، ' : ', ';
+  return daysOfWeek.map((d) => days[(d - 1) % 7]).join(separator);
 }

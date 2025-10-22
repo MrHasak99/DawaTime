@@ -53,24 +53,28 @@ void callbackDispatcher() {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  if (!kIsWeb) {
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  Workmanager().initialize(callbackDispatcher);
+  if (!kIsWeb) {
+    Workmanager().initialize(callbackDispatcher);
 
-  Workmanager().registerPeriodicTask(
-    "medicationRescheduleTask",
-    "medicationRescheduleTask",
-    frequency: Duration(hours: 1),
-    initialDelay: Duration(minutes: 1),
-    constraints: Constraints(
-      networkType: NetworkType.notRequired,
-      requiresBatteryNotLow: false,
-      requiresCharging: false,
-      requiresDeviceIdle: false,
-      requiresStorageNotLow: false,
-    ),
-  );
+    Workmanager().registerPeriodicTask(
+      "medicationRescheduleTask",
+      "medicationRescheduleTask",
+      frequency: Duration(hours: 1),
+      initialDelay: Duration(minutes: 1),
+      constraints: Constraints(
+        networkType: NetworkType.notRequired,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+        requiresStorageNotLow: false,
+      ),
+    );
+  }
 
   final prefs = await SharedPreferences.getInstance();
   final themeString = prefs.getString('themeMode');
@@ -97,88 +101,93 @@ Future<void> main() async {
     localeNotifier.value = Locale(preferredLang);
   }
 
-  tz.initializeTimeZones();
-  final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(timeZoneName));
+  if (!kIsWeb) {
+    tz.initializeTimeZones();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
 
-  if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
   }
 
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('dawatime_notify');
+  if (!kIsWeb) {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('dawatime_notify');
 
-  final DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) async {
-      selectNotificationStream.add(response);
-      if (navigatorKey.currentContext != null && response.payload != null) {
-        showDialog(
-          context: navigatorKey.currentContext!,
-          builder:
-              (context) => AlertDialog(
-                backgroundColor: const Color(0xFF8AC249),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                title: Text(
-                  AppLocalizations.of(context)!.notification,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        selectNotificationStream.add(response);
+        if (navigatorKey.currentContext != null && response.payload != null) {
+          showDialog(
+            context: navigatorKey.currentContext!,
+            builder:
+                (context) => AlertDialog(
+                  backgroundColor: const Color(0xFF8AC249),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
                   ),
-                ),
-                content: Text(
-                  response.payload!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      AppLocalizations.of(context)!.ok,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  title: Text(
+                    AppLocalizations.of(context)!.notification,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-        );
-      }
-    },
-  );
+                  content: Text(
+                    response.payload!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        AppLocalizations.of(context)!.ok,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+          );
+        }
+      },
+    );
 
-  notificationsInitialized = true;
+    notificationsInitialized = true;
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin
-      >()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
 
-  final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-      flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
-  await androidImplementation?.requestNotificationsPermission();
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+    await androidImplementation?.requestNotificationsPermission();
+  }
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -404,6 +413,8 @@ Future<void> checkFirstInstallAndSignOut() async {
 }
 
 Future<bool> isUpdateRequired(BuildContext context) async {
+  if (kIsWeb) return false;
+
   final info = await PackageInfo.fromPlatform();
   final platform =
       Theme.of(context).platform == TargetPlatform.iOS ? 'ios' : 'android';
@@ -718,6 +729,9 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 Future<bool> isBlockedCountry() async {
+  // Skip geo-blocking check on web platform
+  if (kIsWeb) return false;
+
   final blockedCountries = ['IL'];
   bool blockedByIp = false;
   bool blockedByGps = false;

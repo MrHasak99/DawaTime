@@ -58,7 +58,7 @@
       },
       { "source": "/user-management", "destination": "/user-management.html" },
       { "source": "/support", "destination": "/support.html" },
-      { "source": "**", "destination": "/index.html" }
+      { "source": "/", "destination": "/index.html" }
     ]
   }
 }
