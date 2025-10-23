@@ -514,7 +514,6 @@ class _AddMedicationsState extends State<AddMedications> {
                                                 isDark
                                                     ? Colors.white
                                                     : primaryColor;
-
                                             final now = DateTime.now();
                                             final picked = await showDatePicker(
                                               context: context,
@@ -575,65 +574,63 @@ class _AddMedicationsState extends State<AddMedications> {
                                         const SizedBox(height: 16),
                                         SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Radio<FrequencyType>(
-                                                value: FrequencyType.everyXDays,
-                                                groupValue: _frequencyType,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    _frequencyType = val!;
-                                                  });
-                                                },
-                                                activeColor: const Color(
-                                                  0xFF8AC249,
+                                          child: RadioGroup<FrequencyType>(
+                                            groupValue: _frequencyType,
+                                            onChanged: (val) {
+                                              setState(() {
+                                                _frequencyType = val!;
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Radio<FrequencyType>(
+                                                  value:
+                                                      FrequencyType.everyXDays,
+                                                  activeColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.everyXDays,
-                                                style: TextStyle(
-                                                  color:
-                                                      Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                  fontWeight: FontWeight.bold,
+                                                Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.everyXDays,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              Radio<FrequencyType>(
-                                                value: FrequencyType.daysOfWeek,
-                                                groupValue: _frequencyType,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    _frequencyType = val!;
-                                                  });
-                                                },
-                                                activeColor: const Color(
-                                                  0xFF8AC249,
+                                                Radio<FrequencyType>(
+                                                  value:
+                                                      FrequencyType.daysOfWeek,
+                                                  activeColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.selectDaysOfWeek,
-                                                style: TextStyle(
-                                                  color:
-                                                      Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                  fontWeight: FontWeight.bold,
+                                                Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.selectDaysOfWeek,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 8),
@@ -1040,6 +1037,8 @@ class _AddMedicationsState extends State<AddMedications> {
     final days = isArabic ? daysAr : daysEn;
     return Wrap(
       spacing: 8,
+      runSpacing: 8,
+      alignment: WrapAlignment.center,
       children: List.generate(7, (i) {
         final dayNum = i == 0 ? 7 : i;
         return FilterChip(
@@ -1053,7 +1052,7 @@ class _AddMedicationsState extends State<AddMedications> {
                       ? Colors.white
                       : Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 14,
             ),
           ),
           selected: _selectedDaysOfWeek.contains(dayNum),
@@ -1067,7 +1066,7 @@ class _AddMedicationsState extends State<AddMedications> {
                   : const Color(0xFF8AC249).withValues(alpha: 0.12),
           checkmarkColor: const Color(0xFF8AC249),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             side: BorderSide(
               color:
                   _selectedDaysOfWeek.contains(dayNum)
@@ -1078,7 +1077,9 @@ class _AddMedicationsState extends State<AddMedications> {
               width: _selectedDaysOfWeek.contains(dayNum) ? 2 : 1,
             ),
           ),
-          elevation: _selectedDaysOfWeek.contains(dayNum) ? 4 : 0,
+          elevation: _selectedDaysOfWeek.contains(dayNum) ? 3 : 1,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.comfortable,
           onSelected: (selected) {
             setState(() {
               if (selected) {

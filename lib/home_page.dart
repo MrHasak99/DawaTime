@@ -326,7 +326,7 @@ class _HomePageState extends State<HomePage> {
       bool shouldShowToday = false;
 
       if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
-        int todayWeekday = now.weekday == 7 ? 7 : now.weekday;
+        int todayWeekday = now.weekday;
         shouldShowToday = medication.daysOfWeek!.contains(todayWeekday);
       } else {
         var scheduledTime = DateTime(
@@ -1295,6 +1295,138 @@ class _HomePageState extends State<HomePage> {
                                                 }
                                               },
                                             ),
+                                            SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: RadioGroup<FrequencyType>(
+                                                groupValue: editFrequencyType,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    editFrequencyType = val!;
+                                                  });
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Radio<FrequencyType>(
+                                                      value:
+                                                          FrequencyType
+                                                              .everyXDays,
+                                                      activeColor: Colors.white,
+                                                      fillColor:
+                                                          WidgetStateProperty.all(
+                                                            Colors.white,
+                                                          ),
+                                                    ),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.everyXDays,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Radio<FrequencyType>(
+                                                      value:
+                                                          FrequencyType
+                                                              .daysOfWeek,
+                                                      activeColor: Colors.white,
+                                                      fillColor:
+                                                          WidgetStateProperty.all(
+                                                            Colors.white,
+                                                          ),
+                                                    ),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.selectDaysOfWeek,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            editFrequencyType ==
+                                                    FrequencyType.daysOfWeek
+                                                ? Column(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.selectDaysOfWeek,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    _buildEditWeekdayPicker(
+                                                      selectedDaysOfWeek,
+                                                      (dayNum, selected) {
+                                                        setState(() {
+                                                          if (selected) {
+                                                            selectedDaysOfWeek
+                                                                .add(dayNum);
+                                                          } else {
+                                                            selectedDaysOfWeek
+                                                                .remove(dayNum);
+                                                          }
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                )
+                                                : TextField(
+                                                  controller:
+                                                      frequencyController,
+                                                  cursorColor: Colors.white,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  decoration: InputDecoration(
+                                                    labelText:
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.frequency,
+                                                    labelStyle: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    focusedBorder:
+                                                        const UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                        ),
+                                                    enabledBorder:
+                                                        const UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                ),
                                           ],
                                         ),
                                       ),
@@ -1480,13 +1612,17 @@ class _HomePageState extends State<HomePage> {
                                                           ) ??
                                                           0,
                                                       'frequency':
-                                                          int.tryParse(
-                                                            convertArabicNumerals(
-                                                              frequencyController
-                                                                  .text,
-                                                            ),
-                                                          ) ??
-                                                          0,
+                                                          editFrequencyType ==
+                                                                  FrequencyType
+                                                                      .everyXDays
+                                                              ? (int.tryParse(
+                                                                    convertArabicNumerals(
+                                                                      frequencyController
+                                                                          .text,
+                                                                    ),
+                                                                  ) ??
+                                                                  1)
+                                                              : 1,
                                                       'amount':
                                                           double.tryParse(
                                                             convertArabicNumerals(
@@ -1502,6 +1638,12 @@ class _HomePageState extends State<HomePage> {
                                                       'startDate':
                                                           selectedStartDate!
                                                               .toIso8601String(),
+                                                      'daysOfWeek':
+                                                          editFrequencyType ==
+                                                                  FrequencyType
+                                                                      .daysOfWeek
+                                                              ? selectedDaysOfWeek
+                                                              : null,
                                                     });
                                                 final updatedDoc =
                                                     await firestore
@@ -2100,6 +2242,63 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Widget _buildEditWeekdayPicker(
+    List<int> selectedDaysOfWeek,
+    Function(int, bool) onSelectionChanged,
+  ) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final daysAr = [
+      'الأحد',
+      'الاثنين',
+      'الثلاثاء',
+      'الأربعاء',
+      'الخميس',
+      'الجمعة',
+      'السبت',
+    ];
+    final days = isArabic ? daysAr : daysEn;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      alignment: WrapAlignment.center,
+      children: List.generate(7, (i) {
+        final dayNum = i == 0 ? 7 : i;
+        final isSelected = selectedDaysOfWeek.contains(dayNum);
+        return FilterChip(
+          label: Text(
+            days[i],
+            style: TextStyle(
+              color: isSelected ? Colors.white : const Color(0xFF8AC249),
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          selected: isSelected,
+          backgroundColor: Colors.white,
+          selectedColor: const Color(0xFF8AC249).withValues(alpha: 0.8),
+          checkmarkColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color:
+                  isSelected
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.5),
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          elevation: isSelected ? 3 : 1,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.comfortable,
+          onSelected: (selected) {
+            onSelectionChanged(dayNum, selected);
+          },
+        );
+      }),
+    );
+  }
 }
 
 class MedicationDetailsCard extends StatelessWidget {
@@ -2125,11 +2324,13 @@ class MedicationDetailsCard extends StatelessWidget {
         hasDaysOfWeek
             ? medication.daysOfWeek!
                 .map(
-                  (d) => isArabic ? daysAr[(d - 1) % 7] : daysEn[(d - 1) % 7],
+                  (d) =>
+                      isArabic
+                          ? daysAr[d == 7 ? 0 : d]
+                          : daysEn[d == 7 ? 0 : d],
                 )
                 .join(isArabic ? '، ' : ', ')
             : null;
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -2197,18 +2398,6 @@ class MedicationDetailsCard extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: 18),
-            _DetailRow(
-              icon: Icons.inventory_2,
-              label: AppLocalizations.of(context)!.currentAmount,
-              value: "${medication.amount}",
-              valueStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF8AC249),
-                fontSize: 18,
-                fontFamily: 'Inter',
-              ),
-            ),
             if (hasDaysOfWeek && days != null && days.isNotEmpty) ...[
               const SizedBox(height: 18),
               _DetailRow(
@@ -2223,6 +2412,18 @@ class MedicationDetailsCard extends StatelessWidget {
                 ),
               ),
             ],
+            const SizedBox(height: 18),
+            _DetailRow(
+              icon: Icons.inventory_2,
+              label: AppLocalizations.of(context)!.currentAmount,
+              value: "${medication.amount}",
+              valueStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF8AC249),
+                fontSize: 18,
+                fontFamily: 'Inter',
+              ),
+            ),
             const SizedBox(height: 18),
             if (getNextReminder(medication) != null)
               _DetailRow(
@@ -2691,5 +2892,5 @@ String _getDaysOfWeekString(BuildContext context, List<int> daysOfWeek) {
   ];
   final days = isArabic ? daysAr : daysEn;
   final separator = isArabic ? '، ' : ', ';
-  return daysOfWeek.map((d) => days[(d - 1) % 7]).join(separator);
+  return daysOfWeek.map((d) => days[d == 7 ? 0 : d]).join(separator);
 }
