@@ -323,52 +323,77 @@ class _HomePageState extends State<HomePage> {
       final minute = int.tryParse(timeParts[1]);
       if (hour == null || minute == null) continue;
 
-      var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
-      while (scheduledTime.isBefore(now)) {
-        scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
-      }
+      bool shouldShowToday = false;
 
-      if ((now.difference(scheduledTime).inSeconds).abs() <= 1 &&
-          !_shownAlerts.contains(doc.id)) {
-        _shownAlerts.add(doc.id);
-
-        if (navigatorKey.currentContext != null) {
-          showDialog(
-            context: navigatorKey.currentContext!,
-            builder:
-                (context) => AlertDialog(
-                  backgroundColor: const Color(0xFF8AC249),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  title: Text(
-                    AppLocalizations.of(
-                      context,
-                    )!.timeToTakeMedication(medication.name),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        AppLocalizations.of(context)!.ok,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
+        int todayWeekday = now.weekday == 7 ? 7 : now.weekday;
+        shouldShowToday = medication.daysOfWeek!.contains(todayWeekday);
+      } else {
+        var scheduledTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          hour,
+          minute,
+        );
+        while (scheduledTime.isBefore(now)) {
+          scheduledTime = scheduledTime.add(
+            Duration(days: medication.frequency),
           );
         }
+        shouldShowToday = scheduledTime.day == now.day;
       }
 
-      if (now.isBefore(scheduledTime.subtract(const Duration(seconds: 3)))) {
-        _shownAlerts.remove(doc.id);
+      if (shouldShowToday) {
+        final scheduledTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          hour,
+          minute,
+        );
+        if ((now.difference(scheduledTime).inSeconds).abs() <= 1 &&
+            !_shownAlerts.contains(doc.id)) {
+          _shownAlerts.add(doc.id);
+
+          if (navigatorKey.currentContext != null) {
+            showDialog(
+              context: navigatorKey.currentContext!,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    title: Text(
+                      AppLocalizations.of(
+                        context,
+                      )!.timeToTakeMedication(medication.name),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            );
+          }
+        }
+
+        if (now.isBefore(scheduledTime.subtract(const Duration(seconds: 3)))) {
+          _shownAlerts.remove(doc.id);
+        }
       }
     }
   }

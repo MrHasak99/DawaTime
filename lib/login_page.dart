@@ -335,148 +335,113 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      final emailController = TextEditingController();
-                      final passwordController = TextEditingController();
-                      bool obscureResetPassword = true;
-                      final result = await showDialog<bool>(
+                      final resetEmailController = TextEditingController();
+
+                      if (emailController.text.trim().isNotEmpty) {
+                        resetEmailController.text = emailController.text.trim();
+                      }
+
+                      final result = await showDialog<String>(
                         context: context,
                         builder:
-                            (context) => StatefulBuilder(
-                              builder:
-                                  (context, setState) => AlertDialog(
-                                    backgroundColor: Color(0xFF8AC249),
-                                    title: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.resetPassword,
-                                      style: TextStyle(
+                            (context) => AlertDialog(
+                              backgroundColor: const Color(0xFF8AC249),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              title: Text(
+                                AppLocalizations.of(context)!.resetPassword,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.pleaseEnterYourEmail,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  TextField(
+                                    controller: resetEmailController,
+                                    cursorColor: Colors.white,
+                                    keyboardType: TextInputType.emailAddress,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    decoration: InputDecoration(
+                                      labelText:
+                                          AppLocalizations.of(context)!.email,
+                                      labelStyle: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextField(
-                                          controller: emailController,
-                                          cursorColor: Colors.white,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.pleaseEnterYourEmail,
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        TextField(
-                                          controller: passwordController,
-                                          cursorColor: Colors.white,
-                                          obscureText: obscureResetPassword,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.enterYourPassword,
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            focusedBorder:
-                                                const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                            enabledBorder:
-                                                const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                            suffixIcon: IconButton(
-                                              icon: Icon(
-                                                obscureResetPassword
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  obscureResetPassword =
-                                                      !obscureResetPassword;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(context, false),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.cancel,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
                                         ),
                                       ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                        ),
-                                        onPressed:
-                                            () => Navigator.pop(context, true),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.send,
-                                          style: TextStyle(
-                                            color: Color(0xFF8AC249),
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, null),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.cancel,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    final email =
+                                        resetEmailController.text.trim();
+                                    if (email.isEmpty) return;
+                                    Navigator.pop(context, email);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context)!.sendEmail,
+                                    style: TextStyle(
+                                      color: Color(0xFF8AC249),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                       );
-                      if (result == true) {
-                        try {
-                          await FirebaseAuth.instance.sendPasswordResetEmail(
-                            email: emailController.text.trim(),
-                          );
-                          if (!context.mounted) return;
+
+                      if (result == null || result.isEmpty) return;
+
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(
+                          email: result,
+                        );
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: Color(0xFF8AC249),
@@ -490,11 +455,12 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           );
-                        } catch (e) {
-                          if (!context.mounted) return;
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              backgroundColor: Colors.red,
+                              backgroundColor: const Color(0xFF8AC249),
                               content: Text(
                                 '${AppLocalizations.of(context)!.resetEmailFailed} $e',
                                 style: const TextStyle(

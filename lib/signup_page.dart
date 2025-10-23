@@ -346,10 +346,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                   password: passwordController.text.trim(),
                                 );
                             final user = userCredential.user;
+                            final uid = userCredential.user?.uid;
                             if (user != null && !user.emailVerified) {
                               await user.sendEmailVerification();
                             }
-                            final uid = userCredential.user?.uid;
                             await FirebaseFirestore.instance
                                 .collection('Users')
                                 .doc(uid)
@@ -358,15 +358,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   'email': emailController.text.trim(),
                                   'isVerified': user?.emailVerified ?? false,
                                 });
-                            final currentUser =
-                                FirebaseAuth.instance.currentUser;
-                            if (currentUser != null &&
-                                currentUser.emailVerified) {
-                              await FirebaseFirestore.instance
-                                  .collection('Users')
-                                  .doc(currentUser.uid)
-                                  .update({'isVerified': true});
-                            }
+                            await FirebaseAuth.instance.signOut();
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
