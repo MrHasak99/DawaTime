@@ -135,7 +135,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط';
 
   @override
-  String get welcomeBack => 'مرحبًا بعودتك،';
+  String get welcomeBack => 'مرحباً بعودتك،';
 
   @override
   String get noMedicationsFound => 'لم يتم العثور على أدوية.';
@@ -148,12 +148,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String takeMedication(Object medication) {
-    return 'تناول $medication';
+    return 'أخذ $medication';
   }
 
   @override
   String didYouTakeYourMedication(Object medication) {
-    return 'هل تناولت $medication؟';
+    return 'هل أخذت $medication؟';
   }
 
   @override
@@ -256,7 +256,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String timeToTakeMedication(Object medication) {
-    return 'حان وقت تناول $medication!';
+    return 'حان وقت أخذ $medication!';
   }
 
   @override
@@ -266,7 +266,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String reminderTakeMedication(Object medication) {
-    return 'تذكير: تناول دوائك $medication';
+    return 'تذكير: أخذ $medication';
   }
 
   @override
@@ -299,7 +299,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editDeleteBody => 'اسحب لليمين للتعديل أو لليسار لحذف الدواء من القائمة.';
 
   @override
-  String get notificationsBody => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+  String get notificationsBody => 'سيصلك إشعار عندما يحين وقت أخذ دوائك — حتى لو كان التطبيق مغلقاً!';
 
   @override
   String get profileAndSettingsBody => 'قم بإدارة ملفك الشخصي وإعدادات التطبيق من الزاوية العلوية اليمنى.';
@@ -419,7 +419,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manageProfile => '• قم بإدارة ملفك الشخصي والإعدادات من الزاوية العلوية اليمنى.\n';
 
   @override
-  String get medicationNotifications => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+  String get medicationNotifications => 'سيصلك إشعار عندما يحين وقت أخذ دوائك — حتى لو كان التطبيق مغلقاً!';
 
   @override
   String get notification => 'تنبيه';
@@ -513,6 +513,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String timeToTakeMedicationNow(Object medication) {
-    return 'حان وقت تناول $medication الآن!';
+    return 'حان وقت أخذ $medication الآن!';
   }
 }
