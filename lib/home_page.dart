@@ -14,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 
 final StreamController<NotificationResponse> selectNotificationStream =
     StreamController<NotificationResponse>.broadcast();
@@ -361,92 +361,101 @@ class _HomePageState extends State<HomePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final now = DateTime.now();
-    final meds = await FirebaseFirestore.instance.collection(user.uid).get();
+    try {
+      final now = DateTime.now();
+      final meds = await FirebaseFirestore.instance.collection(user.uid).get();
 
-    for (var doc in meds.docs) {
-      final medication = medicationFromDoc(doc);
-      if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
-        continue;
-      }
-
-      final timeParts = medication.notifyTime!.split(':');
-      if (timeParts.length != 2) continue;
-      final hour = int.tryParse(timeParts[0]);
-      final minute = int.tryParse(timeParts[1]);
-      if (hour == null || minute == null) continue;
-
-      bool shouldShowToday = false;
-
-      if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
-        int todayWeekday = now.weekday;
-        shouldShowToday = medication.daysOfWeek!.contains(todayWeekday);
-      } else {
-        var scheduledTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          hour,
-          minute,
-        );
-        while (scheduledTime.isBefore(now)) {
-          scheduledTime = scheduledTime.add(
-            Duration(days: medication.frequency),
-          );
+      for (var doc in meds.docs) {
+        final medication = medicationFromDoc(doc);
+        if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
+          continue;
         }
-        shouldShowToday = scheduledTime.day == now.day;
-      }
 
-      if (shouldShowToday) {
-        final scheduledTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          hour,
-          minute,
-        );
-        if ((now.difference(scheduledTime).inSeconds).abs() <= 1 &&
-            !_shownAlerts.contains(doc.id)) {
-          _shownAlerts.add(doc.id);
+        final timeParts = medication.notifyTime!.split(':');
+        if (timeParts.length != 2) continue;
+        final hour = int.tryParse(timeParts[0]);
+        final minute = int.tryParse(timeParts[1]);
+        if (hour == null || minute == null) continue;
 
-          if (navigatorKey.currentContext != null) {
-            showDialog(
-              context: navigatorKey.currentContext!,
-              builder:
-                  (context) => AlertDialog(
-                    backgroundColor: const Color(0xFF8AC249),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    title: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.timeToTakeMedication(medication.name),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(
-                          AppLocalizations.of(context)!.ok,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        bool shouldShowToday = false;
+
+        if (medication.daysOfWeek != null &&
+            medication.daysOfWeek!.isNotEmpty) {
+          int todayWeekday = now.weekday;
+          shouldShowToday = medication.daysOfWeek!.contains(todayWeekday);
+        } else {
+          var scheduledTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            hour,
+            minute,
+          );
+          while (scheduledTime.isBefore(now)) {
+            scheduledTime = scheduledTime.add(
+              Duration(days: medication.frequency),
             );
           }
+          shouldShowToday = scheduledTime.day == now.day;
         }
 
-        if (now.isBefore(scheduledTime.subtract(const Duration(seconds: 3)))) {
-          _shownAlerts.remove(doc.id);
+        if (shouldShowToday) {
+          final scheduledTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            hour,
+            minute,
+          );
+          if ((now.difference(scheduledTime).inSeconds).abs() <= 1 &&
+              !_shownAlerts.contains(doc.id)) {
+            _shownAlerts.add(doc.id);
+
+            if (navigatorKey.currentContext != null) {
+              showDialog(
+                context: navigatorKey.currentContext!,
+                builder:
+                    (context) => AlertDialog(
+                      backgroundColor: const Color(0xFF8AC249),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      title: Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.timeToTakeMedication(medication.name),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            AppLocalizations.of(context)!.ok,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              );
+            }
+          }
+
+          if (now.isBefore(
+            scheduledTime.subtract(const Duration(seconds: 3)),
+          )) {
+            _shownAlerts.remove(doc.id);
+          }
         }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking medications (user may not be authenticated): $e');
       }
     }
   }
@@ -3010,10 +3019,23 @@ String? getNextReminder(Medications medication) {
 Future<void> rescheduleAllMedications(String uid) async {
   if (kIsWeb) return;
 
-  final meds = await FirebaseFirestore.instance.collection(uid).get();
-  for (var doc in meds.docs) {
-    final medication = medicationFromDoc(doc);
-    await scheduleMedicationNotification(null, doc.id, medication, userId: uid);
+  try {
+    final meds = await FirebaseFirestore.instance.collection(uid).get();
+    for (var doc in meds.docs) {
+      final medication = medicationFromDoc(doc);
+      await scheduleMedicationNotification(
+        null,
+        doc.id,
+        medication,
+        userId: uid,
+      );
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print(
+        'Error rescheduling medications (user may not be authenticated): $e',
+      );
+    }
   }
 }
 

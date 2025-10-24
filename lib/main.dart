@@ -22,7 +22,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -52,28 +52,50 @@ void callbackDispatcher() {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb) {
-    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+  } catch (e) {
+    // Handle initialization error silently
   }
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   if (!kIsWeb) {
-    Workmanager().initialize(callbackDispatcher);
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    } catch (e) {
+      // Handle orientation error silently
+    }
+  }
 
-    Workmanager().registerPeriodicTask(
-      "medicationRescheduleTask",
-      "medicationRescheduleTask",
-      frequency: Duration(hours: 1),
-      initialDelay: Duration(minutes: 1),
-      constraints: Constraints(
-        networkType: NetworkType.notRequired,
-        requiresBatteryNotLow: false,
-        requiresCharging: false,
-        requiresDeviceIdle: false,
-        requiresStorageNotLow: false,
-      ),
-    );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ).timeout(const Duration(seconds: 10));
+  } catch (e) {
+    // Continue without Firebase for now to let app start
+  }
+
+  if (!kIsWeb) {
+    try {
+      Workmanager().initialize(callbackDispatcher);
+
+      Workmanager().registerPeriodicTask(
+        "medicationRescheduleTask",
+        "medicationRescheduleTask",
+        frequency: Duration(hours: 1),
+        initialDelay: Duration(minutes: 1),
+        constraints: Constraints(
+          networkType: NetworkType.notRequired,
+          requiresBatteryNotLow: false,
+          requiresCharging: false,
+          requiresDeviceIdle: false,
+          requiresStorageNotLow: false,
+        ),
+      );
+    } catch (e) {
+      // Continue without WorkManager
+    }
   }
 
   final prefs = await SharedPreferences.getInstance();
@@ -102,106 +124,131 @@ Future<void> main() async {
   }
 
   if (!kIsWeb) {
-    tz.initializeTimeZones();
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    try {
+      tz.initializeTimeZones();
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone()
+          .timeout(const Duration(seconds: 5));
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+    } catch (e) {
+      // Use default timezone
+    }
 
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
+    try {
+      if (await Permission.notification.isDenied) {
+        await Permission.notification.request().timeout(
+          const Duration(seconds: 5),
+        );
+      }
+    } catch (e) {
+      // Continue without notification permissions
     }
   }
 
   if (!kIsWeb) {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('dawatime_notify');
+    try {
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('dawatime_notify');
 
-    final DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-          requestAlertPermission: true,
-          requestBadgePermission: true,
-          requestSoundPermission: true,
-        );
+      final DarwinInitializationSettings initializationSettingsIOS =
+          DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          );
 
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: initializationSettingsIOS,
-        );
+      final InitializationSettings initializationSettings =
+          InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+          );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        selectNotificationStream.add(response);
-        if (navigatorKey.currentContext != null && response.payload != null) {
-          showDialog(
-            context: navigatorKey.currentContext!,
-            builder:
-                (context) => AlertDialog(
-                  backgroundColor: const Color(0xFF8AC249),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  title: Text(
-                    AppLocalizations.of(context)!.notification,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: (
+          NotificationResponse response,
+        ) async {
+          selectNotificationStream.add(response);
+          if (navigatorKey.currentContext != null && response.payload != null) {
+            showDialog(
+              context: navigatorKey.currentContext!,
+              builder:
+                  (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF8AC249),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                  ),
-                  content: Text(
-                    response.payload!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        AppLocalizations.of(context)!.ok,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    title: Text(
+                      AppLocalizations.of(context)!.notification,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-          );
-        }
-      },
-    );
+                    content: Text(
+                      response.payload!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            );
+          }
+        },
+      );
 
-    notificationsInitialized = true;
+      notificationsInitialized = true;
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
 
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-        flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >();
-    await androidImplementation?.requestNotificationsPermission();
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
+      await androidImplementation?.requestNotificationsPermission();
+    } catch (e) {
+      // Continue without notifications
+    }
   }
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  try {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
 
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  } catch (e) {
+    // Use default Flutter error handling
+  }
 
-  if (kIsWeb) {
-    await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  try {
+    if (kIsWeb) {
+      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+    }
+  } catch (e) {
+    // Firebase Auth setup failed
   }
 
   runApp(const MainApp());
@@ -415,18 +462,24 @@ Future<void> checkFirstInstallAndSignOut() async {
 Future<bool> isUpdateRequired(BuildContext context) async {
   if (kIsWeb) return false;
 
-  final info = await PackageInfo.fromPlatform();
-  final platform =
-      Theme.of(context).platform == TargetPlatform.iOS ? 'ios' : 'android';
-  final doc =
-      await FirebaseFirestore.instance
-          .collection('AppConfig')
-          .doc('Version')
-          .get();
-  if (!doc.exists) return false;
-  final latestVersion = doc.data()?[platform];
-  if (latestVersion == null) return false;
-  return _isVersionLower(info.version, latestVersion);
+  try {
+    final info = await PackageInfo.fromPlatform();
+    final platform =
+        Theme.of(context).platform == TargetPlatform.iOS ? 'ios' : 'android';
+
+    final doc = await FirebaseFirestore.instance
+        .collection('AppConfig')
+        .doc('Version')
+        .get()
+        .timeout(const Duration(seconds: 3));
+
+    if (!doc.exists) return false;
+    final latestVersion = doc.data()?[platform];
+    if (latestVersion == null) return false;
+    return _isVersionLower(info.version, latestVersion);
+  } catch (e) {
+    return false;
+  }
 }
 
 bool _isVersionLower(String current, String latest) {
@@ -468,7 +521,7 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
                 final url =
                     Theme.of(context).platform == TargetPlatform.iOS
                         ? 'https://apps.apple.com/app/6748280994'
-                        : 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime';
+                        : 'https://dawatime.com';
                 launchUrl(Uri.parse(url));
               },
               child: Text(
@@ -508,11 +561,13 @@ class _SplashScreenState extends State<SplashScreen> {
     bool blocked = false;
     try {
       blocked = await isBlockedCountry().timeout(
-        const Duration(seconds: 8),
+        const Duration(seconds: 5),
         onTimeout: () => false,
       );
-    } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking blocked country: $e');
+      }
     }
     if (blocked) {
       await showDialog(
@@ -546,46 +601,16 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     try {
-      final updateNeeded = await isUpdateRequired(
-        context,
-      ).timeout(const Duration(seconds: 8), onTimeout: () => false);
+      final updateNeeded = await isUpdateRequired(context);
       if (updateNeeded) {
         await showForceUpdateDialog(context);
         SystemNavigator.pop();
         return;
       }
-    } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack);
-      await showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              backgroundColor: Colors.red,
-              title: Text(
-                AppLocalizations.of(context)!.error,
-                style: TextStyle(color: Colors.white),
-              ),
-              content: Text(
-                AppLocalizations.of(context)!.failedUpdateCheck,
-                style: TextStyle(color: Colors.white),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.ok,
-                    style: TextStyle(color: Colors.white, fontFamily: 'Inter'),
-                  ),
-                ),
-              ],
-            ),
-      );
-      if (mounted) {
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking for updates: $e');
       }
-      return;
     }
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
