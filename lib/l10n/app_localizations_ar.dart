@@ -54,7 +54,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signupFailed => 'فشل إنشاء الحساب، يرجى المحاولة مرة أخرى';
 
   @override
-  String get welcomeToDawaTime => 'مرحبًا بك في دواء تايم!';
+  String get welcomeToDawaTime => 'مرحباً بك في دواء تايم!';
 
   @override
   String get login => 'تسجيل الدخول';
@@ -123,15 +123,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول';
 
   @override
-  String get dosageFrequencyGreaterThanZero =>
-      'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر';
+  String get dosageFrequencyGreaterThanZero => 'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر';
 
   @override
   String get pleasePickScheduleStartDate => 'يرجى اختيار تاريخ بدء الجدول.';
 
   @override
-  String get couldNotSaveMedication =>
-      'تعذر حفظ الدواء، يرجى المحاولة مرة أخرى';
+  String get couldNotSaveMedication => 'تعذر حفظ الدواء، يرجى المحاولة مرة أخرى';
 
   @override
   String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط';
@@ -227,8 +225,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get couldNotUpdateMedication =>
-      'تعذر تحديث الدواء، يرجى المحاولة مرة أخرى';
+  String get couldNotUpdateMedication => 'تعذر تحديث الدواء، يرجى المحاولة مرة أخرى';
 
   @override
   String get deleteAccountTitle => 'حذف الحساب';
@@ -287,30 +284,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ok => 'حسناً';
 
   @override
-  String get welcomeBody =>
-      'دواء تايم يساعدك على إدارة أدويتك ومواعيدها بكل سهولة.';
+  String get welcomeBody => 'دواء تايم يساعدك على إدارة أدويتك ومواعيدها بكل سهولة.';
 
   @override
   String get addMedicationTitle => 'إضافة أدوية';
 
   @override
-  String get addMedicationBody =>
-      'اضغط على زر \"+\" لإضافة دواء جديد وضبط المنبهات.';
+  String get addMedicationBody => 'اضغط على زر \"+\" لإضافة دواء جديد وضبط المنبهات.';
 
   @override
   String get editDeleteTitle => 'تعديل وحذف';
 
   @override
-  String get editDeleteBody =>
-      'اسحب لليمين للتعديل أو لليسار لحذف الدواء من القائمة.';
+  String get editDeleteBody => 'اسحب لليمين للتعديل أو لليسار لحذف الدواء من القائمة.';
 
   @override
-  String get notificationsBody =>
-      'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+  String get notificationsBody => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
 
   @override
-  String get profileAndSettingsBody =>
-      'قم بإدارة ملفك الشخصي وإعدادات التطبيق من الزاوية العلوية اليمنى.';
+  String get profileAndSettingsBody => 'قم بإدارة ملفك الشخصي وإعدادات التطبيق من الزاوية العلوية اليمنى.';
 
   @override
   String get next => 'التالي';
@@ -361,8 +353,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailChange => 'تم تغيير البريد الإلكتروني';
 
   @override
-  String get verifyNewEmail =>
-      'تم إرسال رسالة تحقق إلى عنوان بريدك الإلكتروني الجديد. يرجى التحقق منه، ثم قم بتسجيل الدخول مرة أخرى باستخدام بريدك الإلكتروني الجديد';
+  String get verifyNewEmail => 'تم إرسال رسالة تحقق إلى عنوان بريدك الإلكتروني الجديد. يرجى التحقق منه، ثم قم بتسجيل الدخول مرة أخرى باستخدام بريدك الإلكتروني الجديد';
 
   @override
   String get updateEmailFailed => 'فشل تحديث البريد الإلكتروني:';
@@ -374,12 +365,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sendEmail => 'أرسل البريد الإلكتروني';
 
   @override
-  String get resetEmailSent =>
-      'تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور!';
+  String get resetEmailSent => 'تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور!';
 
   @override
-  String get resetEmailFailed =>
-      'فشل إرسال البريد إلكتروني لإعادة تعيين كلمة المرور:';
+  String get resetEmailFailed => 'فشل إرسال البريد إلكتروني لإعادة تعيين كلمة المرور:';
 
   @override
   String get enterPasswordTwice => 'يرجى إدخال كلمة المرور مرتين.';
@@ -415,8 +404,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addMedicationBody2 => '• اضف أدويتك بإستخدام زر \"+\".\n';
 
   @override
-  String get setReminders =>
-      '• قم بضبط منبهات لكل دواء حتى لا تفوتك أي جرعة.\n';
+  String get setReminders => '• قم بضبط منبهات لكل دواء حتى لا تفوتك أي جرعة.\n';
 
   @override
   String get viewDetails => '• اضغط على الدواء لرؤية التفاصيل\n';
@@ -428,12 +416,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkReminders => '• تفقد تذكيراتك القادمة على الشاشة الرئيسية.\n';
 
   @override
-  String get manageProfile =>
-      '• قم بإدارة ملفك الشخصي والإعدادات من الزاوية العلوية اليمنى.\n';
+  String get manageProfile => '• قم بإدارة ملفك الشخصي والإعدادات من الزاوية العلوية اليمنى.\n';
 
   @override
-  String get medicationNotifications =>
-      'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
+  String get medicationNotifications => 'سيصلك إشعار عندما يحين وقت تناول دوائك — حتى لو كان التطبيق مغلقاً!';
 
   @override
   String get notification => 'تنبيه';
@@ -442,8 +428,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateRequired => 'تحديث مطلوب';
 
   @override
-  String get pleaseUpdate =>
-      'يتوفر إصدار جديد من التطبيق، الرجاء التحديث للمتابعة';
+  String get pleaseUpdate => 'يتوفر إصدار جديد من التطبيق، الرجاء التحديث للمتابعة';
 
   @override
   String get update => 'حدّث';
@@ -455,8 +440,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notAvailable => 'هذا التطبيق غير متاح في بلدك';
 
   @override
-  String get failedUpdateCheck =>
-      'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً';
+  String get failedUpdateCheck => 'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً';
 
   @override
   String get error => 'خطأ';
@@ -465,16 +449,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gotIt => 'حسناً!';
 
   @override
-  String get pleaseVerfiy =>
-      'الرجاء التحقق من بريدك الإلكتروني قبل تسجيل الدخول';
+  String get pleaseVerfiy => 'الرجاء التحقق من بريدك الإلكتروني قبل تسجيل الدخول';
 
   @override
-  String get noAccount =>
-      'لم يتم العثور على حساب مرتبط بهذا البريد الإلكتروني، الرجاء إنشاء حساب أولاً';
+  String get noAccount => 'لم يتم العثور على حساب مرتبط بهذا البريد الإلكتروني، الرجاء إنشاء حساب أولاً';
 
   @override
-  String get incorrectPassword =>
-      'كلمة المرور غير صحيحة، الرجاء المحاولة مرة أخرى';
+  String get incorrectPassword => 'كلمة المرور غير صحيحة، الرجاء المحاولة مرة أخرى';
 
   @override
   String get invalidEmail => 'عنوان البريد الإلكتروني غير صحيح';
@@ -483,24 +464,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get disabledAccount => 'هذا الحساب معطل، يرجى التواصل مع فريق الدعم';
 
   @override
-  String get loginFailed =>
-      'فشل تسجيل الدخول، الرجاء التأكد من بيانات الدخول والمحاولة مرة أخرى';
+  String get loginFailed => 'فشل تسجيل الدخول، الرجاء التأكد من بيانات الدخول والمحاولة مرة أخرى';
 
   @override
-  String get emailAlreadyRegistered =>
-      'هذا البريد الإلكتروني مسجل بالفعل، الرجاء استخدام بريد إلكتروني آخر أو تسجيل الدخول';
+  String get emailAlreadyRegistered => 'هذا البريد الإلكتروني مسجل بالفعل، الرجاء استخدام بريد إلكتروني آخر أو تسجيل الدخول';
 
   @override
-  String get emailInvalid =>
-      'عنوان البريد الإلكتروني غير صحيح، يرجى التأكد منه وإعادة المحاولة';
+  String get emailInvalid => 'عنوان البريد الإلكتروني غير صحيح، يرجى التأكد منه وإعادة المحاولة';
 
   @override
-  String get weakPassword =>
-      'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل';
+  String get weakPassword => 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل';
 
   @override
-  String get emailMethod =>
-      'طريقة التسجيل هذه غير مفعّلة، الرجاء التواصل مع الدعم الفني';
+  String get emailMethod => 'طريقة التسجيل هذه غير مفعّلة، الرجاء التواصل مع الدعم الفني';
 
   @override
   String get friend => 'صديقي';
@@ -512,8 +488,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addMedicationFailed => 'تعذّر إضافة الدواء:';
 
   @override
-  String get allowSettings =>
-      'الرجاء السماح بإذن \"المنبهات والتذكيرات\" من إعدادات النظام';
+  String get allowSettings => 'الرجاء السماح بإذن \"المنبهات والتذكيرات\" من إعدادات النظام';
 
   @override
   String get openSettings => 'افتح الإعدادات';
@@ -528,12 +503,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateFailed => 'فشل التحديث:';
 
   @override
-  String get passwordEmail =>
-      'سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:';
+  String get passwordEmail => 'سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:';
 
   @override
   String get selectDaysOfWeek => 'أيام الأسبوع';
 
   @override
   String get everyXDays => 'كل X يوم';
+
+  @override
+  String timeToTakeMedicationNow(Object medication) {
+    return 'حان وقت تناول $medication الآن!';
+  }
 }

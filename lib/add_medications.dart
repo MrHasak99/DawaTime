@@ -842,14 +842,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             _frequencyType ==
                                                                     FrequencyType
                                                                         .everyXDays
-                                                                ? int.tryParse(
+                                                                ? (int.tryParse(
                                                                       convertArabicNumerals(
                                                                         frequencyController
                                                                             .text,
                                                                       ),
                                                                     ) ??
-                                                                    0
-                                                                : 0,
+                                                                    1)
+                                                                : 1,
                                                         'amount':
                                                             double.tryParse(
                                                               convertArabicNumerals(
@@ -871,8 +871,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                     FrequencyType
                                                                         .daysOfWeek
                                                                 ? _selectedDaysOfWeek
-                                                                    .join(',')
-                                                                : '',
+                                                                : null,
                                                       });
                                                       final updatedDoc =
                                                           await firestore
@@ -889,6 +888,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         context,
                                                         widget.docId!,
                                                         updatedMedication,
+                                                        userId: widget.uid,
                                                       );
                                                     } else {
                                                       final docRef = await firestore.collection(widget.uid).add({
@@ -906,13 +906,17 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             ) ??
                                                             0,
                                                         'frequency':
-                                                            int.tryParse(
-                                                              convertArabicNumerals(
-                                                                frequencyController
-                                                                    .text,
-                                                              ),
-                                                            ) ??
-                                                            0,
+                                                            _frequencyType ==
+                                                                    FrequencyType
+                                                                        .everyXDays
+                                                                ? (int.tryParse(
+                                                                      convertArabicNumerals(
+                                                                        frequencyController
+                                                                            .text,
+                                                                      ),
+                                                                    ) ??
+                                                                    1)
+                                                                : 1,
                                                         'amount':
                                                             double.tryParse(
                                                               convertArabicNumerals(
@@ -930,8 +934,11 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             _selectedStartDate!
                                                                 .toIso8601String(),
                                                         'daysOfWeek':
-                                                            _selectedDaysOfWeek
-                                                                .join(','),
+                                                            _frequencyType ==
+                                                                    FrequencyType
+                                                                        .daysOfWeek
+                                                                ? _selectedDaysOfWeek
+                                                                : null,
                                                       });
                                                       final newDoc =
                                                           await docRef.get();
@@ -943,6 +950,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         context,
                                                         docRef.id,
                                                         newMedication,
+                                                        userId: widget.uid,
                                                       );
                                                     }
                                                     if (!context.mounted) {
@@ -1084,6 +1092,11 @@ class _AddMedicationsState extends State<AddMedications> {
             setState(() {
               if (selected) {
                 _selectedDaysOfWeek.add(dayNum);
+                _selectedDaysOfWeek.sort((a, b) {
+                  if (a == 7 && b != 7) return -1;
+                  if (a != 7 && b == 7) return 1;
+                  return a.compareTo(b);
+                });
               } else {
                 _selectedDaysOfWeek.remove(dayNum);
               }
@@ -1100,6 +1113,7 @@ Future<void> scheduleMedicationNotification(
   String docId,
   Medications medication, {
   bool forceNextDay = false,
+  String? userId,
 }) async {
   await requestExactAlarmPermission();
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
@@ -1235,6 +1249,45 @@ Future<void> scheduleMedicationNotification(
             ),
           ),
           payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
+      }
+      if (userId != null) {
+        final autoRescheduleTime = scheduledTime.add(Duration(minutes: 120));
+        final autoRescheduleTZ = tz.TZDateTime.from(
+          autoRescheduleTime,
+          tz.local,
+        );
+        final autoRescheduleId = ('${docId}_auto_reschedule').hashCode;
+
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          autoRescheduleId,
+          'Auto Reschedule',
+          'Scheduling next reminder for ${medication.name}',
+          autoRescheduleTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'auto_reschedule_channel_$docId',
+              'Auto Reschedule for ${medication.name}',
+              channelDescription:
+                  'Automatically reschedules ${medication.name}',
+              importance: Importance.low,
+              priority: Priority.low,
+              playSound: false,
+              showWhen: false,
+              ongoing: false,
+              autoCancel: true,
+              visibility: NotificationVisibility.secret,
+              icon: 'dawatime_notify',
+              color: const Color(0xFF8AC249),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: false,
+              presentSound: false,
+              presentBadge: false,
+            ),
+          ),
+          payload: '${docId}_auto_reschedule_$userId',
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         );
       }

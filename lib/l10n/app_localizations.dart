@@ -1060,6 +1060,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Every X days'**
   String get everyXDays;
+
+  /// No description provided for @timeToTakeMedicationNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to take {medication} now!'**
+  String timeToTakeMedicationNow(Object medication);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

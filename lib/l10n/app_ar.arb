@@ -160,5 +160,6 @@
   "updateFailed": "فشل التحديث:",
   "passwordEmail": "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:",
   "selectDaysOfWeek": "أيام الأسبوع",
-  "everyXDays": "كل X يوم"
+  "everyXDays": "كل X يوم",
+  "timeToTakeMedicationNow": "حان وقت تناول {medication} الآن!"
 }

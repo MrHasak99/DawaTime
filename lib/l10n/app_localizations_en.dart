@@ -510,4 +510,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get everyXDays => 'Every X days';
+
+  @override
+  String timeToTakeMedicationNow(Object medication) {
+    return 'Time to take $medication now!';
+  }
 }

@@ -28,6 +28,7 @@ class Medications {
   final String? notifyTime;
   final DateTime? startDate;
   final List<int>? daysOfWeek;
+  final DateTime? lastTaken;
 
   Medications({
     required this.name,
@@ -38,6 +39,7 @@ class Medications {
     this.notifyTime,
     this.startDate,
     this.daysOfWeek,
+    this.lastTaken,
   });
 
   factory Medications.fromMap(Map<String, dynamic> data) {
@@ -66,6 +68,10 @@ class Medications {
               ? DateTime.tryParse(data['startDate'])
               : null,
       daysOfWeek: daysOfWeek,
+      lastTaken:
+          data['lastTaken'] != null
+              ? DateTime.tryParse(data['lastTaken'])
+              : null,
     );
   }
 
@@ -79,6 +85,7 @@ class Medications {
       'notifyTime': notifyTime,
       'startDate': startDate?.toIso8601String(),
       'daysOfWeek': daysOfWeek,
+      'lastTaken': lastTaken?.toIso8601String(),
     };
   }
 }
@@ -126,7 +133,26 @@ class _HomePageState extends State<HomePage> {
 
     await Firebase.initializeApp();
 
-    final docId = response.payload!;
+    final payload = response.payload!;
+    if (payload.contains('_auto_reschedule_')) {
+      final parts = payload.split('_auto_reschedule_');
+      if (parts.length == 2) {
+        final docId = parts[0];
+        final userId = parts[1];
+
+        final doc =
+            await FirebaseFirestore.instance
+                .collection(userId)
+                .doc(docId)
+                .get();
+        if (doc.exists) {
+          final medication = medicationFromDoc(doc);
+          await scheduleMedicationNotification(null, docId, medication);
+        }
+      }
+      return;
+    }
+    final docId = payload;
     final doc =
         await FirebaseFirestore.instance
             .collection('medications')
@@ -164,7 +190,33 @@ class _HomePageState extends State<HomePage> {
         NotificationResponse response,
       ) async {
         if (response.payload != null && widget.uid != null) {
-          final docId = response.payload!;
+          final payload = response.payload!;
+          if (payload.contains('_auto_reschedule_')) {
+            final parts = payload.split('_auto_reschedule_');
+            if (parts.length == 2) {
+              final docId = parts[0];
+              final userId = parts[1];
+
+              if (userId == widget.uid) {
+                final doc =
+                    await FirebaseFirestore.instance
+                        .collection(widget.uid!)
+                        .doc(docId)
+                        .get();
+                if (doc.exists) {
+                  final medication = medicationFromDoc(doc);
+                  await scheduleMedicationNotification(
+                    context,
+                    docId,
+                    medication,
+                    userId: widget.uid,
+                  );
+                }
+              }
+            }
+            return;
+          }
+          final docId = payload;
           final doc =
               await FirebaseFirestore.instance
                   .collection(widget.uid!)
@@ -211,6 +263,7 @@ class _HomePageState extends State<HomePage> {
               docId,
               medication,
               forceNextDay: true,
+              userId: widget.uid,
             );
           }
         }
@@ -531,6 +584,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     deletedDocId,
                     deletedMedication,
+                    userId: widget.uid,
                   );
                   if (mounted) setState(() {});
                 } catch (e) {
@@ -959,42 +1013,6 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             TextField(
-                                              controller: frequencyController,
-                                              cursorColor: Colors.white,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.frequency,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            TextField(
                                               controller: amountController,
                                               cursorColor: Colors.white,
                                               style: Theme.of(
@@ -1378,6 +1396,21 @@ class _HomePageState extends State<HomePage> {
                                                           if (selected) {
                                                             selectedDaysOfWeek
                                                                 .add(dayNum);
+                                                            selectedDaysOfWeek
+                                                                .sort((a, b) {
+                                                                  if (a == 7 &&
+                                                                      b != 7) {
+                                                                    return -1;
+                                                                  }
+                                                                  if (a != 7 &&
+                                                                      b == 7) {
+                                                                    return 1;
+                                                                  }
+                                                                  return a
+                                                                      .compareTo(
+                                                                        b,
+                                                                      );
+                                                                });
                                                           } else {
                                                             selectedDaysOfWeek
                                                                 .remove(dayNum);
@@ -1659,6 +1692,7 @@ class _HomePageState extends State<HomePage> {
                                                   context,
                                                   docs[index].id,
                                                   updatedMedication,
+                                                  userId: widget.uid,
                                                 );
                                                 if (!context.mounted) {
                                                   return;
@@ -2024,6 +2058,9 @@ class _HomePageState extends State<HomePage> {
                                                     ? 0
                                                     : medication.amount -
                                                         medication.dosage,
+                                            'lastTaken':
+                                                DateTime.now()
+                                                    .toIso8601String(),
                                           });
                                       await cancelMedicationReminders(
                                         docs[index].id,
@@ -2122,6 +2159,7 @@ class _HomePageState extends State<HomePage> {
                                                   .doc(docs[index].id)
                                                   .update({
                                                     'amount': previousAmount,
+                                                    'lastTaken': null,
                                                   });
                                               final restoredDoc =
                                                   await firestore
@@ -2497,8 +2535,8 @@ Future<void> scheduleMedicationNotification(
   String docId,
   Medications medication, {
   bool forceNextDay = false,
+  String? userId,
 }) async {
-  // Skip notification scheduling on web
   if (kIsWeb) return;
 
   await requestExactAlarmPermission();
@@ -2629,6 +2667,45 @@ Future<void> scheduleMedicationNotification(
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         );
       }
+      if (userId != null) {
+        final autoRescheduleTime = scheduledTime.add(Duration(minutes: 120));
+        final autoRescheduleTZ = tz.TZDateTime.from(
+          autoRescheduleTime,
+          tz.local,
+        );
+        final autoRescheduleId = ('${docId}_auto_reschedule').hashCode;
+
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          autoRescheduleId,
+          'Auto Reschedule',
+          'Scheduling next reminder for ${medication.name}',
+          autoRescheduleTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'auto_reschedule_channel_$docId',
+              'Auto Reschedule for ${medication.name}',
+              channelDescription:
+                  'Automatically reschedules ${medication.name}',
+              importance: Importance.low,
+              priority: Priority.low,
+              playSound: false,
+              showWhen: false,
+              ongoing: false,
+              autoCancel: true,
+              visibility: NotificationVisibility.secret,
+              icon: 'dawatime_notify',
+              color: const Color(0xFF8AC249),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: false,
+              presentSound: false,
+              presentBadge: false,
+            ),
+          ),
+          payload: '${docId}_auto_reschedule_$userId',
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
+      }
     }
   } catch (e) {
     if (context != null) {
@@ -2684,7 +2761,6 @@ Future<void> openExactAlarmSettings() async {
 }
 
 Future<void> requestExactAlarmPermission() async {
-  // Skip permission requests on web
   if (kIsWeb) return;
 
   if (await Permission.scheduleExactAlarm.isDenied) {
@@ -2721,11 +2797,86 @@ String? getNextReminder(Medications medication) {
           )
           : DateTime(now.year, now.month, now.day, hour, minute);
 
-  // Declare contextToUse at the top
   final contextToUse = navigatorKey.currentContext;
+  bool isWithinReminderWindow = false;
+  if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
+    final scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+
+    if (medication.daysOfWeek!.contains(now.weekday)) {
+      if (now.isAtSameMomentAs(scheduledTime) || now.isAfter(scheduledTime)) {
+        final timeSinceScheduled = now.difference(scheduledTime).inMinutes;
+        if (timeSinceScheduled <= 120) {
+          if (medication.lastTaken != null) {
+            final lastTakenToday =
+                medication.lastTaken!.year == now.year &&
+                medication.lastTaken!.month == now.month &&
+                medication.lastTaken!.day == now.day;
+            if (lastTakenToday &&
+                medication.lastTaken!.isAfter(scheduledTime)) {
+              isWithinReminderWindow = false;
+            } else {
+              isWithinReminderWindow = true;
+            }
+          } else {
+            isWithinReminderWindow = true;
+          }
+        }
+      }
+    }
+  } else {
+    var scheduledTime = baseDate;
+    while (scheduledTime.isBefore(
+      now.subtract(Duration(days: medication.frequency)),
+    )) {
+      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+    }
+    final todayScheduledTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    if (now.isAtSameMomentAs(todayScheduledTime) ||
+        now.isAfter(todayScheduledTime)) {
+      final timeSinceScheduled = now.difference(todayScheduledTime).inMinutes;
+      if (timeSinceScheduled <= 120) {
+        var checkTime = scheduledTime;
+        while (checkTime.isBefore(now.add(Duration(days: 1)))) {
+          if (checkTime.year == now.year &&
+              checkTime.month == now.month &&
+              checkTime.day == now.day) {
+            if (medication.lastTaken != null) {
+              final lastTakenToday =
+                  medication.lastTaken!.year == now.year &&
+                  medication.lastTaken!.month == now.month &&
+                  medication.lastTaken!.day == now.day;
+              if (lastTakenToday &&
+                  medication.lastTaken!.isAfter(todayScheduledTime)) {
+                isWithinReminderWindow = false;
+              } else {
+                isWithinReminderWindow = true;
+              }
+            } else {
+              isWithinReminderWindow = true;
+            }
+            break;
+          }
+          checkTime = checkTime.add(Duration(days: medication.frequency));
+        }
+      }
+    }
+  }
+  if (isWithinReminderWindow) {
+    return contextToUse != null
+        ? AppLocalizations.of(
+          contextToUse,
+        )!.timeToTakeMedicationNow(medication.name)
+        : 'Time to take medication now';
+  }
 
   if (medication.daysOfWeek != null && medication.daysOfWeek!.isNotEmpty) {
-    // Calculate next day from daysOfWeek
     final hour = baseDate.hour;
     final minute = baseDate.minute;
     for (int i = 0; i < 7; i++) {
@@ -2739,7 +2890,6 @@ String? getNextReminder(Medications medication) {
           minute,
         );
         if (scheduledTime.isAfter(now)) {
-          // Format and return as before
           final isArabic =
               contextToUse != null
                   ? Localizations.localeOf(contextToUse).languageCode == 'ar'
@@ -2799,8 +2949,6 @@ String? getNextReminder(Medications medication) {
     }
     return null;
   }
-
-  // Only use frequency logic if daysOfWeek is empty or null
   var scheduledTime = baseDate;
   while (scheduledTime.isBefore(now)) {
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
@@ -2860,13 +3008,12 @@ String? getNextReminder(Medications medication) {
 }
 
 Future<void> rescheduleAllMedications(String uid) async {
-  // Skip notification rescheduling on web
   if (kIsWeb) return;
 
   final meds = await FirebaseFirestore.instance.collection(uid).get();
   for (var doc in meds.docs) {
     final medication = medicationFromDoc(doc);
-    await scheduleMedicationNotification(null, doc.id, medication);
+    await scheduleMedicationNotification(null, doc.id, medication, userId: uid);
   }
 }
 

@@ -729,7 +729,6 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 Future<bool> isBlockedCountry() async {
-  // Skip geo-blocking check on web platform
   if (kIsWeb) return false;
 
   final blockedCountries = ['IL'];

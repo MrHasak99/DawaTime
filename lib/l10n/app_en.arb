@@ -160,5 +160,6 @@
   "updateFailed": "Failed to update:",
   "passwordEmail": "A password reset email will be sent to:",
   "selectDaysOfWeek": "Days of the week",
-  "everyXDays": "Every X days"
+  "everyXDays": "Every X days",
+  "timeToTakeMedicationNow": "Time to take {medication} now!"
 }
