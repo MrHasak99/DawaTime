@@ -515,4 +515,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String timeToTakeMedicationNow(Object medication) {
     return 'حان وقت أخذ $medication الآن!';
   }
+
+  @override
+  String get followUsOnInstagram => 'تابعنا على انستجرام';
+
+  @override
+  String get checkForUpdates => 'البحث عن تحديثات';
+
+  @override
+  String get checkingForUpdates => 'جاري البحث عن تحديثات...';
+
+  @override
+  String get upToDate => 'التطبيق محدث';
+
+  @override
+  String lastChecked(Object time) {
+    return 'آخر فحص: $time';
+  }
 }

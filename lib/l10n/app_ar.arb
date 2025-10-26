@@ -161,5 +161,10 @@
   "passwordEmail": "سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور إلى:",
   "selectDaysOfWeek": "أيام الأسبوع",
   "everyXDays": "كل X يوم",
-  "timeToTakeMedicationNow": "حان وقت أخذ {medication} الآن!"
+  "timeToTakeMedicationNow": "حان وقت أخذ {medication} الآن!",
+  "followUsOnInstagram": "تابعنا على انستجرام",
+  "checkForUpdates": "البحث عن تحديثات",
+  "checkingForUpdates": "جاري البحث عن تحديثات...",
+  "upToDate": "التطبيق محدث",
+  "lastChecked": "آخر فحص: {time}"
 }

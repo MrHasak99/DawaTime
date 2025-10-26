@@ -1,7 +1,7 @@
 name: dawatime
 description: A medication reminder app.
 publish_to: "none"
-version: 1.3.2+1
+version: 1.3.4+3
 
 environment:
   sdk: ^3.7.2
@@ -58,10 +58,12 @@ flutter:
       fonts:
         - asset: assets/fonts/Nunito-ExtraBold.ttf
   assets:
-    - assets/DawaTime.png
-    - assets/DawaTime_white.png
-    - assets/DawaTime_green.png
-    - assets/notification_sound.wav
+    - assets/
+    # - assets/DawaTime.png
+    # - assets/DawaTime_white.png
+    # - assets/DawaTime_green.png
+    # - assets/notification_sound.wav
+    # - assets/instagram.png
 flutter_launcher_icons:
   android: true
   ios: true

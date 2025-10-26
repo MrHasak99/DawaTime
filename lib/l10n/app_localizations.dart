@@ -1066,6 +1066,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time to take {medication} now!'**
   String timeToTakeMedicationNow(Object medication);
+
+  /// No description provided for @followUsOnInstagram.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow us on Instagram'**
+  String get followUsOnInstagram;
+
+  /// No description provided for @checkForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get checkForUpdates;
+
+  /// No description provided for @checkingForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get checkingForUpdates;
+
+  /// No description provided for @upToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'App is up to date'**
+  String get upToDate;
+
+  /// No description provided for @lastChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Last checked: {time}'**
+  String lastChecked(Object time);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

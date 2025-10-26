@@ -459,8 +459,42 @@ Future<void> checkFirstInstallAndSignOut() async {
   }
 }
 
-Future<bool> isUpdateRequired(BuildContext context) async {
+Future<bool> _shouldCheckForUpdates() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final lastCheckTime = prefs.getInt('last_update_check') ?? 0;
+    final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    const updateCheckInterval = 24 * 60 * 60 * 1000;
+
+    if (currentTime - lastCheckTime >= updateCheckInterval) {
+      await prefs.setInt('last_update_check', currentTime);
+      return true;
+    }
+    return false;
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error checking update frequency: $e');
+    }
+    return true;
+  }
+}
+
+Future<bool> isUpdateRequired(
+  BuildContext context, {
+  bool forceCheck = false,
+}) async {
   if (kIsWeb) return false;
+
+  if (!forceCheck) {
+    final shouldCheck = await _shouldCheckForUpdates();
+    if (!shouldCheck) {
+      if (kDebugMode) {
+        print('Skipping update check - checked recently');
+      }
+      return false;
+    }
+  }
 
   try {
     final info = await PackageInfo.fromPlatform();
@@ -476,9 +510,52 @@ Future<bool> isUpdateRequired(BuildContext context) async {
     if (!doc.exists) return false;
     final latestVersion = doc.data()?[platform];
     if (latestVersion == null) return false;
-    return _isVersionLower(info.version, latestVersion);
+    final isOutdated = _isVersionLower(info.version, latestVersion);
+    if (kDebugMode) {
+      print(
+        'Update check: Current ${info.version} vs Latest $latestVersion = ${isOutdated ? 'Update needed' : 'Up to date'}',
+      );
+    }
+    return isOutdated;
   } catch (e) {
+    if (kDebugMode) {
+      print('Error checking for updates: $e');
+    }
     return false;
+  }
+}
+
+Future<bool> forceUpdateCheck(BuildContext context) async {
+  return await isUpdateRequired(context, forceCheck: true);
+}
+
+Future<void> resetUpdateCheckTimer() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('last_update_check');
+    if (kDebugMode) {
+      print('Update check timer reset');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error resetting update check timer: $e');
+    }
+  }
+}
+
+Future<DateTime?> getLastUpdateCheckTime() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final lastCheckTime = prefs.getInt('last_update_check');
+    if (lastCheckTime != null) {
+      return DateTime.fromMillisecondsSinceEpoch(lastCheckTime);
+    }
+    return null;
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error getting last update check time: $e');
+    }
+    return null;
   }
 }
 

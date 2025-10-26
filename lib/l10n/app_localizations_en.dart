@@ -515,4 +515,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String timeToTakeMedicationNow(Object medication) {
     return 'Time to take $medication now!';
   }
+
+  @override
+  String get followUsOnInstagram => 'Follow us on Instagram';
+
+  @override
+  String get checkForUpdates => 'Check for Updates';
+
+  @override
+  String get checkingForUpdates => 'Checking for updates...';
+
+  @override
+  String get upToDate => 'App is up to date';
+
+  @override
+  String lastChecked(Object time) {
+    return 'Last checked: $time';
+  }
 }
