@@ -7,26 +7,76 @@
     <link rel="icon" type="image/png" sizes="32x32" href="DawaTime.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="DawaTime.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="DawaTime.png" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito:700,400&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("Inter_18pt-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "Nunito";
+        src: url("Nunito-ExtraBold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap");
+      :root {
+        --bg-color: #ffffff;
+        --container-bg: #f5f5f5;
+        --text-color: #000000;
+        --secondary-text-color: #333333;
+        --tertiary-text-color: #444444;
+        --muted-text-color: #666666;
+        --primary-color: #8ac249;
+        --primary-hover: #7bb13b;
+        --primary-disabled: #b5d89c;
+        --border-color: #d0d0d0;
+        --input-bg: #fafafa;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        --success-color: #388e3c;
+        --error-color: #d32f2f;
+      }
+      [data-theme="dark"] {
+        --bg-color: #000000;
+        --container-bg: #1a1a1a;
+        --text-color: #ffffff;
+        --secondary-text-color: #e0e0e0;
+        --tertiary-text-color: #f0f0f0;
+        --muted-text-color: #b0b0b0;
+        --primary-color: #8ac249;
+        --primary-hover: #9dd954;
+        --primary-disabled: #5c7540;
+        --border-color: #4a4a4a;
+        --input-bg: #2a2a2a;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+        --success-color: #81c784;
+        --error-color: #ef5350;
+      }
+      html[dir="rtl"] {
+        font-family: "Noto Kufi Arabic", "Nunito", "Inter", Arial, sans-serif;
+      }
+      html[dir="rtl"] label,
+      html[dir="rtl"] .form-content {
+        text-align: right;
+      }
       body {
-        font-family: "Nunito", Arial, sans-serif;
-        background: #f8f8f8;
+        font-family: "Nunito", "Inter", Arial, sans-serif;
+        background: var(--bg-color);
         margin: 0;
         padding: 0;
-        color: #222;
+        color: var(--text-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
       .container {
         max-width: 420px;
         margin: 48px auto;
-        background: #fff;
+        background: var(--container-bg);
         border-radius: 18px;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        box-shadow: var(--shadow);
         padding: 32px 24px 24px 24px;
         text-align: center;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
       }
       .logo {
         width: 80px;
@@ -34,7 +84,7 @@
         margin-bottom: 18px;
       }
       h1 {
-        color: #8ac249;
+        color: var(--primary-color);
         font-size: 2rem;
         margin-bottom: 8px;
         font-weight: 700;
@@ -45,27 +95,37 @@
         font-size: 1rem;
         margin-bottom: 24px;
         text-align: center;
-        color: #444;
+        color: var(--secondary-text-color);
+        transition: color 0.3s ease;
       }
       label {
         font-weight: 700;
         display: block;
         margin-bottom: 8px;
-        color: #333;
+        color: var(--tertiary-text-color);
         text-align: left;
+        transition: color 0.3s ease;
       }
       input {
         width: 100%;
         padding: 10px 12px;
         margin-bottom: 18px;
-        border: 1px solid #d0d0d0;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
         font-size: 1rem;
         font-family: inherit;
-        background: #fafafa;
+        background: var(--input-bg);
+        color: var(--text-color);
+        box-sizing: border-box;
+        transition: border-color 0.2s, background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
       }
       button {
-        background: #8ac249;
+        background: var(--primary-color);
         color: #fff;
         font-weight: 700;
         border: none;
@@ -79,7 +139,7 @@
         box-shadow: 0 2px 8px rgba(138, 194, 73, 0.08);
       }
       button:disabled {
-        background: #b5d89c;
+        background: var(--primary-disabled);
         cursor: not-allowed;
       }
       .success,
@@ -89,10 +149,128 @@
         font-weight: 700;
       }
       .success {
-        color: #388e3c;
+        color: var(--success-color);
       }
       .error {
-        color: #d32f2f;
+        color: var(--error-color);
+      }
+      .footer-note {
+        font-size: 0.95rem;
+        color: var(--muted-text-color);
+        margin-top: 18px;
+        transition: color 0.3s ease;
+      }
+      .footer-note a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      .footer-note a:hover {
+        text-decoration: underline;
+      }
+      .dark-mode-toggle {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 56px;
+        height: 56px;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(138, 194, 73, 0.3);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dark-mode-toggle #theme-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+      .dark-mode-toggle:hover {
+        transform: scale(1.1) translateY(-2px);
+        box-shadow: 0 8px 24px rgba(138, 194, 73, 0.4);
+      }
+      .dark-mode-toggle:active {
+        transform: scale(0.95);
+      }
+      .dark-mode-toggle::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 70px;
+        right: 50%;
+        transform: translateX(50%);
+        background: var(--container-bg);
+        color: var(--text-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--tertiary-text-color);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        font-family: "Inter", Arial, sans-serif;
+        font-weight: 500;
+      }
+      .dark-mode-toggle:hover::after {
+        opacity: 1;
+        transform: translateX(50%) translateY(-5px);
+      }
+      .language-toggle {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        background: var(--text-color);
+        color: var(--bg-color);
+        border: none;
+        border-radius: 8px;
+        width: 48px;
+        height: 32px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Inter", Arial, sans-serif;
+      }
+      .language-toggle:hover {
+        transform: scale(1.05) translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+      .icon-light,
+      .icon-dark,
+      .icon-auto {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        position: relative;
+        display: block;
+        margin: 0;
+      }
+      .icon-light {
+        border: 2px solid white;
+        background: transparent;
+      }
+      .icon-dark {
+        background: white;
+        border: 2px solid white;
+      }
+      .icon-auto {
+        background: linear-gradient(90deg, transparent 50%, white 50%);
+        border: 2px solid white;
       }
       .form-content {
         max-width: 320px;
@@ -130,33 +308,234 @@
       <img src="DawaTime.png" class="logo" alt="DawaTime Logo" />
       <h1 id="mainTitle">Account Management</h1>
       <div id="mainContent"></div>
-      <p style="font-size: 0.95rem; color: #888; margin-top: 18px">
-        Need help? Contact
-        <a href="mailto:help@dawatime.com">help@dawatime.com</a>.
+      <p class="footer-note">
+        <span data-en="Need help? Contact" data-ar="تحتاج مساعدة؟ تواصل مع"
+          >Need help? Contact</span
+        >
+        <a href="mailto:help@dawatime.com">help@dawatime.com</a
+        ><span data-en="." data-ar=".">.</span>
       </p>
     </div>
+    <button
+      class="dark-mode-toggle"
+      onclick="toggleDarkMode()"
+      id="theme-toggle"
+      title="System Theme (Auto)"
+      data-tooltip="System Theme"
+    >
+      <span id="theme-icon"><div class="icon-auto"></div></span>
+    </button>
+    <button
+      class="language-toggle"
+      onclick="toggleLanguage()"
+      id="language-toggle"
+      title="Switch Language"
+    >
+      <span id="language-icon">EN</span>
+    </button>
     <script>
+      let currentLanguage = localStorage.getItem("language") || "en";
+      let currentThemeMode = "system";
+      function initTheme() {
+        const savedTheme = localStorage.getItem("theme") || "system";
+        currentThemeMode = savedTheme;
+        if (savedTheme === "system") {
+          applySystemTheme();
+        } else if (savedTheme === "dark") {
+          document.body.setAttribute("data-theme", "dark");
+        } else {
+          document.body.removeAttribute("data-theme");
+        }
+        updateThemeButton();
+        setupSystemThemeListener();
+      }
+      function updateThemeButton() {
+        const button = document.getElementById("theme-toggle");
+        const themeIcon = document.getElementById("theme-icon");
+        if (currentThemeMode === "system") {
+          button.title = "System Theme (Auto)";
+          button.setAttribute("data-tooltip", "System Theme");
+          themeIcon.innerHTML = '<div class="icon-auto"></div>';
+        } else if (currentThemeMode === "light") {
+          button.title = "Light Theme";
+          button.setAttribute("data-tooltip", "Light Theme");
+          themeIcon.innerHTML = '<div class="icon-light"></div>';
+        } else {
+          button.title = "Dark Theme";
+          button.setAttribute("data-tooltip", "Dark Theme");
+          themeIcon.innerHTML = '<div class="icon-dark"></div>';
+        }
+      }
+      function toggleDarkMode() {
+        const body = document.body;
+        if (currentThemeMode === "system") {
+          currentThemeMode = "light";
+          body.removeAttribute("data-theme");
+          localStorage.setItem("theme", "light");
+        } else if (currentThemeMode === "light") {
+          currentThemeMode = "dark";
+          body.setAttribute("data-theme", "dark");
+          localStorage.setItem("theme", "dark");
+        } else {
+          currentThemeMode = "system";
+          applySystemTheme();
+          localStorage.setItem("theme", "system");
+        }
+        updateThemeButton();
+      }
+      function applySystemTheme() {
+        const body = document.body;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        if (prefersDark) {
+          body.setAttribute("data-theme", "dark");
+        } else {
+          body.removeAttribute("data-theme");
+        }
+      }
+      function setupSystemThemeListener() {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        mediaQuery.addListener((e) => {
+          if (currentThemeMode === "system") {
+            applySystemTheme();
+          }
+        });
+      }
+      const translations = {
+        en: {
+          accountManagement: "Account Management",
+          resetPassword: "Reset Password",
+          verifyEmail: "Verify Email",
+          confirmEmailChange: "Confirm Email Change",
+          verifyNewEmail: "Verify New Email",
+          invalidActionCode: "Invalid or missing action code.",
+          unknownActionMode: "Unknown action mode.",
+          resetPasswordDesc:
+            "Enter your new password below to reset your DawaTime account password.",
+          newPassword: "New Password",
+          enterNewPassword: "Enter new password",
+          resetPasswordBtn: "Reset Password",
+          verifyEmailDesc:
+            "Click the button below to verify your DawaTime email address.<br>If you did not request this, you can ignore this page.",
+          verifyEmailBtn: "Verify Email",
+          confirmEmailDesc:
+            "Click the button below to confirm your DawaTime email address change.<br>If you did not request this, you can ignore this page.",
+          confirmEmailBtn: "Confirm Email Change",
+          verifyNewEmailDesc:
+            "Click the button below to verify your new DawaTime email address.<br>If you did not request this, you can ignore this page.",
+          verifyNewEmailBtn: "Verify New Email",
+          processing: "Processing...",
+          passwordResetSuccess: "Your password has been reset successfully.",
+          emailVerifiedSuccess:
+            "Your email address has been verified successfully.",
+          emailChangedSuccess:
+            "Your email address has been changed successfully.",
+          newEmailVerifiedSuccess:
+            "Your new email address has been verified and updated successfully.",
+          errorPrefix: "Error: ",
+          passwordResetError: "Unable to reset password.",
+          emailVerifyError: "Unable to verify email.",
+          emailChangeError: "Unable to confirm email change.",
+          newEmailVerifyError: "Unable to verify new email address.",
+        },
+        ar: {
+          accountManagement: "إدارة الحساب",
+          resetPassword: "إعادة تعيين كلمة المرور",
+          verifyEmail: "تأكيد البريد الإلكتروني",
+          confirmEmailChange: "تأكيد تغيير البريد الإلكتروني",
+          verifyNewEmail: "تأكيد البريد الإلكتروني الجديد",
+          invalidActionCode: "رمز الإجراء غير صحيح أو مفقود.",
+          unknownActionMode: "وضع إجراء غير معروف.",
+          resetPasswordDesc:
+            "أدخل كلمة المرور الجديدة أدناه لإعادة تعيين كلمة مرور حساب دواء تايم الخاص بك.",
+          newPassword: "كلمة المرور الجديدة",
+          enterNewPassword: "أدخل كلمة المرور الجديدة",
+          resetPasswordBtn: "إعادة تعيين كلمة المرور",
+          verifyEmailDesc:
+            "انقر على الزر أدناه للتأكد من عنوان البريد الإلكتروني الخاص بك في دواء تايم.<br>إذا لم تطلب هذا، يمكنك تجاهل هذه الصفحة.",
+          verifyEmailBtn: "تأكيد البريد الإلكتروني",
+          confirmEmailDesc:
+            "انقر على الزر أدناه لتأكيد تغيير عنوان البريد الإلكتروني الخاص بك في دواء تايم.<br>إذا لم تطلب هذا، يمكنك تجاهل هذه الصفحة.",
+          confirmEmailBtn: "تأكيد تغيير البريد الإلكتروني",
+          verifyNewEmailDesc:
+            "انقر على الزر أدناه للتأكد من عنوان البريد الإلكتروني الجديد الخاص بك في دواء تايم.<br>إذا لم تطلب هذا، يمكنك تجاهل هذه الصفحة.",
+          verifyNewEmailBtn: "تأكيد البريد الإلكتروني الجديد",
+          processing: "معالجة...",
+          passwordResetSuccess: "تم إعادة تعيين كلمة المرور بنجاح.",
+          emailVerifiedSuccess: "تم التأكد من عنوان البريد الإلكتروني بنجاح.",
+          emailChangedSuccess: "تم تغيير عنوان البريد الإلكتروني بنجاح.",
+          newEmailVerifiedSuccess:
+            "تم التأكد من عنوان البريد الإلكتروني الجديد وتحديثه بنجاح.",
+          errorPrefix: "خطأ: ",
+          passwordResetError: "غير قادر على إعادة تعيين كلمة المرور.",
+          emailVerifyError: "غير قادر على التأكد من البريد الإلكتروني.",
+          emailChangeError: "غير قادر على تأكيد تغيير البريد الإلكتروني.",
+          newEmailVerifyError:
+            "غير قادر على التأكد من البريد الإلكتروني الجديد.",
+        },
+      };
       const params = new URLSearchParams(window.location.search);
       const mode = params.get("mode");
       const oobCode = params.get("oobCode");
       const mainTitle = document.getElementById("mainTitle");
       const mainContent = document.getElementById("mainContent");
-
+      function t(key) {
+        return translations[currentLanguage][key] || key;
+      }
+      function updateLanguage() {
+        const isArabic = currentLanguage === "ar";
+        document.documentElement.setAttribute("lang", currentLanguage);
+        document.documentElement.setAttribute("dir", isArabic ? "rtl" : "ltr");
+        const elements = document.querySelectorAll("[data-en][data-ar]");
+        elements.forEach((element) => {
+          element.textContent = element.getAttribute(`data-${currentLanguage}`);
+        });
+        document.getElementById("language-icon").textContent = isArabic
+          ? "EN"
+          : "ع";
+        document.title = isArabic
+          ? "إدارة حساب دواء تايم"
+          : "DawaTime Account Management";
+        renderMainContent();
+      }
+      function toggleLanguage() {
+        currentLanguage = currentLanguage === "en" ? "ar" : "en";
+        localStorage.setItem("language", currentLanguage);
+        updateLanguage();
+      }
       function showMessage(msg, type) {
         mainContent.innerHTML = `<div class="${type}">${msg}</div>`;
       }
-
-      if (!mode || !oobCode) {
-        showMessage("Invalid or missing action code.", "error");
-      } else if (mode === "resetPassword") {
-        mainTitle.textContent = "Reset Password";
+      function renderMainContent() {
+        if (!mode || !oobCode) {
+          showMessage(t("invalidActionCode"), "error");
+          return;
+        }
+        mainTitle.textContent = t("accountManagement");
+        if (mode === "resetPassword") {
+          renderResetPassword();
+        } else if (mode === "verifyEmail") {
+          renderVerifyEmail();
+        } else if (mode === "recoverEmail") {
+          renderConfirmEmailChange();
+        } else if (mode === "verifyAndChangeEmail") {
+          renderVerifyNewEmail();
+        } else {
+          showMessage(t("unknownActionMode"), "error");
+        }
+      }
+      function renderResetPassword() {
+        mainTitle.textContent = t("resetPassword");
         mainContent.innerHTML = `
         <div class="form-content">
-          <p>Enter your new password below to reset your DawaTime account password.</p>
+          <p>${t("resetPasswordDesc")}</p>
           <form id="resetForm">
-            <label for="password">New Password</label>
-            <input type="password" id="password" name="password" required minlength="6" placeholder="Enter new password" />
-            <button type="submit">Reset Password</button>
+            <label for="password">${t("newPassword")}</label>
+            <input type="password" id="password" name="password" required minlength="6" placeholder="${t(
+              "enterNewPassword"
+            )}" />
+            <button type="submit">${t("resetPasswordBtn")}</button>
             <div id="formMessage"></div>
           </form>
         </div>
@@ -167,25 +546,26 @@
             e.preventDefault();
             const password = document.getElementById("password").value.trim();
             const msg = document.getElementById("formMessage");
-            msg.textContent = "Processing...";
+            msg.textContent = t("processing");
             msg.className = "";
             try {
               await firebase.auth().confirmPasswordReset(oobCode, password);
-              msg.textContent = "Your password has been reset successfully.";
+              msg.textContent = t("passwordResetSuccess");
               msg.className = "success";
               document.getElementById("resetForm").reset();
               document.querySelector("#resetForm button").disabled = true;
             } catch (err) {
               msg.textContent =
-                "Error: " + (err.message || "Unable to reset password.");
+                t("errorPrefix") + (err.message || t("passwordResetError"));
               msg.className = "error";
             }
           });
-      } else if (mode === "verifyEmail") {
-        mainTitle.textContent = "Verify Email";
+      }
+      function renderVerifyEmail() {
+        mainTitle.textContent = t("verifyEmail");
         mainContent.innerHTML = `
-        <p>Click the button below to verify your DawaTime email address.<br>If you did not request this, you can ignore this page.</p>
-        <button id="verifyBtn">Verify Email</button>
+        <p>${t("verifyEmailDesc")}</p>
+        <button id="verifyBtn">${t("verifyEmailBtn")}</button>
         <div id="formMessage"></div>
       `;
         document
@@ -193,24 +573,24 @@
           .addEventListener("click", async function () {
             const msg = document.getElementById("formMessage");
             this.disabled = true;
-            msg.textContent = "Processing...";
+            msg.textContent = t("processing");
             msg.className = "";
             try {
               await firebase.auth().applyActionCode(oobCode);
-              msg.textContent =
-                "Your email address has been verified successfully.";
+              msg.textContent = t("emailVerifiedSuccess");
               msg.className = "success";
             } catch (err) {
               msg.textContent =
-                "Error: " + (err.message || "Unable to verify email.");
+                t("errorPrefix") + (err.message || t("emailVerifyError"));
               msg.className = "error";
             }
           });
-      } else if (mode === "recoverEmail") {
-        mainTitle.textContent = "Confirm Email Change";
+      }
+      function renderConfirmEmailChange() {
+        mainTitle.textContent = t("confirmEmailChange");
         mainContent.innerHTML = `
-        <p>Click the button below to confirm your DawaTime email address change.<br>If you did not request this, you can ignore this page.</p>
-        <button id="confirmBtn">Confirm Email Change</button>
+        <p>${t("confirmEmailDesc")}</p>
+        <button id="confirmBtn">${t("confirmEmailBtn")}</button>
         <div id="formMessage"></div>
       `;
         document
@@ -218,25 +598,25 @@
           .addEventListener("click", async function () {
             const msg = document.getElementById("formMessage");
             this.disabled = true;
-            msg.textContent = "Processing...";
+            msg.textContent = t("processing");
             msg.className = "";
             try {
               await firebase.auth().checkActionCode(oobCode);
               await firebase.auth().applyActionCode(oobCode);
-              msg.textContent =
-                "Your email address has been changed successfully.";
+              msg.textContent = t("emailChangedSuccess");
               msg.className = "success";
             } catch (err) {
               msg.textContent =
-                "Error: " + (err.message || "Unable to confirm email change.");
+                t("errorPrefix") + (err.message || t("emailChangeError"));
               msg.className = "error";
             }
           });
-      } else if (mode === "verifyAndChangeEmail") {
-        mainTitle.textContent = "Verify New Email";
+      }
+      function renderVerifyNewEmail() {
+        mainTitle.textContent = t("verifyNewEmail");
         mainContent.innerHTML = `
-        <p>Click the button below to verify your new DawaTime email address.<br>If you did not request this, you can ignore this page.</p>
-        <button id="verifyChangeBtn">Verify New Email</button>
+        <p>${t("verifyNewEmailDesc")}</p>
+        <button id="verifyChangeBtn">${t("verifyNewEmailBtn")}</button>
         <div id="formMessage"></div>
       `;
         document
@@ -244,23 +624,24 @@
           .addEventListener("click", async function () {
             const msg = document.getElementById("formMessage");
             this.disabled = true;
-            msg.textContent = "Processing...";
+            msg.textContent = t("processing");
             msg.className = "";
             try {
               await firebase.auth().applyActionCode(oobCode);
-              msg.textContent =
-                "Your new email address has been verified and updated successfully.";
+              msg.textContent = t("newEmailVerifiedSuccess");
               msg.className = "success";
             } catch (err) {
               msg.textContent =
-                "Error: " +
-                (err.message || "Unable to verify new email address.");
+                t("errorPrefix") + (err.message || t("newEmailVerifyError"));
               msg.className = "error";
             }
           });
-      } else {
-        showMessage("Unknown action mode.", "error");
       }
+      initTheme();
+      updateLanguage();
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", toggleDarkMode);
     </script>
   </body>
 </html>
