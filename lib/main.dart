@@ -55,7 +55,7 @@ Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
   } catch (e) {
-    // Handle initialization error silently
+    rethrow;
   }
 
   if (!kIsWeb) {
@@ -63,18 +63,14 @@ Future<void> main() async {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]);
-    } catch (e) {
-      // Handle orientation error silently
-    }
+    } catch (_) {}
   }
 
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     ).timeout(const Duration(seconds: 10));
-  } catch (e) {
-    // Continue without Firebase for now to let app start
-  }
+  } catch (_) {}
 
   if (!kIsWeb) {
     try {
@@ -93,9 +89,7 @@ Future<void> main() async {
           requiresStorageNotLow: false,
         ),
       );
-    } catch (e) {
-      // Continue without WorkManager
-    }
+    } catch (_) {}
   }
 
   final prefs = await SharedPreferences.getInstance();
@@ -129,9 +123,7 @@ Future<void> main() async {
       final String timeZoneName = await FlutterTimezone.getLocalTimezone()
           .timeout(const Duration(seconds: 5));
       tz.setLocalLocation(tz.getLocation(timeZoneName));
-    } catch (e) {
-      // Use default timezone
-    }
+    } catch (_) {}
 
     try {
       if (await Permission.notification.isDenied) {
@@ -139,9 +131,7 @@ Future<void> main() async {
           const Duration(seconds: 5),
         );
       }
-    } catch (e) {
-      // Continue without notification permissions
-    }
+    } catch (_) {}
   }
 
   if (!kIsWeb) {
@@ -223,9 +213,7 @@ Future<void> main() async {
                 AndroidFlutterLocalNotificationsPlugin
               >();
       await androidImplementation?.requestNotificationsPermission();
-    } catch (e) {
-      // Continue without notifications
-    }
+    } catch (_) {}
   }
 
   try {
@@ -239,17 +227,13 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-  } catch (e) {
-    // Use default Flutter error handling
-  }
+  } catch (_) {}
 
   try {
     if (kIsWeb) {
       await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
     }
-  } catch (e) {
-    // Firebase Auth setup failed
-  }
+  } catch (_) {}
 
   runApp(const MainApp());
 }
@@ -638,7 +622,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool blocked = false;
     try {
       blocked = await isBlockedCountry().timeout(
-        const Duration(seconds: 5),
+        const Duration(seconds: 3),
         onTimeout: () => false,
       );
     } catch (e) {
@@ -690,7 +674,9 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
     await Future.delayed(const Duration(milliseconds: 800));
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
@@ -839,7 +825,7 @@ Future<bool> isBlockedCountry() async {
   try {
     final response = await http
         .get(Uri.parse('https://ipinfo.io/json'))
-        .timeout(const Duration(seconds: 5));
+        .timeout(const Duration(seconds: 2));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final countryCode = data['country'];
@@ -847,30 +833,43 @@ Future<bool> isBlockedCountry() async {
         blockedByIp = true;
       }
     }
-  } catch (_) {}
+  } catch (e) {
+    if (kDebugMode) {
+      print('IP check failed: $e');
+    }
+  }
   try {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled().timeout(
+      const Duration(seconds: 1),
+    );
     if (serviceEnabled) {
-      LocationPermission permission = await Geolocator.checkPermission();
+      LocationPermission permission = await Geolocator.checkPermission()
+          .timeout(const Duration(seconds: 1));
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
+        permission = await Geolocator.requestPermission().timeout(
+          const Duration(seconds: 1),
+        );
       }
       if (permission == LocationPermission.whileInUse ||
           permission == LocationPermission.always) {
         final position = await Geolocator.getCurrentPosition().timeout(
-          const Duration(seconds: 5),
+          const Duration(seconds: 2),
         );
         final placemarks = await placemarkFromCoordinates(
           position.latitude,
           position.longitude,
-        );
+        ).timeout(const Duration(seconds: 1));
         final countryCode = placemarks.first.isoCountryCode;
         if (blockedCountries.contains(countryCode)) {
           blockedByGps = true;
         }
       }
     }
-  } catch (_) {}
+  } catch (e) {
+    if (kDebugMode) {
+      print('GPS check failed: $e');
+    }
+  }
 
   return blockedByIp || blockedByGps;
 }
