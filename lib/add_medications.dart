@@ -1170,6 +1170,9 @@ Future<void> scheduleMedicationNotification(
                 importance: Importance.max,
                 priority: Priority.high,
                 playSound: true,
+                showWhen: true,
+                ongoing: false,
+                autoCancel: true,
                 icon: 'dawatime_notify',
                 sound: RawResourceAndroidNotificationSound(
                   'notification_sound',
@@ -1237,6 +1240,9 @@ Future<void> scheduleMedicationNotification(
               importance: Importance.max,
               priority: Priority.high,
               playSound: true,
+              showWhen: true,
+              ongoing: false,
+              autoCancel: true,
               icon: 'dawatime_notify',
               sound: RawResourceAndroidNotificationSound('notification_sound'),
               color: const Color(0xFF8AC249),
@@ -1249,45 +1255,6 @@ Future<void> scheduleMedicationNotification(
             ),
           ),
           payload: docId,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        );
-      }
-      if (userId != null) {
-        final autoRescheduleTime = scheduledTime.add(Duration(minutes: 120));
-        final autoRescheduleTZ = tz.TZDateTime.from(
-          autoRescheduleTime,
-          tz.local,
-        );
-        final autoRescheduleId = ('${docId}_auto_reschedule').hashCode;
-
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          autoRescheduleId,
-          'Auto Reschedule',
-          'Scheduling next reminder for ${medication.name}',
-          autoRescheduleTZ,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'auto_reschedule_channel_$docId',
-              'Auto Reschedule for ${medication.name}',
-              channelDescription:
-                  'Automatically reschedules ${medication.name}',
-              importance: Importance.low,
-              priority: Priority.low,
-              playSound: false,
-              showWhen: false,
-              ongoing: false,
-              autoCancel: true,
-              visibility: NotificationVisibility.secret,
-              icon: 'dawatime_notify',
-              color: const Color(0xFF8AC249),
-            ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: false,
-              presentSound: false,
-              presentBadge: false,
-            ),
-          ),
-          payload: '${docId}_auto_reschedule_$userId',
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         );
       }

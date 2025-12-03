@@ -133,26 +133,7 @@ class _HomePageState extends State<HomePage> {
 
     await Firebase.initializeApp();
 
-    final payload = response.payload!;
-    if (payload.contains('_auto_reschedule_')) {
-      final parts = payload.split('_auto_reschedule_');
-      if (parts.length == 2) {
-        final docId = parts[0];
-        final userId = parts[1];
-
-        final doc =
-            await FirebaseFirestore.instance
-                .collection(userId)
-                .doc(docId)
-                .get();
-        if (doc.exists) {
-          final medication = medicationFromDoc(doc);
-          await scheduleMedicationNotification(null, docId, medication);
-        }
-      }
-      return;
-    }
-    final docId = payload;
+    final docId = response.payload!;
     final doc =
         await FirebaseFirestore.instance
             .collection('medications')
@@ -180,6 +161,7 @@ class _HomePageState extends State<HomePage> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         rescheduleAllMedications(user.uid);
+        _autoRescheduleOverdueMedications(user.uid);
       }
 
       _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -190,33 +172,7 @@ class _HomePageState extends State<HomePage> {
         NotificationResponse response,
       ) async {
         if (response.payload != null && widget.uid != null) {
-          final payload = response.payload!;
-          if (payload.contains('_auto_reschedule_')) {
-            final parts = payload.split('_auto_reschedule_');
-            if (parts.length == 2) {
-              final docId = parts[0];
-              final userId = parts[1];
-
-              if (userId == widget.uid) {
-                final doc =
-                    await FirebaseFirestore.instance
-                        .collection(widget.uid!)
-                        .doc(docId)
-                        .get();
-                if (doc.exists) {
-                  final medication = medicationFromDoc(doc);
-                  await scheduleMedicationNotification(
-                    context,
-                    docId,
-                    medication,
-                    userId: widget.uid,
-                  );
-                }
-              }
-            }
-            return;
-          }
-          final docId = payload;
+          final docId = response.payload!;
           final doc =
               await FirebaseFirestore.instance
                   .collection(widget.uid!)
@@ -355,6 +311,113 @@ class _HomePageState extends State<HomePage> {
     _medicationCheckTimer?.cancel();
     localeNotifier.removeListener(_localeListener);
     super.dispose();
+  }
+
+  Future<void> _autoRescheduleOverdueMedications(String userId) async {
+    try {
+      final now = DateTime.now();
+      final meds = await FirebaseFirestore.instance.collection(userId).get();
+
+      for (var doc in meds.docs) {
+        final medication = medicationFromDoc(doc);
+        if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
+          continue;
+        }
+
+        final timeParts = medication.notifyTime!.split(':');
+        if (timeParts.length != 2) continue;
+        final hour = int.tryParse(timeParts[0]);
+        final minute = int.tryParse(timeParts[1]);
+        if (hour == null || minute == null) continue;
+
+        bool shouldAutoReschedule = false;
+        DateTime? lastScheduledTime;
+
+        if (medication.daysOfWeek != null &&
+            medication.daysOfWeek!.isNotEmpty) {
+          if (medication.daysOfWeek!.contains(now.weekday)) {
+            lastScheduledTime = DateTime(
+              now.year,
+              now.month,
+              now.day,
+              hour,
+              minute,
+            );
+          }
+        } else {
+          DateTime baseDate =
+              medication.startDate != null
+                  ? DateTime(
+                    medication.startDate!.year,
+                    medication.startDate!.month,
+                    medication.startDate!.day,
+                    hour,
+                    minute,
+                  )
+                  : DateTime(now.year, now.month, now.day, hour, minute);
+
+          var scheduledTime = baseDate;
+          while (scheduledTime.isBefore(
+            now.subtract(Duration(days: medication.frequency)),
+          )) {
+            scheduledTime = scheduledTime.add(
+              Duration(days: medication.frequency),
+            );
+          }
+
+          if (scheduledTime.year == now.year &&
+              scheduledTime.month == now.month &&
+              scheduledTime.day == now.day) {
+            lastScheduledTime = scheduledTime;
+          }
+        }
+
+        if (lastScheduledTime != null) {
+          final minutesSince = now.difference(lastScheduledTime).inMinutes;
+          if (minutesSince > 120) {
+            if (medication.lastTaken == null ||
+                medication.lastTaken!.isBefore(
+                  DateTime(now.year, now.month, now.day),
+                )) {
+              shouldAutoReschedule = true;
+            }
+          }
+        }
+
+        if (shouldAutoReschedule) {
+          if (medication.daysOfWeek == null || medication.daysOfWeek!.isEmpty) {
+            final nextScheduled = lastScheduledTime!.add(
+              Duration(days: medication.frequency),
+            );
+            final updatedMedication = Medications(
+              name: medication.name,
+              typeOfMedication: medication.typeOfMedication,
+              dosage: medication.dosage,
+              frequency: medication.frequency,
+              amount: medication.amount,
+              notifyTime: medication.notifyTime,
+              startDate: nextScheduled,
+              daysOfWeek: medication.daysOfWeek,
+              lastTaken: medication.lastTaken,
+            );
+            await FirebaseFirestore.instance
+                .collection(userId)
+                .doc(doc.id)
+                .update(updatedMedication.toMap());
+          }
+          await scheduleMedicationNotification(
+            null,
+            doc.id,
+            medication,
+            userId: userId,
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error auto-rescheduling overdue medications: $e');
+      }
+    }
   }
 
   void _checkAndShowDueMedications() async {
@@ -2564,25 +2627,36 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
-    for (int i = 0; i < 14; i++) {
-      final date = now.add(Duration(days: i));
-      if (daysOfWeek.contains(date.weekday)) {
-        final scheduledTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          hour,
-          minute,
-        );
-        if (scheduledTime.isAfter(now)) {
-          final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);
-          final notificationId = ('${docId}_${date.weekday}_$i').hashCode;
+    final now = DateTime.now();
+    for (final weekday in daysOfWeek) {
+      int daysUntil = (weekday - now.weekday) % 7;
+      if (daysUntil <= 0) daysUntil += 7;
+      final nextDate = now.add(Duration(days: daysUntil));
+      final scheduledTime = DateTime(
+        nextDate.year,
+        nextDate.month,
+        nextDate.day,
+        hour,
+        minute,
+      );
+      if (scheduledTime.isAfter(now)) {
+        for (int j = 0; j <= 8; j++) {
+          final followUpTime = scheduledTime.add(Duration(minutes: 15 * j));
+          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+          final notificationId = ('${docId}_${weekday}_$j').hashCode;
+          final notificationMessage =
+              j == 0
+                  ? AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.timeToTakeMedication(medication.name)
+                  : AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.reminderTakeMedication(medication.name);
+
           await flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
             medication.name,
-            AppLocalizations.of(
-              context ?? navigatorKey.currentContext!,
-            )!.timeToTakeMedication(medication.name),
+            notificationMessage,
             scheduledTZ,
             NotificationDetails(
               android: AndroidNotificationDetails(
@@ -2592,6 +2666,9 @@ Future<void> scheduleMedicationNotification(
                 importance: Importance.max,
                 priority: Priority.high,
                 playSound: true,
+                showWhen: true,
+                ongoing: false,
+                autoCancel: true,
                 icon: 'dawatime_notify',
                 sound: RawResourceAndroidNotificationSound(
                   'notification_sound',
@@ -2661,6 +2738,9 @@ Future<void> scheduleMedicationNotification(
               importance: Importance.max,
               priority: Priority.high,
               playSound: true,
+              showWhen: true,
+              ongoing: false,
+              autoCancel: true,
               icon: 'dawatime_notify',
               sound: RawResourceAndroidNotificationSound('notification_sound'),
               color: const Color(0xFF8AC249),
@@ -2673,45 +2753,6 @@ Future<void> scheduleMedicationNotification(
             ),
           ),
           payload: docId,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        );
-      }
-      if (userId != null) {
-        final autoRescheduleTime = scheduledTime.add(Duration(minutes: 120));
-        final autoRescheduleTZ = tz.TZDateTime.from(
-          autoRescheduleTime,
-          tz.local,
-        );
-        final autoRescheduleId = ('${docId}_auto_reschedule').hashCode;
-
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          autoRescheduleId,
-          'Auto Reschedule',
-          'Scheduling next reminder for ${medication.name}',
-          autoRescheduleTZ,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'auto_reschedule_channel_$docId',
-              'Auto Reschedule for ${medication.name}',
-              channelDescription:
-                  'Automatically reschedules ${medication.name}',
-              importance: Importance.low,
-              priority: Priority.low,
-              playSound: false,
-              showWhen: false,
-              ongoing: false,
-              autoCancel: true,
-              visibility: NotificationVisibility.secret,
-              icon: 'dawatime_notify',
-              color: const Color(0xFF8AC249),
-            ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: false,
-              presentSound: false,
-              presentBadge: false,
-            ),
-          ),
-          payload: '${docId}_auto_reschedule_$userId',
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         );
       }
