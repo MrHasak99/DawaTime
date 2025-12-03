@@ -34,6 +34,7 @@ class _AddMedicationsState extends State<AddMedications> {
   TextEditingController dosageController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController frequencyController = TextEditingController();
+  TextEditingController refillThresholdController = TextEditingController();
   TimeOfDay? _selectedTime;
   DateTime? _selectedStartDate;
   List<int> _selectedDaysOfWeek = [];
@@ -48,6 +49,10 @@ class _AddMedicationsState extends State<AddMedications> {
       dosageController.text = widget.medication!.dosage.toString();
       frequencyController.text = widget.medication!.frequency.toString();
       amountController.text = widget.medication!.amount.toString();
+      if (widget.medication!.refillThreshold != null) {
+        refillThresholdController.text =
+            widget.medication!.refillThreshold!.toString();
+      }
       if (widget.medication!.notifyTime != null &&
           widget.medication!.notifyTime!.isNotEmpty) {
         final parts = widget.medication!.notifyTime!.split(':');
@@ -328,6 +333,43 @@ class _AddMedicationsState extends State<AddMedications> {
                                                 AppLocalizations.of(
                                                   context,
                                                 )!.currentAmount,
+                                            labelStyle: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
+                                              color:
+                                                  Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        TextField(
+                                          controller: refillThresholdController,
+                                          cursorColor: Color(0xFF8AC249),
+                                          keyboardType: TextInputType.number,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.refillThreshold,
+                                            hintText:
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.refillThresholdHint,
+                                            hintStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
                                             labelStyle: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
@@ -872,6 +914,18 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                         .daysOfWeek
                                                                 ? _selectedDaysOfWeek
                                                                 : null,
+                                                        'refillThreshold':
+                                                            refillThresholdController
+                                                                    .text
+                                                                    .isNotEmpty
+                                                                ? double.tryParse(
+                                                                  convertArabicNumerals(
+                                                                    refillThresholdController
+                                                                        .text,
+                                                                  ),
+                                                                )
+                                                                : null,
+                                                        'refillNotified': false,
                                                       });
                                                       final updatedDoc =
                                                           await firestore
@@ -939,6 +993,18 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                         .daysOfWeek
                                                                 ? _selectedDaysOfWeek
                                                                 : null,
+                                                        'refillThreshold':
+                                                            refillThresholdController
+                                                                    .text
+                                                                    .isNotEmpty
+                                                                ? double.tryParse(
+                                                                  convertArabicNumerals(
+                                                                    refillThresholdController
+                                                                        .text,
+                                                                  ),
+                                                                )
+                                                                : null,
+                                                        'refillNotified': false,
                                                       });
                                                       final newDoc =
                                                           await docRef.get();

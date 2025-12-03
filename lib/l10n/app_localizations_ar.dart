@@ -532,4 +532,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String lastChecked(Object time) {
     return 'آخر فحص: $time';
   }
+
+  @override
+  String get refillReminder => 'تذكير بإعادة التعبئة';
+
+  @override
+  String refillReminderBody(Object amount, Object medication, Object type) {
+    return 'لديك $amount $type من $medication متبقية. حان وقت إعادة التعبئة!';
+  }
+
+  @override
+  String get refillThreshold => 'حد إعادة التعبئة';
+
+  @override
+  String get refillThresholdHint => 'تنبيهي عندما تكون الكمية عند أو أقل من (اختياري)';
+
+  @override
+  String get lowStock => 'مخزون منخفض';
 }

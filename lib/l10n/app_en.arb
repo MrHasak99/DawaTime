@@ -166,5 +166,10 @@
   "checkForUpdates": "Check for Updates",
   "checkingForUpdates": "Checking for updates...",
   "upToDate": "App is up to date",
-  "lastChecked": "Last checked: {time}"
+  "lastChecked": "Last checked: {time}",
+  "refillReminder": "Refill Reminder",
+  "refillReminderBody": "You have {amount} {type} of {medication} left. Time to refill!",
+  "refillThreshold": "Refill Threshold",
+  "refillThresholdHint": "Alert me when amount is at or below (optional)",
+  "lowStock": "Low Stock"
 }

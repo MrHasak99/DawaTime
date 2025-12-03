@@ -29,6 +29,8 @@ class Medications {
   final DateTime? startDate;
   final List<int>? daysOfWeek;
   final DateTime? lastTaken;
+  final double? refillThreshold;
+  final bool? refillNotified;
 
   Medications({
     required this.name,
@@ -40,6 +42,8 @@ class Medications {
     this.startDate,
     this.daysOfWeek,
     this.lastTaken,
+    this.refillThreshold,
+    this.refillNotified,
   });
 
   factory Medications.fromMap(Map<String, dynamic> data) {
@@ -72,6 +76,11 @@ class Medications {
           data['lastTaken'] != null
               ? DateTime.tryParse(data['lastTaken'])
               : null,
+      refillThreshold:
+          data['refillThreshold'] != null
+              ? (data['refillThreshold'] as num).toDouble()
+              : null,
+      refillNotified: data['refillNotified'] as bool?,
     );
   }
 
@@ -86,6 +95,8 @@ class Medications {
       'startDate': startDate?.toIso8601String(),
       'daysOfWeek': daysOfWeek,
       'lastTaken': lastTaken?.toIso8601String(),
+      'refillThreshold': refillThreshold,
+      'refillNotified': refillNotified,
     };
   }
 }
@@ -162,6 +173,7 @@ class _HomePageState extends State<HomePage> {
       if (user != null) {
         rescheduleAllMedications(user.uid);
         _autoRescheduleOverdueMedications(user.uid);
+        _checkRefillReminders(user.uid);
       }
 
       _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -416,6 +428,144 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       if (kDebugMode) {
         print('Error auto-rescheduling overdue medications: $e');
+      }
+    }
+  }
+
+  Future<void> _checkRefillReminders(String userId) async {
+    if (kIsWeb) return;
+
+    try {
+      final meds = await FirebaseFirestore.instance.collection(userId).get();
+
+      for (var doc in meds.docs) {
+        final medication = medicationFromDoc(doc);
+
+        if (medication.refillThreshold == null ||
+            medication.refillThreshold! <= 0) {
+          continue;
+        }
+
+        if (medication.amount <= medication.refillThreshold!) {
+          if (medication.refillNotified != true) {
+            await _showRefillNotification(medication, doc.id);
+
+            await FirebaseFirestore.instance
+                .collection(userId)
+                .doc(doc.id)
+                .update({'refillNotified': true});
+          }
+        } else {
+          if (medication.refillNotified == true) {
+            await FirebaseFirestore.instance
+                .collection(userId)
+                .doc(doc.id)
+                .update({'refillNotified': false});
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking refill reminders: $e');
+      }
+    }
+  }
+
+  Future<void> _showRefillNotification(
+    Medications medication,
+    String docId,
+  ) async {
+    try {
+      final context = navigatorKey.currentContext;
+      final loc = context != null ? AppLocalizations.of(context) : null;
+
+      final title =
+          loc != null
+              ? '${loc.refillReminder}: ${medication.name}'
+              : 'Refill Reminder: ${medication.name}';
+
+      final body =
+          loc != null
+              ? loc.refillReminderBody(
+                medication.amount.toInt().toString(),
+                medication.typeOfMedication,
+                medication.name,
+              )
+              : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
+
+      await flutterLocalNotificationsPlugin.show(
+        docId.hashCode + 1000,
+        title,
+        body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'refill_channel',
+            'Refill Reminders',
+            channelDescription: 'Reminds you to refill your medications',
+            importance: Importance.high,
+            priority: Priority.high,
+            playSound: true,
+            icon: 'dawatime_notify',
+            sound: RawResourceAndroidNotificationSound('notification_sound'),
+            color: const Color(0xFFFF9800),
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentSound: true,
+            presentBadge: true,
+            sound: "notification_sound.wav",
+          ),
+        ),
+        payload: 'refill_$docId',
+      );
+
+      if (context != null && mounted) {
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: const Color(0xFFFF9800),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                title: Row(
+                  children: [
+                    Icon(Icons.warning_rounded, color: Colors.white, size: 28),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                content: Text(
+                  body,
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      loc?.ok ?? 'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error showing refill notification: $e');
       }
     }
   }

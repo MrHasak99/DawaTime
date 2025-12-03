@@ -1096,6 +1096,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last checked: {time}'**
   String lastChecked(Object time);
+
+  /// No description provided for @refillReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Refill Reminder'**
+  String get refillReminder;
+
+  /// No description provided for @refillReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have {amount} {type} of {medication} left. Time to refill!'**
+  String refillReminderBody(Object amount, Object medication, Object type);
+
+  /// No description provided for @refillThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Refill Threshold'**
+  String get refillThreshold;
+
+  /// No description provided for @refillThresholdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert me when amount is at or below (optional)'**
+  String get refillThresholdHint;
+
+  /// No description provided for @lowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get lowStock;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

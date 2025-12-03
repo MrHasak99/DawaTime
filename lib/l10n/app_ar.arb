@@ -166,5 +166,10 @@
   "checkForUpdates": "البحث عن تحديثات",
   "checkingForUpdates": "جاري البحث عن تحديثات...",
   "upToDate": "التطبيق محدث",
-  "lastChecked": "آخر فحص: {time}"
+  "lastChecked": "آخر فحص: {time}",
+  "refillReminder": "تذكير بإعادة التعبئة",
+  "refillReminderBody": "لديك {amount} {type} من {medication} متبقية. حان وقت إعادة التعبئة!",
+  "refillThreshold": "حد إعادة التعبئة",
+  "refillThresholdHint": "تنبيهي عندما تكون الكمية عند أو أقل من (اختياري)",
+  "lowStock": "مخزون منخفض"
 }
