@@ -170,7 +170,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkIntroGuide();
-    _setupCarPlayHandler();
 
     if (!kIsWeb) {
       final user = FirebaseAuth.instance.currentUser;
