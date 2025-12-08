@@ -437,25 +437,29 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final meds = await FirebaseFirestore.instance.collection(userId).get();
+      final List<Map<String, dynamic>> lowStockMeds = [];
 
       for (var doc in meds.docs) {
         final medication = medicationFromDoc(doc);
 
         if (medication.refillThreshold == null ||
             medication.refillThreshold! <= 0) {
+          await cancelRefillNotifications(doc.id);
           continue;
         }
 
         if (medication.amount <= medication.refillThreshold!) {
-          if (medication.refillNotified != true) {
-            await _showRefillNotification(medication, doc.id);
+          lowStockMeds.add({'medication': medication, 'docId': doc.id});
 
+          if (medication.refillNotified != true) {
             await FirebaseFirestore.instance
                 .collection(userId)
                 .doc(doc.id)
                 .update({'refillNotified': true});
           }
+          await scheduleWeeklyRefillNotification(medication, doc.id);
         } else {
+          await cancelRefillNotifications(doc.id);
           if (medication.refillNotified == true) {
             await FirebaseFirestore.instance
                 .collection(userId)
@@ -464,6 +468,10 @@ class _HomePageState extends State<HomePage> {
           }
         }
       }
+
+      if (lowStockMeds.isNotEmpty) {
+        await _showRefillNotifications(lowStockMeds);
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error checking refill reminders: $e');
@@ -471,53 +479,93 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _showRefillNotification(
-    Medications medication,
-    String docId,
+  Future<void> _showRefillNotifications(
+    List<Map<String, dynamic>> lowStockMeds,
   ) async {
     try {
       final context = navigatorKey.currentContext;
       final loc = context != null ? AppLocalizations.of(context) : null;
 
-      final title =
-          loc != null
-              ? '${loc.refillReminder}: ${medication.name}'
-              : 'Refill Reminder: ${medication.name}';
+      if (lowStockMeds.length == 1) {
+        final medication = lowStockMeds[0]['medication'] as Medications;
+        final docId = lowStockMeds[0]['docId'] as String;
 
-      final body =
-          loc != null
-              ? loc.refillReminderBody(
-                medication.amount.toInt().toString(),
-                medication.typeOfMedication,
-                medication.name,
-              )
-              : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
+        final title =
+            loc != null
+                ? '${loc.refillReminder}: ${medication.name}'
+                : 'Refill Reminder: ${medication.name}';
 
-      await flutterLocalNotificationsPlugin.show(
-        docId.hashCode + 1000,
-        title,
-        body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'refill_channel',
-            'Refill Reminders',
-            channelDescription: 'Reminds you to refill your medications',
-            importance: Importance.high,
-            priority: Priority.high,
-            playSound: true,
-            icon: 'dawatime_notify',
-            sound: RawResourceAndroidNotificationSound('notification_sound'),
-            color: const Color(0xFFFF9800),
+        final body =
+            loc != null
+                ? loc.refillReminderBody(
+                  medication.amount.toInt().toString(),
+                  medication.name,
+                  medication.typeOfMedication,
+                )
+                : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
+
+        await flutterLocalNotificationsPlugin.show(
+          docId.hashCode + 1000,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'refill_channel',
+              'Refill Reminders',
+              channelDescription: 'Reminds you to refill your medications',
+              importance: Importance.high,
+              priority: Priority.high,
+              playSound: true,
+              icon: 'dawatime_notify',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFFFF9800),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
           ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentSound: true,
-            presentBadge: true,
-            sound: "notification_sound.wav",
+          payload: 'refill_$docId',
+        );
+      } else {
+        final title =
+            loc != null
+                ? '${loc.refillReminder} (${lowStockMeds.length})'
+                : 'Refill Reminder (${lowStockMeds.length})';
+
+        final body =
+            loc != null
+                ? '${lowStockMeds.length} ${loc.needRefillShort}'
+                : '${lowStockMeds.length} medications need refilling';
+
+        await flutterLocalNotificationsPlugin.show(
+          'refill_multiple'.hashCode,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'refill_channel',
+              'Refill Reminders',
+              channelDescription: 'Reminds you to refill your medications',
+              importance: Importance.high,
+              priority: Priority.high,
+              playSound: true,
+              icon: 'dawatime_notify',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFFFF9800),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
           ),
-        ),
-        payload: 'refill_$docId',
-      );
+          payload: 'refill_multiple',
+        );
+      }
 
       if (context != null && mounted) {
         showDialog(
@@ -534,7 +582,13 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        title,
+                        lowStockMeds.length == 1
+                            ? (loc != null
+                                ? '${loc.refillReminder}: ${(lowStockMeds[0]['medication'] as Medications).name}'
+                                : 'Refill Reminder: ${(lowStockMeds[0]['medication'] as Medications).name}')
+                            : (loc != null
+                                ? '${loc.lowStock} (${lowStockMeds.length})'
+                                : 'Low Stock (${lowStockMeds.length})'),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -543,9 +597,66 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                content: Text(
-                  body,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                content: SingleChildScrollView(
+                  child:
+                      lowStockMeds.length == 1
+                          ? Text(
+                            loc != null
+                                ? loc.refillReminderBody(
+                                  (lowStockMeds[0]['medication'] as Medications)
+                                      .amount
+                                      .toInt()
+                                      .toString(),
+                                  (lowStockMeds[0]['medication'] as Medications)
+                                      .name,
+                                  (lowStockMeds[0]['medication'] as Medications)
+                                      .typeOfMedication,
+                                )
+                                : 'You have ${(lowStockMeds[0]['medication'] as Medications).amount.toInt()} ${(lowStockMeds[0]['medication'] as Medications).typeOfMedication} left. Time to refill!',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          )
+                          : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc != null
+                                    ? loc.needRefill
+                                    : 'The following medications need refilling:',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 12),
+                              ...lowStockMeds.map((item) {
+                                final med = item['medication'] as Medications;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.medication,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          '${med.name}: ${med.amount.toInt()} ${med.typeOfMedication}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
                 ),
                 actions: [
                   TextButton(
@@ -808,6 +919,15 @@ class _HomePageState extends State<HomePage> {
                     deletedMedication,
                     userId: widget.uid,
                   );
+                  if (deletedMedication.refillThreshold != null &&
+                      deletedMedication.refillThreshold! > 0 &&
+                      deletedMedication.amount <=
+                          deletedMedication.refillThreshold!) {
+                    await scheduleWeeklyRefillNotification(
+                      deletedMedication,
+                      deletedDocId,
+                    );
+                  }
                   if (mounted) setState(() {});
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1076,6 +1196,12 @@ class _HomePageState extends State<HomePage> {
                           final amountController = TextEditingController(
                             text: medication.amount.toString(),
                           );
+                          final refillThresholdController =
+                              TextEditingController(
+                                text:
+                                    medication.refillThreshold?.toString() ??
+                                    '',
+                              );
                           TimeOfDay? selectedTime;
                           if (medication.notifyTime != null &&
                               medication.notifyTime!.isNotEmpty) {
@@ -1250,6 +1376,43 @@ class _HomePageState extends State<HomePage> {
                                                     AppLocalizations.of(
                                                       context,
                                                     )!.currentAmount,
+                                                labelStyle: Theme.of(
+                                                  context,
+                                                ).textTheme.bodyLarge?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                focusedBorder:
+                                                    const UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                enabledBorder:
+                                                    const UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                            TextField(
+                                              controller:
+                                                  refillThresholdController,
+                                              cursorColor: Colors.white,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.bodyLarge?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.refillThreshold,
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
@@ -1849,57 +2012,63 @@ class _HomePageState extends State<HomePage> {
                                                 final oldData =
                                                     docs[index].data()
                                                         as Map<String, dynamic>;
-                                                await firestore
-                                                    .collection(widget.uid!)
-                                                    .doc(docs[index].id)
-                                                    .update({
-                                                      'name':
-                                                          nameController.text,
-                                                      'typeOfMedication':
-                                                          typeOfMedicationController
-                                                              .text,
-                                                      'dosage':
-                                                          double.tryParse(
+                                                await firestore.collection(widget.uid!).doc(docs[index].id).update({
+                                                  'name': nameController.text,
+                                                  'typeOfMedication':
+                                                      typeOfMedicationController
+                                                          .text,
+                                                  'dosage':
+                                                      double.tryParse(
+                                                        convertArabicNumerals(
+                                                          dosageController.text,
+                                                        ),
+                                                      ) ??
+                                                      0,
+                                                  'frequency':
+                                                      editFrequencyType ==
+                                                              FrequencyType
+                                                                  .everyXDays
+                                                          ? (int.tryParse(
+                                                                convertArabicNumerals(
+                                                                  frequencyController
+                                                                      .text,
+                                                                ),
+                                                              ) ??
+                                                              1)
+                                                          : 1,
+                                                  'amount':
+                                                      double.tryParse(
+                                                        convertArabicNumerals(
+                                                          amountController.text,
+                                                        ),
+                                                      ) ??
+                                                      0,
+                                                  'refillThreshold':
+                                                      refillThresholdController
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? double.tryParse(
                                                             convertArabicNumerals(
-                                                              dosageController
+                                                              refillThresholdController
                                                                   .text,
                                                             ),
-                                                          ) ??
-                                                          0,
-                                                      'frequency':
-                                                          editFrequencyType ==
-                                                                  FrequencyType
-                                                                      .everyXDays
-                                                              ? (int.tryParse(
-                                                                    convertArabicNumerals(
-                                                                      frequencyController
-                                                                          .text,
-                                                                    ),
-                                                                  ) ??
-                                                                  1)
-                                                              : 1,
-                                                      'amount':
-                                                          double.tryParse(
-                                                            convertArabicNumerals(
-                                                              amountController
-                                                                  .text,
-                                                            ),
-                                                          ) ??
-                                                          0,
-                                                      'notifyTime':
-                                                          selectedTime != null
-                                                              ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                              : '',
-                                                      'startDate':
-                                                          selectedStartDate!
-                                                              .toIso8601String(),
-                                                      'daysOfWeek':
-                                                          editFrequencyType ==
-                                                                  FrequencyType
-                                                                      .daysOfWeek
-                                                              ? selectedDaysOfWeek
-                                                              : null,
-                                                    });
+                                                          )
+                                                          : null,
+                                                  'refillNotified': false,
+                                                  'notifyTime':
+                                                      selectedTime != null
+                                                          ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                          : '',
+                                                  'startDate':
+                                                      selectedStartDate!
+                                                          .toIso8601String(),
+                                                  'daysOfWeek':
+                                                      editFrequencyType ==
+                                                              FrequencyType
+                                                                  .daysOfWeek
+                                                          ? selectedDaysOfWeek
+                                                          : null,
+                                                });
                                                 final updatedDoc =
                                                     await firestore
                                                         .collection(widget.uid!)
@@ -1916,6 +2085,28 @@ class _HomePageState extends State<HomePage> {
                                                   updatedMedication,
                                                   userId: widget.uid,
                                                 );
+
+                                                if (updatedMedication
+                                                            .refillThreshold !=
+                                                        null &&
+                                                    updatedMedication
+                                                            .refillThreshold! >
+                                                        0) {
+                                                  if (updatedMedication
+                                                          .amount <=
+                                                      updatedMedication
+                                                          .refillThreshold!) {
+                                                    await scheduleWeeklyRefillNotification(
+                                                      updatedMedication,
+                                                      docs[index].id,
+                                                    );
+                                                  } else {
+                                                    await cancelRefillNotifications(
+                                                      docs[index].id,
+                                                    );
+                                                  }
+                                                }
+
                                                 if (!context.mounted) {
                                                   return;
                                                 }
@@ -2059,6 +2250,7 @@ class _HomePageState extends State<HomePage> {
                               deletedDocId.hashCode,
                             );
                             await cancelMedicationReminders(deletedDocId);
+                            await cancelRefillNotifications(deletedDocId);
 
                             setState(() {
                               _recentlyDeletedMedication = deletedMedication;
@@ -2096,6 +2288,11 @@ class _HomePageState extends State<HomePage> {
                         color:
                             medication.amount <= 0
                                 ? Colors.red
+                                : (medication.refillThreshold != null &&
+                                    medication.refillThreshold! > 0 &&
+                                    medication.amount <=
+                                        medication.refillThreshold!)
+                                ? const Color(0xFFFF9800)
                                 : Color(0xFF8AC249),
                         margin: EdgeInsets.zero,
                         child: Padding(
@@ -2301,6 +2498,25 @@ class _HomePageState extends State<HomePage> {
                                         docs[index].id,
                                         updatedMedication,
                                       );
+
+                                      if (updatedMedication.refillThreshold !=
+                                              null &&
+                                          updatedMedication.refillThreshold! >
+                                              0) {
+                                        if (updatedMedication.amount <=
+                                            updatedMedication
+                                                .refillThreshold!) {
+                                          await scheduleWeeklyRefillNotification(
+                                            updatedMedication,
+                                            docs[index].id,
+                                          );
+                                        } else {
+                                          await cancelRefillNotifications(
+                                            docs[index].id,
+                                          );
+                                        }
+                                      }
+
                                       if (updatedMedication.amount <= 0) {
                                         showDialog(
                                           context: context,
@@ -2344,6 +2560,81 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else if (updatedMedication
+                                                  .refillThreshold !=
+                                              null &&
+                                          updatedMedication.refillThreshold! >
+                                              0 &&
+                                          previousAmount >
+                                              updatedMedication
+                                                  .refillThreshold! &&
+                                          updatedMedication.amount <=
+                                              updatedMedication
+                                                  .refillThreshold!) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              backgroundColor: const Color(
+                                                0xFFFF9800,
+                                              ),
+                                              title: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.warning_rounded,
+                                                    color: Colors.white,
+                                                    size: 28,
+                                                  ),
+                                                  SizedBox(width: 12),
+                                                  Expanded(
+                                                    child: Text(
+                                                      '${AppLocalizations.of(context)!.lowStock}: ${medication.name}',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              content: Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.refillReminderBody(
+                                                  updatedMedication.amount
+                                                      .toInt()
+                                                      .toString(),
+                                                  updatedMedication.name,
+                                                  updatedMedication
+                                                      .typeOfMedication,
+                                                ),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.ok,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
                                                     ),
                                                   ),
                                                 ),
@@ -2429,9 +2720,7 @@ class _HomePageState extends State<HomePage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: const Color(
-                                          0xFF8AC249,
-                                        ),
+                                        backgroundColor: Colors.red,
                                         title: Text(
                                           AppLocalizations.of(
                                             context,
@@ -2950,6 +3239,93 @@ Future<void> cancelMedicationReminders(String docId) async {
   for (int i = 0; i <= 8; i++) {
     final notificationId = ('${docId}_$i').hashCode;
     await flutterLocalNotificationsPlugin.cancel(notificationId);
+  }
+}
+
+Future<void> scheduleWeeklyRefillNotification(
+  Medications medication,
+  String docId,
+) async {
+  if (kIsWeb) return;
+
+  try {
+    await cancelRefillNotifications(docId);
+
+    final now = DateTime.now();
+    final nextWeek = now.add(const Duration(days: 7));
+    final scheduledTime = DateTime(
+      nextWeek.year,
+      nextWeek.month,
+      nextWeek.day,
+      10,
+      0,
+    );
+
+    final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);
+    final notificationId = ('refill_weekly_$docId').hashCode;
+
+    final context = navigatorKey.currentContext;
+    final loc = context != null ? AppLocalizations.of(context) : null;
+
+    final title =
+        loc != null
+            ? '${loc.refillReminder}: ${medication.name}'
+            : 'Refill Reminder: ${medication.name}';
+
+    final body =
+        loc != null
+            ? loc.refillReminderBody(
+              medication.amount.toInt().toString(),
+              medication.name,
+              medication.typeOfMedication,
+            )
+            : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      notificationId,
+      title,
+      body,
+      scheduledTZ,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'refill_channel',
+          'Refill Reminders',
+          channelDescription: 'Weekly reminders to refill your medications',
+          importance: Importance.high,
+          priority: Priority.high,
+          playSound: true,
+          icon: 'dawatime_notify',
+          sound: RawResourceAndroidNotificationSound('notification_sound'),
+          color: const Color(0xFFFF9800),
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          presentBadge: true,
+          sound: "notification_sound.wav",
+        ),
+      ),
+      payload: 'refill_$docId',
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+    );
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error scheduling weekly refill notification: $e');
+    }
+  }
+}
+
+Future<void> cancelRefillNotifications(String docId) async {
+  if (kIsWeb) return;
+
+  try {
+    final notificationId = ('refill_weekly_$docId').hashCode;
+    await flutterLocalNotificationsPlugin.cancel(notificationId);
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error canceling refill notifications: $e');
+    }
   }
 }
 

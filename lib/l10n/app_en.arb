@@ -169,7 +169,9 @@
   "lastChecked": "Last checked: {time}",
   "refillReminder": "Refill Reminder",
   "refillReminderBody": "You have {amount} {type} of {medication} left. Time to refill!",
-  "refillThreshold": "Refill Threshold",
-  "refillThresholdHint": "Alert me when amount is at or below (optional)",
-  "lowStock": "Low Stock"
+  "refillThreshold": "Refill Alert",
+  "lowStock": "Low Stock",
+  "medications": "Medications",
+  "needRefill": "The following medications need refilling:",
+  "needRefillShort": "medications need refilling"
 }

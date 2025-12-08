@@ -1112,20 +1112,32 @@ abstract class AppLocalizations {
   /// No description provided for @refillThreshold.
   ///
   /// In en, this message translates to:
-  /// **'Refill Threshold'**
+  /// **'Refill Alert'**
   String get refillThreshold;
-
-  /// No description provided for @refillThresholdHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Alert me when amount is at or below (optional)'**
-  String get refillThresholdHint;
 
   /// No description provided for @lowStock.
   ///
   /// In en, this message translates to:
   /// **'Low Stock'**
   String get lowStock;
+
+  /// No description provided for @medications.
+  ///
+  /// In en, this message translates to:
+  /// **'Medications'**
+  String get medications;
+
+  /// No description provided for @needRefill.
+  ///
+  /// In en, this message translates to:
+  /// **'The following medications need refilling:'**
+  String get needRefill;
+
+  /// No description provided for @needRefillShort.
+  ///
+  /// In en, this message translates to:
+  /// **'medications need refilling'**
+  String get needRefillShort;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

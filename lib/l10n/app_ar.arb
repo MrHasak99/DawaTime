@@ -169,7 +169,9 @@
   "lastChecked": "آخر فحص: {time}",
   "refillReminder": "تذكير بإعادة التعبئة",
   "refillReminderBody": "لديك {amount} {type} من {medication} متبقية. حان وقت إعادة التعبئة!",
-  "refillThreshold": "حد إعادة التعبئة",
-  "refillThresholdHint": "تنبيهي عندما تكون الكمية عند أو أقل من (اختياري)",
-  "lowStock": "مخزون منخفض"
+  "refillThreshold": "تنبيه إعادة التعبئة",
+  "lowStock": "مخزون منخفض",
+  "medications": "الأدوية",
+  "needRefill": "الأدوية التالية تحتاج إلى إعادة تعبئة:",
+  "needRefillShort": "أدوية تحتاج إعادة تعبئة"
 }

@@ -542,11 +542,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'Refill Threshold';
-
-  @override
-  String get refillThresholdHint => 'Alert me when amount is at or below (optional)';
+  String get refillThreshold => 'Refill Alert';
 
   @override
   String get lowStock => 'Low Stock';
+
+  @override
+  String get medications => 'Medications';
+
+  @override
+  String get needRefill => 'The following medications need refilling:';
+
+  @override
+  String get needRefillShort => 'medications need refilling';
 }

@@ -542,11 +542,17 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'حد إعادة التعبئة';
-
-  @override
-  String get refillThresholdHint => 'تنبيهي عندما تكون الكمية عند أو أقل من (اختياري)';
+  String get refillThreshold => 'تنبيه إعادة التعبئة';
 
   @override
   String get lowStock => 'مخزون منخفض';
+
+  @override
+  String get medications => 'الأدوية';
+
+  @override
+  String get needRefill => 'الأدوية التالية تحتاج إلى إعادة تعبئة:';
+
+  @override
+  String get needRefillShort => 'أدوية تحتاج إعادة تعبئة';
 }

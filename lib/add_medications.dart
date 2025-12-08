@@ -362,14 +362,6 @@ class _AddMedicationsState extends State<AddMedications> {
                                                 AppLocalizations.of(
                                                   context,
                                                 )!.refillThreshold,
-                                            hintText:
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.refillThresholdHint,
-                                            hintStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey,
-                                            ),
                                             labelStyle: Theme.of(
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
