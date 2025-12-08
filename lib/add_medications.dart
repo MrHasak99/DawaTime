@@ -162,7 +162,7 @@ class _AddMedicationsState extends State<AddMedications> {
       future: FirebaseFirestore.instance.collection(user.uid).get(),
       builder: (context, snapshot) {
         final medicationCount = snapshot.data?.docs.length ?? 0;
-        final isAtLimit = medicationCount >= 7;
+        final isAtLimit = medicationCount >= 12;
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -199,7 +199,7 @@ class _AddMedicationsState extends State<AddMedications> {
                             Text(
                               AppLocalizations.of(
                                 context,
-                              )!.youCanOnlyHaveUpTo7Medications,
+                              )!.youCanOnlyHaveUpTo12Medications,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleMedium?.copyWith(
@@ -239,6 +239,45 @@ class _AddMedicationsState extends State<AddMedications> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF8AC249,
+                                            ).withValues(alpha: 0.1),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            border: Border.all(
+                                              color: const Color(
+                                                0xFF8AC249,
+                                              ).withValues(alpha: 0.3),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.info_outline,
+                                                color: const Color(0xFF8AC249),
+                                                size: 18,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.notificationContinuityWarning,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(fontSize: 11),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
                                         TextField(
                                           controller: nameController,
                                           textCapitalization:
@@ -1385,7 +1424,7 @@ Future<void> scheduleMedicationNotification(
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return;
 
-  for (int i = 0; i <= 8; i++) {
+  for (int i = 0; i <= 4; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
@@ -1393,65 +1432,72 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
-    final now = DateTime.now();
+    DateTime? nextOccurrence;
+    int? nextWeekday;
+
     for (final weekday in daysOfWeek) {
       int daysUntil = (weekday - now.weekday) % 7;
       if (daysUntil <= 0) daysUntil += 7;
-      final nextDate = now.add(Duration(days: daysUntil));
-      final scheduledTime = DateTime(
-        nextDate.year,
-        nextDate.month,
-        nextDate.day,
+      final candidateDate = now.add(Duration(days: daysUntil));
+      final candidateTime = DateTime(
+        candidateDate.year,
+        candidateDate.month,
+        candidateDate.day,
         hour,
         minute,
       );
-      if (scheduledTime.isAfter(now)) {
-        for (int j = 0; j <= 8; j++) {
-          final followUpTime = scheduledTime.add(Duration(minutes: 15 * j));
-          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
-          final notificationId = ('${docId}_${weekday}_$j').hashCode;
-          final notificationMessage =
-              j == 0
-                  ? AppLocalizations.of(
-                    context ?? navigatorKey.currentContext!,
-                  )!.timeToTakeMedication(medication.name)
-                  : AppLocalizations.of(
-                    context ?? navigatorKey.currentContext!,
-                  )!.reminderTakeMedication(medication.name);
 
-          await flutterLocalNotificationsPlugin.zonedSchedule(
-            notificationId,
-            medication.name,
-            notificationMessage,
-            scheduledTZ,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                'medication_channel_$docId',
-                'Medication Reminders for ${medication.name}',
-                channelDescription: 'Reminds you to take ${medication.name}',
-                importance: Importance.max,
-                priority: Priority.high,
-                playSound: true,
-                showWhen: true,
-                ongoing: false,
-                autoCancel: true,
-                icon: 'dawatime_notify',
-                sound: RawResourceAndroidNotificationSound(
-                  'notification_sound',
-                ),
-                color: const Color(0xFF8AC249),
-              ),
-              iOS: DarwinNotificationDetails(
-                presentAlert: true,
-                presentSound: true,
-                presentBadge: true,
-                sound: "notification_sound.wav",
-              ),
-            ),
-            payload: docId,
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );
+      if (candidateTime.isAfter(now)) {
+        if (nextOccurrence == null || candidateTime.isBefore(nextOccurrence)) {
+          nextOccurrence = candidateTime;
+          nextWeekday = weekday;
         }
+      }
+    }
+    if (nextOccurrence != null && nextWeekday != null) {
+      for (int j = 0; j <= 4; j++) {
+        final followUpTime = nextOccurrence.add(Duration(minutes: 30 * j));
+        final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+        final notificationId = ('${docId}_${nextWeekday}_$j').hashCode;
+        final notificationMessage =
+            j == 0
+                ? AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.timeToTakeMedication(medication.name)
+                : AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.reminderTakeMedication(medication.name);
+
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          notificationId,
+          medication.name,
+          notificationMessage,
+          scheduledTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'medication_channel_$docId',
+              'Medication Reminders for ${medication.name}',
+              channelDescription: 'Reminds you to take ${medication.name}',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+              showWhen: true,
+              ongoing: false,
+              autoCancel: true,
+              icon: 'dawatime_notify',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFF8AC249),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
+          ),
+          payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
       }
     }
     return;
@@ -1475,8 +1521,8 @@ Future<void> scheduleMedicationNotification(
 
   try {
     if (scheduledTime.isAfter(now)) {
-      for (int i = 0; i <= 8; i++) {
-        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
+      for (int i = 0; i <= 4; i++) {
+        final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
         final notificationMessage =
             i == 0
                 ? AppLocalizations.of(

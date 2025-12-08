@@ -341,11 +341,23 @@ abstract class AppLocalizations {
   /// **'Could not save medication. Please try again'**
   String get couldNotSaveMedication;
 
-  /// No description provided for @youCanOnlyHaveUpTo7Medications.
+  /// No description provided for @youCanOnlyHaveUpTo12Medications.
   ///
   /// In en, this message translates to:
-  /// **'You can only have up to 7 medications'**
-  String get youCanOnlyHaveUpTo7Medications;
+  /// **'You can only have up to 12 medications'**
+  String get youCanOnlyHaveUpTo12Medications;
+
+  /// No description provided for @openAppRegularlyForNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app regularly to ensure medication reminders continue'**
+  String get openAppRegularlyForNotifications;
+
+  /// No description provided for @notificationContinuityWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'To keep receiving reminders, please open DawaTime at least once a week'**
+  String get notificationContinuityWarning;
 
   /// No description provided for @welcomeBack.
   ///

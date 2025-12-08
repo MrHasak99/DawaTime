@@ -132,7 +132,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get couldNotSaveMedication => 'Could not save medication. Please try again';
 
   @override
-  String get youCanOnlyHaveUpTo7Medications => 'You can only have up to 7 medications';
+  String get youCanOnlyHaveUpTo12Medications => 'You can only have up to 12 medications';
+
+  @override
+  String get openAppRegularlyForNotifications => 'Open the app regularly to ensure medication reminders continue';
+
+  @override
+  String get notificationContinuityWarning => 'To keep receiving reminders, please open DawaTime at least once a week';
 
   @override
   String get welcomeBack => 'Welcome back,';

@@ -1052,1537 +1052,122 @@ class _HomePageState extends State<HomePage> {
             return medA.name.toLowerCase().compareTo(medB.name.toLowerCase());
           });
 
-          return Builder(
-            builder: (scaffoldContext) {
-              return ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: docs.length,
-                itemBuilder: (context, index) {
-                  final medication = medicationFromDoc(docs[index]);
-                  final isRTL = Directionality.of(context) == TextDirection.rtl;
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
-                    child: Dismissible(
-                      key: Key(docs[index].id),
-                      direction: DismissDirection.horizontal,
-                      background:
-                          isRTL
-                              ? Container(
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.lightBlue,
-                                  size: 32,
-                                ),
-                              )
-                              : Container(
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.lightBlue,
-                                  size: 32,
-                                ),
-                              ),
-                      secondaryBackground:
-                          isRTL
-                              ? Container(
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                  size: 32,
-                                ),
-                              )
-                              : Container(
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                ),
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                  size: 32,
-                                ),
-                              ),
-                      confirmDismiss: (direction) async {
-                        if (direction == DismissDirection.endToStart) {
-                          return await showDialog<bool>(
-                            context: context,
-                            builder:
-                                (context) => AlertDialog(
-                                  backgroundColor: Color(0xFF8AC249),
-                                  title: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.deleteMedication,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  content: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.areYouSureDeleteMedication(
-                                      medication.name,
-                                    ),
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed:
-                                          () => Navigator.pop(context, false),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.cancel,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      onPressed:
-                                          () => Navigator.pop(context, true),
-                                      child: Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.deleteMedication,
-                                        style: const TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                          );
-                        } else if (direction == DismissDirection.startToEnd) {
-                          FrequencyType editFrequencyType =
-                              (medication.daysOfWeek != null &&
-                                      medication.daysOfWeek!.isNotEmpty)
-                                  ? FrequencyType.daysOfWeek
-                                  : FrequencyType.everyXDays;
-
-                          final nameController = TextEditingController(
-                            text: medication.name,
-                          );
-                          final typeOfMedicationController =
-                              TextEditingController(
-                                text: medication.typeOfMedication,
-                              );
-                          final dosageController = TextEditingController(
-                            text: medication.dosage.toString(),
-                          );
-                          final frequencyController = TextEditingController(
-                            text: medication.frequency.toString(),
-                          );
-                          final amountController = TextEditingController(
-                            text: medication.amount.toString(),
-                          );
-                          final refillThresholdController =
-                              TextEditingController(
-                                text:
-                                    medication.refillThreshold?.toString() ??
-                                    '',
-                              );
-                          TimeOfDay? selectedTime;
-                          if (medication.notifyTime != null &&
-                              medication.notifyTime!.isNotEmpty) {
-                            final parts = medication.notifyTime!.split(":");
-                            if (parts.length == 2) {
-                              selectedTime = TimeOfDay(
-                                hour: int.tryParse(parts[0]) ?? 0,
-                                minute: int.tryParse(parts[1]) ?? 0,
-                              );
-                            }
-                          }
-
-                          DateTime? selectedStartDate = medication.startDate;
-                          List<int> selectedDaysOfWeek =
-                              medication.daysOfWeek != null
-                                  ? List<int>.from(medication.daysOfWeek!)
-                                  : [];
-                          bool nameError = false;
-                          bool typeError = false;
-                          bool dosageError = false;
-                          bool amountError = false;
-                          bool frequencyError = false;
-                          bool timeError = false;
-                          bool startDateError = false;
-                          bool daysOfWeekError = false;
-
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) {
-                              return StatefulBuilder(
-                                builder:
-                                    (context, setState) => AlertDialog(
-                                      backgroundColor: Color(0xFF8AC249),
-                                      title: Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.editMedication,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextField(
-                                              controller: nameController,
-                                              cursorColor: Colors.white,
-                                              textCapitalization:
-                                                  TextCapitalization.words,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              textDirection:
-                                                  Localizations.localeOf(
-                                                            context,
-                                                          ).languageCode ==
-                                                          'ar'
-                                                      ? TextDirection.rtl
-                                                      : TextDirection.ltr,
-                                              onChanged: (value) {
-                                                if (nameError &&
-                                                    value.isNotEmpty) {
-                                                  setState(
-                                                    () => nameError = false,
-                                                  );
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.name,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color:
-                                                      nameError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                errorText:
-                                                    nameError
-                                                        ? AppLocalizations.of(
-                                                          context,
-                                                        )!.pleaseFillAllFields
-                                                        : null,
-                                                errorStyle: TextStyle(
-                                                  color: Colors.red[100],
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller:
-                                                  typeOfMedicationController,
-                                              cursorColor: Colors.white,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              textDirection:
-                                                  Localizations.localeOf(
-                                                            context,
-                                                          ).languageCode ==
-                                                          'ar'
-                                                      ? TextDirection.rtl
-                                                      : TextDirection.ltr,
-                                              onChanged: (value) {
-                                                if (typeError &&
-                                                    value.isNotEmpty) {
-                                                  setState(
-                                                    () => typeError = false,
-                                                  );
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.unitOfMeasurement,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color:
-                                                      typeError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                errorText:
-                                                    typeError
-                                                        ? AppLocalizations.of(
-                                                          context,
-                                                        )!.pleaseFillAllFields
-                                                        : null,
-                                                errorStyle: TextStyle(
-                                                  color: Colors.red[100],
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: dosageController,
-                                              cursorColor: Colors.white,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                if (dosageError &&
-                                                    value.isNotEmpty &&
-                                                    convertArabicNumerals(
-                                                          value,
-                                                        ) !=
-                                                        '0') {
-                                                  setState(
-                                                    () => dosageError = false,
-                                                  );
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.dosage,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color:
-                                                      dosageError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                errorText:
-                                                    dosageError
-                                                        ? AppLocalizations.of(
-                                                          context,
-                                                        )!.dosageFrequencyGreaterThanZero
-                                                        : null,
-                                                errorStyle: TextStyle(
-                                                  color: Colors.red[100],
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: amountController,
-                                              cursorColor: Colors.white,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                if (amountError &&
-                                                    value.isNotEmpty) {
-                                                  setState(
-                                                    () => amountError = false,
-                                                  );
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.currentAmount,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color:
-                                                      amountError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                errorText:
-                                                    amountError
-                                                        ? AppLocalizations.of(
-                                                          context,
-                                                        )!.pleaseFillAllFields
-                                                        : null,
-                                                errorStyle: TextStyle(
-                                                  color: Colors.red[100],
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller:
-                                                  refillThresholdController,
-                                              cursorColor: Colors.white,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.refillThreshold,
-                                                labelStyle: Theme.of(
-                                                  context,
-                                                ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            ListTile(
-                                              title: Text(
-                                                selectedTime == null
-                                                    ? AppLocalizations.of(
-                                                      context,
-                                                    )!.pickNotificationTime
-                                                    : "${AppLocalizations.of(context)!.notifyAt}: ${selectedTime!.format(context)}",
-                                                style: TextStyle(
-                                                  color:
-                                                      timeError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              trailing: Icon(
-                                                Icons.access_time,
-                                                color:
-                                                    timeError
-                                                        ? Colors.red
-                                                        : Colors.white,
-                                              ),
-                                              onTap: () async {
-                                                final isDark =
-                                                    Theme.of(
-                                                      context,
-                                                    ).brightness ==
-                                                    Brightness.dark;
-                                                final primaryColor =
-                                                    const Color(0xFF8AC249);
-                                                final surfaceColor =
-                                                    isDark
-                                                        ? const Color(
-                                                          0xFF222222,
-                                                        )
-                                                        : Colors.white;
-                                                final onSurfaceColor =
-                                                    isDark
-                                                        ? Colors.white
-                                                        : primaryColor;
-                                                final hourMinuteBg =
-                                                    isDark
-                                                        ? primaryColor
-                                                            .withValues(
-                                                              alpha: 0.15,
-                                                            )
-                                                        : primaryColor
-                                                            .withValues(
-                                                              alpha: 0.08,
-                                                            );
-
-                                                final picked = await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      selectedTime ??
-                                                      TimeOfDay.now(),
-                                                  builder: (context, child) {
-                                                    return Theme(
-                                                      data: Theme.of(
-                                                        context,
-                                                      ).copyWith(
-                                                        timePickerTheme: TimePickerThemeData(
-                                                          backgroundColor:
-                                                              surfaceColor,
-                                                          hourMinuteTextColor:
-                                                              primaryColor,
-                                                          hourMinuteColor:
-                                                              hourMinuteBg,
-                                                          dayPeriodTextColor:
-                                                              primaryColor,
-                                                          dayPeriodColor:
-                                                              hourMinuteBg,
-                                                          dialHandColor:
-                                                              primaryColor,
-                                                          dialBackgroundColor:
-                                                              hourMinuteBg,
-                                                          entryModeIconColor:
-                                                              primaryColor,
-                                                          helpTextStyle:
-                                                              TextStyle(
-                                                                color:
-                                                                    primaryColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                          hourMinuteTextStyle:
-                                                              TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 28,
-                                                                color:
-                                                                    primaryColor,
-                                                              ),
-                                                          dayPeriodTextStyle:
-                                                              TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 16,
-                                                                color:
-                                                                    primaryColor,
-                                                              ),
-                                                          dialTextStyle:
-                                                              TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 20,
-                                                                color:
-                                                                    primaryColor,
-                                                              ),
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  24,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        textButtonTheme: TextButtonThemeData(
-                                                          style: TextButton.styleFrom(
-                                                            foregroundColor:
-                                                                primaryColor,
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        colorScheme: ColorScheme(
-                                                          brightness:
-                                                              isDark
-                                                                  ? Brightness
-                                                                      .dark
-                                                                  : Brightness
-                                                                      .light,
-                                                          primary: primaryColor,
-                                                          onPrimary:
-                                                              Colors.white,
-                                                          secondary:
-                                                              primaryColor,
-                                                          onSecondary:
-                                                              Colors.white,
-                                                          error: Colors.red,
-                                                          onError: Colors.white,
-                                                          surface: surfaceColor,
-                                                          onSurface:
-                                                              onSurfaceColor,
-                                                        ),
-                                                      ),
-                                                      child: child!,
-                                                    );
-                                                  },
-                                                );
-                                                if (picked != null) {
-                                                  setState(() {
-                                                    selectedTime = picked;
-                                                    timeError = false;
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                            ListTile(
-                                              title: Text(
-                                                selectedStartDate == null
-                                                    ? AppLocalizations.of(
-                                                      context,
-                                                    )!.pickScheduleStartDate
-                                                    : "${AppLocalizations.of(context)!.startDate}: ${selectedStartDate!.day.toString().padLeft(2, '0')}-${selectedStartDate!.month.toString().padLeft(2, '0')}-${selectedStartDate!.year}",
-                                                style: TextStyle(
-                                                  color:
-                                                      startDateError
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              trailing: Icon(
-                                                Icons.calendar_today,
-                                                color:
-                                                    startDateError
-                                                        ? Colors.red
-                                                        : Colors.white,
-                                              ),
-                                              onTap: () async {
-                                                final isDark =
-                                                    Theme.of(
-                                                      context,
-                                                    ).brightness ==
-                                                    Brightness.dark;
-                                                final primaryColor =
-                                                    const Color(0xFF8AC249);
-                                                final surfaceColor =
-                                                    isDark
-                                                        ? const Color(
-                                                          0xFF222222,
-                                                        )
-                                                        : Colors.white;
-                                                final onSurfaceColor =
-                                                    isDark
-                                                        ? Colors.white
-                                                        : primaryColor;
-
-                                                final now = DateTime.now();
-                                                final safeInitialDate =
-                                                    (selectedStartDate !=
-                                                                null &&
-                                                            selectedStartDate!
-                                                                .isAfter(now))
-                                                        ? selectedStartDate!
-                                                        : now;
-
-                                                final picked = await showDatePicker(
-                                                  context: context,
-                                                  initialDate: safeInitialDate,
-                                                  firstDate: now,
-                                                  lastDate: DateTime(
-                                                    now.year + 10,
-                                                  ),
-                                                  builder: (context, child) {
-                                                    return Theme(
-                                                      data: Theme.of(
-                                                        context,
-                                                      ).copyWith(
-                                                        colorScheme: ColorScheme(
-                                                          brightness:
-                                                              isDark
-                                                                  ? Brightness
-                                                                      .dark
-                                                                  : Brightness
-                                                                      .light,
-                                                          primary: primaryColor,
-                                                          onPrimary:
-                                                              Colors.white,
-                                                          secondary:
-                                                              primaryColor,
-                                                          onSecondary:
-                                                              Colors.white,
-                                                          error: Colors.red,
-                                                          onError: Colors.white,
-                                                          surface: surfaceColor,
-                                                          onSurface:
-                                                              onSurfaceColor,
-                                                        ),
-                                                        textButtonTheme: TextButtonThemeData(
-                                                          style: TextButton.styleFrom(
-                                                            foregroundColor:
-                                                                primaryColor,
-                                                            textStyle:
-                                                                const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        dialogTheme:
-                                                            DialogThemeData(
-                                                              backgroundColor:
-                                                                  surfaceColor,
-                                                            ),
-                                                      ),
-                                                      child: child!,
-                                                    );
-                                                  },
-                                                );
-                                                if (picked != null) {
-                                                  setState(() {
-                                                    selectedStartDate = picked;
-                                                    startDateError = false;
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                            SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: RadioGroup<FrequencyType>(
-                                                groupValue: editFrequencyType,
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    editFrequencyType = val!;
-                                                  });
-                                                },
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Radio<FrequencyType>(
-                                                      value:
-                                                          FrequencyType
-                                                              .everyXDays,
-                                                      activeColor: Colors.white,
-                                                      fillColor:
-                                                          WidgetStateProperty.all(
-                                                            Colors.white,
-                                                          ),
-                                                    ),
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.everyXDays,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    Radio<FrequencyType>(
-                                                      value:
-                                                          FrequencyType
-                                                              .daysOfWeek,
-                                                      activeColor: Colors.white,
-                                                      fillColor:
-                                                          WidgetStateProperty.all(
-                                                            Colors.white,
-                                                          ),
-                                                    ),
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.selectDaysOfWeek,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            editFrequencyType ==
-                                                    FrequencyType.daysOfWeek
-                                                ? Column(
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.selectDaysOfWeek,
-                                                      style: TextStyle(
-                                                        color:
-                                                            daysOfWeekError
-                                                                ? Colors.red
-                                                                : Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    _buildEditWeekdayPicker(
-                                                      selectedDaysOfWeek,
-                                                      (dayNum, selected) {
-                                                        setState(() {
-                                                          if (selected) {
-                                                            selectedDaysOfWeek
-                                                                .add(dayNum);
-                                                            selectedDaysOfWeek
-                                                                .sort((a, b) {
-                                                                  if (a == 7 &&
-                                                                      b != 7) {
-                                                                    return -1;
-                                                                  }
-                                                                  if (a != 7 &&
-                                                                      b == 7) {
-                                                                    return 1;
-                                                                  }
-                                                                  return a
-                                                                      .compareTo(
-                                                                        b,
-                                                                      );
-                                                                });
-                                                          } else {
-                                                            selectedDaysOfWeek
-                                                                .remove(dayNum);
-                                                          }
-                                                          if (daysOfWeekError &&
-                                                              selectedDaysOfWeek
-                                                                  .isNotEmpty) {
-                                                            daysOfWeekError =
-                                                                false;
-                                                          }
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                )
-                                                : TextField(
-                                                  controller:
-                                                      frequencyController,
-                                                  cursorColor: Colors.white,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  onChanged: (value) {
-                                                    if (frequencyError &&
-                                                        value.isNotEmpty &&
-                                                        convertArabicNumerals(
-                                                              value,
-                                                            ) !=
-                                                            '0') {
-                                                      setState(
-                                                        () =>
-                                                            frequencyError =
-                                                                false,
-                                                      );
-                                                    }
-                                                  },
-                                                  decoration: InputDecoration(
-                                                    labelText:
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.frequency,
-                                                    labelStyle: TextStyle(
-                                                      color:
-                                                          frequencyError
-                                                              ? Colors.red
-                                                              : Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    errorText:
-                                                        frequencyError
-                                                            ? AppLocalizations.of(
-                                                              context,
-                                                            )!.dosageFrequencyGreaterThanZero
-                                                            : null,
-                                                    errorStyle: TextStyle(
-                                                      color: Colors.red[100],
-                                                    ),
-                                                    focusedBorder:
-                                                        const UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                    enabledBorder:
-                                                        const UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                              ),
-                                                        ),
-                                                  ),
-                                                ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed:
-                                              () =>
-                                                  Navigator.pop(context, false),
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.cancel,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            final isEveryXDays =
-                                                editFrequencyType ==
-                                                FrequencyType.everyXDays;
-                                            final isDaysOfWeek =
-                                                editFrequencyType ==
-                                                FrequencyType.daysOfWeek;
-
-                                            setState(() {
-                                              nameError = false;
-                                              typeError = false;
-                                              dosageError = false;
-                                              amountError = false;
-                                              frequencyError = false;
-                                              timeError = false;
-                                              startDateError = false;
-                                              daysOfWeekError = false;
-                                            });
-
-                                            bool hasErrors = false;
-
-                                            if (nameController.text.isEmpty) {
-                                              setState(() => nameError = true);
-                                              hasErrors = true;
-                                            }
-                                            if (typeOfMedicationController
-                                                .text
-                                                .isEmpty) {
-                                              setState(() => typeError = true);
-                                              hasErrors = true;
-                                            }
-                                            if (dosageController.text.isEmpty) {
-                                              setState(
-                                                () => dosageError = true,
-                                              );
-                                              hasErrors = true;
-                                            }
-                                            if (amountController.text.isEmpty) {
-                                              setState(
-                                                () => amountError = true,
-                                              );
-                                              hasErrors = true;
-                                            }
-                                            if (selectedTime == null) {
-                                              setState(() => timeError = true);
-                                              hasErrors = true;
-                                            }
-                                            if (selectedStartDate == null) {
-                                              setState(
-                                                () => startDateError = true,
-                                              );
-                                              hasErrors = true;
-                                            }
-                                            if (isEveryXDays &&
-                                                frequencyController
-                                                    .text
-                                                    .isEmpty) {
-                                              setState(
-                                                () => frequencyError = true,
-                                              );
-                                              hasErrors = true;
-                                            }
-                                            if (isDaysOfWeek &&
-                                                selectedDaysOfWeek.isEmpty) {
-                                              setState(
-                                                () => daysOfWeekError = true,
-                                              );
-                                              hasErrors = true;
-                                            }
-
-                                            if (hasErrors) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  backgroundColor: Colors.red,
-                                                  content: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.pleaseFillAllFields,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                              return;
-                                            }
-
-                                            if (isEveryXDays &&
-                                                (convertArabicNumerals(
-                                                      frequencyController.text,
-                                                    ).isEmpty ||
-                                                    convertArabicNumerals(
-                                                          frequencyController
-                                                              .text,
-                                                        ) ==
-                                                        '0')) {
-                                              setState(
-                                                () => frequencyError = true,
-                                              );
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  backgroundColor: Colors.red,
-                                                  content: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.dosageFrequencyGreaterThanZero,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            if (nameController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                typeOfMedicationController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                dosageController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                frequencyController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                amountController
-                                                    .text
-                                                    .isNotEmpty) {
-                                              if (dosageController.text ==
-                                                      '0' ||
-                                                  frequencyController.text ==
-                                                      '0') {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: Colors.red,
-                                                    content: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.dosageFrequencyGreaterThanZero,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Inter',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                                return;
-                                              }
-                                              if (selectedStartDate == null) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: Color(
-                                                      0xFF8AC249,
-                                                    ),
-                                                    content: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.pleasePickScheduleStartDate,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Inter',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                                return;
-                                              }
-                                              try {
-                                                final oldData =
-                                                    docs[index].data()
-                                                        as Map<String, dynamic>;
-                                                await firestore.collection(widget.uid!).doc(docs[index].id).update({
-                                                  'name': nameController.text,
-                                                  'typeOfMedication':
-                                                      typeOfMedicationController
-                                                          .text,
-                                                  'dosage':
-                                                      double.tryParse(
-                                                        convertArabicNumerals(
-                                                          dosageController.text,
-                                                        ),
-                                                      ) ??
-                                                      0,
-                                                  'frequency':
-                                                      editFrequencyType ==
-                                                              FrequencyType
-                                                                  .everyXDays
-                                                          ? (int.tryParse(
-                                                                convertArabicNumerals(
-                                                                  frequencyController
-                                                                      .text,
-                                                                ),
-                                                              ) ??
-                                                              1)
-                                                          : 1,
-                                                  'amount':
-                                                      double.tryParse(
-                                                        convertArabicNumerals(
-                                                          amountController.text,
-                                                        ),
-                                                      ) ??
-                                                      0,
-                                                  'refillThreshold':
-                                                      refillThresholdController
-                                                              .text
-                                                              .isNotEmpty
-                                                          ? double.tryParse(
-                                                            convertArabicNumerals(
-                                                              refillThresholdController
-                                                                  .text,
-                                                            ),
-                                                          )
-                                                          : null,
-                                                  'refillNotified': false,
-                                                  'notifyTime':
-                                                      selectedTime != null
-                                                          ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
-                                                          : '',
-                                                  'startDate':
-                                                      selectedStartDate!
-                                                          .toIso8601String(),
-                                                  'daysOfWeek':
-                                                      editFrequencyType ==
-                                                              FrequencyType
-                                                                  .daysOfWeek
-                                                          ? selectedDaysOfWeek
-                                                          : null,
-                                                });
-                                                final updatedDoc =
-                                                    await firestore
-                                                        .collection(widget.uid!)
-                                                        .doc(docs[index].id)
-                                                        .get();
-                                                final updatedMedication =
-                                                    medicationFromDoc(
-                                                      updatedDoc,
-                                                    );
-
-                                                await scheduleMedicationNotification(
-                                                  context,
-                                                  docs[index].id,
-                                                  updatedMedication,
-                                                  userId: widget.uid,
-                                                );
-
-                                                if (updatedMedication
-                                                            .refillThreshold !=
-                                                        null &&
-                                                    updatedMedication
-                                                            .refillThreshold! >
-                                                        0) {
-                                                  if (updatedMedication
-                                                          .amount <=
-                                                      updatedMedication
-                                                          .refillThreshold!) {
-                                                    await scheduleWeeklyRefillNotification(
-                                                      updatedMedication,
-                                                      docs[index].id,
-                                                    );
-                                                  } else {
-                                                    await cancelRefillNotifications(
-                                                      docs[index].id,
-                                                    );
-                                                  }
-                                                }
-
-                                                if (!context.mounted) {
-                                                  return;
-                                                }
-                                                Navigator.pop(context, true);
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor:
-                                                        const Color(0xFF8AC249),
-                                                    content: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.medicationUpdated(
-                                                        medication.name,
-                                                      ),
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Inter',
-                                                      ),
-                                                    ),
-                                                    action: SnackBarAction(
-                                                      label:
-                                                          AppLocalizations.of(
-                                                            context,
-                                                          )!.undo,
-                                                      textColor: Colors.red,
-                                                      onPressed: () async {
-                                                        await firestore
-                                                            .collection(
-                                                              widget.uid!,
-                                                            )
-                                                            .doc(docs[index].id)
-                                                            .set(oldData);
-                                                        await scheduleMedicationNotification(
-                                                          context,
-                                                          docs[index].id,
-                                                          medicationFromDoc(
-                                                            await firestore
-                                                                .collection(
-                                                                  widget.uid!,
-                                                                )
-                                                                .doc(
-                                                                  docs[index]
-                                                                      .id,
-                                                                )
-                                                                .get(),
-                                                          ),
-                                                        );
-                                                        if (mounted) {
-                                                          setState(() {});
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                );
-                                              } catch (e) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor:
-                                                        const Color(0xFF8AC249),
-                                                    content: Text(
-                                                      '${AppLocalizations.of(context)!.addMedicationFailed} $e',
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Inter',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            } else {
-                                              if (!mounted) return;
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  backgroundColor: const Color(
-                                                    0xFF8AC249,
-                                                  ),
-                                                  content: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.pleaseFillAllFields,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                          ),
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.saveMedication,
-                                            style: const TextStyle(
-                                              color: Color(0xFF8AC249),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                              );
-                            },
-                          );
-                          if (result == true && mounted) {
-                            setState(() {});
-                          }
-                          return false;
-                        }
-                        return false;
-                      },
-                      onDismissed: (direction) async {
-                        if (direction == DismissDirection.endToStart) {
-                          final deletedDocId = docs[index].id;
-                          final deletedData =
-                              docs[index].data() as Map<String, dynamic>;
-                          final deletedMedication = medicationFromDoc(
-                            docs[index],
-                          );
-                          try {
-                            await firestore
-                                .collection(widget.uid!)
-                                .doc(deletedDocId)
-                                .delete();
-                            await flutterLocalNotificationsPlugin.cancel(
-                              deletedDocId.hashCode,
-                            );
-                            await cancelMedicationReminders(deletedDocId);
-                            await cancelRefillNotifications(deletedDocId);
-
-                            setState(() {
-                              _recentlyDeletedMedication = deletedMedication;
-                              _recentlyDeletedData = deletedData;
-                              _recentlyDeletedDocId = deletedDocId;
-                            });
-                          } catch (e) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              ScaffoldMessenger.of(
-                                scaffoldContext,
-                              ).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: const Color(0xFF8AC249),
-                                  content: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.couldNotUpdateMedication,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                          }
-                        }
-                      },
-                      child: Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+          return SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF8AC249).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFF8AC249).withValues(alpha: 0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: const Color(0xFF8AC249),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.openAppRegularlyForNotifications,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black87,
+                            fontSize: 12,
+                          ),
                         ),
-                        color:
-                            medication.amount <= 0
-                                ? Colors.red
-                                : (medication.refillThreshold != null &&
-                                    medication.refillThreshold! > 0 &&
-                                    medication.amount <=
-                                        medication.refillThreshold!)
-                                ? const Color(0xFFFF9800)
-                                : Color(0xFF8AC249),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: ListTile(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder:
-                                    (context) => Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      insetPadding: const EdgeInsets.all(16),
-                                      child: MedicationDetailsCard(
-                                        medication: medication,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Builder(
+                    builder: (scaffoldContext) {
+                      return ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 80),
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          final medication = medicationFromDoc(docs[index]);
+                          final isRTL =
+                              Directionality.of(context) == TextDirection.rtl;
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              top: 24,
+                              left: 8,
+                              right: 8,
+                            ),
+                            child: Dismissible(
+                              key: Key(docs[index].id),
+                              direction: DismissDirection.horizontal,
+                              background:
+                                  isRTL
+                                      ? Container(
+                                        alignment: Alignment.centerRight,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: const Icon(
+                                          Icons.edit,
+                                          color: Colors.lightBlue,
+                                          size: 32,
+                                        ),
+                                      )
+                                      : Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: const Icon(
+                                          Icons.edit,
+                                          color: Colors.lightBlue,
+                                          size: 32,
+                                        ),
                                       ),
-                                    ),
-                              );
-                            },
-                            title: Text(
-                              medication.name,
-                              textDirection:
-                                  Localizations.localeOf(
-                                            context,
-                                          ).languageCode ==
-                                          'ar'
-                                      ? TextDirection.rtl
-                                      : TextDirection.ltr,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (medication.daysOfWeek != null &&
-                                    medication.daysOfWeek!.isNotEmpty)
-                                  Text(
-                                    "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every}: ${_getDaysOfWeekString(context, medication.daysOfWeek!)}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                else
-                                  Text(
-                                    "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                if (medication.amount > 0)
-                                  Text(
-                                    "${AppLocalizations.of(context)!.currentAmount}: ${(medication.amount).toStringAsFixed(2)}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  )
-                                else
-                                  Text(
-                                    AppLocalizations.of(context)!.outOfStock,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                if (getNextReminder(medication) != null)
-                                  Text(
-                                    "${AppLocalizations.of(context)!.nextReminder}: ${getNextReminder(medication)!}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            trailing: IconButton(
-                              tooltip: AppLocalizations.of(
-                                context,
-                              )!.takeMedication(medication.name),
-                              icon: const Icon(
-                                Icons.medication_rounded,
-                                color: Colors.white,
-                                size: 40,
-                              ),
-                              onPressed: () async {
-                                if (medication.amount > 0) {
-                                  final confirm = await showDialog<bool>(
+                              secondaryBackground:
+                                  isRTL
+                                      ? Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: 32,
+                                        ),
+                                      )
+                                      : Container(
+                                        alignment: Alignment.centerRight,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: 32,
+                                        ),
+                                      ),
+                              confirmDismiss: (direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  return await showDialog<bool>(
                                     context: context,
                                     builder:
                                         (context) => AlertDialog(
@@ -2590,7 +1175,7 @@ class _HomePageState extends State<HomePage> {
                                           title: Text(
                                             AppLocalizations.of(
                                               context,
-                                            )!.takeMedication(medication.name),
+                                            )!.deleteMedication,
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -2599,10 +1184,12 @@ class _HomePageState extends State<HomePage> {
                                           content: Text(
                                             AppLocalizations.of(
                                               context,
-                                            )!.didYouTakeYourMedication(
+                                            )!.areYouSureDeleteMedication(
                                               medication.name,
                                             ),
-                                            style: const TextStyle(
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -2617,7 +1204,7 @@ class _HomePageState extends State<HomePage> {
                                               child: Text(
                                                 AppLocalizations.of(
                                                   context,
-                                                )!.no,
+                                                )!.cancel,
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -2636,9 +1223,9 @@ class _HomePageState extends State<HomePage> {
                                               child: Text(
                                                 AppLocalizations.of(
                                                   context,
-                                                )!.yes,
-                                                style: TextStyle(
-                                                  color: Color(0xFF8AC249),
+                                                )!.deleteMedication,
+                                                style: const TextStyle(
+                                                  color: Colors.red,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -2646,99 +1233,1028 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                         ),
                                   );
-                                  if (confirm == true) {
-                                    final previousAmount = medication.amount;
-                                    try {
-                                      await firestore
-                                          .collection(widget.uid!)
-                                          .doc(docs[index].id)
-                                          .update({
-                                            'amount':
-                                                medication.amount -
-                                                            medication.dosage <
-                                                        0
-                                                    ? 0
-                                                    : medication.amount -
-                                                        medication.dosage,
-                                            'lastTaken':
-                                                DateTime.now()
-                                                    .toIso8601String(),
-                                          });
-                                      await cancelMedicationReminders(
-                                        docs[index].id,
+                                } else if (direction ==
+                                    DismissDirection.startToEnd) {
+                                  FrequencyType editFrequencyType =
+                                      (medication.daysOfWeek != null &&
+                                              medication.daysOfWeek!.isNotEmpty)
+                                          ? FrequencyType.daysOfWeek
+                                          : FrequencyType.everyXDays;
+
+                                  final nameController = TextEditingController(
+                                    text: medication.name,
+                                  );
+                                  final typeOfMedicationController =
+                                      TextEditingController(
+                                        text: medication.typeOfMedication,
                                       );
-
-                                      final updatedDoc =
-                                          await firestore
-                                              .collection(widget.uid!)
-                                              .doc(docs[index].id)
-                                              .get();
-                                      final updatedMedication =
-                                          medicationFromDoc(updatedDoc);
-
-                                      await scheduleMedicationNotification(
-                                        context,
-                                        docs[index].id,
-                                        updatedMedication,
+                                  final dosageController =
+                                      TextEditingController(
+                                        text: medication.dosage.toString(),
                                       );
+                                  final frequencyController =
+                                      TextEditingController(
+                                        text: medication.frequency.toString(),
+                                      );
+                                  final amountController =
+                                      TextEditingController(
+                                        text: medication.amount.toString(),
+                                      );
+                                  final refillThresholdController =
+                                      TextEditingController(
+                                        text:
+                                            medication.refillThreshold
+                                                ?.toString() ??
+                                            '',
+                                      );
+                                  TimeOfDay? selectedTime;
+                                  if (medication.notifyTime != null &&
+                                      medication.notifyTime!.isNotEmpty) {
+                                    final parts = medication.notifyTime!.split(
+                                      ":",
+                                    );
+                                    if (parts.length == 2) {
+                                      selectedTime = TimeOfDay(
+                                        hour: int.tryParse(parts[0]) ?? 0,
+                                        minute: int.tryParse(parts[1]) ?? 0,
+                                      );
+                                    }
+                                  }
 
-                                      if (updatedMedication.refillThreshold !=
-                                              null &&
-                                          updatedMedication.refillThreshold! >
-                                              0) {
-                                        if (updatedMedication.amount <=
-                                            updatedMedication
-                                                .refillThreshold!) {
-                                          await scheduleWeeklyRefillNotification(
-                                            updatedMedication,
-                                            docs[index].id,
-                                          );
-                                        } else {
-                                          await cancelRefillNotifications(
-                                            docs[index].id,
-                                          );
-                                        }
-                                      }
+                                  DateTime? selectedStartDate =
+                                      medication.startDate;
+                                  List<int> selectedDaysOfWeek =
+                                      medication.daysOfWeek != null
+                                          ? List<int>.from(
+                                            medication.daysOfWeek!,
+                                          )
+                                          : [];
+                                  bool nameError = false;
+                                  bool typeError = false;
+                                  bool dosageError = false;
+                                  bool amountError = false;
+                                  bool frequencyError = false;
+                                  bool timeError = false;
+                                  bool startDateError = false;
+                                  bool daysOfWeekError = false;
 
-                                      if (updatedMedication.amount <= 0) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              backgroundColor: const Color(
+                                  final result = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) {
+                                      return StatefulBuilder(
+                                        builder:
+                                            (context, setState) => AlertDialog(
+                                              backgroundColor: Color(
                                                 0xFF8AC249,
                                               ),
                                               title: Text(
                                                 AppLocalizations.of(
                                                   context,
-                                                )!.youreOutOfMedication(
-                                                  medication.name,
-                                                ),
+                                                )!.editMedication,
                                                 style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              content: Text(
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.pleaseRefillYourMedication(
-                                                  medication.name,
-                                                ),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    TextField(
+                                                      controller:
+                                                          nameController,
+                                                      cursorColor: Colors.white,
+                                                      textCapitalization:
+                                                          TextCapitalization
+                                                              .words,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                      textDirection:
+                                                          Localizations.localeOf(
+                                                                    context,
+                                                                  ).languageCode ==
+                                                                  'ar'
+                                                              ? TextDirection
+                                                                  .rtl
+                                                              : TextDirection
+                                                                  .ltr,
+                                                      onChanged: (value) {
+                                                        if (nameError &&
+                                                            value.isNotEmpty) {
+                                                          setState(
+                                                            () =>
+                                                                nameError =
+                                                                    false,
+                                                          );
+                                                        }
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.name,
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  nameError
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        errorText:
+                                                            nameError
+                                                                ? AppLocalizations.of(
+                                                                  context,
+                                                                )!.pleaseFillAllFields
+                                                                : null,
+                                                        errorStyle: TextStyle(
+                                                          color:
+                                                              Colors.red[100],
+                                                        ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          typeOfMedicationController,
+                                                      cursorColor: Colors.white,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                      textDirection:
+                                                          Localizations.localeOf(
+                                                                    context,
+                                                                  ).languageCode ==
+                                                                  'ar'
+                                                              ? TextDirection
+                                                                  .rtl
+                                                              : TextDirection
+                                                                  .ltr,
+                                                      onChanged: (value) {
+                                                        if (typeError &&
+                                                            value.isNotEmpty) {
+                                                          setState(
+                                                            () =>
+                                                                typeError =
+                                                                    false,
+                                                          );
+                                                        }
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.unitOfMeasurement,
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  typeError
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        errorText:
+                                                            typeError
+                                                                ? AppLocalizations.of(
+                                                                  context,
+                                                                )!.pleaseFillAllFields
+                                                                : null,
+                                                        errorStyle: TextStyle(
+                                                          color:
+                                                              Colors.red[100],
+                                                        ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          dosageController,
+                                                      cursorColor: Colors.white,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      onChanged: (value) {
+                                                        if (dosageError &&
+                                                            value.isNotEmpty &&
+                                                            convertArabicNumerals(
+                                                                  value,
+                                                                ) !=
+                                                                '0') {
+                                                          setState(
+                                                            () =>
+                                                                dosageError =
+                                                                    false,
+                                                          );
+                                                        }
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.dosage,
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  dosageError
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        errorText:
+                                                            dosageError
+                                                                ? AppLocalizations.of(
+                                                                  context,
+                                                                )!.dosageFrequencyGreaterThanZero
+                                                                : null,
+                                                        errorStyle: TextStyle(
+                                                          color:
+                                                              Colors.red[100],
+                                                        ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          amountController,
+                                                      cursorColor: Colors.white,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      onChanged: (value) {
+                                                        if (amountError &&
+                                                            value.isNotEmpty) {
+                                                          setState(
+                                                            () =>
+                                                                amountError =
+                                                                    false,
+                                                          );
+                                                        }
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.currentAmount,
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  amountError
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        errorText:
+                                                            amountError
+                                                                ? AppLocalizations.of(
+                                                                  context,
+                                                                )!.pleaseFillAllFields
+                                                                : null,
+                                                        errorStyle: TextStyle(
+                                                          color:
+                                                              Colors.red[100],
+                                                        ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          refillThresholdController,
+                                                      cursorColor: Colors.white,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        labelText:
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.refillThreshold,
+                                                        labelStyle: Theme.of(
+                                                              context,
+                                                            )
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        focusedBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                        enabledBorder:
+                                                            const UnderlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    ListTile(
+                                                      title: Text(
+                                                        selectedTime == null
+                                                            ? AppLocalizations.of(
+                                                              context,
+                                                            )!.pickNotificationTime
+                                                            : "${AppLocalizations.of(context)!.notifyAt}: ${selectedTime!.format(context)}",
+                                                        style: TextStyle(
+                                                          color:
+                                                              timeError
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                      .white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      trailing: Icon(
+                                                        Icons.access_time,
+                                                        color:
+                                                            timeError
+                                                                ? Colors.red
+                                                                : Colors.white,
+                                                      ),
+                                                      onTap: () async {
+                                                        final isDark =
+                                                            Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark;
+                                                        final primaryColor =
+                                                            const Color(
+                                                              0xFF8AC249,
+                                                            );
+                                                        final surfaceColor =
+                                                            isDark
+                                                                ? const Color(
+                                                                  0xFF222222,
+                                                                )
+                                                                : Colors.white;
+                                                        final onSurfaceColor =
+                                                            isDark
+                                                                ? Colors.white
+                                                                : primaryColor;
+                                                        final hourMinuteBg =
+                                                            isDark
+                                                                ? primaryColor
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.15,
+                                                                    )
+                                                                : primaryColor
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.08,
+                                                                    );
+
+                                                        final picked = await showTimePicker(
+                                                          context: context,
+                                                          initialTime:
+                                                              selectedTime ??
+                                                              TimeOfDay.now(),
+                                                          builder: (
+                                                            context,
+                                                            child,
+                                                          ) {
+                                                            return Theme(
+                                                              data: Theme.of(
+                                                                context,
+                                                              ).copyWith(
+                                                                timePickerTheme: TimePickerThemeData(
+                                                                  backgroundColor:
+                                                                      surfaceColor,
+                                                                  hourMinuteTextColor:
+                                                                      primaryColor,
+                                                                  hourMinuteColor:
+                                                                      hourMinuteBg,
+                                                                  dayPeriodTextColor:
+                                                                      primaryColor,
+                                                                  dayPeriodColor:
+                                                                      hourMinuteBg,
+                                                                  dialHandColor:
+                                                                      primaryColor,
+                                                                  dialBackgroundColor:
+                                                                      hourMinuteBg,
+                                                                  entryModeIconColor:
+                                                                      primaryColor,
+                                                                  helpTextStyle: TextStyle(
+                                                                    color:
+                                                                        primaryColor,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                  hourMinuteTextStyle: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        28,
+                                                                    color:
+                                                                        primaryColor,
+                                                                  ),
+                                                                  dayPeriodTextStyle: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        16,
+                                                                    color:
+                                                                        primaryColor,
+                                                                  ),
+                                                                  dialTextStyle: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        20,
+                                                                    color:
+                                                                        primaryColor,
+                                                                  ),
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          24,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                textButtonTheme: TextButtonThemeData(
+                                                                  style: TextButton.styleFrom(
+                                                                    foregroundColor:
+                                                                        primaryColor,
+                                                                    textStyle: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                colorScheme: ColorScheme(
+                                                                  brightness:
+                                                                      isDark
+                                                                          ? Brightness
+                                                                              .dark
+                                                                          : Brightness
+                                                                              .light,
+                                                                  primary:
+                                                                      primaryColor,
+                                                                  onPrimary:
+                                                                      Colors
+                                                                          .white,
+                                                                  secondary:
+                                                                      primaryColor,
+                                                                  onSecondary:
+                                                                      Colors
+                                                                          .white,
+                                                                  error:
+                                                                      Colors
+                                                                          .red,
+                                                                  onError:
+                                                                      Colors
+                                                                          .white,
+                                                                  surface:
+                                                                      surfaceColor,
+                                                                  onSurface:
+                                                                      onSurfaceColor,
+                                                                ),
+                                                              ),
+                                                              child: child!,
+                                                            );
+                                                          },
+                                                        );
+                                                        if (picked != null) {
+                                                          setState(() {
+                                                            selectedTime =
+                                                                picked;
+                                                            timeError = false;
+                                                          });
+                                                        }
+                                                      },
+                                                    ),
+                                                    ListTile(
+                                                      title: Text(
+                                                        selectedStartDate ==
+                                                                null
+                                                            ? AppLocalizations.of(
+                                                              context,
+                                                            )!.pickScheduleStartDate
+                                                            : "${AppLocalizations.of(context)!.startDate}: ${selectedStartDate!.day.toString().padLeft(2, '0')}-${selectedStartDate!.month.toString().padLeft(2, '0')}-${selectedStartDate!.year}",
+                                                        style: TextStyle(
+                                                          color:
+                                                              startDateError
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                      .white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      trailing: Icon(
+                                                        Icons.calendar_today,
+                                                        color:
+                                                            startDateError
+                                                                ? Colors.red
+                                                                : Colors.white,
+                                                      ),
+                                                      onTap: () async {
+                                                        final isDark =
+                                                            Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark;
+                                                        final primaryColor =
+                                                            const Color(
+                                                              0xFF8AC249,
+                                                            );
+                                                        final surfaceColor =
+                                                            isDark
+                                                                ? const Color(
+                                                                  0xFF222222,
+                                                                )
+                                                                : Colors.white;
+                                                        final onSurfaceColor =
+                                                            isDark
+                                                                ? Colors.white
+                                                                : primaryColor;
+
+                                                        final now =
+                                                            DateTime.now();
+                                                        final safeInitialDate =
+                                                            (selectedStartDate !=
+                                                                        null &&
+                                                                    selectedStartDate!
+                                                                        .isAfter(
+                                                                          now,
+                                                                        ))
+                                                                ? selectedStartDate!
+                                                                : now;
+
+                                                        final picked = await showDatePicker(
+                                                          context: context,
+                                                          initialDate:
+                                                              safeInitialDate,
+                                                          firstDate: now,
+                                                          lastDate: DateTime(
+                                                            now.year + 10,
+                                                          ),
+                                                          builder: (
+                                                            context,
+                                                            child,
+                                                          ) {
+                                                            return Theme(
+                                                              data: Theme.of(
+                                                                context,
+                                                              ).copyWith(
+                                                                colorScheme: ColorScheme(
+                                                                  brightness:
+                                                                      isDark
+                                                                          ? Brightness
+                                                                              .dark
+                                                                          : Brightness
+                                                                              .light,
+                                                                  primary:
+                                                                      primaryColor,
+                                                                  onPrimary:
+                                                                      Colors
+                                                                          .white,
+                                                                  secondary:
+                                                                      primaryColor,
+                                                                  onSecondary:
+                                                                      Colors
+                                                                          .white,
+                                                                  error:
+                                                                      Colors
+                                                                          .red,
+                                                                  onError:
+                                                                      Colors
+                                                                          .white,
+                                                                  surface:
+                                                                      surfaceColor,
+                                                                  onSurface:
+                                                                      onSurfaceColor,
+                                                                ),
+                                                                textButtonTheme: TextButtonThemeData(
+                                                                  style: TextButton.styleFrom(
+                                                                    foregroundColor:
+                                                                        primaryColor,
+                                                                    textStyle: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                dialogTheme:
+                                                                    DialogThemeData(
+                                                                      backgroundColor:
+                                                                          surfaceColor,
+                                                                    ),
+                                                              ),
+                                                              child: child!,
+                                                            );
+                                                          },
+                                                        );
+                                                        if (picked != null) {
+                                                          setState(() {
+                                                            selectedStartDate =
+                                                                picked;
+                                                            startDateError =
+                                                                false;
+                                                          });
+                                                        }
+                                                      },
+                                                    ),
+                                                    SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: RadioGroup<
+                                                        FrequencyType
+                                                      >(
+                                                        groupValue:
+                                                            editFrequencyType,
+                                                        onChanged: (val) {
+                                                          setState(() {
+                                                            editFrequencyType =
+                                                                val!;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Radio<
+                                                              FrequencyType
+                                                            >(
+                                                              value:
+                                                                  FrequencyType
+                                                                      .everyXDays,
+                                                              activeColor:
+                                                                  Colors.white,
+                                                              fillColor:
+                                                                  WidgetStateProperty.all(
+                                                                    Colors
+                                                                        .white,
+                                                                  ),
+                                                            ),
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.everyXDays,
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            Radio<
+                                                              FrequencyType
+                                                            >(
+                                                              value:
+                                                                  FrequencyType
+                                                                      .daysOfWeek,
+                                                              activeColor:
+                                                                  Colors.white,
+                                                              fillColor:
+                                                                  WidgetStateProperty.all(
+                                                                    Colors
+                                                                        .white,
+                                                                  ),
+                                                            ),
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.selectDaysOfWeek,
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    editFrequencyType ==
+                                                            FrequencyType
+                                                                .daysOfWeek
+                                                        ? Column(
+                                                          children: [
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.selectDaysOfWeek,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    daysOfWeekError
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            _buildEditWeekdayPicker(
+                                                              selectedDaysOfWeek,
+                                                              (
+                                                                dayNum,
+                                                                selected,
+                                                              ) {
+                                                                setState(() {
+                                                                  if (selected) {
+                                                                    selectedDaysOfWeek
+                                                                        .add(
+                                                                          dayNum,
+                                                                        );
+                                                                    selectedDaysOfWeek.sort((
+                                                                      a,
+                                                                      b,
+                                                                    ) {
+                                                                      if (a ==
+                                                                              7 &&
+                                                                          b !=
+                                                                              7) {
+                                                                        return -1;
+                                                                      }
+                                                                      if (a !=
+                                                                              7 &&
+                                                                          b ==
+                                                                              7) {
+                                                                        return 1;
+                                                                      }
+                                                                      return a
+                                                                          .compareTo(
+                                                                            b,
+                                                                          );
+                                                                    });
+                                                                  } else {
+                                                                    selectedDaysOfWeek
+                                                                        .remove(
+                                                                          dayNum,
+                                                                        );
+                                                                  }
+                                                                  if (daysOfWeekError &&
+                                                                      selectedDaysOfWeek
+                                                                          .isNotEmpty) {
+                                                                    daysOfWeekError =
+                                                                        false;
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
+                                                          ],
+                                                        )
+                                                        : TextField(
+                                                          controller:
+                                                              frequencyController,
+                                                          cursorColor:
+                                                              Colors.white,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          style:
+                                                              const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          onChanged: (value) {
+                                                            if (frequencyError &&
+                                                                value
+                                                                    .isNotEmpty &&
+                                                                convertArabicNumerals(
+                                                                      value,
+                                                                    ) !=
+                                                                    '0') {
+                                                              setState(
+                                                                () =>
+                                                                    frequencyError =
+                                                                        false,
+                                                              );
+                                                            }
+                                                          },
+                                                          decoration: InputDecoration(
+                                                            labelText:
+                                                                AppLocalizations.of(
+                                                                  context,
+                                                                )!.frequency,
+                                                            labelStyle: TextStyle(
+                                                              color:
+                                                                  frequencyError
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            errorText:
+                                                                frequencyError
+                                                                    ? AppLocalizations.of(
+                                                                      context,
+                                                                    )!.dosageFrequencyGreaterThanZero
+                                                                    : null,
+                                                            errorStyle: TextStyle(
+                                                              color:
+                                                                  Colors
+                                                                      .red[100],
+                                                            ),
+                                                            focusedBorder:
+                                                                const UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
+                                                                ),
+                                                            enabledBorder:
+                                                                const UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                        color:
+                                                                            Colors.white,
+                                                                      ),
+                                                                ),
+                                                          ),
+                                                        ),
+                                                  ],
                                                 ),
                                               ),
                                               actions: [
                                                 TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
+                                                  onPressed:
+                                                      () => Navigator.pop(
+                                                        context,
+                                                        false,
+                                                      ),
                                                   child: Text(
                                                     AppLocalizations.of(
                                                       context,
-                                                    )!.ok,
+                                                    )!.cancel,
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -2746,40 +2262,1111 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      } else if (updatedMedication
-                                                  .refillThreshold !=
-                                              null &&
-                                          updatedMedication.refillThreshold! >
-                                              0 &&
-                                          previousAmount >
-                                              updatedMedication
-                                                  .refillThreshold! &&
-                                          updatedMedication.amount <=
-                                              updatedMedication
-                                                  .refillThreshold!) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              backgroundColor: const Color(
-                                                0xFFFF9800,
-                                              ),
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.warning_rounded,
-                                                    color: Colors.white,
-                                                    size: 28,
+                                                ElevatedButton(
+                                                  onPressed: () async {
+                                                    final isEveryXDays =
+                                                        editFrequencyType ==
+                                                        FrequencyType
+                                                            .everyXDays;
+                                                    final isDaysOfWeek =
+                                                        editFrequencyType ==
+                                                        FrequencyType
+                                                            .daysOfWeek;
+
+                                                    setState(() {
+                                                      nameError = false;
+                                                      typeError = false;
+                                                      dosageError = false;
+                                                      amountError = false;
+                                                      frequencyError = false;
+                                                      timeError = false;
+                                                      startDateError = false;
+                                                      daysOfWeekError = false;
+                                                    });
+
+                                                    bool hasErrors = false;
+
+                                                    if (nameController
+                                                        .text
+                                                        .isEmpty) {
+                                                      setState(
+                                                        () => nameError = true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (typeOfMedicationController
+                                                        .text
+                                                        .isEmpty) {
+                                                      setState(
+                                                        () => typeError = true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (dosageController
+                                                        .text
+                                                        .isEmpty) {
+                                                      setState(
+                                                        () =>
+                                                            dosageError = true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (amountController
+                                                        .text
+                                                        .isEmpty) {
+                                                      setState(
+                                                        () =>
+                                                            amountError = true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (selectedTime == null) {
+                                                      setState(
+                                                        () => timeError = true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (selectedStartDate ==
+                                                        null) {
+                                                      setState(
+                                                        () =>
+                                                            startDateError =
+                                                                true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (isEveryXDays &&
+                                                        frequencyController
+                                                            .text
+                                                            .isEmpty) {
+                                                      setState(
+                                                        () =>
+                                                            frequencyError =
+                                                                true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+                                                    if (isDaysOfWeek &&
+                                                        selectedDaysOfWeek
+                                                            .isEmpty) {
+                                                      setState(
+                                                        () =>
+                                                            daysOfWeekError =
+                                                                true,
+                                                      );
+                                                      hasErrors = true;
+                                                    }
+
+                                                    if (hasErrors) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          content: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.pleaseFillAllFields,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontFamily:
+                                                                  'Inter',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+
+                                                    if (isEveryXDays &&
+                                                        (convertArabicNumerals(
+                                                              frequencyController
+                                                                  .text,
+                                                            ).isEmpty ||
+                                                            convertArabicNumerals(
+                                                                  frequencyController
+                                                                      .text,
+                                                                ) ==
+                                                                '0')) {
+                                                      setState(
+                                                        () =>
+                                                            frequencyError =
+                                                                true,
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          content: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.dosageFrequencyGreaterThanZero,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontFamily:
+                                                                  'Inter',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+                                                    if (nameController
+                                                            .text
+                                                            .isNotEmpty &&
+                                                        typeOfMedicationController
+                                                            .text
+                                                            .isNotEmpty &&
+                                                        dosageController
+                                                            .text
+                                                            .isNotEmpty &&
+                                                        frequencyController
+                                                            .text
+                                                            .isNotEmpty &&
+                                                        amountController
+                                                            .text
+                                                            .isNotEmpty) {
+                                                      if (dosageController
+                                                                  .text ==
+                                                              '0' ||
+                                                          frequencyController
+                                                                  .text ==
+                                                              '0') {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                            content: Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.dosageFrequencyGreaterThanZero,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                        return;
+                                                      }
+                                                      if (selectedStartDate ==
+                                                          null) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                Color(
+                                                                  0xFF8AC249,
+                                                                ),
+                                                            content: Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.pleasePickScheduleStartDate,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                        return;
+                                                      }
+                                                      try {
+                                                        final oldData =
+                                                            docs[index].data()
+                                                                as Map<
+                                                                  String,
+                                                                  dynamic
+                                                                >;
+                                                        await firestore.collection(widget.uid!).doc(docs[index].id).update({
+                                                          'name':
+                                                              nameController
+                                                                  .text,
+                                                          'typeOfMedication':
+                                                              typeOfMedicationController
+                                                                  .text,
+                                                          'dosage':
+                                                              double.tryParse(
+                                                                convertArabicNumerals(
+                                                                  dosageController
+                                                                      .text,
+                                                                ),
+                                                              ) ??
+                                                              0,
+                                                          'frequency':
+                                                              editFrequencyType ==
+                                                                      FrequencyType
+                                                                          .everyXDays
+                                                                  ? (int.tryParse(
+                                                                        convertArabicNumerals(
+                                                                          frequencyController
+                                                                              .text,
+                                                                        ),
+                                                                      ) ??
+                                                                      1)
+                                                                  : 1,
+                                                          'amount':
+                                                              double.tryParse(
+                                                                convertArabicNumerals(
+                                                                  amountController
+                                                                      .text,
+                                                                ),
+                                                              ) ??
+                                                              0,
+                                                          'refillThreshold':
+                                                              refillThresholdController
+                                                                      .text
+                                                                      .isNotEmpty
+                                                                  ? double.tryParse(
+                                                                    convertArabicNumerals(
+                                                                      refillThresholdController
+                                                                          .text,
+                                                                    ),
+                                                                  )
+                                                                  : null,
+                                                          'refillNotified':
+                                                              false,
+                                                          'notifyTime':
+                                                              selectedTime !=
+                                                                      null
+                                                                  ? '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}'
+                                                                  : '',
+                                                          'startDate':
+                                                              selectedStartDate!
+                                                                  .toIso8601String(),
+                                                          'daysOfWeek':
+                                                              editFrequencyType ==
+                                                                      FrequencyType
+                                                                          .daysOfWeek
+                                                                  ? selectedDaysOfWeek
+                                                                  : null,
+                                                        });
+                                                        final updatedDoc =
+                                                            await firestore
+                                                                .collection(
+                                                                  widget.uid!,
+                                                                )
+                                                                .doc(
+                                                                  docs[index]
+                                                                      .id,
+                                                                )
+                                                                .get();
+                                                        final updatedMedication =
+                                                            medicationFromDoc(
+                                                              updatedDoc,
+                                                            );
+
+                                                        await scheduleMedicationNotification(
+                                                          context,
+                                                          docs[index].id,
+                                                          updatedMedication,
+                                                          userId: widget.uid,
+                                                        );
+
+                                                        if (updatedMedication
+                                                                    .refillThreshold !=
+                                                                null &&
+                                                            updatedMedication
+                                                                    .refillThreshold! >
+                                                                0) {
+                                                          if (updatedMedication
+                                                                  .amount <=
+                                                              updatedMedication
+                                                                  .refillThreshold!) {
+                                                            await scheduleWeeklyRefillNotification(
+                                                              updatedMedication,
+                                                              docs[index].id,
+                                                            );
+                                                          } else {
+                                                            await cancelRefillNotifications(
+                                                              docs[index].id,
+                                                            );
+                                                          }
+                                                        }
+
+                                                        if (!context.mounted) {
+                                                          return;
+                                                        }
+                                                        Navigator.pop(
+                                                          context,
+                                                          true,
+                                                        );
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                  0xFF8AC249,
+                                                                ),
+                                                            content: Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.medicationUpdated(
+                                                                medication.name,
+                                                              ),
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                            ),
+                                                            action: SnackBarAction(
+                                                              label:
+                                                                  AppLocalizations.of(
+                                                                    context,
+                                                                  )!.undo,
+                                                              textColor:
+                                                                  Colors.red,
+                                                              onPressed: () async {
+                                                                await firestore
+                                                                    .collection(
+                                                                      widget
+                                                                          .uid!,
+                                                                    )
+                                                                    .doc(
+                                                                      docs[index]
+                                                                          .id,
+                                                                    )
+                                                                    .set(
+                                                                      oldData,
+                                                                    );
+                                                                await scheduleMedicationNotification(
+                                                                  context,
+                                                                  docs[index]
+                                                                      .id,
+                                                                  medicationFromDoc(
+                                                                    await firestore
+                                                                        .collection(
+                                                                          widget
+                                                                              .uid!,
+                                                                        )
+                                                                        .doc(
+                                                                          docs[index]
+                                                                              .id,
+                                                                        )
+                                                                        .get(),
+                                                                  ),
+                                                                );
+                                                                if (mounted) {
+                                                                  setState(
+                                                                    () {},
+                                                                  );
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                  0xFF8AC249,
+                                                                ),
+                                                            content: Text(
+                                                              '${AppLocalizations.of(context)!.addMedicationFailed} $e',
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      if (!mounted) return;
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF8AC249,
+                                                              ),
+                                                          content: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.pleaseFillAllFields,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      ),
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.saveMedication,
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF8AC249),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
-                                                  SizedBox(width: 12),
-                                                  Expanded(
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                    },
+                                  );
+                                  if (result == true && mounted) {
+                                    setState(() {});
+                                  }
+                                  return false;
+                                }
+                                return false;
+                              },
+                              onDismissed: (direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  final deletedDocId = docs[index].id;
+                                  final deletedData =
+                                      docs[index].data()
+                                          as Map<String, dynamic>;
+                                  final deletedMedication = medicationFromDoc(
+                                    docs[index],
+                                  );
+                                  try {
+                                    await firestore
+                                        .collection(widget.uid!)
+                                        .doc(deletedDocId)
+                                        .delete();
+                                    await flutterLocalNotificationsPlugin
+                                        .cancel(deletedDocId.hashCode);
+                                    await cancelMedicationReminders(
+                                      deletedDocId,
+                                    );
+                                    await cancelRefillNotifications(
+                                      deletedDocId,
+                                    );
+
+                                    setState(() {
+                                      _recentlyDeletedMedication =
+                                          deletedMedication;
+                                      _recentlyDeletedData = deletedData;
+                                      _recentlyDeletedDocId = deletedDocId;
+                                    });
+                                  } catch (e) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          ScaffoldMessenger.of(
+                                            scaffoldContext,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: const Color(
+                                                0xFF8AC249,
+                                              ),
+                                              content: Text(
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.couldNotUpdateMedication,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  }
+                                }
+                              },
+                              child: Card(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                color:
+                                    medication.amount <= 0
+                                        ? Colors.red
+                                        : (medication.refillThreshold != null &&
+                                            medication.refillThreshold! > 0 &&
+                                            medication.amount <=
+                                                medication.refillThreshold!)
+                                        ? const Color(0xFFFF9800)
+                                        : Color(0xFF8AC249),
+                                margin: EdgeInsets.zero,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder:
+                                            (context) => Dialog(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              insetPadding:
+                                                  const EdgeInsets.all(16),
+                                              child: MedicationDetailsCard(
+                                                medication: medication,
+                                              ),
+                                            ),
+                                      );
+                                    },
+                                    title: Text(
+                                      medication.name,
+                                      textDirection:
+                                          Localizations.localeOf(
+                                                    context,
+                                                  ).languageCode ==
+                                                  'ar'
+                                              ? TextDirection.rtl
+                                              : TextDirection.ltr,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (medication.daysOfWeek != null &&
+                                            medication.daysOfWeek!.isNotEmpty)
+                                          Text(
+                                            "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every}: ${_getDaysOfWeekString(context, medication.daysOfWeek!)}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          )
+                                        else
+                                          Text(
+                                            "${medication.dosage} ${medication.typeOfMedication} ${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        if (medication.amount > 0)
+                                          Text(
+                                            "${AppLocalizations.of(context)!.currentAmount}: ${(medication.amount).toStringAsFixed(2)}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          )
+                                        else
+                                          Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.outOfStock,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        if (getNextReminder(medication) != null)
+                                          Text(
+                                            "${AppLocalizations.of(context)!.nextReminder}: ${getNextReminder(medication)!}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    trailing: IconButton(
+                                      tooltip: AppLocalizations.of(
+                                        context,
+                                      )!.takeMedication(medication.name),
+                                      icon: const Icon(
+                                        Icons.medication_rounded,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                      onPressed: () async {
+                                        if (medication.amount > 0) {
+                                          final confirm = await showDialog<
+                                            bool
+                                          >(
+                                            context: context,
+                                            builder:
+                                                (context) => AlertDialog(
+                                                  backgroundColor: Color(
+                                                    0xFF8AC249,
+                                                  ),
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.takeMedication(
+                                                      medication.name,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.didYouTakeYourMedication(
+                                                      medication.name,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.pop(
+                                                            context,
+                                                            false,
+                                                          ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.no,
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    ElevatedButton(
+                                                      style:
+                                                          ElevatedButton.styleFrom(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                          ),
+                                                      onPressed:
+                                                          () => Navigator.pop(
+                                                            context,
+                                                            true,
+                                                          ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.yes,
+                                                        style: TextStyle(
+                                                          color: Color(
+                                                            0xFF8AC249,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                          );
+                                          if (confirm == true) {
+                                            final previousAmount =
+                                                medication.amount;
+                                            try {
+                                              await firestore
+                                                  .collection(widget.uid!)
+                                                  .doc(docs[index].id)
+                                                  .update({
+                                                    'amount':
+                                                        medication.amount -
+                                                                    medication
+                                                                        .dosage <
+                                                                0
+                                                            ? 0
+                                                            : medication
+                                                                    .amount -
+                                                                medication
+                                                                    .dosage,
+                                                    'lastTaken':
+                                                        DateTime.now()
+                                                            .toIso8601String(),
+                                                  });
+                                              await cancelMedicationReminders(
+                                                docs[index].id,
+                                              );
+
+                                              final updatedDoc =
+                                                  await firestore
+                                                      .collection(widget.uid!)
+                                                      .doc(docs[index].id)
+                                                      .get();
+                                              final updatedMedication =
+                                                  medicationFromDoc(updatedDoc);
+
+                                              await scheduleMedicationNotification(
+                                                context,
+                                                docs[index].id,
+                                                updatedMedication,
+                                              );
+
+                                              if (updatedMedication
+                                                          .refillThreshold !=
+                                                      null &&
+                                                  updatedMedication
+                                                          .refillThreshold! >
+                                                      0) {
+                                                if (updatedMedication.amount <=
+                                                    updatedMedication
+                                                        .refillThreshold!) {
+                                                  await scheduleWeeklyRefillNotification(
+                                                    updatedMedication,
+                                                    docs[index].id,
+                                                  );
+                                                } else {
+                                                  await cancelRefillNotifications(
+                                                    docs[index].id,
+                                                  );
+                                                }
+                                              }
+
+                                              if (updatedMedication.amount <=
+                                                  0) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (
+                                                    BuildContext context,
+                                                  ) {
+                                                    return AlertDialog(
+                                                      backgroundColor:
+                                                          const Color(
+                                                            0xFF8AC249,
+                                                          ),
+                                                      title: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.youreOutOfMedication(
+                                                          medication.name,
+                                                        ),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      content: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.pleaseRefillYourMedication(
+                                                          medication.name,
+                                                        ),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                          },
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.ok,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else if (updatedMedication
+                                                          .refillThreshold !=
+                                                      null &&
+                                                  updatedMedication
+                                                          .refillThreshold! >
+                                                      0 &&
+                                                  previousAmount >
+                                                      updatedMedication
+                                                          .refillThreshold! &&
+                                                  updatedMedication.amount <=
+                                                      updatedMedication
+                                                          .refillThreshold!) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (
+                                                    BuildContext context,
+                                                  ) {
+                                                    return AlertDialog(
+                                                      backgroundColor:
+                                                          const Color(
+                                                            0xFFFF9800,
+                                                          ),
+                                                      title: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .warning_rounded,
+                                                            color: Colors.white,
+                                                            size: 28,
+                                                          ),
+                                                          SizedBox(width: 12),
+                                                          Expanded(
+                                                            child: Text(
+                                                              '${AppLocalizations.of(context)!.lowStock}: ${medication.name}',
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      content: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.refillReminderBody(
+                                                          updatedMedication
+                                                              .amount
+                                                              .toInt()
+                                                              .toString(),
+                                                          updatedMedication
+                                                              .name,
+                                                          updatedMedication
+                                                              .typeOfMedication,
+                                                        ),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                          },
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!.ok,
+                                                            style:
+                                                                const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.markedAsTaken(
+                                                      medication.name,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Inter',
+                                                    ),
+                                                  ),
+                                                  action: SnackBarAction(
+                                                    label:
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.undo,
+                                                    textColor: Colors.red,
+                                                    onPressed: () async {
+                                                      await firestore
+                                                          .collection(
+                                                            widget.uid!,
+                                                          )
+                                                          .doc(docs[index].id)
+                                                          .update({
+                                                            'amount':
+                                                                previousAmount,
+                                                            'lastTaken': null,
+                                                          });
+                                                      final restoredDoc =
+                                                          await firestore
+                                                              .collection(
+                                                                widget.uid!,
+                                                              )
+                                                              .doc(
+                                                                docs[index].id,
+                                                              )
+                                                              .get();
+                                                      final restoredMedication =
+                                                          medicationFromDoc(
+                                                            restoredDoc,
+                                                          );
+                                                      await scheduleMedicationNotification(
+                                                        context,
+                                                        docs[index].id,
+                                                        restoredMedication,
+                                                      );
+                                                      if (mounted) {
+                                                        setState(() {});
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor: const Color(
+                                                    0xFF8AC249,
+                                                  ),
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.couldNotUpdateMedication,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Inter',
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                backgroundColor: Colors.red,
+                                                title: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.youreOutOfMedication(
+                                                    medication.name,
+                                                  ),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.pleaseRefillYourMedication(
+                                                    medication.name,
+                                                  ),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop();
+                                                    },
                                                     child: Text(
-                                                      '${AppLocalizations.of(context)!.lowStock}: ${medication.name}',
-                                                      style: const TextStyle(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.ok,
+                                                      style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -2787,190 +3374,61 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                 ],
-                                              ),
-                                              content: Text(
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.refillReminderBody(
-                                                  updatedMedication.amount
-                                                      .toInt()
-                                                      .toString(),
-                                                  updatedMedication.name,
-                                                  updatedMedication
-                                                      .typeOfMedication,
-                                                ),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.ok,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: const Color(
-                                            0xFF8AC249,
-                                          ),
-                                          content: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.markedAsTaken(medication.name),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Inter',
-                                            ),
-                                          ),
-                                          action: SnackBarAction(
-                                            label:
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.undo,
-                                            textColor: Colors.red,
-                                            onPressed: () async {
-                                              await firestore
-                                                  .collection(widget.uid!)
-                                                  .doc(docs[index].id)
-                                                  .update({
-                                                    'amount': previousAmount,
-                                                    'lastTaken': null,
-                                                  });
-                                              final restoredDoc =
-                                                  await firestore
-                                                      .collection(widget.uid!)
-                                                      .doc(docs[index].id)
-                                                      .get();
-                                              final restoredMedication =
-                                                  medicationFromDoc(
-                                                    restoredDoc,
-                                                  );
-                                              await scheduleMedicationNotification(
-                                                context,
-                                                docs[index].id,
-                                                restoredMedication,
                                               );
-                                              if (mounted) setState(() {});
                                             },
-                                          ),
-                                        ),
-                                      );
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: const Color(
-                                            0xFF8AC249,
-                                          ),
-                                          content: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.couldNotUpdateMedication,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Inter',
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        backgroundColor: Colors.red,
-                                        title: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.youreOutOfMedication(
-                                            medication.name,
-                                          ),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        content: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.pleaseRefillYourMedication(
-                                            medication.name,
-                                          ),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              AppLocalizations.of(context)!.ok,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: AppLocalizations.of(context)!.addMedication,
-        shape: const CircleBorder(),
-        backgroundColor: Color(0xFF8AC249),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddMedications(uid: widget.uid!),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF8AC249).withValues(alpha: 0.4),
+              blurRadius: 12,
+              spreadRadius: 2,
             ),
-          );
-          if (!mounted) return;
-        },
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 36),
+          ],
+        ),
+        child: FloatingActionButton(
+          tooltip: AppLocalizations.of(context)!.addMedication,
+          shape: const CircleBorder(),
+          backgroundColor:
+              Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2C2C2C)
+                  : Colors.white,
+          elevation: 0,
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddMedications(uid: widget.uid!),
+              ),
+            );
+            if (!mounted) return;
+          },
+          child: const Icon(
+            Icons.add_rounded,
+            color: Color(0xFF8AC249),
+            size: 36,
+          ),
+        ),
       ),
     );
   }
@@ -3241,7 +3699,7 @@ Future<void> scheduleMedicationNotification(
   final minute = int.tryParse(timeParts[1]);
   if (hour == null || minute == null) return;
 
-  for (int i = 0; i <= 8; i++) {
+  for (int i = 0; i <= 4; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
   }
 
@@ -3249,65 +3707,71 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
-    final now = DateTime.now();
+    DateTime? nextOccurrence;
+    int? nextWeekday;
+
     for (final weekday in daysOfWeek) {
       int daysUntil = (weekday - now.weekday) % 7;
       if (daysUntil <= 0) daysUntil += 7;
-      final nextDate = now.add(Duration(days: daysUntil));
-      final scheduledTime = DateTime(
-        nextDate.year,
-        nextDate.month,
-        nextDate.day,
+      final candidateDate = now.add(Duration(days: daysUntil));
+      final candidateTime = DateTime(
+        candidateDate.year,
+        candidateDate.month,
+        candidateDate.day,
         hour,
         minute,
       );
-      if (scheduledTime.isAfter(now)) {
-        for (int j = 0; j <= 8; j++) {
-          final followUpTime = scheduledTime.add(Duration(minutes: 15 * j));
-          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
-          final notificationId = ('${docId}_${weekday}_$j').hashCode;
-          final notificationMessage =
-              j == 0
-                  ? AppLocalizations.of(
-                    context ?? navigatorKey.currentContext!,
-                  )!.timeToTakeMedication(medication.name)
-                  : AppLocalizations.of(
-                    context ?? navigatorKey.currentContext!,
-                  )!.reminderTakeMedication(medication.name);
-
-          await flutterLocalNotificationsPlugin.zonedSchedule(
-            notificationId,
-            medication.name,
-            notificationMessage,
-            scheduledTZ,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                'medication_channel_$docId',
-                'Medication Reminders for ${medication.name}',
-                channelDescription: 'Reminds you to take ${medication.name}',
-                importance: Importance.max,
-                priority: Priority.high,
-                playSound: true,
-                showWhen: true,
-                ongoing: false,
-                autoCancel: true,
-                icon: 'dawatime_notify',
-                sound: RawResourceAndroidNotificationSound(
-                  'notification_sound',
-                ),
-                color: const Color(0xFF8AC249),
-              ),
-              iOS: DarwinNotificationDetails(
-                presentAlert: true,
-                presentSound: true,
-                presentBadge: true,
-                sound: "notification_sound.wav",
-              ),
-            ),
-            payload: docId,
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );
+      if (candidateTime.isAfter(now)) {
+        if (nextOccurrence == null || candidateTime.isBefore(nextOccurrence)) {
+          nextOccurrence = candidateTime;
+          nextWeekday = weekday;
         }
+      }
+    }
+    if (nextOccurrence != null && nextWeekday != null) {
+      for (int j = 0; j <= 4; j++) {
+        final followUpTime = nextOccurrence.add(Duration(minutes: 30 * j));
+        final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+        final notificationId = ('${docId}_${nextWeekday}_$j').hashCode;
+        final notificationMessage =
+            j == 0
+                ? AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.timeToTakeMedication(medication.name)
+                : AppLocalizations.of(
+                  context ?? navigatorKey.currentContext!,
+                )!.reminderTakeMedication(medication.name);
+
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          notificationId,
+          medication.name,
+          notificationMessage,
+          scheduledTZ,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              'medication_channel_$docId',
+              'Medication Reminders for ${medication.name}',
+              channelDescription: 'Reminds you to take ${medication.name}',
+              importance: Importance.max,
+              priority: Priority.high,
+              playSound: true,
+              showWhen: true,
+              ongoing: false,
+              autoCancel: true,
+              icon: 'dawatime_notify',
+              sound: RawResourceAndroidNotificationSound('notification_sound'),
+              color: const Color(0xFF8AC249),
+            ),
+            iOS: DarwinNotificationDetails(
+              presentAlert: true,
+              presentSound: true,
+              presentBadge: true,
+              sound: "notification_sound.wav",
+            ),
+          ),
+          payload: docId,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
       }
     }
     return;
@@ -3333,8 +3797,8 @@ Future<void> scheduleMedicationNotification(
 
   try {
     if (scheduledTime.isAfter(now)) {
-      for (int i = 0; i <= 8; i++) {
-        final followUpTime = scheduledTime.add(Duration(minutes: 15 * i));
+      for (int i = 0; i <= 4; i++) {
+        final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
         final notificationMessage =
             i == 0
                 ? AppLocalizations.of(

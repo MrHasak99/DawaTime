@@ -132,7 +132,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get couldNotSaveMedication => 'تعذر حفظ الدواء، يرجى المحاولة مرة أخرى';
 
   @override
-  String get youCanOnlyHaveUpTo7Medications => 'يمكنك إضافة حتى 7 أدوية فقط';
+  String get youCanOnlyHaveUpTo12Medications => 'يمكنك إضافة حتى ١٢ أدوية فقط';
+
+  @override
+  String get openAppRegularlyForNotifications => 'افتح التطبيق بانتظام لضمان استمرار تذكيرات الأدوية';
+
+  @override
+  String get notificationContinuityWarning => 'للاستمرار في تلقي التذكيرات، يرجى فتح التطبيق مرة واحدة على الأقل في الأسبوع';
 
   @override
   String get welcomeBack => 'مرحباً بعودتك،';
@@ -473,7 +479,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailInvalid => 'عنوان البريد الإلكتروني غير صحيح، يرجى التأكد منه وإعادة المحاولة';
 
   @override
-  String get weakPassword => 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل';
+  String get weakPassword => 'كلمة المرور ضعيفة، يجب أن تتكون من ٦ أحرف على الأقل';
 
   @override
   String get emailMethod => 'طريقة التسجيل هذه غير مفعّلة، الرجاء التواصل مع الدعم الفني';
