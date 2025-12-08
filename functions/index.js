@@ -262,13 +262,15 @@ exports.requestAccountDeletion = functions
       }
     });
 
-exports.blockAccessFromCertainCountries = functions.https.onRequest(
-    (req, res) => {
-      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+exports.blockAccessFromCertainCountries = functions
+    .runWith({memory: "512MB", timeoutSeconds: 30})
+    .https.onRequest((req, res) => {
+      const ip =
+        req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       const geo = geoip.lookup(ip);
       if (geo && blockedCountries.includes(geo.country)) {
+        console.log(`Blocked access from ${geo.country} (IP: ${ip})`);
         return res.status(403).send("Access denied in your country.");
       }
       res.status(200).send("Access granted.");
-    },
-);
+    });
