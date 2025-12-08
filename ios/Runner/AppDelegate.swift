@@ -11,15 +11,16 @@ import UIKit
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     
-    // Setup method channel for CarPlay
-    if let controller = window?.rootViewController as? FlutterViewController {
-      methodChannel = FlutterMethodChannel(name: "com.dawatime/carplay", binaryMessenger: controller.binaryMessenger)
+    // Setup method channel after a delay to ensure window is ready
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      if let controller = self?.window?.rootViewController as? FlutterViewController {
+        self?.methodChannel = FlutterMethodChannel(name: "com.dawatime/carplay", binaryMessenger: controller.binaryMessenger)
+      }
     }
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
   
-  // Make method channel accessible to CarPlaySceneDelegate
   static func getMethodChannel() -> FlutterMethodChannel? {
     if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
       return appDelegate.methodChannel

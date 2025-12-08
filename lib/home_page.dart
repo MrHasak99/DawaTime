@@ -121,8 +121,6 @@ class _HomePageState extends State<HomePage> {
 
   bool _showIntroGuide = false;
   int _introStep = 0;
-
-  // Method channel for CarPlay
   static const MethodChannel _carPlayChannel = MethodChannel(
     'com.dawatime/carplay',
   );

@@ -9,7 +9,6 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                                    didConnect interfaceController: CPInterfaceController) {
         self.interfaceController = interfaceController
         
-        // Request medications from Flutter
         if let methodChannel = AppDelegate.getMethodChannel() {
             methodChannel.invokeMethod("getMedications", arguments: nil) { [weak self] result in
                 guard let self = self else { return }
@@ -17,12 +16,10 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                 if let medications = result as? [[String: Any]] {
                     self.displayMedications(medications, on: interfaceController)
                 } else {
-                    // Fallback to empty list if no medications
                     self.displayEmptyState(on: interfaceController)
                 }
             }
         } else {
-            // Fallback if method channel not available
             self.displayEmptyState(on: interfaceController)
         }
     }
