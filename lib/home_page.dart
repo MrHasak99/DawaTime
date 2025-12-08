@@ -1219,6 +1219,14 @@ class _HomePageState extends State<HomePage> {
                               medication.daysOfWeek != null
                                   ? List<int>.from(medication.daysOfWeek!)
                                   : [];
+                          bool nameError = false;
+                          bool typeError = false;
+                          bool dosageError = false;
+                          bool amountError = false;
+                          bool frequencyError = false;
+                          bool timeError = false;
+                          bool startDateError = false;
+                          bool daysOfWeekError = false;
 
                           final result = await showDialog<bool>(
                             context: context,
@@ -1257,6 +1265,14 @@ class _HomePageState extends State<HomePage> {
                                                           'ar'
                                                       ? TextDirection.rtl
                                                       : TextDirection.ltr,
+                                              onChanged: (value) {
+                                                if (nameError &&
+                                                    value.isNotEmpty) {
+                                                  setState(
+                                                    () => nameError = false,
+                                                  );
+                                                }
+                                              },
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -1265,8 +1281,20 @@ class _HomePageState extends State<HomePage> {
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
+                                                  color:
+                                                      nameError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
+                                                ),
+                                                errorText:
+                                                    nameError
+                                                        ? AppLocalizations.of(
+                                                          context,
+                                                        )!.pleaseFillAllFields
+                                                        : null,
+                                                errorStyle: TextStyle(
+                                                  color: Colors.red[100],
                                                 ),
                                                 focusedBorder:
                                                     const UnderlineInputBorder(
@@ -1299,6 +1327,14 @@ class _HomePageState extends State<HomePage> {
                                                           'ar'
                                                       ? TextDirection.rtl
                                                       : TextDirection.ltr,
+                                              onChanged: (value) {
+                                                if (typeError &&
+                                                    value.isNotEmpty) {
+                                                  setState(
+                                                    () => typeError = false,
+                                                  );
+                                                }
+                                              },
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -1307,8 +1343,20 @@ class _HomePageState extends State<HomePage> {
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
+                                                  color:
+                                                      typeError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
+                                                ),
+                                                errorText:
+                                                    typeError
+                                                        ? AppLocalizations.of(
+                                                          context,
+                                                        )!.pleaseFillAllFields
+                                                        : null,
+                                                errorStyle: TextStyle(
+                                                  color: Colors.red[100],
                                                 ),
                                                 focusedBorder:
                                                     const UnderlineInputBorder(
@@ -1335,6 +1383,18 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               keyboardType:
                                                   TextInputType.number,
+                                              onChanged: (value) {
+                                                if (dosageError &&
+                                                    value.isNotEmpty &&
+                                                    convertArabicNumerals(
+                                                          value,
+                                                        ) !=
+                                                        '0') {
+                                                  setState(
+                                                    () => dosageError = false,
+                                                  );
+                                                }
+                                              },
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -1343,8 +1403,20 @@ class _HomePageState extends State<HomePage> {
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
+                                                  color:
+                                                      dosageError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
+                                                ),
+                                                errorText:
+                                                    dosageError
+                                                        ? AppLocalizations.of(
+                                                          context,
+                                                        )!.dosageFrequencyGreaterThanZero
+                                                        : null,
+                                                errorStyle: TextStyle(
+                                                  color: Colors.red[100],
                                                 ),
                                                 focusedBorder:
                                                     const UnderlineInputBorder(
@@ -1371,6 +1443,14 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               keyboardType:
                                                   TextInputType.number,
+                                              onChanged: (value) {
+                                                if (amountError &&
+                                                    value.isNotEmpty) {
+                                                  setState(
+                                                    () => amountError = false,
+                                                  );
+                                                }
+                                              },
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -1379,8 +1459,20 @@ class _HomePageState extends State<HomePage> {
                                                 labelStyle: Theme.of(
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
-                                                  color: Colors.white,
+                                                  color:
+                                                      amountError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
+                                                ),
+                                                errorText:
+                                                    amountError
+                                                        ? AppLocalizations.of(
+                                                          context,
+                                                        )!.pleaseFillAllFields
+                                                        : null,
+                                                errorStyle: TextStyle(
+                                                  color: Colors.red[100],
                                                 ),
                                                 focusedBorder:
                                                     const UnderlineInputBorder(
@@ -1441,14 +1533,20 @@ class _HomePageState extends State<HomePage> {
                                                     )!.pickNotificationTime
                                                     : "${AppLocalizations.of(context)!.notifyAt}: ${selectedTime!.format(context)}",
                                                 style: TextStyle(
-                                                  color: Colors.white,
+                                                  color:
+                                                      timeError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                 ),
                                               ),
                                               trailing: Icon(
                                                 Icons.access_time,
-                                                color: Colors.white,
+                                                color:
+                                                    timeError
+                                                        ? Colors.red
+                                                        : Colors.white,
                                               ),
                                               onTap: () async {
                                                 final isDark =
@@ -1588,6 +1686,7 @@ class _HomePageState extends State<HomePage> {
                                                 if (picked != null) {
                                                   setState(() {
                                                     selectedTime = picked;
+                                                    timeError = false;
                                                   });
                                                 }
                                               },
@@ -1600,14 +1699,20 @@ class _HomePageState extends State<HomePage> {
                                                     )!.pickScheduleStartDate
                                                     : "${AppLocalizations.of(context)!.startDate}: ${selectedStartDate!.day.toString().padLeft(2, '0')}-${selectedStartDate!.month.toString().padLeft(2, '0')}-${selectedStartDate!.year}",
                                                 style: TextStyle(
-                                                  color: Colors.white,
+                                                  color:
+                                                      startDateError
+                                                          ? Colors.red
+                                                          : Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                 ),
                                               ),
                                               trailing: Icon(
                                                 Icons.calendar_today,
-                                                color: Colors.white,
+                                                color:
+                                                    startDateError
+                                                        ? Colors.red
+                                                        : Colors.white,
                                               ),
                                               onTap: () async {
                                                 final isDark =
@@ -1694,6 +1799,7 @@ class _HomePageState extends State<HomePage> {
                                                 if (picked != null) {
                                                   setState(() {
                                                     selectedStartDate = picked;
+                                                    startDateError = false;
                                                   });
                                                 }
                                               },
@@ -1764,8 +1870,11 @@ class _HomePageState extends State<HomePage> {
                                                       AppLocalizations.of(
                                                         context,
                                                       )!.selectDaysOfWeek,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
+                                                      style: TextStyle(
+                                                        color:
+                                                            daysOfWeekError
+                                                                ? Colors.red
+                                                                : Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 16,
@@ -1800,6 +1909,12 @@ class _HomePageState extends State<HomePage> {
                                                             selectedDaysOfWeek
                                                                 .remove(dayNum);
                                                           }
+                                                          if (daysOfWeekError &&
+                                                              selectedDaysOfWeek
+                                                                  .isNotEmpty) {
+                                                            daysOfWeekError =
+                                                                false;
+                                                          }
                                                         });
                                                       },
                                                     ),
@@ -1815,15 +1930,41 @@ class _HomePageState extends State<HomePage> {
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                   ),
+                                                  onChanged: (value) {
+                                                    if (frequencyError &&
+                                                        value.isNotEmpty &&
+                                                        convertArabicNumerals(
+                                                              value,
+                                                            ) !=
+                                                            '0') {
+                                                      setState(
+                                                        () =>
+                                                            frequencyError =
+                                                                false,
+                                                      );
+                                                    }
+                                                  },
                                                   decoration: InputDecoration(
                                                     labelText:
                                                         AppLocalizations.of(
                                                           context,
                                                         )!.frequency,
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
+                                                    labelStyle: TextStyle(
+                                                      color:
+                                                          frequencyError
+                                                              ? Colors.red
+                                                              : Colors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                    ),
+                                                    errorText:
+                                                        frequencyError
+                                                            ? AppLocalizations.of(
+                                                              context,
+                                                            )!.dosageFrequencyGreaterThanZero
+                                                            : null,
+                                                    errorStyle: TextStyle(
+                                                      color: Colors.red[100],
                                                     ),
                                                     focusedBorder:
                                                         const UnderlineInputBorder(
@@ -1872,30 +2013,69 @@ class _HomePageState extends State<HomePage> {
                                                 editFrequencyType ==
                                                 FrequencyType.daysOfWeek;
 
-                                            final allFieldsFilled =
-                                                nameController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                typeOfMedicationController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                dosageController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                amountController
-                                                    .text
-                                                    .isNotEmpty &&
-                                                selectedTime != null &&
-                                                selectedStartDate != null &&
-                                                ((isEveryXDays &&
-                                                        frequencyController
-                                                            .text
-                                                            .isNotEmpty) ||
-                                                    (isDaysOfWeek &&
-                                                        selectedDaysOfWeek
-                                                            .isNotEmpty));
+                                            setState(() {
+                                              nameError = false;
+                                              typeError = false;
+                                              dosageError = false;
+                                              amountError = false;
+                                              frequencyError = false;
+                                              timeError = false;
+                                              startDateError = false;
+                                              daysOfWeekError = false;
+                                            });
 
-                                            if (!allFieldsFilled) {
+                                            bool hasErrors = false;
+
+                                            if (nameController.text.isEmpty) {
+                                              setState(() => nameError = true);
+                                              hasErrors = true;
+                                            }
+                                            if (typeOfMedicationController
+                                                .text
+                                                .isEmpty) {
+                                              setState(() => typeError = true);
+                                              hasErrors = true;
+                                            }
+                                            if (dosageController.text.isEmpty) {
+                                              setState(
+                                                () => dosageError = true,
+                                              );
+                                              hasErrors = true;
+                                            }
+                                            if (amountController.text.isEmpty) {
+                                              setState(
+                                                () => amountError = true,
+                                              );
+                                              hasErrors = true;
+                                            }
+                                            if (selectedTime == null) {
+                                              setState(() => timeError = true);
+                                              hasErrors = true;
+                                            }
+                                            if (selectedStartDate == null) {
+                                              setState(
+                                                () => startDateError = true,
+                                              );
+                                              hasErrors = true;
+                                            }
+                                            if (isEveryXDays &&
+                                                frequencyController
+                                                    .text
+                                                    .isEmpty) {
+                                              setState(
+                                                () => frequencyError = true,
+                                              );
+                                              hasErrors = true;
+                                            }
+                                            if (isDaysOfWeek &&
+                                                selectedDaysOfWeek.isEmpty) {
+                                              setState(
+                                                () => daysOfWeekError = true,
+                                              );
+                                              hasErrors = true;
+                                            }
+
+                                            if (hasErrors) {
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
@@ -1926,6 +2106,9 @@ class _HomePageState extends State<HomePage> {
                                                               .text,
                                                         ) ==
                                                         '0')) {
+                                              setState(
+                                                () => frequencyError = true,
+                                              );
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(

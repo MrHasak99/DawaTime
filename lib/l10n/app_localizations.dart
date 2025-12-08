@@ -320,7 +320,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseFillAllFields.
   ///
   /// In en, this message translates to:
-  /// **'Please fill all fields'**
+  /// **'Please fill all required fields'**
   String get pleaseFillAllFields;
 
   /// No description provided for @dosageFrequencyGreaterThanZero.
@@ -1112,7 +1112,7 @@ abstract class AppLocalizations {
   /// No description provided for @refillThreshold.
   ///
   /// In en, this message translates to:
-  /// **'Refill Alert'**
+  /// **'Refill alert at (optional)'**
   String get refillThreshold;
 
   /// No description provided for @lowStock.

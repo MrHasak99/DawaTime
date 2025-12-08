@@ -120,7 +120,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startDate => 'تاريخ البدء';
 
   @override
-  String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول';
+  String get pleaseFillAllFields => 'يرجى تعبئة جميع الحقول المطلوبة';
 
   @override
   String get dosageFrequencyGreaterThanZero => 'يجب أن تكون عدد الجرعة والتكرار أكبر من الصفر';
@@ -542,7 +542,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'تنبيه إعادة التعبئة';
+  String get refillThreshold => 'تنبيه التعبئة عند (إختياري)';
 
   @override
   String get lowStock => 'مخزون منخفض';

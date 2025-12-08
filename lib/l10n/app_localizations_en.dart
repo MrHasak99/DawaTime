@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startDate => 'Start Date';
 
   @override
-  String get pleaseFillAllFields => 'Please fill all fields';
+  String get pleaseFillAllFields => 'Please fill all required fields';
 
   @override
   String get dosageFrequencyGreaterThanZero => 'Dosage and frequency must be greater than zero';
@@ -542,7 +542,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'Refill Alert';
+  String get refillThreshold => 'Refill alert at (optional)';
 
   @override
   String get lowStock => 'Low Stock';

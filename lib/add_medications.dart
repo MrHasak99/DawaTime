@@ -39,6 +39,14 @@ class _AddMedicationsState extends State<AddMedications> {
   DateTime? _selectedStartDate;
   List<int> _selectedDaysOfWeek = [];
   FrequencyType _frequencyType = FrequencyType.everyXDays;
+  bool _nameError = false;
+  bool _typeError = false;
+  bool _dosageError = false;
+  bool _amountError = false;
+  bool _frequencyError = false;
+  bool _timeError = false;
+  bool _startDateError = false;
+  bool _daysOfWeekError = false;
 
   @override
   void initState() {
@@ -241,6 +249,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                           ).textTheme.bodyLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          onChanged: (value) {
+                                            if (_nameError &&
+                                                value.isNotEmpty) {
+                                              setState(
+                                                () => _nameError = false,
+                                              );
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(
@@ -250,14 +266,22 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                  _nameError
+                                                      ? Colors.red
+                                                      : (Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
                                               fontWeight: FontWeight.bold,
                                             ),
+                                            errorText:
+                                                _nameError
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseFillAllFields
+                                                    : null,
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -270,6 +294,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                           ).textTheme.bodyLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          onChanged: (value) {
+                                            if (_typeError &&
+                                                value.isNotEmpty) {
+                                              setState(
+                                                () => _typeError = false,
+                                              );
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(
@@ -279,14 +311,22 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                  _typeError
+                                                      ? Colors.red
+                                                      : (Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
                                               fontWeight: FontWeight.bold,
                                             ),
+                                            errorText:
+                                                _typeError
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseFillAllFields
+                                                    : null,
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -299,6 +339,16 @@ class _AddMedicationsState extends State<AddMedications> {
                                           ).textTheme.bodyLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          onChanged: (value) {
+                                            if (_dosageError &&
+                                                value.isNotEmpty &&
+                                                convertArabicNumerals(value) !=
+                                                    '0') {
+                                              setState(
+                                                () => _dosageError = false,
+                                              );
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(
@@ -308,14 +358,22 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                  _dosageError
+                                                      ? Colors.red
+                                                      : (Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
                                               fontWeight: FontWeight.bold,
                                             ),
+                                            errorText:
+                                                _dosageError
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.dosageFrequencyGreaterThanZero
+                                                    : null,
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -328,6 +386,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                           ).textTheme.bodyLarge?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
+                                          onChanged: (value) {
+                                            if (_amountError &&
+                                                value.isNotEmpty) {
+                                              setState(
+                                                () => _amountError = false,
+                                              );
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(
@@ -337,14 +403,22 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               color:
-                                                  Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                  _amountError
+                                                      ? Colors.red
+                                                      : (Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black),
                                               fontWeight: FontWeight.bold,
                                             ),
+                                            errorText:
+                                                _amountError
+                                                    ? AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseFillAllFields
+                                                    : null,
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -388,9 +462,17 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
+                                              color:
+                                                  _timeError
+                                                      ? Colors.red
+                                                      : null,
                                             ),
                                           ),
-                                          trailing: Icon(Icons.access_time),
+                                          trailing: Icon(
+                                            Icons.access_time,
+                                            color:
+                                                _timeError ? Colors.red : null,
+                                          ),
                                           onTap: () async {
                                             final isDark =
                                                 Theme.of(context).brightness ==
@@ -514,6 +596,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                             if (picked != null) {
                                               setState(() {
                                                 _selectedTime = picked;
+                                                _timeError = false;
                                               });
                                             }
                                           },
@@ -530,9 +613,19 @@ class _AddMedicationsState extends State<AddMedications> {
                                               context,
                                             ).textTheme.bodyLarge?.copyWith(
                                               fontWeight: FontWeight.bold,
+                                              color:
+                                                  _startDateError
+                                                      ? Colors.red
+                                                      : null,
                                             ),
                                           ),
-                                          trailing: Icon(Icons.calendar_today),
+                                          trailing: Icon(
+                                            Icons.calendar_today,
+                                            color:
+                                                _startDateError
+                                                    ? Colors.red
+                                                    : null,
+                                          ),
                                           onTap: () async {
                                             final isDark =
                                                 Theme.of(context).brightness ==
@@ -601,6 +694,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                             if (picked != null) {
                                               setState(() {
                                                 _selectedStartDate = picked;
+                                                _startDateError = false;
                                               });
                                             }
                                           },
@@ -683,6 +777,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontSize: 18,
+                                                        color:
+                                                            _daysOfWeekError
+                                                                ? Colors.red
+                                                                : null,
                                                       ),
                                                   textAlign: TextAlign.center,
                                                 ),
@@ -700,6 +798,19 @@ class _AddMedicationsState extends State<AddMedications> {
                                               ).textTheme.bodyLarge?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
+                                              onChanged: (value) {
+                                                if (_frequencyError &&
+                                                    value.isNotEmpty &&
+                                                    convertArabicNumerals(
+                                                          value,
+                                                        ) !=
+                                                        '0') {
+                                                  setState(
+                                                    () =>
+                                                        _frequencyError = false,
+                                                  );
+                                                }
+                                              },
                                               decoration: InputDecoration(
                                                 labelText:
                                                     AppLocalizations.of(
@@ -709,14 +820,23 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   context,
                                                 ).textTheme.bodyLarge?.copyWith(
                                                   color:
-                                                      Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                                      _frequencyError
+                                                          ? Colors.red
+                                                          : (Theme.of(
+                                                                    context,
+                                                                  ).brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black),
                                                   fontWeight: FontWeight.bold,
                                                 ),
+                                                errorText:
+                                                    _frequencyError
+                                                        ? AppLocalizations.of(
+                                                          context,
+                                                        )!.dosageFrequencyGreaterThanZero
+                                                        : null,
                                               ),
                                             ),
                                         const SizedBox(height: 16),
@@ -735,31 +855,87 @@ class _AddMedicationsState extends State<AddMedications> {
                                                       _frequencyType ==
                                                       FrequencyType.daysOfWeek;
 
-                                                  final allFieldsFilled =
-                                                      nameController
+                                                  setState(() {
+                                                    _nameError = false;
+                                                    _typeError = false;
+                                                    _dosageError = false;
+                                                    _amountError = false;
+                                                    _frequencyError = false;
+                                                    _timeError = false;
+                                                    _startDateError = false;
+                                                    _daysOfWeekError = false;
+                                                  });
+                                                  bool hasErrors = false;
+                                                  if (nameController
+                                                      .text
+                                                      .isEmpty) {
+                                                    setState(
+                                                      () => _nameError = true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (typeOfMedicationController
+                                                      .text
+                                                      .isEmpty) {
+                                                    setState(
+                                                      () => _typeError = true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (dosageController
+                                                      .text
+                                                      .isEmpty) {
+                                                    setState(
+                                                      () => _dosageError = true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (amountController
+                                                      .text
+                                                      .isEmpty) {
+                                                    setState(
+                                                      () => _amountError = true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (_selectedTime == null) {
+                                                    setState(
+                                                      () => _timeError = true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (_selectedStartDate ==
+                                                      null) {
+                                                    setState(
+                                                      () =>
+                                                          _startDateError =
+                                                              true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (isEveryXDays &&
+                                                      frequencyController
                                                           .text
-                                                          .isNotEmpty &&
-                                                      typeOfMedicationController
-                                                          .text
-                                                          .isNotEmpty &&
-                                                      dosageController
-                                                          .text
-                                                          .isNotEmpty &&
-                                                      amountController
-                                                          .text
-                                                          .isNotEmpty &&
-                                                      _selectedTime != null &&
-                                                      _selectedStartDate !=
-                                                          null &&
-                                                      ((isEveryXDays &&
-                                                              frequencyController
-                                                                  .text
-                                                                  .isNotEmpty) ||
-                                                          (isDaysOfWeek &&
-                                                              _selectedDaysOfWeek
-                                                                  .isNotEmpty));
+                                                          .isEmpty) {
+                                                    setState(
+                                                      () =>
+                                                          _frequencyError =
+                                                              true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
+                                                  if (isDaysOfWeek &&
+                                                      _selectedDaysOfWeek
+                                                          .isEmpty) {
+                                                    setState(
+                                                      () =>
+                                                          _daysOfWeekError =
+                                                              true,
+                                                    );
+                                                    hasErrors = true;
+                                                  }
 
-                                                  if (!allFieldsFilled) {
+                                                  if (hasErrors) {
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
@@ -803,6 +979,31 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                         .text,
                                                                   ) ==
                                                                   '0'))) {
+                                                    setState(() {
+                                                      if (convertArabicNumerals(
+                                                                dosageController
+                                                                    .text,
+                                                              ) ==
+                                                              '0' ||
+                                                          convertArabicNumerals(
+                                                            dosageController
+                                                                .text,
+                                                          ).isEmpty) {
+                                                        _dosageError = true;
+                                                      }
+                                                      if (isEveryXDays &&
+                                                          (convertArabicNumerals(
+                                                                    frequencyController
+                                                                        .text,
+                                                                  ) ==
+                                                                  '0' ||
+                                                              convertArabicNumerals(
+                                                                frequencyController
+                                                                    .text,
+                                                              ).isEmpty)) {
+                                                        _frequencyError = true;
+                                                      }
+                                                    });
                                                     ScaffoldMessenger.of(
                                                       context,
                                                     ).showSnackBar(
@@ -1157,6 +1358,9 @@ class _AddMedicationsState extends State<AddMedications> {
                 });
               } else {
                 _selectedDaysOfWeek.remove(dayNum);
+              }
+              if (_daysOfWeekError && _selectedDaysOfWeek.isNotEmpty) {
+                _daysOfWeekError = false;
               }
             });
           },
