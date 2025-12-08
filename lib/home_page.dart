@@ -122,6 +122,11 @@ class _HomePageState extends State<HomePage> {
   bool _showIntroGuide = false;
   int _introStep = 0;
 
+  // Method channel for CarPlay
+  static const MethodChannel _carPlayChannel = MethodChannel(
+    'com.dawatime/carplay',
+  );
+
   List<Map<String, String>> get _introSteps {
     final loc = AppLocalizations.of(context)!;
     return [
@@ -167,6 +172,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkIntroGuide();
+    _setupCarPlayHandler();
 
     if (!kIsWeb) {
       final user = FirebaseAuth.instance.currentUser;
@@ -795,6 +801,43 @@ class _HomePageState extends State<HomePage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showInteractiveGuide();
       });
+    }
+  }
+
+  void _setupCarPlayHandler() {
+    _carPlayChannel.setMethodCallHandler((call) async {
+      if (call.method == 'getMedications') {
+        return await _getMedicationsForCarPlay();
+      }
+      return null;
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> _getMedicationsForCarPlay() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return [];
+
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection(user.uid)
+              .orderBy('notifyTime')
+              .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'name': data['name'] ?? 'Unknown',
+          'notifyTime': data['notifyTime'] ?? 'No time set',
+          'dosage': data['dosage'] ?? 0.0,
+          'typeOfMedication': data['typeOfMedication'] ?? '',
+        };
+      }).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching medications for CarPlay: $e');
+      }
+      return [];
     }
   }
 
