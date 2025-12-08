@@ -173,5 +173,7 @@
   "lowStock": "مخزون منخفض",
   "medications": "الأدوية",
   "needRefill": "الأدوية التالية تحتاج إلى إعادة تعبئة:",
-  "needRefillShort": "أدوية تحتاج إعادة تعبئة"
+  "needRefillShort": "أدوية تحتاج إعادة تعبئة",
+  "newUpdateAvailable": "تحديث جديد متوفر!",
+  "updateAvailableBody": "إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن."
 }

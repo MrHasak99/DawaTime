@@ -2273,6 +2273,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                         'preferredLanguage',
                                         locale?.languageCode ?? 'en',
                                       );
+                                      final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (user != null) {
+                                        await FirebaseFirestore.instance
+                                            .collection('Users')
+                                            .doc(user.uid)
+                                            .set({
+                                              'preferredLanguage':
+                                                  locale?.languageCode ?? 'en',
+                                            }, SetOptions(merge: true));
+                                      }
                                     },
                                   ),
                                 ),

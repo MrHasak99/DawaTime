@@ -555,4 +555,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get needRefillShort => 'medications need refilling';
+
+  @override
+  String get newUpdateAvailable => 'New Update Available!';
+
+  @override
+  String get updateAvailableBody => 'A new version of DawaTime is available. Tap to update now.';
 }

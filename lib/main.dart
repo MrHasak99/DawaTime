@@ -24,6 +24,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -35,6 +36,57 @@ final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
 );
 
 final ValueNotifier<Locale?> localeNotifier = ValueNotifier(null);
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  if (message.data['type'] == 'update_available') {
+    final title = message.data['title'] ?? 'New Update Available!';
+    final body =
+        message.data['body'] ??
+        'A new version of DawaTime is available. Tap to update now.';
+
+    const initializationSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const initializationSettingsIOS = DarwinInitializationSettings();
+    const initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+          'updates',
+          'App Updates',
+          channelDescription: 'Notifications for app updates',
+          importance: Importance.high,
+          priority: Priority.high,
+          color: Color(0xFF8AC249),
+        );
+
+    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    const NotificationDetails details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      999999,
+      title,
+      body,
+      details,
+      payload: 'update_available',
+    );
+  }
+}
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -159,6 +211,12 @@ Future<void> main() async {
         ) async {
           selectNotificationStream.add(response);
           if (navigatorKey.currentContext != null && response.payload != null) {
+            if (response.payload == 'update_available') {
+              final context = navigatorKey.currentContext!;
+              await showForceUpdateDialog(context);
+              return;
+            }
+
             showDialog(
               context: navigatorKey.currentContext!,
               builder:
@@ -214,6 +272,80 @@ Future<void> main() async {
               >();
       await androidImplementation?.requestNotificationsPermission();
     } catch (_) {}
+    try {
+      final messaging = FirebaseMessaging.instance;
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
+
+      await messaging.requestPermission(alert: true, badge: true, sound: true);
+
+      final token = await messaging.getToken();
+      if (token != null) {}
+
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        if (message.data['type'] == 'update_available') {
+          final title = message.data['title'] ?? 'New Update Available!';
+          final body =
+              message.data['body'] ??
+              'A new version of DawaTime is available. Tap to update now.';
+
+          const AndroidNotificationDetails androidDetails =
+              AndroidNotificationDetails(
+                'updates',
+                'App Updates',
+                channelDescription: 'Notifications for app updates',
+                importance: Importance.high,
+                priority: Priority.high,
+                color: Color(0xFF8AC249),
+              );
+
+          const DarwinNotificationDetails iosDetails =
+              DarwinNotificationDetails(
+                presentAlert: true,
+                presentBadge: true,
+                presentSound: true,
+              );
+
+          const NotificationDetails details = NotificationDetails(
+            android: androidDetails,
+            iOS: iosDetails,
+          );
+
+          await flutterLocalNotificationsPlugin.show(
+            999999,
+            title,
+            body,
+            details,
+            payload: 'update_available',
+          );
+        }
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        if (message.data['type'] == 'update_available') {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (navigatorKey.currentContext != null) {
+              showForceUpdateDialog(navigatorKey.currentContext!);
+            }
+          });
+        }
+      });
+
+      final initialMessage = await messaging.getInitialMessage();
+      if (initialMessage != null &&
+          initialMessage.data['type'] == 'update_available') {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (navigatorKey.currentContext != null) {
+            showForceUpdateDialog(navigatorKey.currentContext!);
+          }
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('FCM initialization error: $e');
+      }
+    }
   }
 
   try {
@@ -384,6 +516,29 @@ class MainApp extends StatelessWidget {
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
+  Future<void> _saveFCMToken(String uid) async {
+    if (kIsWeb) return;
+
+    try {
+      final messaging = FirebaseMessaging.instance;
+      final token = await messaging.getToken();
+
+      if (token != null) {
+        final prefs = await SharedPreferences.getInstance();
+        final preferredLang = prefs.getString('preferredLanguage') ?? 'en';
+
+        await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+          'fcmToken': token,
+          'preferredLanguage': preferredLang,
+        }, SetOptions(merge: true));
+      } else {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Error saving FCM token: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -397,7 +552,9 @@ class AuthGate extends StatelessWidget {
           );
         }
         if (snapshot.hasData && snapshot.data != null) {
-          return HomePage(uid: snapshot.data!.uid);
+          final user = snapshot.data!;
+          _saveFCMToken(user.uid);
+          return HomePage(uid: user.uid);
         }
         return const LoginPage();
       },

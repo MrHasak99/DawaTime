@@ -173,5 +173,7 @@
   "lowStock": "Low Stock",
   "medications": "Medications",
   "needRefill": "The following medications need refilling:",
-  "needRefillShort": "medications need refilling"
+  "needRefillShort": "medications need refilling",
+  "newUpdateAvailable": "New Update Available!",
+  "updateAvailableBody": "A new version of DawaTime is available. Tap to update now."
 }

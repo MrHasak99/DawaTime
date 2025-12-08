@@ -555,4 +555,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get needRefillShort => 'أدوية تحتاج إعادة تعبئة';
+
+  @override
+  String get newUpdateAvailable => 'تحديث جديد متوفر!';
+
+  @override
+  String get updateAvailableBody => 'إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.';
 }

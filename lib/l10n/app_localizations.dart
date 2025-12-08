@@ -1138,6 +1138,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'medications need refilling'**
   String get needRefillShort;
+
+  /// No description provided for @newUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New Update Available!'**
+  String get newUpdateAvailable;
+
+  /// No description provided for @updateAvailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of DawaTime is available. Tap to update now.'**
+  String get updateAvailableBody;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
