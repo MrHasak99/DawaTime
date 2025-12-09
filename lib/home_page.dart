@@ -3724,7 +3724,13 @@ Future<void> scheduleMedicationNotification(
         now.isAfter(todayScheduledTime) &&
         now.isBefore(twoHoursAfter);
 
-    if (isWithinWindow) {
+    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {
+      if (kDebugMode) {
+        print(
+          'Skipping old notification for ${medication.name} on ${now.weekday}',
+        );
+      }
+    } else if (isWithinWindow) {
       for (int j = 0; j <= 4; j++) {
         final followUpTime = todayScheduledTime.add(Duration(minutes: 30 * j));
         if (followUpTime.isAfter(now)) {
@@ -3864,6 +3870,16 @@ Future<void> scheduleMedicationNotification(
     final twoHoursAfter = scheduledTime.add(const Duration(hours: 2));
     final isWithinWindow =
         now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
+
+    if (now.isAfter(twoHoursAfter)) {
+      if (kDebugMode) {
+        print(
+          'Skipping old notification for ${medication.name} at $scheduledTime',
+        );
+      }
+      return;
+    }
+
     if (scheduledTime.isAfter(now)) {
       for (int i = 0; i <= 4; i++) {
         final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
