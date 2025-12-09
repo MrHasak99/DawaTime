@@ -591,8 +591,17 @@ Future<Medications?> fetchMedicationByDocId(String docId) async {
 }
 
 Future<void> requestExactAlarmPermission() async {
-  if (await Permission.scheduleExactAlarm.isDenied) {
-    await Permission.scheduleExactAlarm.request();
+  if (kIsWeb) return;
+
+  try {
+    final status = await Permission.scheduleExactAlarm.status;
+    if (status.isGranted) {
+      return;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error checking exact alarm permission: $e');
+    }
   }
 }
 

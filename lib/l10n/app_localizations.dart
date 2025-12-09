@@ -1124,8 +1124,14 @@ abstract class AppLocalizations {
   /// No description provided for @refillThreshold.
   ///
   /// In en, this message translates to:
-  /// **'Refill alert at (optional)'**
+  /// **'(optional) Refill alert at'**
   String get refillThreshold;
+
+  /// No description provided for @refillThresholdDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Refill Alert'**
+  String get refillThresholdDisplay;
 
   /// No description provided for @lowStock.
   ///

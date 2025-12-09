@@ -548,7 +548,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'Refill alert at (optional)';
+  String get refillThreshold => '(optional) Refill alert at';
+
+  @override
+  String get refillThresholdDisplay => 'Refill Alert';
 
   @override
   String get lowStock => 'Low Stock';

@@ -548,7 +548,10 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get refillThreshold => 'تنبيه التعبئة عند (إختياري)';
+  String get refillThreshold => '(إختياري) تنبيه التعبئة عند';
+
+  @override
+  String get refillThresholdDisplay => 'تنبيه إعادة التعبئة';
 
   @override
   String get lowStock => 'مخزون منخفض';

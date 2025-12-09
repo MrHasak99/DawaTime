@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -171,6 +172,7 @@ class _HomePageState extends State<HomePage> {
     if (!kIsWeb) {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        _checkPermissionsIfNeeded(user.uid);
         rescheduleAllMedications(user.uid);
         _autoRescheduleOverdueMedications(user.uid);
         _checkRefillReminders(user.uid);
@@ -323,6 +325,50 @@ class _HomePageState extends State<HomePage> {
     _medicationCheckTimer?.cancel();
     localeNotifier.removeListener(_localeListener);
     super.dispose();
+  }
+
+  Future<void> _checkPermissionsIfNeeded(String userId) async {
+    if (kIsWeb) return;
+
+    if (!Platform.isAndroid) return;
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection(userId).get();
+      if (snapshot.docs.isEmpty) {
+        return;
+      }
+
+      final status = await Permission.scheduleExactAlarm.status;
+      if (!status.isGranted && mounted) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: const Color(0xFF8AC249),
+                content: Text(
+                  AppLocalizations.of(context)!.allowSettings,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                action: SnackBarAction(
+                  label: AppLocalizations.of(context)!.openSettings,
+                  onPressed: openExactAlarmSettings,
+                  textColor: Colors.white,
+                ),
+                duration: const Duration(seconds: 8),
+              ),
+            );
+          }
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking permissions: $e');
+      }
+    }
   }
 
   Future<void> _autoRescheduleOverdueMedications(String userId) async {
@@ -3617,6 +3663,21 @@ class MedicationDetailsCard extends StatelessWidget {
                 fontFamily: 'Inter',
               ),
             ),
+            if (medication.refillThreshold != null &&
+                medication.refillThreshold! > 0) ...[
+              const SizedBox(height: 18),
+              _DetailRow(
+                icon: Icons.warning_amber_rounded,
+                label: AppLocalizations.of(context)!.refillThresholdDisplay,
+                value: "${medication.refillThreshold}",
+                valueStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF8AC249),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ],
             const SizedBox(height: 18),
             if (getNextReminder(medication) != null)
               _DetailRow(
@@ -4117,9 +4178,24 @@ Future<void> openExactAlarmSettings() async {
 
 Future<void> requestExactAlarmPermission() async {
   if (kIsWeb) return;
+  if (!Platform.isAndroid) return;
 
-  if (await Permission.scheduleExactAlarm.isDenied) {
-    await Permission.scheduleExactAlarm.request();
+  try {
+    final status = await Permission.scheduleExactAlarm.status;
+
+    if (status.isGranted) {
+      return;
+    }
+
+    if (status.isDenied || status.isPermanentlyDenied) {
+      if (kDebugMode) {
+        print('Exact alarm permission not granted');
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error checking exact alarm permission: $e');
+    }
   }
 }
 
