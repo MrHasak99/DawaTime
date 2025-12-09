@@ -14,10 +14,9 @@ exports.notifyOnVersionUpdate = functions
       const before = change.before.data();
       const after = change.after.data();
 
-      const iosUpdated = before.ios !== after.ios;
-      const androidUpdated = before.android !== after.android;
+      const versionUpdated = before.version !== after.version;
 
-      if (!iosUpdated && !androidUpdated) return null;
+      if (!versionUpdated) return null;
 
       try {
         const users = [];
@@ -77,8 +76,7 @@ exports.notifyOnVersionUpdate = functions
           const message = {
             data: {
               type: "update_available",
-              iosVersion: after.ios || "",
-              androidVersion: after.android || "",
+              version: after.version || "",
               title: "تحديث جديد متوفر!",
               body: "إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.",
             },
@@ -103,8 +101,7 @@ exports.notifyOnVersionUpdate = functions
           const message = {
             data: {
               type: "update_available",
-              iosVersion: after.ios || "",
-              androidVersion: after.android || "",
+              version: after.version || "",
               title: "New Update Available!",
               body:
                 "A new version of DawaTime is available. " +

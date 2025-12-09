@@ -64,6 +64,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           channelDescription: 'Notifications for app updates',
           importance: Importance.high,
           priority: Priority.high,
+          playSound: true,
+          sound: RawResourceAndroidNotificationSound('notification_sound'),
           color: Color(0xFF8AC249),
         );
 
@@ -71,6 +73,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      sound: 'notification_sound.wav',
     );
 
     const NotificationDetails details = NotificationDetails(
@@ -297,6 +300,10 @@ Future<void> main() async {
                 channelDescription: 'Notifications for app updates',
                 importance: Importance.high,
                 priority: Priority.high,
+                playSound: true,
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
                 color: Color(0xFF8AC249),
               );
 
@@ -305,6 +312,7 @@ Future<void> main() async {
                 presentAlert: true,
                 presentBadge: true,
                 presentSound: true,
+                sound: 'notification_sound.wav',
               );
 
           const NotificationDetails details = NotificationDetails(
@@ -639,9 +647,6 @@ Future<bool> isUpdateRequired(
 
   try {
     final info = await PackageInfo.fromPlatform();
-    final platform =
-        Theme.of(context).platform == TargetPlatform.iOS ? 'ios' : 'android';
-
     final doc = await FirebaseFirestore.instance
         .collection('AppConfig')
         .doc('Version')
@@ -649,7 +654,7 @@ Future<bool> isUpdateRequired(
         .timeout(const Duration(seconds: 3));
 
     if (!doc.exists) return false;
-    final latestVersion = doc.data()?[platform];
+    final latestVersion = doc.data()?['version'];
     if (latestVersion == null) return false;
     final isOutdated = _isVersionLower(info.version, latestVersion);
     if (kDebugMode) {
