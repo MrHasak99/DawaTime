@@ -173,9 +173,7 @@ class _HomePageState extends State<HomePage> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         _checkPermissionsIfNeeded(user.uid);
-        rescheduleAllMedications(user.uid);
-        _autoRescheduleOverdueMedications(user.uid);
-        _checkRefillReminders(user.uid);
+        _scheduleAfterPermissionCheck(user.uid);
       }
 
       _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -369,6 +367,18 @@ class _HomePageState extends State<HomePage> {
         print('Error checking permissions: $e');
       }
     }
+  }
+
+  Future<void> _scheduleAfterPermissionCheck(String userId) async {
+    if (kIsWeb) return;
+
+    if (Platform.isIOS) {
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+
+    rescheduleAllMedications(userId);
+    _autoRescheduleOverdueMedications(userId);
+    _checkRefillReminders(userId);
   }
 
   Future<void> _autoRescheduleOverdueMedications(String userId) async {
@@ -3815,6 +3825,11 @@ Future<void> scheduleMedicationNotification(
         );
       }
     } else if (isWithinWindow) {
+      if (kDebugMode) {
+        print(
+          'Within 2-hour window for ${medication.name}. Scheduling follow-ups...',
+        );
+      }
       for (int j = 0; j <= 4; j++) {
         final followUpTime = todayScheduledTime.add(Duration(minutes: 30 * j));
         if (followUpTime.isAfter(now)) {
@@ -3823,6 +3838,12 @@ Future<void> scheduleMedicationNotification(
           final notificationMessage = AppLocalizations.of(
             context ?? navigatorKey.currentContext!,
           )!.reminderTakeMedication(medication.name);
+
+          if (kDebugMode) {
+            print(
+              'Scheduling notification #$notificationId for ${medication.name} at $followUpTime (in ${followUpTime.difference(now).inMinutes} minutes)',
+            );
+          }
 
           await flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
@@ -3857,7 +3878,20 @@ Future<void> scheduleMedicationNotification(
             payload: docId,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
+
+          if (kDebugMode) {
+            print('✓ Notification scheduled successfully');
+          }
+        } else {
+          if (kDebugMode) {
+            print('Skipping notification at $followUpTime (already passed)');
+          }
         }
+      }
+      if (kDebugMode) {
+        print(
+          'Finished scheduling all follow-up notifications for ${medication.name}',
+        );
       }
       return;
     }
@@ -3946,8 +3980,14 @@ Future<void> scheduleMedicationNotification(
           : DateTime(now.year, now.month, now.day, hour, minute);
 
   var scheduledTime = baseDate;
-  while (scheduledTime.isBefore(now)) {
-    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+  final twoHoursAfterBase = baseDate.add(const Duration(hours: 2));
+  final isWithinWindowOfToday =
+      now.isAfter(baseDate) && now.isBefore(twoHoursAfterBase);
+
+  if (!isWithinWindowOfToday) {
+    while (scheduledTime.isBefore(now)) {
+      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+    }
   }
 
   try {

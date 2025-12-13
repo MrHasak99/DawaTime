@@ -1421,12 +1421,18 @@ Future<void> scheduleMedicationNotification(
   String? userId,
 }) async {
   await requestExactAlarmPermission();
-  if (medication.notifyTime == null || medication.notifyTime!.isEmpty) return;
+  if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
+    return;
+  }
   final timeParts = medication.notifyTime!.split(':');
-  if (timeParts.length != 2) return;
+  if (timeParts.length != 2) {
+    return;
+  }
   final hour = int.tryParse(timeParts[0]);
   final minute = int.tryParse(timeParts[1]);
-  if (hour == null || minute == null) return;
+  if (hour == null || minute == null) {
+    return;
+  }
 
   for (int i = 0; i <= 4; i++) {
     await flutterLocalNotificationsPlugin.cancel(docId.hashCode + i);
@@ -1436,6 +1442,69 @@ Future<void> scheduleMedicationNotification(
   final daysOfWeek = medication.daysOfWeek ?? [];
 
   if (daysOfWeek.isNotEmpty) {
+    final todayScheduledTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+    final twoHoursAfter = todayScheduledTime.add(const Duration(hours: 2));
+    final isTodayScheduled = daysOfWeek.contains(now.weekday);
+    final isWithinWindow =
+        isTodayScheduled &&
+        now.isAfter(todayScheduledTime) &&
+        now.isBefore(twoHoursAfter);
+
+    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {
+    } else if (isWithinWindow) {
+      for (int j = 0; j <= 4; j++) {
+        final followUpTime = todayScheduledTime.add(Duration(minutes: 30 * j));
+        if (followUpTime.isAfter(now)) {
+          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+          final notificationId = ('${docId}_${now.weekday}_$j').hashCode;
+          final notificationMessage = AppLocalizations.of(
+            context ?? navigatorKey.currentContext!,
+          )!.reminderTakeMedication(medication.name);
+
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            notificationId,
+            medication.name,
+            notificationMessage,
+            scheduledTZ,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel_$docId',
+                'Medication Reminders for ${medication.name}',
+                channelDescription: 'Reminds you to take ${medication.name}',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                showWhen: true,
+                ongoing: false,
+                autoCancel: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFF8AC249),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+                interruptionLevel: InterruptionLevel.timeSensitive,
+              ),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        }
+      }
+      return;
+    }
+
     DateTime? nextOccurrence;
     int? nextWeekday;
 
@@ -1519,11 +1588,27 @@ Future<void> scheduleMedicationNotification(
           : DateTime(now.year, now.month, now.day, hour, minute);
 
   var scheduledTime = baseDate;
-  while (scheduledTime.isBefore(now)) {
-    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+
+  final twoHoursAfterBase = baseDate.add(const Duration(hours: 2));
+  final isWithinWindowOfToday =
+      now.isAfter(baseDate) && now.isBefore(twoHoursAfterBase);
+
+  if (!isWithinWindowOfToday) {
+    while (scheduledTime.isBefore(now)) {
+      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+    }
   }
 
   try {
+    final baseScheduledTime = scheduledTime;
+    final twoHoursAfter = scheduledTime.add(const Duration(hours: 2));
+    final isWithinWindow =
+        now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
+
+    if (now.isAfter(twoHoursAfter)) {
+      return;
+    }
+
     if (scheduledTime.isAfter(now)) {
       for (int i = 0; i <= 4; i++) {
         final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
@@ -1569,6 +1654,51 @@ Future<void> scheduleMedicationNotification(
           payload: docId,
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         );
+      }
+    } else if (isWithinWindow) {
+      for (int i = 0; i <= 4; i++) {
+        final followUpTime = baseScheduledTime.add(Duration(minutes: 30 * i));
+        if (followUpTime.isAfter(now)) {
+          final notificationMessage = AppLocalizations.of(
+            context ?? navigatorKey.currentContext!,
+          )!.reminderTakeMedication(medication.name);
+
+          final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+          final notificationId = ('${docId}_$i').hashCode;
+
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+            notificationId,
+            medication.name,
+            notificationMessage,
+            scheduledTZ,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'medication_channel_$docId',
+                'Medication Reminders for ${medication.name}',
+                channelDescription: 'Reminds you to take ${medication.name}',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                showWhen: true,
+                ongoing: false,
+                autoCancel: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFF8AC249),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
+            ),
+            payload: docId,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        }
       }
     }
   } catch (e) {
