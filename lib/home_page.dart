@@ -33,7 +33,7 @@ class Medications {
   final double? refillThreshold;
   final bool? refillNotified;
 
-  Medications({
+  const Medications({
     required this.name,
     required this.typeOfMedication,
     required this.dosage,
@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         '${AppLocalizations.of(context)!.addMedicationBody2}\n'
                         '${AppLocalizations.of(context)!.setReminders}\n'
@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                         '${AppLocalizations.of(context)!.manageProfile}.\n',
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text(
                         AppLocalizations.of(context)!.medicationNotifications,
                         style: TextStyle(
@@ -333,7 +333,7 @@ class _HomePageState extends State<HomePage> {
     if (!Platform.isAndroid) return;
     try {
       final snapshot =
-          await FirebaseFirestore.instance.collection(userId).get();
+          await FirebaseFirestore.instance.collection(userId).limit(1).get();
       if (snapshot.docs.isEmpty) {
         return;
       }
@@ -374,7 +374,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _autoRescheduleOverdueMedications(String userId) async {
     try {
       final now = DateTime.now();
-      final meds = await FirebaseFirestore.instance.collection(userId).get();
+      final meds = await FirebaseFirestore.instance.collection(userId).limit(12).get();
 
       for (var doc in meds.docs) {
         final medication = medicationFromDoc(doc);
@@ -432,13 +432,22 @@ class _HomePageState extends State<HomePage> {
 
         if (lastScheduledTime != null) {
           final minutesSince = now.difference(lastScheduledTime).inMinutes;
-          if (minutesSince > 120) {
-            if (medication.lastTaken == null ||
-                medication.lastTaken!.isBefore(
-                  DateTime(now.year, now.month, now.day),
-                )) {
-              shouldAutoReschedule = true;
-            }
+
+          final notTakenToday =
+              medication.lastTaken == null ||
+              medication.lastTaken!.isBefore(
+                DateTime(now.year, now.month, now.day),
+              );
+
+          if (minutesSince >= 0 && minutesSince <= 120 && notTakenToday) {
+            await scheduleMedicationNotification(
+              null,
+              doc.id,
+              medication,
+              userId: userId,
+            );
+          } else if (minutesSince > 120 && notTakenToday) {
+            shouldAutoReschedule = true;
           }
         }
 
@@ -482,7 +491,7 @@ class _HomePageState extends State<HomePage> {
     if (kIsWeb) return;
 
     try {
-      final meds = await FirebaseFirestore.instance.collection(userId).get();
+      final meds = await FirebaseFirestore.instance.collection(userId).limit(12).get();
       final List<Map<String, dynamic>> lowStockMeds = [];
 
       for (var doc in meds.docs) {
@@ -662,7 +671,10 @@ class _HomePageState extends State<HomePage> {
                                       .typeOfMedication,
                                 )
                                 : 'You have ${(lowStockMeds[0]['medication'] as Medications).amount.toInt()} ${(lowStockMeds[0]['medication'] as Medications).typeOfMedication} left. Time to refill!',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           )
                           : Column(
                             mainAxisSize: MainAxisSize.min,
@@ -712,7 +724,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       loc?.ok ?? 'OK',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -736,7 +748,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final now = DateTime.now();
-      final meds = await FirebaseFirestore.instance.collection(user.uid).get();
+      final meds = await FirebaseFirestore.instance.collection(user.uid).limit(12).get();
 
       for (var doc in meds.docs) {
         final medication = medicationFromDoc(doc);
@@ -1059,7 +1071,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => SettingsPage()),
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
                   );
                 },
               ),
@@ -1068,7 +1080,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection(user.uid).snapshots(),
+        stream: FirebaseFirestore.instance.collection(user.uid).limit(12).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -1080,7 +1092,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.medication, color: Color(0xFF8AC249), size: 64),
+                  const Icon(Icons.medication, color: Color(0xFF8AC249), size: 64),
                   const SizedBox(height: 16),
                   Text(
                     AppLocalizations.of(context)!.noMedicationsFound,
@@ -4444,7 +4456,7 @@ Future<void> rescheduleAllMedications(String uid) async {
   if (kIsWeb) return;
 
   try {
-    final meds = await FirebaseFirestore.instance.collection(uid).get();
+    final meds = await FirebaseFirestore.instance.collection(uid).limit(12).get();
     for (var doc in meds.docs) {
       final medication = medicationFromDoc(doc);
       await scheduleMedicationNotification(

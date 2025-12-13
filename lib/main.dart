@@ -872,7 +872,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             title: Text(
               AppLocalizations.of(context)!.appGuide,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -896,7 +896,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     '${AppLocalizations.of(context)!.swipe}\n'
                     '${AppLocalizations.of(context)!.checkReminders}\n'
                     '${AppLocalizations.of(context)!.manageProfile}.\n',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    style: const TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   SizedBox(height: 16),
                   Text(

@@ -159,7 +159,7 @@ class _AddMedicationsState extends State<AddMedications> {
     }
 
     return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection(user.uid).get(),
+      future: FirebaseFirestore.instance.collection(user.uid).limit(12).get(),
       builder: (context, snapshot) {
         final medicationCount = snapshot.data?.docs.length ?? 0;
         final isAtLimit = medicationCount >= 12;
@@ -194,7 +194,7 @@ class _AddMedicationsState extends State<AddMedications> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.warning, color: Colors.red, size: 64),
+                            const Icon(Icons.warning, color: Colors.red, size: 64),
                             const SizedBox(height: 16),
                             Text(
                               AppLocalizations.of(

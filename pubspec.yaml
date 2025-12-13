@@ -22,7 +22,6 @@ dependencies:
   flutter_timezone: ^4.1.1
   url_launcher: ^6.3.1
   shared_preferences: ^2.5.3
-  flutter_slidable: ^4.0.0
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   http: ^1.4.0
@@ -32,7 +31,6 @@ dependencies:
   workmanager: ^0.9.0+2
   flutter_native_splash: ^2.4.6
   intl: ^0.20.2
-  flutter_localization: ^0.3.3
   flutter_localizations:
     sdk: flutter
   flutter_gen: ^5.11.0
@@ -60,11 +58,6 @@ flutter:
         - asset: assets/fonts/Nunito-ExtraBold.ttf
   assets:
     - assets/
-    # - assets/DawaTime.png
-    # - assets/DawaTime_white.png
-    # - assets/DawaTime_green.png
-    # - assets/notification_sound.wav
-    # - assets/instagram.png
 flutter_launcher_icons:
   android: true
   ios: true
