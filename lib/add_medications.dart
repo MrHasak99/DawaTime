@@ -194,7 +194,11 @@ class _AddMedicationsState extends State<AddMedications> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.warning, color: Colors.red, size: 64),
+                            const Icon(
+                              Icons.warning,
+                              color: Colors.red,
+                              size: 64,
+                            ),
                             const SizedBox(height: 16),
                             Text(
                               AppLocalizations.of(
