@@ -95,12 +95,19 @@ class _AddMedicationsState extends State<AddMedications> {
       NotificationResponse response,
     ) async {
       if (response.payload != null && context.mounted) {
+        final payload = response.payload!;
+
+        if (payload == 'refill_multiple' || payload.startsWith('refill_')) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          return;
+        }
+
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           final doc =
               await FirebaseFirestore.instance
                   .collection(user.uid)
-                  .doc(response.payload!)
+                  .doc(payload)
                   .get();
           if (doc.exists) {
             final medication = medicationFromDoc(doc);

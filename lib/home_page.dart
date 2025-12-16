@@ -184,7 +184,14 @@ class _HomePageState extends State<HomePage> {
         NotificationResponse response,
       ) async {
         if (response.payload != null && widget.uid != null) {
-          final docId = response.payload!;
+          final payload = response.payload!;
+
+          if (payload == 'refill_multiple' || payload.startsWith('refill_')) {
+            await _checkAndShowDueMedications();
+            return;
+          }
+
+          final docId = payload;
           final doc =
               await FirebaseFirestore.instance
                   .collection(widget.uid!)
@@ -754,7 +761,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _checkAndShowDueMedications() async {
+  Future<void> _checkAndShowDueMedications() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 

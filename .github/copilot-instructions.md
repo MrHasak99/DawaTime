@@ -130,8 +130,31 @@ await flutterLocalNotificationsPlugin.initialize(
 3. **App updates**: Channel ID = `'updates'` (green color, high priority)
 
 #### Payload Handling Patterns
+**CRITICAL**: All notification listeners must handle refill payloads BEFORE attempting Firestore queries.
+
+**Implementation in home_page.dart, add_medications.dart, and settings.dart**:
+```dart
+selectNotificationStream.stream.listen((NotificationResponse response) async {
+  if (response.payload != null && context.mounted) {
+    final payload = response.payload!;
+    
+    // MUST check refill payloads first
+    if (payload == 'refill_multiple' || payload.startsWith('refill_')) {
+      // home_page.dart: await _checkAndShowDueMedications();
+      // add_medications.dart & settings.dart: Navigator.popUntil((route) => route.isFirst);
+      return;
+    }
+    
+    // Then handle medication reminders with Firestore query
+    final doc = await FirebaseFirestore.instance.collection(userId).doc(payload).get();
+    // ...
+  }
+});
+```
+
+**Payload types**:
 - **Medication reminder**: `payload = docId` → Open medication details dialog
-- **Refill reminder**: `payload = 'refill_$docId'` or `'refill_multiple'` → Show refill alert
+- **Refill reminder**: `payload = 'refill_$docId'` or `'refill_multiple'` → Show refill alert or navigate to home
 - **Update notification**: `payload = 'update_available'` → Open force update dialog
 
 ### Firebase Integration Details
@@ -183,6 +206,33 @@ await flutterLocalNotificationsPlugin.initialize(
 - **Update medication**: `.update({...})` (partial update)
 - **Delete medication**: `.delete()` + cancel notifications
 
+#### Firebase Hosting Configuration (`firebase.json`)
+**WWW Subdomain Redirect**:
+```json
+"hosting": {
+  "public": "public",
+  "redirects": [
+    {
+      "source": "https://www.dawatime.com{,/**}",
+      "destination": "https://dawatime.com",
+      "type": 301
+    }
+  ],
+  "rewrites": [
+    {"source": "/account-deletion", "destination": "/account-deletion.html"},
+    {"source": "/user-management", "destination": "/user-management.html"},
+    {"source": "/support", "destination": "/support.html"},
+    {"source": "/", "destination": "/index.html"}
+  ]
+}
+```
+
+**DNS Configuration** (Porkbun or similar):
+- Type: CNAME
+- Host: `www` (not www.dawatime.com)
+- Answer: `dawatime.com`
+- TTL: 600
+
 ## Developer Workflows
 
 ### Build & Release Commands
@@ -233,13 +283,13 @@ flutter run                         # Run on simulator/device
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+4`
+1. **`pubspec.yaml`**: `version: 1.4.4+6` (current version)
    - Format: `<major>.<minor>.<patch>+<buildNumber>`
-   - Example: `1.4.4+4` = version 1.4.4, build 4
+   - Example: `1.4.4+6` = version 1.4.4, build 6
 
 2. **`android/app/build.gradle.kts`**:
    ```kotlin
-   versionCode = 4
+   versionCode = 6
    versionName = "1.4.4"
    ```
 
@@ -563,6 +613,25 @@ TextField(
 
 ## Common Pitfalls & Solutions
 
+### Async Function Return Types
+
+**Problem**: Using `void` return type for async functions causes compilation errors when awaited.
+
+**Solution**: Always use `Future<void>` for async functions:
+```dart
+// ❌ WRONG - causes "Uses 'await' on an instance of 'void'" error
+void _checkAndShowDueMedications() async {
+  await someAsyncOperation();
+}
+
+// ✅ CORRECT
+Future<void> _checkAndShowDueMedications() async {
+  await someAsyncOperation();
+}
+```
+
+**Where this matters**: Any async function that is awaited elsewhere in the codebase must return `Future<void>` or `Future<T>`.
+
 ### Arabic Numeral Handling
 
 **Problem**: Arabic locale inputs use Eastern Arabic numerals (٠١٢٣٤٥٦٧٨٩) which crash `int.parse()` and `double.parse()`.
@@ -624,13 +693,15 @@ selectNotificationStream.stream.listen((NotificationResponse response) async {
   
   final payload = response.payload!;
   
-  if (payload == 'update_available') {
-    await showForceUpdateDialog(context);
+  // CRITICAL: Check refill payloads FIRST before Firestore queries
+  if (payload == 'refill_multiple' || payload.startsWith('refill_')) {
+    // home_page.dart: await _checkAndShowDueMedications();
+    // add_medications.dart & settings.dart: Navigator.popUntil((route) => route.isFirst);
     return;
   }
   
-  if (payload.startsWith('refill_')) {
-    // Show refill reminder dialog
+  if (payload == 'update_available') {
+    await showForceUpdateDialog(context);
     return;
   }
   

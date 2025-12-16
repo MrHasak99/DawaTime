@@ -51,6 +51,13 @@
   "hosting": {
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [
+      {
+        "source": "https://www.dawatime.com{,/**}",
+        "destination": "https://dawatime.com",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "/account-deletion",
