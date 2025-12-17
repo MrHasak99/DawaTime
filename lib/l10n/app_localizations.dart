@@ -650,8 +650,20 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsBody.
   ///
   /// In en, this message translates to:
-  /// **'You\'ll get notified when it\'s time to take your medication — even if the app is closed!'**
+  /// **'You\'ll receive up to 5 reminder notifications every 30 minutes. Tap to confirm when taken!'**
   String get notificationsBody;
+
+  /// No description provided for @stockRefillTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock & Refill Alerts'**
+  String get stockRefillTitle;
+
+  /// No description provided for @stockRefillBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a refill threshold to get weekly alerts when medication is running low. Orange cards = low stock, red = out of stock.'**
+  String get stockRefillBody;
 
   /// No description provided for @profileAndSettingsBody.
   ///
@@ -860,7 +872,7 @@ abstract class AppLocalizations {
   /// No description provided for @setReminders.
   ///
   /// In en, this message translates to:
-  /// **'• Set reminders for each medication so you never miss a dose.\n'**
+  /// **'• Set reminders — you\'ll get up to 5 notifications every 30 minutes.\n'**
   String get setReminders;
 
   /// No description provided for @viewDetails.
@@ -874,6 +886,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'• Swipe left to delete or right to edit a medication.\n'**
   String get swipe;
+
+  /// No description provided for @stockRefillGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'• Set refill thresholds for low stock alerts (orange/red cards).\n'**
+  String get stockRefillGuide;
 
   /// No description provided for @checkReminders.
   ///

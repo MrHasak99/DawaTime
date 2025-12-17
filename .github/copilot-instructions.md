@@ -15,20 +15,22 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Force update check on app launch (`forceUpdateCheck()` compares Firestore `AppConfig/Version` with local version)
   - FCM background message handler (`_firebaseMessagingBackgroundHandler`)
 
-- **`lib/home_page.dart`** (4488 lines): Main UI and notification logic hub:
+- **`lib/home_page.dart`** (3785 lines): Main UI and medication list display:
   - `StreamBuilder<QuerySnapshot>` for real-time Firestore medication updates
   - `Dismissible` widgets for swipe-to-edit (left/right) and swipe-to-delete (end-to-start)
-  - Notification scheduling: `scheduleMedicationNotification()`, `scheduleWeeklyRefillNotification()`
-  - Notification cancellation: `cancelMedicationReminders()`, `cancelRefillNotifications()`
-  - Utility functions: `medicationFromDoc()`, `getNextReminder()`, `convertArabicNumerals()`
+  - Utility functions: `medicationFromDoc()`, `rescheduleAllMedications()`, `initializeNotifications()`
   - Auto-reschedule logic in `_autoRescheduleOverdueMedications()` (runs on app open)
-  - Permission checking: `requestExactAlarmPermission()`, `openExactAlarmSettings()`
+  - Notification handling via imports from `lib/utils/medication_notifications.dart`
+  - Helper functions via imports from `lib/utils/medication_helpers.dart`
+  - **Intro guide**: 6-step onboarding shown on first app launch (stored in `SharedPreferences` as `seenIntroGuide`)
 
-- **`lib/add_medications.dart`** (1608 lines): Medication CRUD operations:
+- **`lib/add_medications.dart`** (1414 lines): Medication CRUD operations:
   - Two frequency modes via `FrequencyType` enum: `everyXDays` (interval-based) or `daysOfWeek` (specific weekdays)
   - 12-medication limit enforcement (checked via Firestore query count)
   - Inline edit dialogs within `home_page.dart` use same validation logic
   - Refill threshold field (optional) triggers weekly refill notifications
+  - Notification scheduling via imports from `lib/utils/medication_notifications.dart`
+  - String utilities via imports from `lib/utils/string_utils.dart`
 
 - **`lib/settings.dart`** (2306 lines): User profile and app configuration:
   - Theme switching (light/dark/system) with `ValueNotifier<ThemeMode>` + `SharedPreferences` persistence
@@ -42,6 +44,54 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Signup sends verification email via `sendEmailVerification()`
   - Terms & Conditions and Privacy Policy acceptance required (checkbox validation)
   - Creates Firestore `/Users/{uid}` document on successful signup
+
+### Shared Utilities (lib/utils/)
+
+**IMPORTANT**: These utilities were extracted from duplicated code across `home_page.dart` and `add_medications.dart` to establish a single source of truth. Approximately 700 lines of duplicate code were eliminated through this refactoring.
+
+- **`lib/utils/string_utils.dart`** (10 lines): String manipulation utilities
+  - `convertArabicNumerals()`: Converts Eastern Arabic numerals (٠-٩) to Western (0-9)
+  - Critical for parsing numeric input in Arabic locale (prevents `int.parse()` crashes)
+  - Used in 27+ call sites across form validation and data parsing
+  - Example: `convertArabicNumerals('١٢٣')` returns `'123'`
+
+- **`lib/utils/medication_notifications.dart`** (504 lines): Notification scheduling and permission management
+  - `scheduleMedicationNotification()`: Main scheduling function with 5 follow-up reminders (T+0, T+30, T+60, T+90, T+120)
+  - `cancelMedicationReminders()`: Comprehensive cancellation of all pending notifications
+  - `scheduleWeeklyRefillNotification()`: Weekly refill reminders at 10:00 AM
+  - `cancelRefillNotifications()`: Cancel refill notification by docId
+  - `requestExactAlarmPermission()`: Check Android 13+ exact alarm permission status
+  - `openExactAlarmSettings()`: Navigate to system settings for alarm permission
+  - Used in 13+ call sites for medication scheduling across add/edit/reschedule operations
+  - **Import pattern**: `import 'package:dawatime/utils/medication_notifications.dart';`
+
+- **`lib/utils/medication_helpers.dart`** (233 lines): Medication data processing and display logic
+  - `getNextReminder()`: Calculates and formats next reminder time with 2-hour window detection
+  - Handles both `daysOfWeek` and `everyXDays` scheduling modes
+  - Returns "Time to take medication now!" if within reminder window and not yet taken
+  - Returns formatted date/time string (e.g., "January 15, 2025 - 2:30 PM") for future reminders
+  - Supports Arabic locale with translated month names and RTL formatting
+  - Used in 4 call sites for displaying "Next Reminder" in UI (ListView cards and detail dialogs)
+  - **Import pattern**: `import 'package:dawatime/utils/medication_helpers.dart';`
+
+**Refactoring Benefits**:
+- Single source of truth for notification logic (eliminates sync bugs)
+- Reduced code duplication: ~897 lines eliminated (703 from home_page.dart, 194 from add_medications.dart)
+- Improved maintainability: Bug fixes and feature updates only need to happen once
+- Cleaner imports: Files only import what they actually use
+- Better organization: Utilities separated by function (strings, notifications, helpers)
+
+**Import Dependencies**:
+- `medication_notifications.dart` depends on: `home_page.dart` (Medications class), `main.dart` (flutterLocalNotificationsPlugin, navigatorKey), `l10n` (localization)
+- `medication_helpers.dart` depends on: `home_page.dart` (Medications class), `main.dart` (navigatorKey), `l10n` (localization)
+- `string_utils.dart` has no external dependencies (pure utility function)
+
+**Call Site Verification**:
+- `scheduleMedicationNotification()`: 13 call sites (10 in home_page.dart, 2 in add_medications.dart, 1 internal)
+- `getNextReminder()`: 4 call sites (all in home_page.dart for UI display)
+- `convertArabicNumerals()`: 27+ call sites (8 in home_page.dart, 19 in add_medications.dart)
+- `cancelMedicationReminders()`: 3 call sites (2 in home_page.dart, 1 internal)
+- `rescheduleAllMedications()`: 2 call sites (1 in home_page.dart, 1 in main.dart)
 
 ### Data Model & Firestore Structure
 
@@ -88,6 +138,23 @@ final StreamController<NotificationResponse> selectNotificationStream =
 
 **Why broadcast?** Multiple pages (HomePage, AddMedications, Settings) listen simultaneously. When notification is tapped, all listeners receive the event, but only the currently mounted widget should process it (check `context.mounted`).
 
+**Why ALL THREE listeners are REQUIRED:**
+- **HomePage listener**: Shows medication details dialog with home page context, handles foreground alerts
+- **Settings listener**: Handles notification taps when user is configuring app settings, navigates to home for refills
+- **AddMedications listener**: Handles notification taps when user is adding/editing medications, navigates to home for refills
+
+**What breaks without these listeners?**
+- User on settings page, taps medication notification → **Nothing happens** (no listener mounted)
+- User on add medication page, taps refill notification → **Stuck on page** (can't navigate to see alert)
+- Only HomePage listener → **Notifications ignored** when user is on any other page
+
+**User scenarios requiring all listeners:**
+1. User editing settings → Medication reminder fires → Taps notification → Should show alert
+2. User adding medication → Refill notification fires → Taps notification → Should navigate to home
+3. User on home page → Any notification fires → Should show immediate dialog
+
+**DO NOT remove these listeners**—they're part of a well-designed broadcast pattern ensuring notifications work correctly regardless of which page is currently mounted.
+
 **Initialization in main.dart**:
 ```dart
 await flutterLocalNotificationsPlugin.initialize(
@@ -101,27 +168,28 @@ await flutterLocalNotificationsPlugin.initialize(
 
 #### Notification Scheduling Logic
 
-**Function: `scheduleMedicationNotification()` (line ~3749 in home_page.dart)**
+**Function: `scheduleMedicationNotification()` (lib/utils/medication_notifications.dart)**
 - **Cancels previous notifications**: Loops through `docId.hashCode + i` (i=0 to 4) to clear old schedules
 - **Two scheduling modes**:
   1. **daysOfWeek mode**: Calculates next occurrence of each selected weekday
   2. **everyXDays mode**: Adds `frequency` days to `startDate` repeatedly until future date found
 - **Follow-up reminders**: Schedules 5 notifications at 30-minute intervals (immediate, +30min, +60min, +90min, +120min)
 - **2-hour grace period**: If notification time passed today but < 2 hours ago, schedules follow-ups starting now
+- **Skip old notifications**: If notification time is more than 2 hours past, skips scheduling entirely (prevents stale notifications when app opened after long period)
 - **Uses `androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle`** for reliable delivery even in Doze mode
 - **Notification ID generation**: `('${docId}_${weekday}_$followUpIndex').hashCode` ensures uniqueness
 
-**Function: `scheduleWeeklyRefillNotification()` (line ~4082)**
+**Function: `scheduleWeeklyRefillNotification()` (lib/utils/medication_notifications.dart)**
 - Schedules weekly recurring notification at 10:00 AM
 - Uses `matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime` for weekly repeat
 - Separate channel ID `'refill_channel'` with orange color (`0xFFFF9800`)
 - Notification ID: `('refill_weekly_$docId').hashCode`
 
-**Function: `cancelMedicationReminders()` (line ~4075)**
+**Function: `cancelMedicationReminders()` (lib/utils/medication_notifications.dart)**
 - Cancels notifications with IDs: `('${docId}_$i').hashCode` where i=0 to 8
 - Call before rescheduling to prevent duplicate notifications
 
-**Function: `cancelRefillNotifications()` (line ~4165)**
+**Function: `cancelRefillNotifications()` (lib/utils/medication_notifications.dart)**
 - Cancels refill notification with ID: `('refill_weekly_$docId').hashCode`
 
 #### Notification Channels
@@ -156,6 +224,56 @@ selectNotificationStream.stream.listen((NotificationResponse response) async {
 - **Medication reminder**: `payload = docId` → Open medication details dialog
 - **Refill reminder**: `payload = 'refill_$docId'` or `'refill_multiple'` → Show refill alert or navigate to home
 - **Update notification**: `payload = 'update_available'` → Open force update dialog
+
+#### Foreground Alert System
+**Purpose**: Automatically show alert dialogs when reminder notifications fire while the app is in the foreground, without requiring user to tap the notification.
+
+**Implementation** (home_page.dart `_checkAndShowDueMedications()`):
+- **Timer-based checking**: Runs every 1 second via `Timer.periodic`
+- **Checks all 5 follow-up times**: T+0, T+30, T+60, T+90, T+120 minutes
+- **Deduplication**: Uses `_shownAlerts` set to prevent duplicate dialogs (stores keys like `${docId}_$followUpIndex`)
+- **1-second window**: Triggers if current time is within ±1 second of any reminder time
+- **Auto-cleanup**: Removes old alert keys when time moves before the schedule window
+
+**Logic flow**:
+```dart
+for (int i = 0; i <= 4; i++) {
+  final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
+  alertKey = '${doc.id}_$i';
+  
+  if ((now.difference(followUpTime).inSeconds).abs() <= 1 &&
+      !_shownAlerts.contains(alertKey)) {
+    shouldShowAlert = true;
+    break;
+  }
+}
+```
+
+**Example Timeline - Foreground Detection:**
+| Time | Follow-up Index | Action |
+|------|----------------|--------|
+| 2:00:00 PM | 0 | Timer detects match → Shows dialog "Time to take Medicine A" |
+| 2:00:01 PM | 0 | Already in `_shownAlerts` → Skip (prevents duplicate) |
+| 2:30:00 PM | 1 | Timer detects T+30 match → Shows dialog "Reminder: Take Medicine A" |
+| 3:00:00 PM | 2 | Timer detects T+60 match → Shows dialog (if not confirmed yet) |
+| 3:30:00 PM | 3 | Timer detects T+90 match → Shows dialog (if not confirmed yet) |
+| 4:00:00 PM | 4 | Timer detects T+120 match → Shows dialog (if not confirmed yet) |
+
+**When User Confirms Taking Medication:**
+1. Updates Firestore (`lastTaken` timestamp, reduces `amount`)
+2. **Cancels ALL pending notifications** via `cancelMedicationReminders(docId)`
+3. Reschedules next occurrence
+4. Alert keys remain in `_shownAlerts` until page disposed/refreshed
+
+**Why this approach?**
+- **Better UX**: Users actively using the app see immediate alerts instead of having to check notification tray
+- **Complements system notifications**: System notifications still fire for background/locked scenarios
+- **Handles all follow-ups**: Unlike tap-only handling, this catches all 5 reminder times automatically
+
+**Key considerations**:
+- Only works when HomePage is mounted (app in foreground on home screen)
+- System notifications still appear in notification tray as backup
+- Alert dialogs are non-blocking (user can dismiss and continue using app)
 
 ### Firebase Integration Details
 
@@ -227,11 +345,33 @@ selectNotificationStream.stream.listen((NotificationResponse response) async {
 }
 ```
 
-**DNS Configuration** (Porkbun or similar):
+**DNS Configuration** (Cloudflare):
+**CRITICAL**: DNS is managed by Cloudflare (nameservers: rick.ns.cloudflare.com), NOT Porkbun.
+
+**WWW Subdomain Setup**:
 - Type: CNAME
-- Host: `www` (not www.dawatime.com)
-- Answer: `dawatime.com`
-- TTL: 600
+- Name: `www`
+- Target: `medication-cd9b8.web.app` (Firebase Hosting URL)
+- Proxy status: **Grey cloud (DNS only)** - MUST be disabled for Firebase SSL provisioning
+- TTL: Auto or 300
+
+**Adding Custom Domain in Firebase Hosting Console**:
+1. Navigate to: https://console.firebase.google.com/project/medication-cd9b8/hosting
+2. Click "Add custom domain" button
+3. Enter domain name (e.g., `www.dawatime.com`)
+4. Click "Continue"
+5. Firebase verifies DNS records automatically (if CNAME is correct)
+6. If ownership verification required, add TXT record to Cloudflare as instructed
+7. Wait for SSL certificate provisioning (5-60 minutes)
+8. Status will change from "Needs Setup" → "Pending" → "Connected"
+
+**Troubleshooting www subdomain**:
+1. Verify DNS provider: `dig dawatime.com SOA` (check for cloudflare.com in output)
+2. Check CNAME record: `dig @rick.ns.cloudflare.com www.dawatime.com CNAME`
+3. Ensure Cloudflare proxy (orange cloud) is DISABLED - Firebase cannot verify with proxy enabled
+4. Clear local DNS cache: `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
+5. Verify CNAME returns `medication-cd9b8.web.app` (not dawatime.com)
+6. Wait for SSL provisioning (5-60 minutes)
 
 ## Developer Workflows
 
@@ -239,19 +379,18 @@ selectNotificationStream.stream.listen((NotificationResponse response) async {
 
 #### Android
 ```bash
-# Clean build (ALWAYS run after dependency changes or switching branches)
 flutter clean && flutter pub get
-
-# Release builds
-flutter build appbundle --release  # Google Play Store (AAB format)
-flutter build apk --release         # Direct APK distribution
-
-# Install debug build on connected device
+flutter build apk --release
+flutter build appbundle --release
 flutter install
-
-# Run with specific flavor (if flavors configured)
 flutter run --flavor production
 ```
+
+**Build command notes:**
+- `flutter build apk --release` - Production build for website distribution
+- `flutter build appbundle --release` - Google Play Store (AAB format, not currently used)
+
+**Distribution Method**: APK distributed via website (https://dawatime.com) due to Google Play Console restrictions on health-related apps from personal developer accounts.
 
 **Android Build Configuration** (`android/app/build.gradle.kts`):
 - Namespace: `com.mrhasak99.dawatime`
@@ -262,16 +401,23 @@ flutter run --flavor production
 - ProGuard: Enabled with minification (`isMinifyEnabled = true`)
 - Core library desugaring: Enabled for Java 8+ API support on older devices
 
+**Output location**: `build/app/outputs/flutter-apk/app-release.apk`
+
 #### iOS
 ```bash
-# Release builds (macOS only)
-flutter build ipa                   # App Store distribution (creates IPA)
-flutter build ios --release         # Xcode build (for manual signing/distribution)
-
-# Development builds
-flutter build ios                   # Debug build
-flutter run                         # Run on simulator/device
+flutter build ipa
+flutter build ios --release
+flutter build ios
+flutter run
 ```
+
+**Build command notes:**
+- `flutter build ipa` - App Store distribution (creates IPA)
+- `flutter build ios --release` - Xcode build (for manual signing/distribution)
+- `flutter build ios` - Debug build
+- `flutter run` - Run on simulator/device
+
+**Distribution Method**: App Store Connect (standard iOS distribution).
 
 **iOS Configuration** (`ios/Runner/Info.plist`):
 - Bundle ID: `com.mrhasak99.dawatime`
@@ -279,17 +425,31 @@ flutter run                         # Run on simulator/device
 - Permissions required: Notifications, exact alarm scheduling
 - Background modes: Remote notifications, background fetch
 
+**Output location**: `build/ios/ipa/dawatime.ipa`
+
+#### Combined Build for Both Platforms
+```bash
+flutter clean
+flutter pub get
+flutter build apk --release
+flutter build ipa
+```
+
+**Build sequence notes:**
+- Android APK output: `build/app/outputs/flutter-apk/app-release.apk`
+- iOS IPA output: `build/ios/ipa/dawatime.ipa`
+
 ### Version Management Checklist
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+6` (current version)
+1. **`pubspec.yaml`**: `version: 1.4.4+10` (current version)
    - Format: `<major>.<minor>.<patch>+<buildNumber>`
-   - Example: `1.4.4+6` = version 1.4.4, build 6
+   - Example: `1.4.4+10` = version 1.4.4, build 10
 
 2. **`android/app/build.gradle.kts`**:
    ```kotlin
-   versionCode = 6
+   versionCode = 10
    versionName = "1.4.4"
    ```
 
@@ -325,11 +485,11 @@ When releasing a new version, update **all three** in sync:
    }
    ```
 
-3. **Generate Dart code**:
+3. **Generate Dart code** (ALWAYS run after modifying ARB files):
    ```bash
-   flutter gen-l10n  # Manual generation
-   # OR just run 'flutter pub get' or 'flutter build' (auto-generates)
+   flutter gen-l10n
    ```
+   **Important**: This command MUST be run every time you modify `app_en.arb` or `app_ar.arb` to regenerate the localization classes. While `flutter pub get` and `flutter build` also trigger generation, explicitly running `flutter gen-l10n` ensures immediate feedback on any ARB syntax errors.
 
 4. **Use in code**:
    ```dart
@@ -495,6 +655,100 @@ color: medication.amount <= 0
 - **Orange card** = Proactive warning (approaching threshold)
 - **Green card** = Healthy stock level
 
+### App Guides / Onboarding
+
+The app includes **two separate guide implementations** for different user contexts:
+
+#### 1. Splash Screen Quick Guide (main.dart)
+**Purpose**: Quick reference guide button available on splash screen, always accessible.
+
+**Location**: Button on splash screen (`SplashScreen` widget)
+
+**Format**: Single-dialog with bullet-point overview
+
+**Content** (localized in `app_en.arb`/`app_ar.arb`):
+- Add medications using the "+" button
+- Set reminders — you'll get up to 5 notifications every 30 minutes
+- Tap a medication to view details
+- Swipe left to delete or right to edit
+- Set refill thresholds for low stock alerts (orange/red cards)
+- Check upcoming reminders on home screen
+- Manage profile and settings from top right
+- Notification behavior note at bottom
+
+**Implementation** (navigation guard pattern):
+```dart
+class _SplashScreenState extends State<SplashScreen> {
+  bool _isShowingGuide = false;
+  
+  Future<void> _checkUpdateAndNavigate() async {
+    // ... update checks ...
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (!mounted || _isShowingGuide) {  // Guard against premature navigation
+      return;
+    }
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const AuthGate())
+    );
+  }
+  
+  Future<void> _showIntroGuide() async {
+    setState(() => _isShowingGuide = true);
+    await showDialog(/* guide dialog */);
+    // Navigate only after user closes dialog
+    if (mounted) {
+      setState(() => _isShowingGuide = false);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const AuthGate())
+      );
+    }
+  }
+}
+```
+
+**Why this pattern?** Prevents automatic splash screen navigation from interrupting the guide dialog. The `_isShowingGuide` flag ensures users can read the guide at their own pace without being prematurely navigated to login/home.
+
+**Accessibility**: Always available to users on splash screen, never dismissed permanently.
+
+#### 2. Home Page Intro Guide (home_page.dart)
+**Purpose**: 6-step interactive tutorial shown automatically to first-time users, comprehensive onboarding.
+
+**Trigger**: Automatically displayed on first app launch when `SharedPreferences` key `seenIntroGuide` is `false` or not set.
+
+**Implementation**:
+- `_checkIntroGuide()` called in `initState()` checks if user has seen guide
+- `_introSteps` getter returns list of 6 steps with localized titles and bodies
+- Modal dialog with pagination controls (Back/Next buttons)
+- Step counter shows progress (e.g., "1/6", "2/6")
+- "Continue" button on final step dismisses guide and sets `seenIntroGuide = true`
+
+**Step Structure**:
+```dart
+List<Map<String, String>> get _introSteps {
+  final loc = AppLocalizations.of(context)!;
+  return [
+    {'title': loc.welcomeToDawaTime, 'body': loc.welcomeBody},
+    {'title': loc.addMedicationTitle, 'body': loc.addMedicationBody},
+    {'title': loc.editDeleteTitle, 'body': loc.editDeleteBody},
+    {'title': loc.notifications, 'body': loc.notificationsBody},
+    {'title': loc.stockRefillTitle, 'body': loc.stockRefillBody},
+    {'title': loc.profileAndSettings, 'body': loc.profileAndSettingsBody},
+  ];
+}
+```
+
+**Current Steps**:
+1. **Welcome to DawaTime**: "DawaTime helps you manage your medications and reminders with ease."
+2. **Add Medications**: "Tap the '+' button to add a new medication and set up reminders."
+3. **Edit & Delete**: "Swipe right to edit or left to delete a medication from your list."
+4. **Notifications**: "You'll receive up to 5 reminder notifications every 30 minutes. Tap to confirm when taken!"
+5. **Stock & Refill Alerts**: "Set a refill threshold to get weekly alerts when medication is running low. Orange cards = low stock, red = out of stock."
+6. **Profile & Settings**: "Manage your profile and app settings from the top right corner."
+
+**Localization**: All content for both guides defined in `app_en.arb` and `app_ar.arb` for full Arabic/English support.
+
+**Manual re-trigger**: "App Guide" button available on login page and splash screen for returning users who want to review the tutorial.
+
 ### Background Task Pattern (Workmanager)
 
 #### Initialization (main.dart)
@@ -636,7 +890,16 @@ Future<void> _checkAndShowDueMedications() async {
 
 **Problem**: Arabic locale inputs use Eastern Arabic numerals (٠١٢٣٤٥٦٧٨٩) which crash `int.parse()` and `double.parse()`.
 
-**Solution**: Always convert before parsing:
+**Solution**: Use the shared utility function from `lib/utils/string_utils.dart`:
+```dart
+import 'package:dawatime/utils/string_utils.dart';
+
+// Usage in forms:
+final dosage = double.tryParse(convertArabicNumerals(dosageController.text)) ?? 0;
+final frequency = int.tryParse(convertArabicNumerals(frequencyController.text)) ?? 1;
+```
+
+**Function implementation** (lib/utils/string_utils.dart):
 ```dart
 String convertArabicNumerals(String input) {
   const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -645,13 +908,11 @@ String convertArabicNumerals(String input) {
   }
   return input;
 }
-
-// Usage:
-final dosage = double.tryParse(convertArabicNumerals(dosageController.text)) ?? 0;
-final frequency = int.tryParse(convertArabicNumerals(frequencyController.text)) ?? 1;
 ```
 
 **Where to use**: All numeric TextField inputs (dosage, frequency, amount, refillThreshold).
+
+**Call sites**: 27+ locations across home_page.dart (8) and add_medications.dart (19).
 
 ### Dismissible Swipe Direction (RTL)
 
@@ -715,6 +976,61 @@ selectNotificationStream.stream.listen((NotificationResponse response) async {
   }
 });
 ```
+
+### Medication Reminders Persisting After Confirmation (Mid-Schedule Bug)
+
+**Problem**: When a user confirmed taking medication mid-schedule (e.g., at T+30 min), follow-up notifications (T+60, T+90, T+120) would still fire because only the initial notification was cancelled, not the entire sequence.
+
+**Root Cause**: The follow-up reminder pattern schedules 5 notifications with different IDs:
+- `('${docId}_${weekday}_0').hashCode` - Initial notification
+- `('${docId}_${weekday}_1').hashCode` - T+30 min
+- `('${docId}_${weekday}_2').hashCode` - T+60 min
+- `('${docId}_${weekday}_3').hashCode` - T+90 min
+- `('${docId}_${weekday}_4').hashCode` - T+120 min
+
+**Solution**: Comprehensive cancellation in `cancelMedicationReminders()` function (lib/utils/medication_notifications.dart):
+```dart
+Future<void> cancelMedicationReminders(String docId) async {
+  // Cancel basic notification IDs (legacy/fallback)
+  for (int i = 0; i <= 8; i++) {
+    final notificationId = ('${docId}_$i').hashCode;
+    await flutterLocalNotificationsPlugin.cancel(notificationId);
+  }
+  
+  // Cancel ALL weekday-based follow-up notifications
+  for (int weekday = 1; weekday <= 7; weekday++) {
+    for (int j = 0; j <= 4; j++) {
+      final notificationId = ('${docId}_${weekday}_$j').hashCode;
+      await flutterLocalNotificationsPlugin.cancel(notificationId);
+    }
+  }
+}
+```
+
+**Confirmation Flow** (home_page.dart "Take Medication" button):
+1. User taps "Take Medication" button (can be at any time: T+0, T+15, T+45, etc.)
+2. Firestore updated with `lastTaken` timestamp and reduced `amount`
+3. **All pending notifications cancelled** via `cancelMedicationReminders(docId)` (cancels ALL 5 follow-ups)
+4. Fresh medication document fetched from Firestore
+5. **New notifications scheduled for next occurrence** via `scheduleMedicationNotification()`
+
+**Example Timeline - Early Confirmation:**
+| Time | Event |
+|------|-------|
+| 2:00 PM | System notification fires (T+0) → User sees notification |
+| 2:15 PM | **User confirms "Take Medication"** (before T+30) |
+| 2:15 PM | `cancelMedicationReminders()` cancels T+30, T+60, T+90, T+120 notifications |
+| 2:30 PM | ❌ **No notification** (cancelled) |
+| 3:00 PM | ❌ **No notification** (cancelled) |
+| 3:30 PM | ❌ **No notification** (cancelled) |
+| 4:00 PM | ❌ **No notification** (cancelled) |
+| **Next day 2:00 PM** | ✅ **Fresh notifications scheduled** for next medication time |
+
+**Why This Works**: By iterating through all possible weekdays (1-7) and all follow-up indices (0-4), we ensure that every single pending notification for this medication is cancelled, regardless of which weekday or follow-up stage it's in. This prevents any stale notifications from the current schedule from persisting after confirmation.
+
+**Important**: This is **intentional behavior** to prevent annoying users with reminders for medication they've already confirmed taking.
+
+**Testing**: To verify the fix, schedule a medication for 2 minutes ahead, wait for the first notification, tap it and confirm taking the medication. Verify that no follow-up notifications (T+30, T+60, etc.) fire afterward.
 
 ### Firestore Document ID to Notification ID
 
@@ -780,8 +1096,12 @@ if (status.isGranted) {
 #### Exact Alarm Permission (Android 13+)
 **Critical difference**: Cannot be requested programmatically - must open system settings.
 
+**Permission check and settings functions** are in `lib/utils/medication_notifications.dart`:
+- `requestExactAlarmPermission()` - Check Android 13+ exact alarm permission status
+- `openExactAlarmSettings()` - Navigate to system settings for alarm permission
+
 ```dart
-// Check status
+// Check status (from medication_notifications.dart)
 final status = await Permission.scheduleExactAlarm.status;
 
 // If not granted, show SnackBar with action
@@ -796,7 +1116,7 @@ ScaffoldMessenger.of(context).showSnackBar(
   ),
 );
 
-// Open system settings
+// Open system settings (from medication_notifications.dart)
 Future<void> openExactAlarmSettings() async {
   final intent = AndroidIntent(
     action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
@@ -1052,7 +1372,7 @@ if (Platform.isIOS) {
 ## Advanced Notification Scenarios
 
 ### Handling Overdue Medications
-**Function**: `_autoRescheduleOverdueMedications()` (home_page.dart line ~374)
+**Function**: `_autoRescheduleOverdueMedications()` (home_page.dart line ~317)
 
 **Trigger**: Called in `initState()` of HomePage - runs when app opens.
 
@@ -1097,7 +1417,7 @@ for (int j = 0; j <= 4; j++) {  // 5 total notifications
 **Cancellation**: When user confirms taking medication, all follow-up notifications are cancelled via `cancelMedicationReminders(docId)`.
 
 ### Refill Notification Weekly Pattern
-**Function**: `scheduleWeeklyRefillNotification()` (line ~4082)
+**Function**: `scheduleWeeklyRefillNotification()` (lib/utils/medication_notifications.dart)
 
 **Trigger**: Scheduled when `medication.amount <= medication.refillThreshold`.
 
@@ -1153,6 +1473,28 @@ adb shell cmd notification list
 # Force trigger notification (simulate time change)
 adb shell su 0 date MMDDHHMMYYYY.SS
 ```
+
+### iOS / Wireless Device Troubleshooting
+
+- **Symptoms:** Device visible to `flutter devices` but not appearing in VS Code device picker.
+- **Quick checks:**
+  - Both Mac and iPhone on the same Wi‑Fi network (no VPN).
+  - iPhone trusts this Mac: Settings → General → VPN & Device Management → verify trust.
+  - Connect iPhone once via USB, open Xcode → Window → Devices and Simulators → enable "Connect via network".
+- **Commands to run:**
+```bash
+# Show connected devices
+flutter devices
+
+# Restart Flutter daemon to refresh devices
+killall -9 dart
+
+# Diagnose environment
+flutter doctor -v
+```
+- **VS Code steps:** `Cmd+Shift+P` → `Flutter: Select Device` (or Reload Window).
+- **If still missing:** open Xcode, toggle "Connect via network" off then on for the device and reconnect via USB once.
+- **Notes:** Wireless iOS requires Xcode pairing; ensure iOS and Xcode versions are compatible and the device has a trusted pairing certificate.
 
 ### Firestore Debugging
 ```dart

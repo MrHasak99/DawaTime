@@ -305,7 +305,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editDeleteBody => 'اسحب لليمين للتعديل أو لليسار لحذف الدواء من القائمة.';
 
   @override
-  String get notificationsBody => 'سيصلك إشعار عندما يحين وقت أخذ دوائك — حتى لو كان التطبيق مغلقاً!';
+  String get notificationsBody => 'ستستلم حتى 5 إشعارات تذكير كل 30 دقيقة. اضغط للتأكيد عند أخذ الدواء!';
+
+  @override
+  String get stockRefillTitle => 'تنبيهات المخزون والتعبئة';
+
+  @override
+  String get stockRefillBody => 'حدد حد التعبئة لتحصل على تنبيهات أسبوعية عندما ينخفض المخزون. البطاقات البرتقالية = مخزون منخفض، الحمراء = نفذ المخزون.';
 
   @override
   String get profileAndSettingsBody => 'قم بإدارة ملفك الشخصي وإعدادات التطبيق من الزاوية العلوية اليمنى.';
@@ -410,13 +416,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addMedicationBody2 => '• اضف أدويتك بإستخدام زر \"+\".\n';
 
   @override
-  String get setReminders => '• قم بضبط منبهات لكل دواء حتى لا تفوتك أي جرعة.\n';
+  String get setReminders => '• اضبط المنبهات — ستحصل على حتى 5 إشعارات كل 30 دقيقة.\n';
 
   @override
   String get viewDetails => '• اضغط على الدواء لرؤية التفاصيل\n';
 
   @override
   String get swipe => '• اسحب الدواء لليسار لحذفه أو لليمين لتعديله.\n';
+
+  @override
+  String get stockRefillGuide => '• حدد حد التعبئة لتنبيهات المخزون المنخفض (بطاقات برتقالية/حمراء).\n';
 
   @override
   String get checkReminders => '• تفقد تذكيراتك القادمة على الشاشة الرئيسية.\n';

@@ -305,7 +305,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editDeleteBody => 'Swipe right to edit or left to delete a medication from your list.';
 
   @override
-  String get notificationsBody => 'You\'ll get notified when it\'s time to take your medication — even if the app is closed!';
+  String get notificationsBody => 'You\'ll receive up to 5 reminder notifications every 30 minutes. Tap to confirm when taken!';
+
+  @override
+  String get stockRefillTitle => 'Stock & Refill Alerts';
+
+  @override
+  String get stockRefillBody => 'Set a refill threshold to get weekly alerts when medication is running low. Orange cards = low stock, red = out of stock.';
 
   @override
   String get profileAndSettingsBody => 'Manage your profile and app settings from the top right corner.';
@@ -410,13 +416,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addMedicationBody2 => '• Add your medications using the \"+\" button.\n';
 
   @override
-  String get setReminders => '• Set reminders for each medication so you never miss a dose.\n';
+  String get setReminders => '• Set reminders — you\'ll get up to 5 notifications every 30 minutes.\n';
 
   @override
   String get viewDetails => '• Tap a medication to view details.\n';
 
   @override
   String get swipe => '• Swipe left to delete or right to edit a medication.\n';
+
+  @override
+  String get stockRefillGuide => '• Set refill thresholds for low stock alerts (orange/red cards).\n';
 
   @override
   String get checkReminders => '• Check your upcoming reminders on the home screen.\n';

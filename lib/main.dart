@@ -182,7 +182,12 @@ Future<void> main() async {
       final String timeZoneName = await FlutterTimezone.getLocalTimezone()
           .timeout(const Duration(seconds: 5));
       tz.setLocalLocation(tz.getLocation(timeZoneName));
-    } catch (_) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('⚠️ Timezone initialization failed, using UTC: $e');
+      }
+      tz.setLocalLocation(tz.getLocation('UTC'));
+    }
 
     try {
       if (await Permission.notification.isDenied) {
@@ -782,6 +787,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isShowingGuide = false;
   @override
   void initState() {
     super.initState();
@@ -853,7 +859,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
     await Future.delayed(const Duration(milliseconds: 800));
-    if (!mounted) {
+    if (!mounted || _isShowingGuide) {
       return;
     }
     Navigator.of(
@@ -861,8 +867,12 @@ class _SplashScreenState extends State<SplashScreen> {
     ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
   }
 
-  void _showIntroGuide() {
-    showDialog(
+  Future<void> _showIntroGuide() async {
+    setState(() {
+      _isShowingGuide = true;
+    });
+
+    await showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
@@ -894,8 +904,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     '${AppLocalizations.of(context)!.setReminders}\n'
                     '${AppLocalizations.of(context)!.viewDetails}\n'
                     '${AppLocalizations.of(context)!.swipe}\n'
+                    '${AppLocalizations.of(context)!.stockRefillGuide}\n'
                     '${AppLocalizations.of(context)!.checkReminders}\n'
-                    '${AppLocalizations.of(context)!.manageProfile}.\n',
+                    '${AppLocalizations.of(context)!.manageProfile}\n',
                     style: const TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   SizedBox(height: 16),
@@ -924,6 +935,15 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
     );
+    if (mounted) {
+      setState(() {
+        _isShowingGuide = false;
+      });
+      if (!mounted) return;
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const AuthGate()));
+    }
   }
 
   @override
