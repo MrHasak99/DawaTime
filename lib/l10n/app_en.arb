@@ -1,4 +1,5 @@
 {
+  "reminderWindowPassed": "The reminder window has passed. Cannot reschedule notification.",
   "appTitle": "DawaTime",
   "addMedication": "Add New Medication",
   "saveMedication": "Save Medication",
@@ -138,6 +139,7 @@
   "medicationNotifications": "You'll receive notifications when it's time to take your medication — even if the app is closed!",
   "notification": "Notification",
   "updateRequired": "Update Required",
+  "acceptButton": "Accept",
   "pleaseUpdate": "A new version of the app is available, please update to continue",
   "update": "Update",
   "accessDenied": "Access Denied",
@@ -181,5 +183,12 @@
   "needRefill": "The following medications need refilling:",
   "needRefillShort": "medications need refilling",
   "newUpdateAvailable": "New Update Available!",
-  "updateAvailableBody": "A new version of DawaTime is available. Tap to update now."
+  "updateAvailableBody": "A new version of DawaTime is available. Tap to update now.",
+  "legalUpdateRequired": "Legal Documents Updated",
+  "legalUpdateMessage": "We've updated our Terms & Conditions and Privacy Policy. Please review and accept the updated documents to continue using DawaTime.",
+  "viewTerms": "View Terms & Conditions",
+  "viewPrivacy": "View Privacy Policy",
+  "acceptUpdatedLegal": "I accept the updated Terms & Conditions and Privacy Policy",
+  "declineAndLogout": "Decline & Logout",
+  "mustAcceptLegalUpdates": "You must accept the updated legal documents to continue"
 }

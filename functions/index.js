@@ -1,4 +1,4 @@
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const fetch = require("node-fetch");
@@ -270,4 +270,191 @@ exports.blockAccessFromCertainCountries = functions
         return res.status(403).send("Access denied in your country.");
       }
       res.status(200).send("Access granted.");
+    });
+
+exports.migrateLegalAcceptanceFields = functions
+    .runWith({memory: "512MB", timeoutSeconds: 540})
+    .https.onCall(async (data, context) => {
+      if (!context.auth) {
+        throw new functions.https.HttpsError(
+            "unauthenticated",
+            "User must be authenticated to run migration",
+        );
+      }
+
+      const defaultTermsVersion = "1.0";
+      const defaultPrivacyVersion = "1.0";
+      const defaultAcceptanceDate = "2025-07-10T00:00:00.000Z";
+
+      const results = {
+        success: 0,
+        alreadyMigrated: 0,
+        failed: 0,
+        errors: [],
+      };
+
+      try {
+        const usersRef = admin.firestore().collection("Users");
+        const snapshot = await usersRef.get();
+
+        if (snapshot.empty) {
+          return {
+            message: "No users found to migrate",
+            results,
+          };
+        }
+
+        const batchSize = 500;
+        let batch = admin.firestore().batch();
+        let operationCount = 0;
+
+        for (const doc of snapshot.docs) {
+          const userData = doc.data();
+
+          if (
+            userData.acceptedTermsVersion &&
+            userData.acceptedPrivacyVersion &&
+            userData.legalAcceptanceDate
+          ) {
+            results.alreadyMigrated++;
+            continue;
+          }
+
+          try {
+            batch.update(doc.ref, {
+              acceptedTermsVersion: defaultTermsVersion,
+              acceptedPrivacyVersion: defaultPrivacyVersion,
+              legalAcceptanceDate: defaultAcceptanceDate,
+            });
+
+            operationCount++;
+            results.success++;
+
+            if (operationCount >= batchSize) {
+              await batch.commit();
+              batch = admin.firestore().batch();
+              operationCount = 0;
+            }
+          } catch (error) {
+            results.failed++;
+            results.errors.push({
+              userId: doc.id,
+              error: error.message,
+            });
+          }
+        }
+
+        if (operationCount > 0) {
+          await batch.commit();
+        }
+
+        return {
+          message: "Migration completed",
+          results,
+          totalProcessed: snapshot.size,
+        };
+      } catch (error) {
+        console.error("Migration error:", error);
+        throw new functions.https.HttpsError(
+            "internal",
+            "Migration failed: " + error.message,
+        );
+      }
+    });
+
+
+exports.migrateLegalAcceptanceFieldsHTTP = functions
+    .runWith({memory: "512MB", timeoutSeconds: 540})
+    .https.onRequest(async (req, res) => {
+      const providedSecret = req.query.secret ||
+        (req.body && req.body.secret);
+      const expectedSecret = process.env.MIGRATION_SECRET ||
+        "dawatime-migration-2025";
+
+      if (providedSecret !== expectedSecret) {
+        return res.status(403).json({
+          error: "Unauthorized. Invalid secret key.",
+        });
+      }
+
+      const defaultTermsVersion = "1.0";
+      const defaultPrivacyVersion = "1.0";
+      const defaultAcceptanceDate = "2025-07-10T00:00:00.000Z";
+
+      const results = {
+        success: 0,
+        alreadyMigrated: 0,
+        failed: 0,
+        errors: [],
+      };
+
+      try {
+        const usersRef = admin.firestore().collection("Users");
+        const snapshot = await usersRef.get();
+
+        if (snapshot.empty) {
+          return res.status(200).json({
+            message: "No users found to migrate",
+            results,
+          });
+        }
+
+        const batchSize = 500;
+        let batch = admin.firestore().batch();
+        let operationCount = 0;
+
+        for (const doc of snapshot.docs) {
+          const userData = doc.data();
+
+          if (
+            userData.acceptedTermsVersion &&
+            userData.acceptedPrivacyVersion &&
+            userData.legalAcceptanceDate
+          ) {
+            results.alreadyMigrated++;
+            continue;
+          }
+
+          try {
+            batch.update(doc.ref, {
+              acceptedTermsVersion: defaultTermsVersion,
+              acceptedPrivacyVersion: defaultPrivacyVersion,
+              legalAcceptanceDate: defaultAcceptanceDate,
+            });
+
+            operationCount++;
+            results.success++;
+
+            if (operationCount >= batchSize) {
+              await batch.commit();
+              batch = admin.firestore().batch();
+              operationCount = 0;
+            }
+          } catch (error) {
+            results.failed++;
+            results.errors.push({
+              userId: doc.id,
+              error: error.message,
+            });
+          }
+        }
+
+        if (operationCount > 0) {
+          await batch.commit();
+        }
+
+        return res.status(200).json({
+          message: "Migration completed successfully",
+          results,
+          totalProcessed: snapshot.size,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error("Migration error:", error);
+        return res.status(500).json({
+          error: "Migration failed",
+          message: error.message,
+          results,
+        });
+      }
     });

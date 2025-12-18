@@ -1,9 +1,69 @@
 library;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dawatime/home_page.dart';
+import 'package:dawatime/utils/medication_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart' show Medications;
 import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:dawatime/main.dart' show navigatorKey;
+
+Medications medicationFromDoc(DocumentSnapshot doc) {
+  final data = doc.data() as Map<String, dynamic>;
+  List<int>? daysOfWeek;
+  if (data['daysOfWeek'] != null) {
+    if (data['daysOfWeek'] is String) {
+      daysOfWeek =
+          (data['daysOfWeek'] as String)
+              .split(',')
+              .map((e) => int.tryParse(e.trim()))
+              .whereType<int>()
+              .toList();
+    } else if (data['daysOfWeek'] is List) {
+      daysOfWeek = List<int>.from(data['daysOfWeek']);
+    }
+  }
+  return Medications(
+    name: data['name'] ?? '',
+    typeOfMedication: data['typeOfMedication'] ?? '',
+    dosage: (data['dosage'] ?? 0).toDouble(),
+    frequency: (data['frequency'] ?? 1),
+    amount: (data['amount'] ?? 0).toDouble(),
+    notifyTime: data['notifyTime']?.toString(),
+    startDate:
+        data['startDate'] != null ? DateTime.tryParse(data['startDate']) : null,
+    daysOfWeek: daysOfWeek,
+    lastTaken:
+        data['lastTaken'] != null ? DateTime.tryParse(data['lastTaken']) : null,
+    refillThreshold:
+        data['refillThreshold'] != null
+            ? (data['refillThreshold'] as num).toDouble()
+            : null,
+    refillNotified: data['refillNotified'] as bool?,
+  );
+}
+
+Future<void> rescheduleAllMedications(String uid) async {
+  if (uid.isEmpty) return;
+  try {
+    final meds =
+        await FirebaseFirestore.instance.collection(uid).limit(12).get();
+    for (var doc in meds.docs) {
+      final medication = medicationFromDoc(doc);
+      await scheduleMedicationNotification(
+        null,
+        doc.id,
+        medication,
+        userId: uid,
+      );
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error rescheduling medications: $e');
+    }
+  }
+}
 
 String? getNextReminder(Medications medication) {
   if (medication.notifyTime == null || medication.notifyTime!.isEmpty) {
@@ -109,13 +169,7 @@ String? getNextReminder(Medications medication) {
     final hour = baseDate.hour;
     final minute = baseDate.minute;
     for (int i = 0; i < 7; i++) {
-      final checkDay = DateTime(
-        now.year,
-        now.month,
-        now.day + i,
-        hour,
-        minute,
-      );
+      final checkDay = DateTime(now.year, now.month, now.day + i, hour, minute);
       if (medication.daysOfWeek!.contains(checkDay.weekday) &&
           checkDay.isAfter(now)) {
         final isArabic =
@@ -158,9 +212,7 @@ String? getNextReminder(Medications medication) {
         final day = checkDay.day;
         final year = checkDay.year;
         final displayHour =
-            checkDay.hour == 0 || checkDay.hour == 12
-                ? 12
-                : checkDay.hour % 12;
+            checkDay.hour == 0 || checkDay.hour == 12 ? 12 : checkDay.hour % 12;
         final displayMinute = checkDay.minute.toString().padLeft(2, '0');
         final period =
             isArabic

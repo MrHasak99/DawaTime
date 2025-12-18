@@ -118,7 +118,9 @@ class _HomePageState extends State<HomePage> {
   String? _recentlyDeletedDocId;
 
   Timer? _medicationCheckTimer;
+  Timer? _autoRefreshTimer;
   final Set<String> _shownAlerts = {};
+  final ScrollController _scrollController = ScrollController();
 
   int _introStep = 0;
 
@@ -178,6 +180,11 @@ class _HomePageState extends State<HomePage> {
 
       _medicationCheckTimer = Timer.periodic(const Duration(seconds: 1), (_) {
         _checkAndShowDueMedications();
+      });
+
+      // Auto-refresh UI every 30 seconds for reminder window updates
+      _autoRefreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+        if (mounted) setState(() {});
       });
 
       selectNotificationStream.stream.listen((
@@ -254,6 +261,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _medicationCheckTimer?.cancel();
+    _autoRefreshTimer?.cancel();
+    _scrollController.dispose();
     localeNotifier.removeListener(_localeListener);
     super.dispose();
   }
@@ -328,8 +337,8 @@ class _HomePageState extends State<HomePage> {
 
         final timeParts = medication.notifyTime!.split(':');
         if (timeParts.length != 2) continue;
-        final hour = int.tryParse(timeParts[0]);
-        final minute = int.tryParse(timeParts[1]);
+        final int? hour = int.tryParse(timeParts[0]);
+        final int? minute = int.tryParse(timeParts[1]);
         if (hour == null || minute == null) continue;
 
         bool shouldAutoReschedule = false;
@@ -1138,6 +1147,7 @@ class _HomePageState extends State<HomePage> {
                   child: Builder(
                     builder: (scaffoldContext) {
                       return ListView.builder(
+                        controller: _scrollController,
                         physics: const AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.only(bottom: 80),
                         itemCount: docs.length,
@@ -3068,10 +3078,11 @@ class _HomePageState extends State<HomePage> {
                                           if (confirm == true) {
                                             final previousAmount =
                                                 medication.amount;
+                                            final docId = docs[index].id;
                                             try {
                                               await firestore
                                                   .collection(widget.uid!)
-                                                  .doc(docs[index].id)
+                                                  .doc(docId)
                                                   .update({
                                                     'amount':
                                                         medication.amount -
@@ -3088,20 +3099,18 @@ class _HomePageState extends State<HomePage> {
                                                             .toIso8601String(),
                                                   });
                                               await cancelMedicationReminders(
-                                                docs[index].id,
+                                                docId,
                                               );
-
                                               final updatedDoc =
                                                   await firestore
                                                       .collection(widget.uid!)
-                                                      .doc(docs[index].id)
+                                                      .doc(docId)
                                                       .get();
                                               final updatedMedication =
                                                   medicationFromDoc(updatedDoc);
-
                                               await scheduleMedicationNotification(
                                                 context,
-                                                docs[index].id,
+                                                docId,
                                                 updatedMedication,
                                               );
 
@@ -3329,11 +3338,90 @@ class _HomePageState extends State<HomePage> {
                                                           medicationFromDoc(
                                                             restoredDoc,
                                                           );
-                                                      await scheduleMedicationNotification(
-                                                        context,
-                                                        docs[index].id,
-                                                        restoredMedication,
-                                                      );
+                                                      final now =
+                                                          DateTime.now();
+                                                      final notifyTime =
+                                                          restoredMedication
+                                                              .notifyTime;
+                                                      bool scheduled = false;
+                                                      if (notifyTime != null &&
+                                                          notifyTime
+                                                              .isNotEmpty) {
+                                                        final timeParts =
+                                                            notifyTime.split(
+                                                              ':',
+                                                            );
+                                                        if (timeParts.length ==
+                                                            2) {
+                                                          final hour =
+                                                              int.tryParse(
+                                                                timeParts[0],
+                                                              );
+                                                          final minute =
+                                                              int.tryParse(
+                                                                timeParts[1],
+                                                              );
+                                                          if (hour != null &&
+                                                              minute != null) {
+                                                            final todayScheduledTime =
+                                                                DateTime(
+                                                                  now.year,
+                                                                  now.month,
+                                                                  now.day,
+                                                                  hour,
+                                                                  minute,
+                                                                );
+                                                            final twoHoursAfter =
+                                                                todayScheduledTime
+                                                                    .add(
+                                                                      const Duration(
+                                                                        hours:
+                                                                            2,
+                                                                      ),
+                                                                    );
+                                                            if (now.isAfter(
+                                                                  todayScheduledTime,
+                                                                ) &&
+                                                                now.isBefore(
+                                                                  twoHoursAfter,
+                                                                )) {
+                                                              await scheduleMedicationNotification(
+                                                                context,
+                                                                docs[index].id,
+                                                                restoredMedication,
+                                                              );
+                                                              scheduled = true;
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                      if (!scheduled) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                  0xFF8AC249,
+                                                                ),
+                                                            content: Text(
+                                                              AppLocalizations.of(
+                                                                context,
+                                                              )!.reminderWindowPassed,
+                                                              style: const TextStyle(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'Inter',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
                                                       if (mounted) {
                                                         setState(() {});
                                                       }
@@ -3363,57 +3451,59 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               );
                                             }
-                                          }
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                backgroundColor: Colors.red,
-                                                title: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!.youreOutOfMedication(
-                                                    medication.name,
-                                                  ),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!.pleaseRefillYourMedication(
-                                                    medication.name,
-                                                  ),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop();
-                                                    },
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.ok,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                          } else {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Colors.red,
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.youreOutOfMedication(
+                                                      medication.name,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          );
+                                                  content: Text(
+                                                    AppLocalizations.of(
+                                                      context,
+                                                    )!.pleaseRefillYourMedication(
+                                                      medication.name,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop();
+                                                      },
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                          context,
+                                                        )!.ok,
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         }
                                       },
                                     ),
@@ -3690,48 +3780,42 @@ class _DetailRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  final TextStyle? valueStyle;
-
+  final TextStyle valueStyle;
   const _DetailRow({
     required this.icon,
     required this.label,
     required this.value,
-    this.valueStyle,
+    required this.valueStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: Color(0xFF8AC249)),
-        const SizedBox(width: 12),
+        Icon(icon, color: const Color(0xFF8AC249), size: 22),
+        const SizedBox(width: 10),
         Text(
-          "$label: ",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          label,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 15,
+            color: Color(0xFF8AC249),
+            fontFamily: 'Inter',
           ),
         ),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style:
-                valueStyle ??
-                Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
+            style: valueStyle,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
     );
   }
-}
-
-Medications medicationFromDoc(DocumentSnapshot doc) {
-  final data = doc.data() as Map<String, dynamic>;
-  return Medications.fromMap(data);
 }
 
 Future<void> initializeNotifications() async {
@@ -3741,31 +3825,6 @@ Future<void> initializeNotifications() async {
     ),
   );
 }
-
-Future<void> rescheduleAllMedications(String uid) async {
-  if (kIsWeb) return;
-
-  try {
-    final meds =
-        await FirebaseFirestore.instance.collection(uid).limit(12).get();
-    for (var doc in meds.docs) {
-      final medication = medicationFromDoc(doc);
-      await scheduleMedicationNotification(
-        null,
-        doc.id,
-        medication,
-        userId: uid,
-      );
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print(
-        'Error rescheduling medications (user may not be authenticated): $e',
-      );
-    }
-  }
-}
-
 
 String _getDaysOfWeekString(BuildContext context, List<int> daysOfWeek) {
   final isArabic = Localizations.localeOf(context).languageCode == 'ar';

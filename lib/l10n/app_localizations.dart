@@ -95,6 +95,12 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
+  /// No description provided for @reminderWindowPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'The reminder window has passed. Cannot reschedule notification.'**
+  String get reminderWindowPassed;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
@@ -923,6 +929,12 @@ abstract class AppLocalizations {
   /// **'Update Required'**
   String get updateRequired;
 
+  /// No description provided for @acceptButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get acceptButton;
+
   /// No description provided for @pleaseUpdate.
   ///
   /// In en, this message translates to:
@@ -1186,6 +1198,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A new version of DawaTime is available. Tap to update now.'**
   String get updateAvailableBody;
+
+  /// No description provided for @legalUpdateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Documents Updated'**
+  String get legalUpdateRequired;
+
+  /// No description provided for @legalUpdateMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve updated our Terms & Conditions and Privacy Policy. Please review and accept the updated documents to continue using DawaTime.'**
+  String get legalUpdateMessage;
+
+  /// No description provided for @viewTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'View Terms & Conditions'**
+  String get viewTerms;
+
+  /// No description provided for @viewPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'View Privacy Policy'**
+  String get viewPrivacy;
+
+  /// No description provided for @acceptUpdatedLegal.
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the updated Terms & Conditions and Privacy Policy'**
+  String get acceptUpdatedLegal;
+
+  /// No description provided for @declineAndLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline & Logout'**
+  String get declineAndLogout;
+
+  /// No description provided for @mustAcceptLegalUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the updated legal documents to continue'**
+  String get mustAcceptLegalUpdates;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

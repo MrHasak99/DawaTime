@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get reminderWindowPassed => 'The reminder window has passed. Cannot reschedule notification.';
+
+  @override
   String get appTitle => 'DawaTime';
 
   @override
@@ -443,6 +446,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateRequired => 'Update Required';
 
   @override
+  String get acceptButton => 'Accept';
+
+  @override
   String get pleaseUpdate => 'A new version of the app is available, please update to continue';
 
   @override
@@ -579,4 +585,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateAvailableBody => 'A new version of DawaTime is available. Tap to update now.';
+
+  @override
+  String get legalUpdateRequired => 'Legal Documents Updated';
+
+  @override
+  String get legalUpdateMessage => 'We\'ve updated our Terms & Conditions and Privacy Policy. Please review and accept the updated documents to continue using DawaTime.';
+
+  @override
+  String get viewTerms => 'View Terms & Conditions';
+
+  @override
+  String get viewPrivacy => 'View Privacy Policy';
+
+  @override
+  String get acceptUpdatedLegal => 'I accept the updated Terms & Conditions and Privacy Policy';
+
+  @override
+  String get declineAndLogout => 'Decline & Logout';
+
+  @override
+  String get mustAcceptLegalUpdates => 'You must accept the updated legal documents to continue';
 }

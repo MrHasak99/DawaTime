@@ -340,6 +340,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           }
                           setState(() => isLoading = true);
                           try {
+                            final legalDocSnap = await FirebaseFirestore.instance
+                                .collection('AppConfig')
+                                .doc('LegalDocuments')
+                                .get();
+                            final termsVersion = legalDocSnap.data()?['termsVersion']?.toString() ?? '1.0';
+                            final privacyVersion = legalDocSnap.data()?['privacyVersion']?.toString() ?? '1.0';
+
                             final userCredential = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
                                   email: emailController.text.trim(),
@@ -357,6 +364,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                   'name': nameController.text.trim(),
                                   'email': emailController.text.trim(),
                                   'isVerified': user?.emailVerified ?? false,
+                                  'acceptedTermsVersion': termsVersion,
+                                  'acceptedPrivacyVersion': privacyVersion,
+                                  'legalAcceptanceDate':
+                                      DateTime.now().toIso8601String(),
                                 });
                             await FirebaseAuth.instance.signOut();
                             if (!context.mounted) return;

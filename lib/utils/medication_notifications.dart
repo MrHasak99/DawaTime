@@ -10,7 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:dawatime/home_page.dart' show Medications;
 import 'package:dawatime/l10n/app_localizations.dart';
-import 'package:dawatime/main.dart' show flutterLocalNotificationsPlugin, navigatorKey;
+import 'package:dawatime/main.dart'
+    show flutterLocalNotificationsPlugin, navigatorKey;
 
 Future<void> scheduleMedicationNotification(
   BuildContext? context,
@@ -19,6 +20,11 @@ Future<void> scheduleMedicationNotification(
   bool forceNextDay = false,
   String? userId,
 }) async {
+  if (kDebugMode) {
+    print(
+      'DEBUG: scheduleMedicationNotification called for ${medication.name} (docId: $docId)',
+    );
+  }
   if (kIsWeb) return;
 
   await requestExactAlarmPermission();
@@ -42,12 +48,28 @@ Future<void> scheduleMedicationNotification(
       hour,
       minute,
     );
+    if (kDebugMode) {
+      print('DEBUG: Checking follow-up scheduling for ${medication.name}');
+      print('DEBUG: lastTaken: \'${medication.lastTaken}\'');
+      print('DEBUG: todayScheduledTime: $todayScheduledTime');
+    }
     final twoHoursAfter = todayScheduledTime.add(const Duration(hours: 2));
     final isTodayScheduled = daysOfWeek.contains(now.weekday);
     final isWithinWindow =
         isTodayScheduled &&
         now.isAfter(todayScheduledTime) &&
         now.isBefore(twoHoursAfter);
+
+    if (isWithinWindow &&
+        medication.lastTaken != null &&
+        medication.lastTaken!.isAfter(todayScheduledTime)) {
+      if (kDebugMode) {
+        print(
+          'Not scheduling follow-ups for ${medication.name} because already marked as taken.',
+        );
+      }
+      return;
+    }
 
     if (isTodayScheduled && now.isAfter(twoHoursAfter)) {
       if (kDebugMode) {
@@ -215,80 +237,56 @@ Future<void> scheduleMedicationNotification(
   final isWithinWindowOfToday =
       now.isAfter(baseDate) && now.isBefore(twoHoursAfterBase);
 
-  if (!isWithinWindowOfToday) {
-    while (scheduledTime.isBefore(now)) {
-      scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
-    }
-  }
-
-  try {
-    final baseScheduledTime = scheduledTime;
-    final twoHoursAfter = scheduledTime.add(const Duration(hours: 2));
-    final isWithinWindow =
-        now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
-
-    if (now.isAfter(twoHoursAfter)) {
+  if (isWithinWindowOfToday &&
+      medication.lastTaken != null &&
+      medication.lastTaken!.isAfter(baseDate)) {
+    if (kDebugMode) {
+      print(
+        'Not scheduling everyXDays follow-ups for ${medication.name} because already marked as taken.',
+      );
+      print('DEBUG: lastTaken: \'${medication.lastTaken}\'');
       if (kDebugMode) {
         print(
-          'Skipping old notification for ${medication.name} at $scheduledTime',
+          'DEBUG: Skipping everyXDays scheduling for ${medication.name} (docId: $docId) because lastTaken (${medication.lastTaken}) > baseDate ($baseDate)',
         );
       }
       return;
     }
+  } else if (isWithinWindowOfToday) {
+    if (kDebugMode) {
+      print('DEBUG: Not skipping everyXDays: lastTaken is null or <= baseDate');
+      print(
+        'DEBUG: lastTaken: \'${medication.lastTaken?.toString() ?? 'null'}\'',
+      );
+      print('DEBUG: baseDate: $baseDate');
+    }
 
-    if (scheduledTime.isAfter(now)) {
-      for (int i = 0; i <= 4; i++) {
-        final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
-        final notificationMessage =
-            i == 0
-                ? AppLocalizations.of(
-                  context ?? navigatorKey.currentContext!,
-                )!.timeToTakeMedication(medication.name)
-                : AppLocalizations.of(
-                  context ?? navigatorKey.currentContext!,
-                )!.reminderTakeMedication(medication.name);
+    try {
+      final baseScheduledTime = scheduledTime;
+      final twoHoursAfter = scheduledTime.add(const Duration(hours: 2));
+      final isWithinWindow =
+          now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
 
-        final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
-        final notificationId = ('${docId}_$i').hashCode;
-
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          notificationId,
-          medication.name,
-          notificationMessage,
-          scheduledTZ,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'medication_channel_$docId',
-              'Medication Reminders for ${medication.name}',
-              channelDescription: 'Reminds you to take ${medication.name}',
-              importance: Importance.max,
-              priority: Priority.high,
-              playSound: true,
-              showWhen: true,
-              ongoing: false,
-              autoCancel: true,
-              icon: 'dawatime_notify',
-              sound: RawResourceAndroidNotificationSound('notification_sound'),
-              color: const Color(0xFF8AC249),
-            ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: true,
-              presentSound: true,
-              presentBadge: true,
-              sound: "notification_sound.wav",
-            ),
-          ),
-          payload: docId,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        );
+      if (now.isAfter(twoHoursAfter)) {
+        if (kDebugMode) {
+          print(
+            'Skipping old notification for ${medication.name} at $scheduledTime',
+          );
+        }
+        return;
       }
-    } else if (isWithinWindow) {
-      for (int i = 0; i <= 4; i++) {
-        final followUpTime = baseScheduledTime.add(Duration(minutes: 30 * i));
-        if (followUpTime.isAfter(now)) {
-          final notificationMessage = AppLocalizations.of(
-            context ?? navigatorKey.currentContext!,
-          )!.reminderTakeMedication(medication.name);
+
+      if (scheduledTime.isAfter(now)) {
+        for (int i = 0; i <= 4; i++) {
+          final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
+          final notificationMessage =
+              i == 0
+                  ? AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.timeToTakeMedication(medication.name)
+                  : AppLocalizations.of(
+                    context ?? navigatorKey.currentContext!,
+                  )!.reminderTakeMedication(medication.name);
 
           final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
           final notificationId = ('${docId}_$i').hashCode;
@@ -320,49 +318,94 @@ Future<void> scheduleMedicationNotification(
                 presentSound: true,
                 presentBadge: true,
                 sound: "notification_sound.wav",
-                interruptionLevel: InterruptionLevel.timeSensitive,
               ),
             ),
             payload: docId,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
+      } else if (isWithinWindow) {
+        for (int i = 0; i <= 4; i++) {
+          final followUpTime = baseScheduledTime.add(Duration(minutes: 30 * i));
+          if (followUpTime.isAfter(now)) {
+            final notificationMessage = AppLocalizations.of(
+              context ?? navigatorKey.currentContext!,
+            )!.reminderTakeMedication(medication.name);
+
+            final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+            final notificationId = ('${docId}_$i').hashCode;
+
+            await flutterLocalNotificationsPlugin.zonedSchedule(
+              notificationId,
+              medication.name,
+              notificationMessage,
+              scheduledTZ,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  'medication_channel_$docId',
+                  'Medication Reminders for ${medication.name}',
+                  channelDescription: 'Reminds you to take ${medication.name}',
+                  importance: Importance.max,
+                  priority: Priority.high,
+                  playSound: true,
+                  showWhen: true,
+                  ongoing: false,
+                  autoCancel: true,
+                  icon: 'dawatime_notify',
+                  sound: RawResourceAndroidNotificationSound(
+                    'notification_sound',
+                  ),
+                  color: const Color(0xFF8AC249),
+                ),
+                iOS: DarwinNotificationDetails(
+                  presentAlert: true,
+                  presentSound: true,
+                  presentBadge: true,
+                  sound: "notification_sound.wav",
+                  interruptionLevel: InterruptionLevel.timeSensitive,
+                ),
+              ),
+              payload: docId,
+              androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            );
+          }
+        }
       }
-    }
-  } catch (e) {
-    if (context != null) {
-      if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: const Color(0xFF8AC249),
-            content: Text(
-              AppLocalizations.of(context)!.allowSettings,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
+    } catch (e) {
+      if (context != null) {
+        if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: const Color(0xFF8AC249),
+              content: Text(
+                AppLocalizations.of(context)!.allowSettings,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              action: SnackBarAction(
+                label: AppLocalizations.of(context)!.openSettings,
+                onPressed: openExactAlarmSettings,
               ),
             ),
-            action: SnackBarAction(
-              label: AppLocalizations.of(context)!.openSettings,
-              onPressed: openExactAlarmSettings,
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: const Color(0xFF8AC249),
-            content: Text(
-              '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: const Color(0xFF8AC249),
+              content: Text(
+                '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
   }
@@ -471,14 +514,12 @@ Future<void> cancelRefillNotifications(String docId) async {
   }
 }
 
-
 Future<void> openExactAlarmSettings() async {
   final intent = AndroidIntent(
     action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
   );
   await intent.launch();
 }
-
 
 Future<void> requestExactAlarmPermission() async {
   if (kIsWeb) return;

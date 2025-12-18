@@ -9,6 +9,9 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get reminderWindowPassed => 'انتهت نافذة التذكير. لا يمكن إعادة جدولة الإشعار.';
+
+  @override
   String get appTitle => 'دواء تايم';
 
   @override
@@ -443,6 +446,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateRequired => 'تحديث مطلوب';
 
   @override
+  String get acceptButton => 'موافق';
+
+  @override
   String get pleaseUpdate => 'يتوفر إصدار جديد من التطبيق، الرجاء التحديث للمتابعة';
 
   @override
@@ -578,5 +584,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newUpdateAvailable => 'تحديث جديد متوفر!';
 
   @override
-  String get updateAvailableBody => 'إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.';
+  String get updateAvailableBody => 'إصدار جديد من داوا تايم متاح. انقر للتحديث الآن.';
+
+  @override
+  String get legalUpdateRequired => 'تحديث المستندات القانونية';
+
+  @override
+  String get legalUpdateMessage => 'لقد قمنا بتحديث الشروط والأحكام وسياسة الخصوصية. يرجى مراجعة وقبول المستندات المحدثة لمتابعة استخدام دواء تايم.';
+
+  @override
+  String get viewTerms => 'عرض الشروط والأحكام';
+
+  @override
+  String get viewPrivacy => 'عرض سياسة الخصوصية';
+
+  @override
+  String get acceptUpdatedLegal => 'أوافق على الشروط والأحكام وسياسة الخصوصية المحدثة';
+
+  @override
+  String get declineAndLogout => 'رفض و تسجيل الخروج';
+
+  @override
+  String get mustAcceptLegalUpdates => 'يجب عليك قبول المستندات القانونية المحدثة للمتابعة';
 }

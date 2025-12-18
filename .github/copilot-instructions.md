@@ -6,13 +6,15 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
 ## Architecture & Key Components
 
 ### Core Files Structure
-- **`lib/main.dart`** (1055 lines): App entry point with critical initialization sequence:
+- **`lib/main.dart`** (1200+ lines): App entry point with critical initialization sequence:
   - Firebase initialization with timeout handling
   - Workmanager background task registration (`medicationRescheduleTask` runs hourly)
   - Timezone initialization via `flutter_timezone` (fallback to UTC if fails)
   - Notification plugin setup with `selectNotificationStream` listener
   - Theme/locale persistence via `SharedPreferences`
   - Force update check on app launch (`forceUpdateCheck()` compares Firestore `AppConfig/Version` with local version)
+  - **Legal document version check** in splash screen (`_checkLegalDocumentVersions()` compares user's accepted versions with current versions in Firestore)
+  - **Legal update dialog** shown when documents are updated (blocks app access until user accepts or logs out, uses `PopScope` and `onPopInvokedWithResult` for back navigation prevention)
   - FCM background message handler (`_firebaseMessagingBackgroundHandler`)
 
 - **`lib/home_page.dart`** (3785 lines): Main UI and medication list display:
@@ -44,6 +46,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Signup sends verification email via `sendEmailVerification()`
   - Terms & Conditions and Privacy Policy acceptance required (checkbox validation)
   - Creates Firestore `/Users/{uid}` document on successful signup
+  - **Legal document version fetch on signup**: On signup, the app fetches the current `termsVersion` and `privacyVersion` from Firestore `/AppConfig/LegalDocuments` and sets them for the new user. No hardcoded version numbers in code.
 
 ### Shared Utilities (lib/utils/)
 
@@ -113,9 +116,17 @@ class Medications {
 ```
 
 #### Firestore Collections
-- **`/Users/{uid}`**: User profile data (name, email, fcmToken, preferredLanguage)
+- **`/Users/{uid}`**: User profile data
+  - `name`, `email`, `fcmToken`, `preferredLanguage`
+  - **`acceptedTermsVersion`**: Version of T&C user accepted (e.g., "1.0"). On signup, this is fetched from `/AppConfig/LegalDocuments`.
+  - **`acceptedPrivacyVersion`**: Version of Privacy Policy user accepted (e.g., "1.0"). On signup, this is fetched from `/AppConfig/LegalDocuments`.
+  - **`legalAcceptanceDate`**: ISO timestamp of when user accepted legal docs
 - **`/{userId}/{medicationId}`**: Medication documents (scoped per user)
 - **`/AppConfig/Version`**: App version control (triggers Cloud Function on update)
+- **`/AppConfig/LegalDocuments`**: Legal document version tracking
+  - `termsVersion`: Current Terms & Conditions version (e.g., "1.0")
+  - `privacyVersion`: Current Privacy Policy version (e.g., "1.0")
+  - `lastUpdated`: ISO date of last legal document update
 - **`/ContactMessages/{messageId}`**: Contact form submissions
 - **`/Messages/{document}`**: Public read/write (used for support messages)
 
@@ -299,11 +310,28 @@ for (int i = 0; i <= 4; i++) {
 - Deletes Firebase Auth account
 - Returns success/failure JSON response
 
+**`migrateLegalAcceptanceFields` (HTTPS Callable)**:
+- One-time migration function to add legal acceptance fields to existing users
+- Requires authentication
+- Adds `acceptedTermsVersion`, `acceptedPrivacyVersion`, and `legalAcceptanceDate` to all users
+- Processes in batches of 500 users
+- Safe to run multiple times (skips already migrated users)
+
+**`migrateLegalAcceptanceFieldsHTTP` (HTTPS Request)**:
+- HTTP trigger version of migration function
+- Secret key authentication (`?secret=dawatime-migration-2025`)
+- Same functionality as callable version but easier to trigger via URL
+- Returns JSON with migration results (success/failed/already migrated counts)
+
 #### Firebase Authentication Flow
 1. **Signup** (signup_page.dart):
    - Create auth account with `createUserWithEmailAndPassword()`
    - Send verification email via `sendEmailVerification()`
-   - Create Firestore document: `/Users/{uid}` with {name, email, fcmToken, preferredLanguage}
+   - Create Firestore document: `/Users/{uid}` with:
+    - `name`, `email`, `fcmToken`, `preferredLanguage`
+    - **`acceptedTermsVersion`**: fetched from `/AppConfig/LegalDocuments/termsVersion` (no longer hardcoded)
+    - **`acceptedPrivacyVersion`**: fetched from `/AppConfig/LegalDocuments/privacyVersion` (no longer hardcoded)
+    - **`legalAcceptanceDate`**: ISO timestamp
    - Show SnackBar: "Verification email sent, please check your inbox"
 
 2. **Login** (login_page.dart):
@@ -443,24 +471,36 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+10` (current version)
-   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-   - Example: `1.4.4+10` = version 1.4.4, build 10
+1. **`pubspec.yaml`**: `version: 1.4.4+13` (current version)
+  - Format: `<major>.<minor>.<patch>+<buildNumber>`
+  - Example: `1.4.4+13` = version 1.4.4, build 13
 
 2. **`android/app/build.gradle.kts`**:
-   ```kotlin
-   versionCode = 10
-   versionName = "1.4.4"
-   ```
+  ```kotlin
+  versionCode = 13
+  versionName = "1.4.4"
+  ```
 
 3. **Firebase Firestore** (manual update):
    - Update `/AppConfig/Version` document field `version: "1.4.4"`
    - This triggers Cloud Function to send FCM notifications to all users
 
-**Build number increment rules**:
-- Patch release (bug fixes): Increment patch and build (1.4.3+3 → 1.4.4+4)
-- Minor release (new features): Increment minor, reset patch (1.4.4+4 → 1.5.0+5)
-- Major release (breaking changes): Increment major, reset minor/patch (1.5.0+5 → 2.0.0+6)
+
+**Version number incrementation definition (using 1.2.3 as example):**
+
+**1** = Major updates (breaking changes, significant new features)
+**2** = Minor updates (backwards-compatible feature additions, improvements)
+**3** = Hotfixes/patches (bug fixes, small tweaks)
+
+**Build number increment rules:**
+For any release (major, minor, or hotfix), always increment the relevant number and never reset any part of the version. For example:
+  - Hotfix/patch release: Increment the third number (e.g., 1.2.3 → 1.2.4)
+  - Minor release: Increment the second number (e.g., 1.2.3 → 1.3.3)
+  - Major release: Increment the first number (e.g., 1.2.3 → 2.2.3)
+  - Do not reset any version segment to zero when incrementing another.
+
+**Build number incrementation for testing:**
+- The build number (the number after the +, e.g., 1.2.3+15) can be incremented for internal testing or CI/CD builds, even if the main version number does not change. This allows for distributing test builds without affecting the public versioning scheme.
 
 ### Localization Workflow
 
