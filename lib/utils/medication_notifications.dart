@@ -209,6 +209,7 @@ Future<void> scheduleMedicationNotification(
               presentSound: true,
               presentBadge: true,
               sound: "notification_sound.wav",
+              interruptionLevel: InterruptionLevel.timeSensitive,
             ),
           ),
           payload: docId,
@@ -318,6 +319,7 @@ Future<void> scheduleMedicationNotification(
                 presentSound: true,
                 presentBadge: true,
                 sound: "notification_sound.wav",
+                interruptionLevel: InterruptionLevel.timeSensitive,
               ),
             ),
             payload: docId,
@@ -408,6 +410,74 @@ Future<void> scheduleMedicationNotification(
         }
       }
     }
+    return;
+  }
+
+  while (scheduledTime.isBefore(now) ||
+      (scheduledTime.isAfter(now) &&
+          scheduledTime.difference(now).inHours < 2 &&
+          medication.lastTaken != null &&
+          medication.lastTaken!.isAfter(scheduledTime))) {
+    scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
+  }
+
+  if (kDebugMode) {
+    print(
+      'Scheduling ${medication.name} for $scheduledTime (in ${scheduledTime.difference(now).inHours} hours)',
+    );
+  }
+
+  for (int i = 0; i <= 4; i++) {
+    final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
+    final notificationMessage =
+        i == 0
+            ? AppLocalizations.of(
+              context ?? navigatorKey.currentContext!,
+            )!.timeToTakeMedication(medication.name)
+            : AppLocalizations.of(
+              context ?? navigatorKey.currentContext!,
+            )!.reminderTakeMedication(medication.name);
+
+    final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
+    final notificationId = ('${docId}_$i').hashCode;
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      notificationId,
+      medication.name,
+      notificationMessage,
+      scheduledTZ,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'medication_channel_$docId',
+          'Medication Reminders for ${medication.name}',
+          channelDescription: 'Reminds you to take ${medication.name}',
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+          showWhen: true,
+          ongoing: false,
+          autoCancel: true,
+          icon: 'dawatime_notify',
+          sound: RawResourceAndroidNotificationSound('notification_sound'),
+          color: const Color(0xFF8AC249),
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          presentBadge: true,
+          sound: "notification_sound.wav",
+          interruptionLevel: InterruptionLevel.timeSensitive,
+        ),
+      ),
+      payload: docId,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+
+    if (kDebugMode) {
+      print(
+        '✓ Scheduled notification #$notificationId for ${medication.name} at $followUpTime',
+      );
+    }
   }
 }
 
@@ -488,6 +558,7 @@ Future<void> scheduleWeeklyRefillNotification(
           presentSound: true,
           presentBadge: true,
           sound: "notification_sound.wav",
+          interruptionLevel: InterruptionLevel.timeSensitive,
         ),
       ),
       payload: 'refill_$docId',
@@ -507,9 +578,29 @@ Future<void> cancelRefillNotifications(String docId) async {
   try {
     final notificationId = ('refill_weekly_$docId').hashCode;
     await flutterLocalNotificationsPlugin.cancel(notificationId);
+
+    if (kDebugMode) {
+      print('✓ Cancelled refill notification for $docId (ID: $notificationId)');
+    }
   } catch (e) {
     if (kDebugMode) {
-      print('Error canceling refill notifications: $e');
+      print('Error canceling refill notifications for $docId: $e');
+    }
+  }
+}
+
+Future<void> cancelAllRefillNotifications() async {
+  if (kIsWeb) return;
+
+  try {
+    await flutterLocalNotificationsPlugin.cancelAll();
+
+    if (kDebugMode) {
+      print('✓ Cancelled all pending notifications for cleanup');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error canceling all notifications: $e');
     }
   }
 }

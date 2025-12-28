@@ -1,7 +1,7 @@
 name: dawatime
 description: A medication reminder app.
 publish_to: "none"
-version: 1.4.4+14
+version: 1.4.4+15
 
 environment:
   sdk: ^3.7.2

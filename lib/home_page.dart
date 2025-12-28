@@ -318,6 +318,17 @@ class _HomePageState extends State<HomePage> {
       await Future.delayed(const Duration(milliseconds: 500));
     }
 
+    try {
+      await flutterLocalNotificationsPlugin.cancelAll();
+      if (kDebugMode) {
+        print('✓ Cleared all old notifications');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('⚠️ Error clearing notifications: $e');
+      }
+    }
+
     rescheduleAllMedications(userId);
     _autoRescheduleOverdueMedications(userId);
     _checkRefillReminders(userId);

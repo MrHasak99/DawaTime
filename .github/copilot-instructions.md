@@ -1,5 +1,30 @@
 # DawaTime - AI Coding Agent Instructions
 
+## Recent Changes (December 2025)
+
+### Critical iOS Notification Fixes
+**Issue**: Users reported no medication reminders on iOS for 2 weeks, only receiving incorrect refill alerts.
+
+**Root Causes Identified**:
+1. Missing main scheduling loop for `everyXDays` medications - only within-window notifications were scheduled
+2. Missing `interruptionLevel: InterruptionLevel.timeSensitive` on iOS notifications - iOS 15+ was suppressing alerts
+3. Stale weekly refill notifications persisting even after medication refilled - iOS doesn't reliably cancel repeating notifications by ID
+
+**Fixes Applied** (medication_notifications.dart, home_page.dart):
+- Added while loop in `scheduleMedicationNotification()` to advance scheduled time for future notifications (lines 416-477)
+- Added `interruptionLevel: InterruptionLevel.timeSensitive` to all DarwinNotificationDetails configurations
+- Implemented startup cleanup in `_scheduleAfterPermissionCheck()` using `cancelAll()` before rescheduling
+- Added new `cancelAllRefillNotifications()` function for nuclear cleanup
+- Enhanced debug logging throughout notification scheduling/cancellation for troubleshooting
+
+**Files Updated**:
+- `/lib/utils/medication_notifications.dart` (504 → 637 lines)
+- `/lib/home_page.dart` (3785 → 3856 lines)
+
+**Testing Verification**: Deploy to physical iOS device, add test medication for 2-3 minutes ahead, verify notification fires at exact time with follow-ups.
+
+---
+
 ## Project Overview
 DawaTime is a Flutter medication reminder app with Firebase backend, supporting Arabic/English localization. The app manages medication schedules, local notifications, and refill reminders with background task execution. Target platforms: Android (SDK 24+) and iOS.
 
@@ -17,11 +42,12 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - **Legal update dialog** shown when documents are updated (blocks app access until user accepts or logs out, uses `PopScope` and `onPopInvokedWithResult` for back navigation prevention)
   - FCM background message handler (`_firebaseMessagingBackgroundHandler`)
 
-- **`lib/home_page.dart`** (3785 lines): Main UI and medication list display:
+- **`lib/home_page.dart`** (3856 lines): Main UI and medication list display:
   - `StreamBuilder<QuerySnapshot>` for real-time Firestore medication updates
   - `Dismissible` widgets for swipe-to-edit (left/right) and swipe-to-delete (end-to-start)
   - Utility functions: `medicationFromDoc()`, `rescheduleAllMedications()`, `initializeNotifications()`
   - Auto-reschedule logic in `_autoRescheduleOverdueMedications()` (runs on app open)
+  - **Startup cleanup**: `_scheduleAfterPermissionCheck()` calls `cancelAll()` to clear stale notifications before rescheduling (critical for preventing incorrect refill alerts)
   - Notification handling via imports from `lib/utils/medication_notifications.dart`
   - Helper functions via imports from `lib/utils/medication_helpers.dart`
   - **Intro guide**: 6-step onboarding shown on first app launch (stored in `SharedPreferences` as `seenIntroGuide`)
@@ -58,13 +84,15 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Used in 27+ call sites across form validation and data parsing
   - Example: `convertArabicNumerals('١٢٣')` returns `'123'`
 
-- **`lib/utils/medication_notifications.dart`** (504 lines): Notification scheduling and permission management
-  - `scheduleMedicationNotification()`: Main scheduling function with 5 follow-up reminders (T+0, T+30, T+60, T+90, T+120)
-  - `cancelMedicationReminders()`: Comprehensive cancellation of all pending notifications
-  - `scheduleWeeklyRefillNotification()`: Weekly refill reminders at 10:00 AM
-  - `cancelRefillNotifications()`: Cancel refill notification by docId
+- **`lib/utils/medication_notifications.dart`** (637 lines): Notification scheduling and permission management
+  - `scheduleMedicationNotification()`: Main scheduling function with 5 follow-up reminders (T+0, T+30, T+60, T+90, T+120). **Fixed Dec 2025**: Added missing main scheduling loop for everyXDays medications and iOS `interruptionLevel` parameter
+  - `cancelMedicationReminders()`: Comprehensive cancellation of all pending notifications (cancels both weekday-based and basic notification IDs)
+  - `scheduleWeeklyRefillNotification()`: Weekly refill reminders at 10:00 AM with debug logging
+  - `cancelRefillNotifications()`: Cancel refill notification by docId with confirmation logging
+  - `cancelAllRefillNotifications()`: Nuclear cleanup option to cancel ALL pending notifications (used on app startup)
   - `requestExactAlarmPermission()`: Check Android 13+ exact alarm permission status
   - `openExactAlarmSettings()`: Navigate to system settings for alarm permission
+  - **Debug logging**: Comprehensive console output for troubleshooting notification scheduling/cancellation
   - Used in 13+ call sites for medication scheduling across add/edit/reschedule operations
   - **Import pattern**: `import 'package:dawatime/utils/medication_notifications.dart';`
 
@@ -183,18 +211,22 @@ await flutterLocalNotificationsPlugin.initialize(
 - **Cancels previous notifications**: Loops through `docId.hashCode + i` (i=0 to 4) to clear old schedules
 - **Two scheduling modes**:
   1. **daysOfWeek mode**: Calculates next occurrence of each selected weekday
-  2. **everyXDays mode**: Adds `frequency` days to `startDate` repeatedly until future date found
+  2. **everyXDays mode**: Uses while loop to advance `scheduledTime` by `frequency` days until future date found. **CRITICAL FIX (Dec 2025)**: This main scheduling loop was missing, causing no notifications for future dates on iOS
 - **Follow-up reminders**: Schedules 5 notifications at 30-minute intervals (immediate, +30min, +60min, +90min, +120min)
 - **2-hour grace period**: If notification time passed today but < 2 hours ago, schedules follow-ups starting now
 - **Skip old notifications**: If notification time is more than 2 hours past, skips scheduling entirely (prevents stale notifications when app opened after long period)
 - **Uses `androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle`** for reliable delivery even in Doze mode
+- **iOS notifications**: All notifications include `interruptionLevel: InterruptionLevel.timeSensitive` for iOS 15+ reliable delivery
 - **Notification ID generation**: `('${docId}_${weekday}_$followUpIndex').hashCode` ensures uniqueness
+- **Debug logging**: Console output shows scheduling details, notification IDs, and timing for troubleshooting
 
 **Function: `scheduleWeeklyRefillNotification()` (lib/utils/medication_notifications.dart)**
 - Schedules weekly recurring notification at 10:00 AM
 - Uses `matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime` for weekly repeat
 - Separate channel ID `'refill_channel'` with orange color (`0xFFFF9800`)
 - Notification ID: `('refill_weekly_$docId').hashCode`
+- Includes `interruptionLevel: InterruptionLevel.timeSensitive` for iOS 15+ delivery
+- Debug logging shows medication name, current amount, threshold, notification ID, and next fire time
 
 **Function: `cancelMedicationReminders()` (lib/utils/medication_notifications.dart)**
 - Cancels notifications with IDs: `('${docId}_$i').hashCode` where i=0 to 8
@@ -202,6 +234,41 @@ await flutterLocalNotificationsPlugin.initialize(
 
 **Function: `cancelRefillNotifications()` (lib/utils/medication_notifications.dart)**
 - Cancels refill notification with ID: `('refill_weekly_$docId').hashCode`
+- Includes debug logging showing cancellation confirmation
+
+**Function: `cancelAllRefillNotifications()` (lib/utils/medication_notifications.dart)**
+- Nuclear cleanup function that cancels ALL pending notifications via `cancelAll()`
+- Used during app startup to prevent stale refill notifications from persisting
+- **Why needed**: iOS repeating notifications (via `matchDateTimeComponents`) persist even after cancellation attempts, causing incorrect refill alerts for medications above threshold
+
+#### Startup Notification Cleanup
+**Critical Fix (Dec 2025)**: Added comprehensive startup cleanup to prevent "ghost notifications"
+
+**Implementation** (`_scheduleAfterPermissionCheck()` in home_page.dart):
+```dart
+try {
+  await flutterLocalNotificationsPlugin.cancelAll();
+  if (kDebugMode) {
+    print('✓ Cleared all old notifications');
+  }
+} catch (e) {
+  if (kDebugMode) {
+    print('⚠️ Error clearing notifications: $e');
+  }
+}
+
+// Now reschedule everything fresh
+rescheduleAllMedications(userId);
+_autoRescheduleOverdueMedications(userId);
+_checkRefillReminders(userId);
+```
+
+**Why this is critical**:
+- Refill notifications use weekly repeating pattern (`matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime`)
+- Once scheduled, they fire every week forever at 10 AM
+- Even after refilling medication (amount > threshold), old notifications kept firing on iOS
+- Cancellation by ID wasn't reliable for iOS repeating notifications
+- Solution: Cancel ALL notifications on startup, then reschedule based on current medication data
 
 #### Notification Channels
 1. **Medication reminders**: Channel ID = `'medication_channel_$docId'` (per-medication channel)
@@ -471,13 +538,13 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+13` (current version)
+1. **`pubspec.yaml`**: `version: 1.4.4+15` (current version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+13` = version 1.4.4, build 13
+  - Example: `1.4.4+15` = version 1.4.4, build 15
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 13
+  versionCode = 15
   versionName = "1.4.4"
   ```
 
@@ -501,6 +568,8 @@ For any release (major, minor, or hotfix), always increment the relevant number 
 
 **Build number incrementation for testing:**
 - The build number (the number after the +, e.g., 1.2.3+15) can be incremented for internal testing or CI/CD builds, even if the main version number does not change. This allows for distributing test builds without affecting the public versioning scheme.
+- **IMPORTANT**: When asked to "increment build number", ONLY increment the number after the + sign (e.g., 1.4.4+15 → 1.4.4+16). Do NOT change the version number itself (1.4.4 stays 1.4.4).
+- When asked to "increment version number", increment the appropriate version segment AND RESET the build number to 1 (e.g., 1.4.4+15 → 1.4.5+1 for patch, 1.4.4+15 → 1.5.0+1 for minor, 1.4.4+15 → 2.0.0+1 for major).
 
 ### Localization Workflow
 
@@ -906,6 +975,39 @@ TextField(
 ```
 
 ## Common Pitfalls & Solutions
+
+### iOS Notification Delivery Issues (Fixed Dec 2025)
+
+**Problem 1: Medication Reminders Not Firing on iOS**
+- **Root cause**: Missing main scheduling loop for `everyXDays` medications (lines 416-477 in medication_notifications.dart)
+- **Symptom**: Only medications within 2-hour window got notifications; future reminders never scheduled
+- **Fix**: Added while loop that advances `scheduledTime` by `medication.frequency` days until future date found
+
+**Problem 2: iOS 15+ Notifications Suppressed**
+- **Root cause**: Missing `interruptionLevel: InterruptionLevel.timeSensitive` parameter in `DarwinNotificationDetails`
+- **Symptom**: Time-sensitive medication reminders delayed or grouped by iOS
+- **Fix**: Added `interruptionLevel` to all iOS notification configurations (3 locations in medication_notifications.dart)
+
+**Problem 3: Incorrect Refill Alerts on iOS**
+- **Root cause**: Weekly repeating notifications persisted even after medication refilled (amount > threshold)
+- **Symptom**: Users receiving refill alerts for medications with adequate stock
+- **Technical issue**: iOS doesn't reliably cancel repeating notifications by ID; old schedules survived app restarts
+- **Fix**: Added startup cleanup (`cancelAll()`) in `_scheduleAfterPermissionCheck()` before rescheduling
+
+**Testing these fixes**:
+```bash
+flutter clean
+flutter pub get
+cd ios && rm -rf Pods Podfile.lock && pod repo update && pod install && cd ..
+flutter build ios --release
+flutter run --release
+```
+
+**Verification Steps**:
+1. **Test medication reminders**: Add medication scheduled 2-3 minutes ahead, lock device, verify notification fires at exact time
+2. **Check debug console**: Look for `✓ Cleared all old notifications` on app startup
+3. **Verify refill logic**: Ensure medications ABOVE threshold don't trigger refill alerts
+4. **Test follow-ups**: If medication not confirmed, verify T+30, T+60, T+90, T+120 notifications fire
 
 ### Async Function Return Types
 
@@ -1501,6 +1603,48 @@ if (kDebugMode) {
   print('Scheduling notification for ${medication.name} at $scheduledTime');
 }
 ```
+
+### Notification Debug Output (December 2025)
+The app now includes comprehensive debug logging for notification operations:
+
+**Startup Cleanup** (home_page.dart `_scheduleAfterPermissionCheck()`):
+```
+✓ Cleared all old notifications
+```
+
+**Refill Checking** (home_page.dart `_checkRefillReminders()`):
+```
+📊 Checking refill reminders for 3 medications...
+  • Aspirin: 50.0 / 10.0
+    → Stock OK: Cancelled refill notification
+  • Vitamin D: 5.0 / 10.0
+    → LOW STOCK: Scheduled refill notification
+```
+
+**Notification Scheduling** (medication_notifications.dart):
+```
+DEBUG: scheduleMedicationNotification called for Medicine A (docId: abc123)
+Scheduling Medicine A for 2025-12-28 14:00:00 (in 2 hours)
+✓ Scheduled notification #123456 for Medicine A at 2025-12-28 14:00:00
+✓ Scheduled notification #123457 for Medicine A at 2025-12-28 14:30:00
+```
+
+**Refill Notification Scheduling**:
+```
+✓ Scheduled weekly refill notification for Medicine B
+  - Current amount: 5.0
+  - Refill threshold: 10.0
+  - Notification ID: 789012
+  - Next fire time: 2025-12-29 10:00:00
+```
+
+**Cancellation Logging**:
+```
+✓ Cancelled refill notification for abc123 (ID: 789012)
+✓ Cancelled all pending notifications for cleanup
+```
+
+These logs appear in the console when running `flutter run` with a debug build.
 
 ### Notification Debugging (Android)
 ```bash
