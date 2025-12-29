@@ -23,6 +23,34 @@
 
 **Testing Verification**: Deploy to physical iOS device, add test medication for 2-3 minutes ahead, verify notification fires at exact time with follow-ups.
 
+### iOS FCM Token Registration Fixes (December 2025)
+**Issue**: iPhone not receiving remote update notifications from Cloud Function.
+
+**Root Causes Identified**:
+1. iOS requires APNs token to be registered before FCM token can be generated
+2. Cloud Function only sent `data` payload - iOS requires `notification` payload for reliable delivery
+3. Missing APNs alert configuration in Cloud Function payload
+4. No token refresh handling when FCM tokens expire/change
+5. No invalid token cleanup causing repeated failures
+6. AppDelegate not properly registering for remote notifications
+
+**Fixes Applied**:
+- **main.dart**: Added APNs token acquisition before FCM token with retry logic (lines 295-309, 546-591)
+- **main.dart**: Added `onTokenRefresh` listener to auto-update Firestore when tokens change (lines 378-392)
+- **AppDelegate.swift**: Added proper remote notification registration in `didFinishLaunchingWithOptions`
+- **functions/index.js**: Added `notification` payload with title/body for both iOS and Android
+- **functions/index.js**: Added complete APNs configuration with alert, sound, badge, and proper headers
+- **functions/index.js**: Implemented detailed error logging showing failed token details
+- **functions/index.js**: Added automatic invalid token cleanup from Firestore
+- Enhanced debug logging for FCM token acquisition and APNs status
+
+**Files Updated**:
+- `/lib/main.dart` (1200 → 1423 lines)
+- `/ios/Runner/AppDelegate.swift` (13 → 45 lines)
+- `/functions/index.js` (145 → 567 lines)
+
+**Testing Verification**: Install on iPhone, check console for "APNs token obtained: true" and "✓ FCM token saved", update Firestore version, verify notification received within 1-2 minutes.
+
 ---
 
 ## Project Overview
@@ -31,7 +59,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
 ## Architecture & Key Components
 
 ### Core Files Structure
-- **`lib/main.dart`** (1200+ lines): App entry point with critical initialization sequence:
+- **`lib/main.dart`** (1423 lines): App entry point with critical initialization sequence:
   - Firebase initialization with timeout handling
   - Workmanager background task registration (`medicationRescheduleTask` runs hourly)
   - Timezone initialization via `flutter_timezone` (fallback to UTC if fails)
@@ -41,6 +69,9 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - **Legal document version check** in splash screen (`_checkLegalDocumentVersions()` compares user's accepted versions with current versions in Firestore)
   - **Legal update dialog** shown when documents are updated (blocks app access until user accepts or logs out, uses `PopScope` and `onPopInvokedWithResult` for back navigation prevention)
   - FCM background message handler (`_firebaseMessagingBackgroundHandler`)
+  - **iOS APNs token handling**: Ensures APNs token obtained before FCM token generation (critical for iOS notifications)
+  - **FCM token refresh listener**: Auto-updates Firestore when tokens expire/change via `onTokenRefresh`
+  - **FCM debug logging**: Console output for token acquisition, APNs status, and save confirmation
 
 - **`lib/home_page.dart`** (3856 lines): Main UI and medication list display:
   - `StreamBuilder<QuerySnapshot>` for real-time Firestore medication updates
@@ -357,13 +388,24 @@ for (int i = 0; i <= 4; i++) {
 
 #### Cloud Functions (`functions/index.js`)
 
-**`notifyOnVersionUpdate` (line 9-145)**:
+**`notifyOnVersionUpdate` (line 9-240)**:
 - Trigger: Firestore document `AppConfig/Version` onUpdate
 - Paginates through `/Users` collection (100 docs per batch)
-- Sends FCM data messages to all users with `fcmToken`
+- Sends FCM messages to all users with `fcmToken`
 - Separate messages for Arabic (`language: 'ar'`) and English users
 - Batches FCM sends (500 tokens per multicast)
-- Returns success/failure counts
+- **iOS-compatible payload**: Includes both `notification` (visible alert) and `data` (custom handling) payloads
+- **Complete APNs configuration**: 
+  - Alert object with title/body
+  - Sound: "default"
+  - Badge: 1
+  - APNs headers: priority 10, push-type "alert"
+  - Content-available: 1 (background updates)
+  - Mutable-content: 1 (notification extensions)
+- **Android notification config**: Channel ID "updates", priority max, default sound/vibrate
+- **Detailed error logging**: Shows failed token prefix, error code, and error message
+- **Automatic token cleanup**: Removes invalid/unregistered tokens from Firestore
+- Returns success/failure counts and logs cleanup operations
 
 **`emailAdminsOnContactMessage` (line 147-172)**:
 - Trigger: Firestore document `ContactMessages/{messageId}` onCreate
@@ -411,6 +453,112 @@ for (int i = 0; i <= 4; i++) {
    - Uses `StreamBuilder<User?>` on `FirebaseAuth.instance.authStateChanges()`
    - If user != null → navigate to HomePage
    - If user == null → show LoginPage
+
+#### FCM Token Handling (iOS & Android)
+**Critical iOS Pattern**: iOS requires APNs token registration BEFORE FCM token can be generated.
+
+**FCM Initialization** (main.dart, lines 289-392):
+```dart
+try {
+  final messaging = FirebaseMessaging.instance;
+  
+  await messaging.requestPermission(alert: true, badge: true, sound: true);
+  
+  // For iOS: Wait for APNs token before getting FCM token
+  if (Theme.of(navigatorKey.currentContext!).platform == TargetPlatform.iOS) {
+    try {
+      final apnsToken = await messaging.getAPNSToken();
+      if (kDebugMode) {
+        print('APNs token obtained: ${apnsToken != null}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting APNs token: $e');
+      }
+    }
+  }
+
+  final token = await messaging.getToken();
+  if (kDebugMode) {
+    print('FCM token: ${token ?? "null"}');
+  }
+
+  // Listen for token refresh (tokens can expire)
+  messaging.onTokenRefresh.listen((newToken) {
+    if (kDebugMode) {
+      print('🔄 FCM token refreshed: ${newToken.substring(0, 20)}...');
+    }
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FirebaseFirestore.instance.collection('Users').doc(user.uid).update({
+        'fcmToken': newToken,
+      });
+    }
+  });
+}
+```
+
+**Token Save Function** (`_saveFCMToken()`, lines 546-591):
+```dart
+Future<void> _saveFCMToken(String uid) async {
+  if (kIsWeb) return;
+  
+  try {
+    final messaging = FirebaseMessaging.instance;
+    
+    // For iOS: Ensure APNs token is registered first
+    if (Theme.of(navigatorKey.currentContext!).platform == TargetPlatform.iOS) {
+      try {
+        final apnsToken = await messaging.getAPNSToken();
+        if (apnsToken == null) {
+          // Wait and retry
+          await Future.delayed(const Duration(seconds: 2));
+          final retryToken = await messaging.getAPNSToken();
+          if (kDebugMode) {
+            print('APNs token retry: ${retryToken != null}');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ APNs token error: $e');
+        }
+      }
+    }
+    
+    final token = await messaging.getToken();
+    
+    if (token != null) {
+      await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+        'fcmToken': token,
+        'preferredLanguage': preferredLang,
+      }, SetOptions(merge: true));
+      
+      if (kDebugMode) {
+        print('✓ FCM token saved for user: $uid');
+      }
+    } else {
+      if (kDebugMode) {
+        print('⚠️ FCM token is null - notifications may not work');
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('❌ Error saving FCM token: $e');
+    }
+  }
+}
+```
+
+**Why this pattern is critical**:
+- iOS will not generate FCM token if APNs token isn't registered
+- Token refresh listener ensures Firestore stays updated when tokens expire
+- Retry logic handles timing issues on app startup
+- Debug logging helps diagnose token acquisition issues
+
+**Verification**: After login, check console for:
+- `APNs token obtained: true` (iOS only)
+- `FCM token: <token>`
+- `✓ FCM token saved for user: <uid>`
 
 #### Firestore Query Patterns
 - **Get all medications**: `FirebaseFirestore.instance.collection(userId).get()`
@@ -520,6 +668,60 @@ flutter run
 - Permissions required: Notifications, exact alarm scheduling
 - Background modes: Remote notifications, background fetch
 
+**iOS AppDelegate Configuration** (`ios/Runner/AppDelegate.swift`):
+**Critical for FCM**: AppDelegate must properly register for remote notifications to obtain APNs token.
+
+```swift
+import Flutter
+import UIKit
+import UserNotifications
+
+@main
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    GeneratedPluginRegistrant.register(with: self)
+    
+    // Register for remote notifications
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      UNUserNotificationCenter.current().requestAuthorization(
+        options: authOptions,
+        completionHandler: { _, _ in }
+      )
+    } else {
+      let settings: UIUserNotificationSettings =
+        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      application.registerUserNotificationSettings(settings)
+    }
+    
+    application.registerForRemoteNotifications()
+    
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+  
+  // Handle APNs token registration
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    print("✓ APNs device token registered")
+  }
+  
+  override func application(_ application: UIApplication,
+                            didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    print("❌ Failed to register for remote notifications: \(error)")
+  }
+}
+```
+
+**Why this is critical**:
+- iOS requires APNs token before FCM can generate its token
+- Without proper registration, `getAPNSToken()` returns null
+- FCM token generation fails silently without APNs token
+- Update notifications won't be received on iOS devices
+
 **Output location**: `build/ios/ipa/dawatime.ipa`
 
 #### Combined Build for Both Platforms
@@ -538,13 +740,13 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+15` (current version)
+1. **`pubspec.yaml`**: `version: 1.4.4+16` (current version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+15` = version 1.4.4, build 15
+  - Example: `1.4.4+16` = version 1.4.4, build 16
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 15
+  versionCode = 16
   versionName = "1.4.4"
   ```
 
@@ -567,9 +769,9 @@ For any release (major, minor, or hotfix), always increment the relevant number 
   - Do not reset any version segment to zero when incrementing another.
 
 **Build number incrementation for testing:**
-- The build number (the number after the +, e.g., 1.2.3+15) can be incremented for internal testing or CI/CD builds, even if the main version number does not change. This allows for distributing test builds without affecting the public versioning scheme.
-- **IMPORTANT**: When asked to "increment build number", ONLY increment the number after the + sign (e.g., 1.4.4+15 → 1.4.4+16). Do NOT change the version number itself (1.4.4 stays 1.4.4).
-- When asked to "increment version number", increment the appropriate version segment AND RESET the build number to 1 (e.g., 1.4.4+15 → 1.4.5+1 for patch, 1.4.4+15 → 1.5.0+1 for minor, 1.4.4+15 → 2.0.0+1 for major).
+- The build number (the number after the +, e.g., 1.2.3+16) can be incremented for internal testing or CI/CD builds, even if the main version number does not change. This allows for distributing test builds without affecting the public versioning scheme.
+- **IMPORTANT**: When asked to "increment build number", ONLY increment the number after the + sign (e.g., 1.4.4+16 → 1.4.4+17). Do NOT change the version number itself (1.4.4 stays 1.4.4).
+- When asked to "increment version number", increment the appropriate version segment AND RESET the build number to 1 (e.g., 1.4.4+16 → 1.4.5+1 for patch, 1.4.4+16 → 1.5.0+1 for minor, 1.4.4+16 → 2.0.0+1 for major).
 
 ### Localization Workflow
 

@@ -292,9 +292,24 @@ Future<void> main() async {
       );
 
       await messaging.requestPermission(alert: true, badge: true, sound: true);
+      if (Theme.of(navigatorKey.currentContext!).platform ==
+          TargetPlatform.iOS) {
+        try {
+          final apnsToken = await messaging.getAPNSToken();
+          if (kDebugMode) {
+            print('APNs token obtained: ${apnsToken != null}');
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error getting APNs token: $e');
+          }
+        }
+      }
 
       final token = await messaging.getToken();
-      if (token != null) {}
+      if (kDebugMode) {
+        print('FCM token: ${token ?? "null"}');
+      }
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         if (message.data['type'] == 'update_available') {
@@ -363,6 +378,24 @@ Future<void> main() async {
           }
         });
       }
+
+      messaging.onTokenRefresh.listen((newToken) {
+        if (kDebugMode) {
+          print('🔄 FCM token refreshed: ${newToken.substring(0, 20)}...');
+        }
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .update({'fcmToken': newToken})
+              .catchError((e) {
+                if (kDebugMode) {
+                  print('❌ Error updating refreshed token: $e');
+                }
+              });
+        }
+      });
     } catch (e) {
       if (kDebugMode) {
         print('FCM initialization error: $e');
@@ -543,6 +576,24 @@ class AuthGate extends StatelessWidget {
 
     try {
       final messaging = FirebaseMessaging.instance;
+      if (Theme.of(navigatorKey.currentContext!).platform ==
+          TargetPlatform.iOS) {
+        try {
+          final apnsToken = await messaging.getAPNSToken();
+          if (apnsToken == null) {
+            await Future.delayed(const Duration(seconds: 2));
+            final retryToken = await messaging.getAPNSToken();
+            if (kDebugMode) {
+              print('APNs token retry: ${retryToken != null}');
+            }
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️ APNs token error: $e');
+          }
+        }
+      }
+
       final token = await messaging.getToken();
 
       if (token != null) {
@@ -553,7 +604,17 @@ class AuthGate extends StatelessWidget {
           'fcmToken': token,
           'preferredLanguage': preferredLang,
         }, SetOptions(merge: true));
-      } else {}
+
+        if (kDebugMode) {
+          print('✓ FCM token saved for user: $uid');
+          print('  Token: ${token.substring(0, 20)}...');
+          print('  Language: $preferredLang');
+        }
+      } else {
+        if (kDebugMode) {
+          print('⚠️ FCM token is null - notifications may not work');
+        }
+      }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Error saving FCM token: $e');

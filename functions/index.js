@@ -72,8 +72,12 @@ exports.notifyOnVersionUpdate = functions
         const batchSize = 500;
 
         for (let i = 0; i < arabicUsers.length; i += batchSize) {
-          const batch = arabicUsers.slice(i, i + batchSize).map((u) => u.token);
+          const batch = arabicUsers.slice(i, i + batchSize);
           const message = {
+            notification: {
+              title: "تحديث جديد متوفر!",
+              body: "إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.",
+            },
             data: {
               type: "update_available",
               version: after.version || "",
@@ -81,8 +85,18 @@ exports.notifyOnVersionUpdate = functions
               body: "إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.",
             },
             apns: {
+              headers: {
+                "apns-priority": "10",
+                "apns-push-type": "alert",
+              },
               payload: {
                 aps: {
+                  "alert": {
+                    title: "تحديث جديد متوفر!",
+                    body: "إصدار جديد من دواء تايم متاح. اضغط للتحديث الآن.",
+                  },
+                  "sound": "default",
+                  "badge": 1,
                   "content-available": 1,
                   "mutable-content": 1,
                 },
@@ -90,15 +104,29 @@ exports.notifyOnVersionUpdate = functions
             },
             android: {
               priority: "high",
+              notification: {
+                channelId: "updates",
+                priority: "max",
+                defaultSound: true,
+                defaultVibrateTimings: true,
+              },
             },
-            tokens: batch,
+            tokens: batch.map((u) => u.token),
           };
-          promises.push(admin.messaging().sendEachForMulticast(message));
+          promises.push({
+            promise: admin.messaging().sendEachForMulticast(message),
+            users: batch,
+          });
         }
         for (let i = 0; i < englishUsers.length; i += batchSize) {
-          const batch =
-            englishUsers.slice(i, i + batchSize).map((u) => u.token);
+          const batch = englishUsers.slice(i, i + batchSize);
           const message = {
+            notification: {
+              title: "New Update Available!",
+              body:
+                "A new version of DawaTime is available. " +
+                "Tap to update now.",
+            },
             data: {
               type: "update_available",
               version: after.version || "",
@@ -108,8 +136,20 @@ exports.notifyOnVersionUpdate = functions
                 "Tap to update now.",
             },
             apns: {
+              headers: {
+                "apns-priority": "10",
+                "apns-push-type": "alert",
+              },
               payload: {
                 aps: {
+                  "alert": {
+                    title: "New Update Available!",
+                    body:
+                      "A new version of DawaTime is available. " +
+                      "Tap to update now.",
+                  },
+                  "sound": "default",
+                  "badge": 1,
                   "content-available": 1,
                   "mutable-content": 1,
                 },
@@ -117,25 +157,91 @@ exports.notifyOnVersionUpdate = functions
             },
             android: {
               priority: "high",
+              notification: {
+                channelId: "updates",
+                priority: "max",
+                defaultSound: true,
+                defaultVibrateTimings: true,
+              },
             },
-            tokens: batch,
+            tokens: batch.map((u) => u.token),
           };
-          promises.push(admin.messaging().sendEachForMulticast(message));
+          promises.push({
+            promise: admin.messaging().sendEachForMulticast(message),
+            users: batch,
+          });
         }
 
-        const results = await Promise.all(promises);
+        const results = await Promise.all(
+            promises.map((p) => p.promise),
+        );
         let successCount = 0;
         let failureCount = 0;
+        const tokensToDelete = [];
 
-        results.forEach((result) => {
+        results.forEach((result, batchIndex) => {
           successCount += result.successCount;
           failureCount += result.failureCount;
+
+          if (result.responses) {
+            result.responses.forEach((response, tokenIndex) => {
+              if (!response.success) {
+                const error = response.error;
+                const userBatch = promises[batchIndex].users;
+                const token = userBatch[tokenIndex].token;
+
+                console.error(
+                    `Failed to send to token ${token.substring(0, 20)}...`,
+                    error && error.code,
+                    error && error.message,
+                );
+
+                if (
+                  error && (
+                    error.code === "messaging/invalid-registration-token" ||
+                    error.code === "messaging/registration-token-not-registered"
+                  )
+                ) {
+                  tokensToDelete.push(token);
+                }
+              }
+            });
+          }
         });
 
         console.log(
             "Update notification sent: " +
             `${successCount} success, ${failureCount} failures`,
         );
+
+
+        if (tokensToDelete.length > 0) {
+          console.log(`Cleaning up ${tokensToDelete.length} invalid tokens`);
+          const deletePromises = [];
+
+          for (const token of tokensToDelete) {
+            const userQuery = admin
+                .firestore()
+                .collection("Users")
+                .where("fcmToken", "==", token)
+                .limit(1);
+
+            deletePromises.push(
+                userQuery.get().then((snapshot) => {
+                  if (!snapshot.empty) {
+                    const doc = snapshot.docs[0];
+                    return doc.ref.update({
+                      fcmToken: admin.firestore.FieldValue.delete(),
+                    });
+                  }
+                  return null;
+                }),
+            );
+          }
+
+          await Promise.all(deletePromises);
+          console.log(`✓ Cleaned up ${tokensToDelete.length} invalid tokens`);
+        }
 
         return null;
       } catch (error) {
