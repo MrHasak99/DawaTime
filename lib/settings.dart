@@ -152,7 +152,10 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.info_outline, color: Colors.white),
+                icon: const Icon(
+                  Icons.info_outline_rounded,
+                  color: Colors.white,
+                ),
                 tooltip: AppLocalizations.of(context)!.appInfo,
                 onPressed: () async {
                   final info = await PackageInfo.fromPlatform();
@@ -220,7 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 Row(
                                   children: [
                                     const Icon(
-                                      Icons.person,
+                                      Icons.person_rounded,
                                       color: Colors.white,
                                       size: 28,
                                     ),
@@ -376,7 +379,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton.icon(
-                                      icon: Icon(Icons.system_update),
+                                      icon: Icon(Icons.system_update_rounded),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white
                                             .withValues(alpha: 0.1),
@@ -510,7 +513,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.logout, color: Colors.white),
+                icon: const Icon(Icons.logout_rounded, color: Colors.white),
                 tooltip: AppLocalizations.of(context)!.logOut,
                 onPressed: () async {
                   final confirm = await showDialog<bool>(
@@ -653,7 +656,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 radius: 44,
                                 backgroundColor: const Color(0xFF8AC249),
                                 child: Icon(
-                                  Icons.account_circle,
+                                  Icons.account_circle_rounded,
                                   size: 72,
                                   color: Theme.of(context).cardColor,
                                 ),
@@ -1461,7 +1464,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
                                   icon: const Icon(
-                                    Icons.delete,
+                                    Icons.delete_rounded,
                                     color: Colors.white,
                                     size: 24,
                                   ),
@@ -1896,7 +1899,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
                                   icon: const Icon(
-                                    Icons.email,
+                                    Icons.email_rounded,
                                     color: Colors.white,
                                   ),
                                   label: Text(
@@ -2179,7 +2182,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   leading: const Icon(
-                                    Icons.palette,
+                                    Icons.palette_rounded,
                                     color: Color(0xFF8AC249),
                                   ),
                                   title: Text(
@@ -2259,7 +2262,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   leading: const Icon(
-                                    Icons.language,
+                                    Icons.language_rounded,
                                     color: Color(0xFF8AC249),
                                   ),
                                   title: Text(

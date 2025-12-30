@@ -2,12 +2,48 @@
 
 ## Recent Changes (December 2025)
 
-**Current Version**: v1.4.4+18 (Production Ready)
+**Current Version**: v1.4.4+21 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active
 
 ---
+
+### 12th Medication Save Navigation Bug Fix (December 30, 2025)
+**Status**: ✅ **FIXED** - Replaced FutureBuilder with initState check for medication limit
+
+**Issue**: When saving the 12th medication, the medication was saved successfully but the user remained on the add medication page with "You can only have up to 12 medications" warning displayed.
+
+**Root Cause**: 
+- `FutureBuilder` in add_medications.dart continuously rebuilding during async operations
+- Navigation (`Navigator.pop()`) completed but FutureBuilder queried Firestore post-navigation
+- Notification scheduling triggered widget rebuilds, causing FutureBuilder to re-execute
+- Duplicate medication count check in both FutureBuilder and save button handler
+
+**Fix Applied** (add_medications.dart):
+- Replaced continuous FutureBuilder pattern with one-time `initState()` check
+- Added `_isLoadingCount` and `_isAtLimit` state variables to cache medication count result
+- Moved limit check to `_checkMedicationLimit()` method called only once in `initState()`
+- Removed duplicate medication count check from save button handler
+- Result: Limit check happens once on page load, navigation works correctly after 12th medication save
+
+**Code Cleanup (December 30, 2025)**:
+- Removed 28 debug print statements across 4 files (add_medications.dart, main.dart, home_page.dart, medication_notifications.dart)
+- Fixed 25+ empty catch blocks: replaced `catch (e) {}` with `catch (_) {}` (Dart idiom for explicit ignore)
+- Removed 3 unused variable declarations (apnsToken, token, retryToken) in main.dart
+- Removed unused `foundation.dart` imports after debug cleanup
+- Incremented build number: 1.4.4+20 → 1.4.4+21
+
+**Files Updated**:
+- `/lib/add_medications.dart` - Medication limit check logic refactored
+- `/lib/main.dart` - Debug statements removed, empty catch blocks fixed, unused variables removed
+- `/lib/home_page.dart` - Empty catch blocks fixed
+- `/lib/utils/medication_notifications.dart` - Debug statements removed, empty catch blocks fixed
+- `/lib/utils/medication_helpers.dart` - Empty catch blocks fixed
+- `/pubspec.yaml` - Version: 1.4.4+20 → 1.4.4+21
+- `/android/app/build.gradle.kts` - versionCode: 20 → 21
+
+**Result**: 12th medication saves correctly and navigates back to home page. Codebase cleaned up with 0 analyzer warnings for targeted issues.
 
 ### Duplicate FCM Notification Fix (December 30, 2025)
 **Status**: ✅ **FIXED** - Removed duplicate notification creation in background handler
@@ -892,15 +928,15 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+18` (current development version)
+1. **`pubspec.yaml`**: `version: 1.4.4+21` (current development version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+18` = version 1.4.4, build 18
+  - Example: `1.4.4+21` = version 1.4.4, build 21
   - **Production deployed**: v1.3.4 (App Store)
-  - **Development**: v1.4.4+18 (ready for next release)
+  - **Development**: v1.4.4+21 (ready for next release)
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 18
+  versionCode = 21
   versionName = "1.4.4"
   ```
 

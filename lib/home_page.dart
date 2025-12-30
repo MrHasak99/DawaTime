@@ -12,7 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:dawatime/utils/medication_notifications.dart';
 import 'package:dawatime/utils/string_utils.dart';
 import 'package:dawatime/utils/medication_helpers.dart';
@@ -154,11 +154,7 @@ class _HomePageState extends State<HomePage> {
           for (var doc in allOldDocs.docs) {
             await doc.reference.delete();
           }
-        } catch (e) {
-          if (kDebugMode) {
-            print('⚠️  Error cleaning up old location: $e');
-          }
-        }
+        } catch (_) {}
 
         setState(() => _useNewStructure = true);
       } else if (hasNewData) {
@@ -222,12 +218,37 @@ class _HomePageState extends State<HomePage> {
 
   late VoidCallback _localeListener;
 
+  Future<void> _clearIOSBadge() async {
+    if (!Platform.isIOS) return;
+
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        999999,
+        null,
+        null,
+        const NotificationDetails(
+          iOS: DarwinNotificationDetails(
+            presentAlert: false,
+            presentSound: false,
+            presentBadge: true,
+            badgeNumber: 0,
+          ),
+        ),
+      );
+
+      await Future.delayed(const Duration(milliseconds: 100));
+      await flutterLocalNotificationsPlugin.cancel(999999);
+    } catch (_) {}
+  }
+
   @override
   void initState() {
     super.initState();
     _checkIntroGuide();
 
     if (!kIsWeb) {
+      _clearIOSBadge();
+
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         _checkMigrationStatus(user.uid);
@@ -360,11 +381,7 @@ class _HomePageState extends State<HomePage> {
           }
         });
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking permissions: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   Future<void> _scheduleAfterPermissionCheck(String userId) async {
@@ -376,11 +393,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       await flutterLocalNotificationsPlugin.cancelAll();
-    } catch (e) {
-      if (kDebugMode) {
-        print('⚠️ Error clearing notifications: $e');
-      }
-    }
+    } catch (_) {}
 
     rescheduleAllMedications(userId);
     _autoRescheduleOverdueMedications(userId);
@@ -495,11 +508,7 @@ class _HomePageState extends State<HomePage> {
           );
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error auto-rescheduling overdue medications: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   Future<void> _checkRefillReminders(String userId) async {
@@ -540,11 +549,7 @@ class _HomePageState extends State<HomePage> {
       if (lowStockMeds.isNotEmpty) {
         await _showRefillNotifications(lowStockMeds);
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking refill reminders: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   Future<void> _showRefillNotifications(
@@ -554,88 +559,91 @@ class _HomePageState extends State<HomePage> {
       final context = navigatorKey.currentContext;
       final loc = context != null ? AppLocalizations.of(context) : null;
 
-      if (lowStockMeds.length == 1) {
-        final medication = lowStockMeds[0]['medication'] as Medications;
-        final docId = lowStockMeds[0]['docId'] as String;
+      if (context == null || !mounted) {
+        if (lowStockMeds.length == 1) {
+          final medication = lowStockMeds[0]['medication'] as Medications;
+          final docId = lowStockMeds[0]['docId'] as String;
 
-        final title =
-            loc != null
-                ? '${loc.refillReminder}: ${medication.name}'
-                : 'Refill Reminder: ${medication.name}';
+          final title =
+              loc != null
+                  ? '${loc.refillReminder}: ${medication.name}'
+                  : 'Refill Reminder: ${medication.name}';
 
-        final body =
-            loc != null
-                ? loc.refillReminderBody(
-                  medication.amount.toInt().toString(),
-                  medication.name,
-                  medication.typeOfMedication,
-                )
-                : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
+          final body =
+              loc != null
+                  ? loc.refillReminderBody(
+                    medication.amount.toInt().toString(),
+                    medication.name,
+                    medication.typeOfMedication,
+                  )
+                  : 'You have ${medication.amount.toInt()} ${medication.typeOfMedication} left. Time to refill!';
 
-        await flutterLocalNotificationsPlugin.show(
-          docId.hashCode + 1000,
-          title,
-          body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'refill_channel',
-              'Refill Reminders',
-              channelDescription: 'Reminds you to refill your medications',
-              importance: Importance.max,
-              priority: Priority.high,
-              playSound: true,
-              showWhen: true,
-              ongoing: false,
-              autoCancel: true,
-              icon: 'dawatime_notify',
-              sound: RawResourceAndroidNotificationSound('notification_sound'),
-              color: const Color(0xFFFF9800),
+          await flutterLocalNotificationsPlugin.show(
+            docId.hashCode + 1000,
+            title,
+            body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'refill_channel',
+                'Refill Reminders',
+                channelDescription: 'Reminds you to refill your medications',
+                importance: Importance.max,
+                priority: Priority.high,
+                playSound: true,
+                showWhen: true,
+                ongoing: false,
+                autoCancel: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFFFF9800),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
             ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: true,
-              presentSound: true,
-              presentBadge: true,
-              sound: "notification_sound.wav",
-            ),
-          ),
-          payload: 'refill_$docId',
-        );
-      } else {
-        final title =
-            loc != null
-                ? '${loc.refillReminder} (${lowStockMeds.length})'
-                : 'Refill Reminder (${lowStockMeds.length})';
+            payload: 'refill_$docId',
+          );
+        } else {
+          final title = loc != null ? loc.refillReminder : 'Refill Reminder';
 
-        final body =
-            loc != null
-                ? '${lowStockMeds.length} ${loc.needRefillShort}'
-                : '${lowStockMeds.length} medications need refilling';
+          final body =
+              loc != null
+                  ? '${lowStockMeds.length} ${loc.needRefillShort}'
+                  : '${lowStockMeds.length} medications need refilling';
 
-        await flutterLocalNotificationsPlugin.show(
-          'refill_multiple'.hashCode,
-          title,
-          body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              'refill_channel',
-              'Refill Reminders',
-              channelDescription: 'Reminds you to refill your medications',
-              importance: Importance.high,
-              priority: Priority.high,
-              playSound: true,
-              icon: 'dawatime_notify',
-              sound: RawResourceAndroidNotificationSound('notification_sound'),
-              color: const Color(0xFFFF9800),
+          await flutterLocalNotificationsPlugin.show(
+            'refill_multiple'.hashCode,
+            title,
+            body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                'refill_channel',
+                'Refill Reminders',
+                channelDescription: 'Reminds you to refill your medications',
+                importance: Importance.high,
+                priority: Priority.high,
+                playSound: true,
+                icon: 'dawatime_notify',
+                sound: RawResourceAndroidNotificationSound(
+                  'notification_sound',
+                ),
+                color: const Color(0xFFFF9800),
+              ),
+              iOS: DarwinNotificationDetails(
+                presentAlert: true,
+                presentSound: true,
+                presentBadge: true,
+                sound: "notification_sound.wav",
+              ),
             ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: true,
-              presentSound: true,
-              presentBadge: true,
-              sound: "notification_sound.wav",
-            ),
-          ),
-          payload: 'refill_multiple',
-        );
+            payload: 'refill_multiple',
+          );
+        }
       }
 
       if (context != null && mounted) {
@@ -711,7 +719,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.medication,
+                                        Icons.medication_rounded,
                                         color: Colors.white,
                                         size: 20,
                                       ),
@@ -748,11 +756,7 @@ class _HomePageState extends State<HomePage> {
               ),
         );
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error showing refill notification: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   Future<void> _checkAndShowDueMedications() async {
@@ -871,11 +875,7 @@ class _HomePageState extends State<HomePage> {
           }
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking medications (user may not be authenticated): $e');
-      }
-    }
+    } catch (_) {}
   }
 
   Future<void> _checkIntroGuide() async {
@@ -1138,7 +1138,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.medication,
+                    Icons.medication_rounded,
                     color: Color(0xFF8AC249),
                     size: 64,
                   ),
@@ -1183,7 +1183,7 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        Icons.info_outline_rounded,
                         color: const Color(0xFF8AC249),
                         size: 20,
                       ),
@@ -1239,7 +1239,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 20,
                                         ),
                                         child: const Icon(
-                                          Icons.edit,
+                                          Icons.edit_rounded,
                                           color: Colors.lightBlue,
                                           size: 32,
                                         ),
@@ -1250,7 +1250,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 20,
                                         ),
                                         child: const Icon(
-                                          Icons.edit,
+                                          Icons.edit_rounded,
                                           color: Colors.lightBlue,
                                           size: 32,
                                         ),
@@ -1263,7 +1263,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 20,
                                         ),
                                         child: const Icon(
-                                          Icons.delete,
+                                          Icons.delete_rounded,
                                           color: Colors.red,
                                           size: 32,
                                         ),
@@ -1274,7 +1274,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 20,
                                         ),
                                         child: const Icon(
-                                          Icons.delete,
+                                          Icons.delete_rounded,
                                           color: Colors.red,
                                           size: 32,
                                         ),
@@ -1825,7 +1825,8 @@ class _HomePageState extends State<HomePage> {
                                                         ),
                                                       ),
                                                       trailing: Icon(
-                                                        Icons.access_time,
+                                                        Icons
+                                                            .access_time_rounded,
                                                         color:
                                                             timeError
                                                                 ? Colors.red
@@ -3725,7 +3726,7 @@ class MedicationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             _DetailRow(
-              icon: Icons.category,
+              icon: Icons.category_rounded,
               label: AppLocalizations.of(context)!.unitOfMeasurement,
               value: medication.typeOfMedication,
               valueStyle: const TextStyle(
@@ -3737,7 +3738,7 @@ class MedicationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             _DetailRow(
-              icon: Icons.medical_services,
+              icon: Icons.medical_services_rounded,
               label: AppLocalizations.of(context)!.dosage,
               value: "${medication.dosage}",
               valueStyle: const TextStyle(
@@ -3751,7 +3752,7 @@ class MedicationDetailsCard extends StatelessWidget {
                 medication.daysOfWeek!.isEmpty) ...[
               const SizedBox(height: 18),
               _DetailRow(
-                icon: Icons.repeat,
+                icon: Icons.repeat_rounded,
                 label: AppLocalizations.of(context)!.frequency,
                 value:
                     "${AppLocalizations.of(context)!.every} ${medication.frequency} ${AppLocalizations.of(context)!.day}",
@@ -3766,7 +3767,7 @@ class MedicationDetailsCard extends StatelessWidget {
             if (hasDaysOfWeek && days != null && days.isNotEmpty) ...[
               const SizedBox(height: 18),
               _DetailRow(
-                icon: Icons.calendar_today,
+                icon: Icons.calendar_today_rounded,
                 label: AppLocalizations.of(context)!.selectDaysOfWeek,
                 value: days,
                 valueStyle: const TextStyle(
@@ -3779,7 +3780,7 @@ class MedicationDetailsCard extends StatelessWidget {
             ],
             const SizedBox(height: 18),
             _DetailRow(
-              icon: Icons.inventory_2,
+              icon: Icons.inventory_2_rounded,
               label: AppLocalizations.of(context)!.currentAmount,
               value: "${medication.amount}",
               valueStyle: const TextStyle(
@@ -3807,7 +3808,7 @@ class MedicationDetailsCard extends StatelessWidget {
             const SizedBox(height: 18),
             if (getNextReminder(medication) != null)
               _DetailRow(
-                icon: Icons.notifications_active,
+                icon: Icons.notifications_active_rounded,
                 label: AppLocalizations.of(context)!.nextReminder,
                 value: getNextReminder(medication)!,
                 valueStyle: const TextStyle(

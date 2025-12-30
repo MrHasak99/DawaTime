@@ -3,7 +3,6 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:dawatime/utils/medication_notifications.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dawatime/home_page.dart' show Medications;
 import 'package:dawatime/l10n/app_localizations.dart';
@@ -63,11 +62,7 @@ Future<void> rescheduleAllMedications(String uid) async {
         userId: uid,
       );
     }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error rescheduling medications: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 String? getNextReminder(Medications medication) {

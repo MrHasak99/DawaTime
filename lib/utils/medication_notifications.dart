@@ -2,7 +2,7 @@ library;
 
 import 'dart:io' show Platform;
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,11 +20,6 @@ Future<void> scheduleMedicationNotification(
   bool forceNextDay = false,
   String? userId,
 }) async {
-  if (kDebugMode) {
-    print(
-      'DEBUG: scheduleMedicationNotification called for ${medication.name} (docId: $docId)',
-    );
-  }
   if (kIsWeb) return;
 
   await requestExactAlarmPermission();
@@ -48,11 +43,6 @@ Future<void> scheduleMedicationNotification(
       hour,
       minute,
     );
-    if (kDebugMode) {
-      print('DEBUG: Checking follow-up scheduling for ${medication.name}');
-      print('DEBUG: lastTaken: \'${medication.lastTaken}\'');
-      print('DEBUG: todayScheduledTime: $todayScheduledTime');
-    }
     final twoHoursAfter = todayScheduledTime.add(const Duration(hours: 2));
     final isTodayScheduled = daysOfWeek.contains(now.weekday);
     final isWithinWindow =
@@ -62,28 +52,10 @@ Future<void> scheduleMedicationNotification(
 
     if (isWithinWindow &&
         medication.lastTaken != null &&
-        medication.lastTaken!.isAfter(todayScheduledTime)) {
-      if (kDebugMode) {
-        print(
-          'Not scheduling follow-ups for ${medication.name} because already marked as taken.',
-        );
-      }
-      return;
+        medication.lastTaken!.isAfter(todayScheduledTime)) {return;
     }
 
-    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {
-      if (kDebugMode) {
-        print(
-          'Skipping old notification for ${medication.name} on ${now.weekday}',
-        );
-      }
-    } else if (isWithinWindow) {
-      if (kDebugMode) {
-        print(
-          'Within 2-hour window for ${medication.name}. Scheduling follow-ups...',
-        );
-      }
-      for (int j = 0; j <= 4; j++) {
+    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {} else if (isWithinWindow) {for (int j = 0; j <= 4; j++) {
         final followUpTime = todayScheduledTime.add(Duration(minutes: 30 * j));
         if (followUpTime.isAfter(now)) {
           final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
@@ -92,11 +64,6 @@ Future<void> scheduleMedicationNotification(
             context ?? navigatorKey.currentContext!,
           )!.reminderTakeMedication(medication.name);
 
-          if (kDebugMode) {
-            print(
-              'Scheduling notification #$notificationId for ${medication.name} at $followUpTime (in ${followUpTime.difference(now).inMinutes} minutes)',
-            );
-          }
 
           await flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
@@ -130,23 +97,10 @@ Future<void> scheduleMedicationNotification(
             ),
             payload: docId,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );
+          );} else {
 
-          if (kDebugMode) {
-            print('✓ Notification scheduled successfully');
-          }
-        } else {
-          if (kDebugMode) {
-            print('Skipping notification at $followUpTime (already passed)');
-          }
         }
-      }
-      if (kDebugMode) {
-        print(
-          'Finished scheduling all follow-up notifications for ${medication.name}',
-        );
-      }
-      return;
+      }return;
     }
 
     DateTime? nextOccurrence;
@@ -241,26 +195,7 @@ Future<void> scheduleMedicationNotification(
   if (isWithinWindowOfToday &&
       medication.lastTaken != null &&
       medication.lastTaken!.isAfter(baseDate)) {
-    if (kDebugMode) {
-      print(
-        'Not scheduling everyXDays follow-ups for ${medication.name} because already marked as taken.',
-      );
-      print('DEBUG: lastTaken: \'${medication.lastTaken}\'');
-      if (kDebugMode) {
-        print(
-          'DEBUG: Skipping everyXDays scheduling for ${medication.name} (docId: $docId) because lastTaken (${medication.lastTaken}) > baseDate ($baseDate)',
-        );
-      }
-      return;
-    }
   } else if (isWithinWindowOfToday) {
-    if (kDebugMode) {
-      print('DEBUG: Not skipping everyXDays: lastTaken is null or <= baseDate');
-      print(
-        'DEBUG: lastTaken: \'${medication.lastTaken?.toString() ?? 'null'}\'',
-      );
-      print('DEBUG: baseDate: $baseDate');
-    }
 
     try {
       final baseScheduledTime = scheduledTime;
@@ -268,13 +203,7 @@ Future<void> scheduleMedicationNotification(
       final isWithinWindow =
           now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
 
-      if (now.isAfter(twoHoursAfter)) {
-        if (kDebugMode) {
-          print(
-            'Skipping old notification for ${medication.name} at $scheduledTime',
-          );
-        }
-        return;
+      if (now.isAfter(twoHoursAfter)) {return;
       }
 
       if (scheduledTime.isAfter(now)) {
@@ -412,11 +341,7 @@ Future<void> scheduleMedicationNotification(
               ),
             );
           }
-        } catch (scaffoldError) {
-          if (kDebugMode) {
-            print('Could not show SnackBar (widget disposed): $scaffoldError');
-          }
-        }
+        } catch (_) {}
       }
     }
     return;
@@ -430,11 +355,6 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
-  if (kDebugMode) {
-    print(
-      'Scheduling ${medication.name} for $scheduledTime (in ${scheduledTime.difference(now).inHours} hours)',
-    );
-  }
 
   for (int i = 0; i <= 4; i++) {
     final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
@@ -480,14 +400,7 @@ Future<void> scheduleMedicationNotification(
       ),
       payload: docId,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
-
-    if (kDebugMode) {
-      print(
-        '✓ Scheduled notification #$notificationId for ${medication.name} at $followUpTime',
-      );
-    }
-  }
+    );}
 }
 
 Future<void> cancelMedicationReminders(String docId) async {
@@ -574,11 +487,7 @@ Future<void> scheduleWeeklyRefillNotification(
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
     );
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error scheduling weekly refill notification: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 Future<void> cancelRefillNotifications(String docId) async {
@@ -587,15 +496,7 @@ Future<void> cancelRefillNotifications(String docId) async {
   try {
     final notificationId = ('refill_weekly_$docId').hashCode;
     await flutterLocalNotificationsPlugin.cancel(notificationId);
-
-    if (kDebugMode) {
-      print('✓ Cancelled refill notification for $docId (ID: $notificationId)');
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error canceling refill notifications for $docId: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 Future<void> cancelAllRefillNotifications() async {
@@ -603,15 +504,7 @@ Future<void> cancelAllRefillNotifications() async {
 
   try {
     await flutterLocalNotificationsPlugin.cancelAll();
-
-    if (kDebugMode) {
-      print('✓ Cancelled all pending notifications for cleanup');
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error canceling all notifications: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 Future<void> openExactAlarmSettings() async {
@@ -632,14 +525,6 @@ Future<void> requestExactAlarmPermission() async {
       return;
     }
 
-    if (status.isDenied || status.isPermanentlyDenied) {
-      if (kDebugMode) {
-        print('Exact alarm permission not granted');
-      }
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error checking exact alarm permission: $e');
-    }
-  }
+    if (status.isDenied || status.isPermanentlyDenied) {}
+  } catch (_) {}
 }

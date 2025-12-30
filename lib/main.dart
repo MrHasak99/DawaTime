@@ -24,7 +24,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -132,9 +132,6 @@ Future<void> main() async {
           .timeout(const Duration(seconds: 5));
       tz.setLocalLocation(tz.getLocation(timeZoneName));
     } catch (e) {
-      if (kDebugMode) {
-        print('⚠️ Timezone initialization failed, using UTC: $e');
-      }
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
   }
@@ -221,21 +218,11 @@ Future<void> main() async {
       await messaging.requestPermission(alert: true, badge: true, sound: true);
       if (Platform.isIOS) {
         try {
-          final apnsToken = await messaging.getAPNSToken();
-          if (kDebugMode) {
-            print('APNs token obtained: ${apnsToken != null}');
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print('Error getting APNs token: $e');
-          }
-        }
+          await messaging.getAPNSToken();
+        } catch (_) {}
       }
 
-      final token = await messaging.getToken();
-      if (kDebugMode) {
-        print('FCM token: ${token ?? "null"}');
-      }
+      await messaging.getToken();
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         if (message.data['type'] == 'update_available') {
@@ -307,27 +294,16 @@ Future<void> main() async {
       }
 
       messaging.onTokenRefresh.listen((newToken) {
-        if (kDebugMode) {
-          print('🔄 FCM token refreshed: ${newToken.substring(0, 20)}...');
-        }
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           FirebaseFirestore.instance
               .collection('Users')
               .doc(user.uid)
               .update({'fcmToken': newToken})
-              .catchError((e) {
-                if (kDebugMode) {
-                  print('❌ Error updating refreshed token: $e');
-                }
-              });
+              .catchError((_) {});
         }
       });
-    } catch (e) {
-      if (kDebugMode) {
-        print('FCM initialization error: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   try {
@@ -509,16 +485,9 @@ class AuthGate extends StatelessWidget {
           final apnsToken = await messaging.getAPNSToken();
           if (apnsToken == null) {
             await Future.delayed(const Duration(seconds: 2));
-            final retryToken = await messaging.getAPNSToken();
-            if (kDebugMode) {
-              print('APNs token retry: ${retryToken != null}');
-            }
+            await messaging.getAPNSToken();
           }
-        } catch (e) {
-          if (kDebugMode) {
-            print('⚠️ APNs token error: $e');
-          }
-        }
+        } catch (_) {}
       }
 
       final token = await messaging.getToken();
@@ -535,23 +504,8 @@ class AuthGate extends StatelessWidget {
           'lastAppVersion': appVersion,
           'lastAccessedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
-
-        if (kDebugMode) {
-          print('✓ FCM token saved for user: $uid');
-          print('  Token: ${token.substring(0, 20)}...');
-          print('  Language: $preferredLang');
-          print('  App Version: $appVersion');
-        }
-      } else {
-        if (kDebugMode) {
-          print('⚠️ FCM token is null - notifications may not work');
-        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Error saving FCM token: $e');
-      }
-    }
+    } catch (_) {}
   }
 
   @override
@@ -597,11 +551,7 @@ Future<void> requestExactAlarmPermission() async {
     if (status.isGranted) {
       return;
     }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error checking exact alarm permission: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 bool isAppInForeground() {
@@ -632,9 +582,6 @@ Future<bool> _shouldCheckForUpdates() async {
     }
     return false;
   } catch (e) {
-    if (kDebugMode) {
-      print('Error checking update frequency: $e');
-    }
     return true;
   }
 }
@@ -648,9 +595,6 @@ Future<bool> isUpdateRequired(
   if (!forceCheck) {
     final shouldCheck = await _shouldCheckForUpdates();
     if (!shouldCheck) {
-      if (kDebugMode) {
-        print('Skipping update check - checked recently');
-      }
       return false;
     }
   }
@@ -667,16 +611,8 @@ Future<bool> isUpdateRequired(
     final latestVersion = doc.data()?['version'];
     if (latestVersion == null) return false;
     final isOutdated = _isVersionLower(info.version, latestVersion);
-    if (kDebugMode) {
-      print(
-        'Update check: Current ${info.version} vs Latest $latestVersion = ${isOutdated ? 'Update needed' : 'Up to date'}',
-      );
-    }
     return isOutdated;
   } catch (e) {
-    if (kDebugMode) {
-      print('Error checking for updates: $e');
-    }
     return false;
   }
 }
@@ -689,14 +625,7 @@ Future<void> resetUpdateCheckTimer() async {
   try {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('last_update_check');
-    if (kDebugMode) {
-      print('Update check timer reset');
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error resetting update check timer: $e');
-    }
-  }
+  } catch (_) {}
 }
 
 Future<DateTime?> getLastUpdateCheckTime() async {
@@ -708,9 +637,6 @@ Future<DateTime?> getLastUpdateCheckTime() async {
     }
     return null;
   } catch (e) {
-    if (kDebugMode) {
-      print('Error getting last update check time: $e');
-    }
     return null;
   }
 }
@@ -798,11 +724,7 @@ class _SplashScreenState extends State<SplashScreen> {
         const Duration(seconds: 3),
         onTimeout: () => false,
       );
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking blocked country: $e');
-      }
-    }
+    } catch (_) {}
     if (blocked) {
       await showDialog(
         context: context,
@@ -841,11 +763,7 @@ class _SplashScreenState extends State<SplashScreen> {
         SystemNavigator.pop();
         return;
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error checking for updates: $e');
-      }
-    }
+    } catch (_) {}
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
@@ -854,11 +772,7 @@ class _SplashScreenState extends State<SplashScreen> {
           await _showLegalUpdateDialog(user.uid);
           if (!mounted) return;
         }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Error checking legal documents: $e');
-        }
-      }
+      } catch (_) {}
     }
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted || _isShowingGuide) {
@@ -957,7 +871,6 @@ class _SplashScreenState extends State<SplashScreen> {
               .get();
 
       if (!configDoc.exists) {
-        if (kDebugMode) print('LegalDocuments configDoc does not exist');
         return false;
       }
 
@@ -969,7 +882,6 @@ class _SplashScreenState extends State<SplashScreen> {
           await FirebaseFirestore.instance.collection('Users').doc(uid).get();
 
       if (!userDoc.exists) {
-        if (kDebugMode) print('User doc does not exist for uid: $uid');
         return false;
       }
 
@@ -978,21 +890,9 @@ class _SplashScreenState extends State<SplashScreen> {
       final acceptedPrivacyVersion =
           userDoc.data()?['acceptedPrivacyVersion'] ?? '0.0';
 
-      if (kDebugMode) {
-        print(
-          '[Legal Check] currentTermsVersion: $currentTermsVersion, currentPrivacyVersion: $currentPrivacyVersion',
-        );
-        print(
-          '[Legal Check] acceptedTermsVersion: $acceptedTermsVersion, acceptedPrivacyVersion: $acceptedPrivacyVersion',
-        );
-      }
-
       return acceptedTermsVersion != currentTermsVersion ||
           acceptedPrivacyVersion != currentPrivacyVersion;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error checking legal document versions: $e');
-      }
       return false;
     }
   }
@@ -1195,11 +1095,6 @@ class _SplashScreenState extends State<SplashScreen> {
                                   if (!context.mounted) return;
                                   Navigator.of(context).pop();
                                 } catch (e) {
-                                  if (kDebugMode) {
-                                    print(
-                                      'Error updating legal acceptance: $e',
-                                    );
-                                  }
                                   if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -1325,11 +1220,7 @@ Future<bool> isBlockedCountry() async {
         blockedByIp = true;
       }
     }
-  } catch (e) {
-    if (kDebugMode) {
-      print('IP check failed: $e');
-    }
-  }
+  } catch (_) {}
   try {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled().timeout(
       const Duration(seconds: 1),
@@ -1357,11 +1248,7 @@ Future<bool> isBlockedCountry() async {
         }
       }
     }
-  } catch (e) {
-    if (kDebugMode) {
-      print('GPS check failed: $e');
-    }
-  }
+  } catch (_) {}
 
   return blockedByIp || blockedByGps;
 }
