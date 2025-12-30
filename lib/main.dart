@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
@@ -41,59 +42,6 @@ final ValueNotifier<Locale?> localeNotifier = ValueNotifier(null);
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-
-  if (message.data['type'] == 'update_available') {
-    final title = message.data['title'] ?? 'New Update Available!';
-    final body =
-        message.data['body'] ??
-        'A new version of DawaTime is available. Tap to update now.';
-
-    const initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-    const initializationSettingsIOS = DarwinInitializationSettings();
-    const initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-          'updates',
-          'App Updates',
-          channelDescription: 'Notifications for app updates',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: true,
-          showWhen: true,
-          ongoing: false,
-          autoCancel: true,
-          icon: 'dawatime_notify',
-          sound: RawResourceAndroidNotificationSound('notification_sound'),
-          color: Color(0xFF8AC249),
-        );
-
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-      sound: 'notification_sound.wav',
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await flutterLocalNotificationsPlugin.show(
-      999999,
-      title,
-      body,
-      details,
-      payload: 'update_available',
-    );
-  }
 }
 
 @pragma('vm:entry-point')
@@ -189,14 +137,6 @@ Future<void> main() async {
       }
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
-
-    try {
-      if (await Permission.notification.isDenied) {
-        await Permission.notification.request().timeout(
-          const Duration(seconds: 5),
-        );
-      }
-    } catch (_) {}
   }
 
   if (!kIsWeb) {
@@ -271,19 +211,6 @@ Future<void> main() async {
       );
 
       notificationsInitialized = true;
-
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin
-              .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin
-              >();
-      await androidImplementation?.requestNotificationsPermission();
     } catch (_) {}
     try {
       final messaging = FirebaseMessaging.instance;
@@ -292,8 +219,7 @@ Future<void> main() async {
       );
 
       await messaging.requestPermission(alert: true, badge: true, sound: true);
-      if (Theme.of(navigatorKey.currentContext!).platform ==
-          TargetPlatform.iOS) {
+      if (Platform.isIOS) {
         try {
           final apnsToken = await messaging.getAPNSToken();
           if (kDebugMode) {
@@ -341,6 +267,7 @@ Future<void> main() async {
                 presentAlert: true,
                 presentBadge: true,
                 presentSound: true,
+                interruptionLevel: InterruptionLevel.timeSensitive,
                 sound: 'notification_sound.wav',
               );
 
@@ -599,16 +526,21 @@ class AuthGate extends StatelessWidget {
       if (token != null) {
         final prefs = await SharedPreferences.getInstance();
         final preferredLang = prefs.getString('preferredLanguage') ?? 'en';
+        final packageInfo = await PackageInfo.fromPlatform();
+        final appVersion = packageInfo.version;
 
         await FirebaseFirestore.instance.collection('Users').doc(uid).set({
           'fcmToken': token,
           'preferredLanguage': preferredLang,
+          'lastAppVersion': appVersion,
+          'lastAccessedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 
         if (kDebugMode) {
           print('✓ FCM token saved for user: $uid');
           print('  Token: ${token.substring(0, 20)}...');
           print('  Language: $preferredLang');
+          print('  App Version: $appVersion');
         }
       } else {
         if (kDebugMode) {
@@ -675,12 +607,6 @@ Future<void> requestExactAlarmPermission() async {
 bool isAppInForeground() {
   final state = WidgetsBinding.instance.lifecycleState;
   return state == AppLifecycleState.resumed;
-}
-
-Future<void> requestNotificationPermission() async {
-  if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
-  }
 }
 
 Future<void> checkFirstInstallAndSignOut() async {
@@ -1281,6 +1207,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                         'Error updating acceptance. Please try again.',
                                       ),
                                       backgroundColor: Colors.red,
+                                      persist: false,
                                     ),
                                   );
                                 }

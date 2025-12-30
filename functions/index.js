@@ -6,6 +6,11 @@ const geoip = require("geoip-lite");
 
 admin.initializeApp();
 
+const {migrateMedicationsToSubcollections} =
+  require("./migrate-to-subcollections");
+
+exports.migrateMedicationsToSubcollections = migrateMedicationsToSubcollections;
+
 exports.notifyOnVersionUpdate = functions
     .runWith({memory: "512MB", timeoutSeconds: 300})
     .firestore
@@ -63,10 +68,30 @@ exports.notifyOnVersionUpdate = functions
           return null;
         }
 
-        console.log(`Found ${users.length} FCM tokens`);
+        const uniqueTokens = new Set();
+        const deduplicatedUsers = users.filter((user) => {
+          if (uniqueTokens.has(user.token)) {
+            console.log(
+                `Skipping duplicate token: ` +
+                `${user.token.substring(0, 20)}...`,
+            );
+            return false;
+          }
+          uniqueTokens.add(user.token);
+          return true;
+        });
 
-        const arabicUsers = users.filter((u) => u.language === "ar");
-        const englishUsers = users.filter((u) => u.language !== "ar");
+        console.log(
+            `Found ${users.length} FCM tokens ` +
+            `(${deduplicatedUsers.length} unique)`,
+        );
+
+        const arabicUsers = deduplicatedUsers.filter(
+            (u) => u.language === "ar",
+        );
+        const englishUsers = deduplicatedUsers.filter(
+            (u) => u.language !== "ar",
+        );
 
         const promises = [];
         const batchSize = 500;
@@ -564,3 +589,103 @@ exports.migrateLegalAcceptanceFieldsHTTP = functions
         });
       }
     });
+
+/**
+ * Check version adoption across users
+ * GET https://us-central1-medication-cd9b8.cloudfunctions.net/checkVersionAdoption?secret=dawatime-admin-2025
+ */
+exports.checkVersionAdoption = functions.https.onRequest(async (req, res) => {
+  // Security check
+  if (req.query.secret !== "dawatime-admin-2025") {
+    return res.status(403).json({error: "Unauthorized"});
+  }
+
+  try {
+    console.log("Starting version adoption check...");
+    const usersSnapshot = await admin.firestore().collection("Users").get();
+    console.log(`Found ${usersSnapshot.size} users`);
+
+    const versionCounts = {};
+    const nullVersionUsers = [];
+    let totalUsers = 0;
+    let usersWithVersion = 0;
+    let oldStructureCount = 0;
+    let newStructureCount = 0;
+
+    for (const doc of usersSnapshot.docs) {
+      totalUsers++;
+      const data = doc.data();
+      const version = data.lastAppVersion || null;
+
+      if (version) {
+        usersWithVersion++;
+        versionCounts[version] = (versionCounts[version] || 0) + 1;
+      } else {
+        nullVersionUsers.push(doc.id);
+      }
+
+      // Check which structure they're using
+      const oldMeds = await admin
+          .firestore()
+          .collection(doc.id)
+          .limit(1)
+          .get();
+      const newMeds = await admin
+          .firestore()
+          .collection("Users")
+          .doc(doc.id)
+          .collection("medications")
+          .limit(1)
+          .get();
+
+      if (!oldMeds.empty) oldStructureCount++;
+      if (!newMeds.empty) newStructureCount++;
+    }
+
+    // Sort versions
+    const sortedVersions = Object.entries(versionCounts).sort((a, b) => {
+      const [majorA = 0, minorA = 0, patchA = 0] =
+        a[0].split(".").map(Number);
+      const [majorB = 0, minorB = 0, patchB = 0] =
+        b[0].split(".").map(Number);
+      if (majorB !== majorA) return majorB - majorA;
+      if (minorB !== minorA) return minorB - minorA;
+      return patchB - patchA;
+    });
+
+    const result = {
+      timestamp: new Date().toISOString(),
+      summary: {
+        totalUsers,
+        usersWithVersion,
+        usersWithVersionPercent:
+          ((usersWithVersion / totalUsers) * 100).toFixed(1),
+        usersWithoutVersion: nullVersionUsers.length,
+      },
+      versions: sortedVersions.map(([version, count]) => ({
+        version,
+        count,
+        percentage: ((count / totalUsers) * 100).toFixed(1),
+      })),
+      database: {
+        oldStructure: oldStructureCount,
+        newStructure: newStructureCount,
+        bothStructures: Math.max(
+            0,
+            oldStructureCount + newStructureCount - totalUsers,
+        ),
+      },
+      usersWithoutVersion: nullVersionUsers.slice(0, 20), // Limit to 20
+    };
+
+    console.log("Version adoption check complete");
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Error checking version adoption:", error);
+    console.error("Error stack:", error.stack);
+    return res.status(500).json({
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});

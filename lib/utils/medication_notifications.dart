@@ -375,38 +375,47 @@ Future<void> scheduleMedicationNotification(
       }
     } catch (e) {
       if (context != null) {
-        if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: const Color(0xFF8AC249),
-              content: Text(
-                AppLocalizations.of(context)!.allowSettings,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
+        try {
+          if (e is PlatformException &&
+              e.code == 'exact_alarms_not_permitted') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: const Color(0xFF8AC249),
+                content: Text(
+                  AppLocalizations.of(context)!.allowSettings,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-              ),
-              action: SnackBarAction(
-                label: AppLocalizations.of(context)!.openSettings,
-                onPressed: openExactAlarmSettings,
-              ),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: const Color(0xFF8AC249),
-              content: Text(
-                '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
+                action: SnackBarAction(
+                  label: AppLocalizations.of(context)!.openSettings,
+                  onPressed: openExactAlarmSettings,
                 ),
+                persist: false,
               ),
-            ),
-          );
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: const Color(0xFF8AC249),
+                content: Text(
+                  '${AppLocalizations.of(context)!.scheduleMedicationFailure} $e',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                persist: false,
+              ),
+            );
+          }
+        } catch (scaffoldError) {
+          if (kDebugMode) {
+            print('Could not show SnackBar (widget disposed): $scaffoldError');
+          }
         }
       }
     }

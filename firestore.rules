@@ -4,20 +4,70 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /Users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // New subcollection structure for medications
+      match /medications/{medicationId} {
+        // Allow listing/querying the collection (needed for migration check)
+        allow list, get: if request.auth != null && request.auth.uid == userId;
+        // Allow delete without validation (request.resource.data is null during delete)
+        allow delete: if request.auth != null && request.auth.uid == userId;
+        allow update: if request.auth != null 
+          && request.auth.uid == userId
+          // Validate amount is never negative
+          && request.resource.data.amount >= 0
+          // Ensure dosage is positive
+          && request.resource.data.dosage > 0
+          // Ensure frequency is positive
+          && request.resource.data.frequency > 0;
+        allow create: if request.auth != null 
+          && request.auth.uid == userId
+          // Validate amount is never negative
+          && request.resource.data.amount >= 0
+          // Ensure dosage is positive
+          && request.resource.data.dosage > 0
+          // Ensure frequency is positive
+          && request.resource.data.frequency > 0
+          // Validate required fields exist
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.typeOfMedication is string;
+      }
     }
+    
+    // Legacy structure - keep during migration period
     match /{userId}/{medicationId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow update, delete: if request.auth != null 
+      // Allow listing/querying the collection (needed for migration check)
+      allow list, get: if request.auth != null && request.auth.uid == userId;
+      // Allow delete without validation (for migration cleanup)
+      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null 
         && request.auth.uid == userId
         // Validate amount is never negative
-        && request.resource.data.amount >= 0;
+        && request.resource.data.amount >= 0
+        // Ensure dosage is positive
+        && request.resource.data.dosage > 0
+        // Ensure frequency is positive
+        && request.resource.data.frequency > 0;
       allow create: if request.auth != null 
         && request.auth.uid == userId
         // Validate amount is never negative
         && request.resource.data.amount >= 0
-        // Enforce 12-medication limit per user (check collection size)
-        && !exists(/databases/$(database)/documents/$(userId)/{doc13});
+        // Ensure dosage is positive
+        && request.resource.data.dosage > 0
+        // Ensure frequency is positive
+        && request.resource.data.frequency > 0
+        // Validate required fields exist
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.typeOfMedication is string;
     }
+    
+    // AppConfig - read-only for all authenticated users
+    match /AppConfig/{document} {
+      allow read: if request.auth != null;
+    }
+    
+    // Messages - public read/write (support)
     match /Messages/{document} {
       allow write: if true;
       allow read: if true;

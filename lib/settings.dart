@@ -48,7 +48,9 @@ class _SettingsPageState extends State<SettingsPage> {
         if (user != null) {
           final doc =
               await FirebaseFirestore.instance
-                  .collection(user.uid)
+                  .collection('Users')
+                  .doc(user.uid)
+                  .collection('medications')
                   .doc(payload)
                   .get();
           if (doc.exists) {
@@ -420,7 +422,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               backgroundColor: Color(
                                                 0xFF8AC249,
                                               ),
-                                              duration: Duration(seconds: 2),
+                                              persist: false,
                                             ),
                                           );
 
@@ -448,7 +450,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 backgroundColor: Color(
                                                   0xFF8AC249,
                                                 ),
-                                                duration: Duration(seconds: 2),
+                                                persist: false,
                                               ),
                                             );
                                           }
@@ -466,7 +468,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 ),
                                               ),
                                               backgroundColor: Colors.red,
-                                              duration: Duration(seconds: 3),
+                                              persist: false,
                                             ),
                                           );
                                         }
@@ -587,6 +589,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            persist: false,
                           ),
                         );
                       }
@@ -864,6 +867,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     fontFamily: 'Inter',
                                                   ),
                                                 ),
+                                                persist: false,
                                               ),
                                             );
                                           }
@@ -884,6 +888,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     fontFamily: 'Inter',
                                                   ),
                                                 ),
+                                                persist: false,
                                               ),
                                             );
                                           }
@@ -1253,6 +1258,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                         fontFamily: 'Inter',
                                                       ),
                                                 ),
+                                                persist: false,
                                               ),
                                             );
                                           }
@@ -1316,6 +1322,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         }
@@ -1418,6 +1425,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         }
@@ -1438,6 +1446,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         }
@@ -1655,6 +1664,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             fontFamily: 'Inter',
                                                           ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                     return;
@@ -1681,6 +1691,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                             fontFamily: 'Inter',
                                                           ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                     return;
@@ -1745,7 +1756,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
                                         final medsCollection = FirebaseFirestore
                                             .instance
-                                            .collection(user.uid);
+                                            .collection('Users')
+                                            .doc(user.uid)
+                                            .collection('medications');
                                         final medsSnapshot =
                                             await medsCollection.get();
                                         for (final doc in medsSnapshot.docs) {
@@ -1857,6 +1870,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         }
@@ -2033,6 +2047,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                   'Inter',
                                                             ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                     }
@@ -2078,6 +2093,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                   'Inter',
                                                             ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                     }
@@ -2101,6 +2117,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                                   'Inter',
                                                             ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                     }
@@ -2136,6 +2153,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         }

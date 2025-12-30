@@ -124,6 +124,62 @@ class _HomePageState extends State<HomePage> {
 
   int _introStep = 0;
 
+  bool? _useNewStructure;
+
+  CollectionReference _getMedicationsCollection(String userId) {
+    if (_useNewStructure == false) {
+      return firestore.collection(userId);
+    }
+    return firestore.collection('Users').doc(userId).collection('medications');
+  }
+
+  Future<void> _checkMigrationStatus(String userId) async {
+    if (_useNewStructure != null) return;
+
+    try {
+      final newLocation = firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('medications');
+      final newSnapshot = await newLocation.limit(1).get();
+      final hasNewData = newSnapshot.docs.isNotEmpty;
+
+      final oldLocation = firestore.collection(userId);
+      final oldSnapshot = await oldLocation.limit(1).get();
+      final hasOldData = oldSnapshot.docs.isNotEmpty;
+
+      if (hasNewData && hasOldData) {
+        try {
+          final allOldDocs = await oldLocation.get();
+          for (var doc in allOldDocs.docs) {
+            await doc.reference.delete();
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️  Error cleaning up old location: $e');
+          }
+        }
+
+        setState(() => _useNewStructure = true);
+      } else if (hasNewData) {
+        setState(() => _useNewStructure = true);
+      } else if (hasOldData) {
+        setState(() => _useNewStructure = false);
+      } else {
+        setState(() => _useNewStructure = true);
+      }
+    } catch (e) {
+      setState(() => _useNewStructure = true);
+
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          _useNewStructure = null;
+          _checkMigrationStatus(userId);
+        }
+      });
+    }
+  }
+
   List<Map<String, String>> get _introSteps {
     final loc = AppLocalizations.of(context)!;
     return [
@@ -174,6 +230,7 @@ class _HomePageState extends State<HomePage> {
     if (!kIsWeb) {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        _checkMigrationStatus(user.uid);
         _checkPermissionsIfNeeded(user.uid);
         _scheduleAfterPermissionCheck(user.uid);
       }
@@ -182,7 +239,6 @@ class _HomePageState extends State<HomePage> {
         _checkAndShowDueMedications();
       });
 
-      // Auto-refresh UI every 30 seconds for reminder window updates
       _autoRefreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
         if (mounted) setState(() {});
       });
@@ -201,7 +257,9 @@ class _HomePageState extends State<HomePage> {
           final docId = payload;
           final doc =
               await FirebaseFirestore.instance
-                  .collection(widget.uid!)
+                  .collection('Users')
+                  .doc(widget.uid!)
+                  .collection('medications')
                   .doc(docId)
                   .get();
           if (doc.exists) {
@@ -272,8 +330,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!Platform.isAndroid) return;
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection(userId).limit(1).get();
+      final snapshot = await _getMedicationsCollection(userId).limit(1).get();
       if (snapshot.docs.isEmpty) {
         return;
       }
@@ -298,7 +355,6 @@ class _HomePageState extends State<HomePage> {
                   onPressed: openExactAlarmSettings,
                   textColor: Colors.white,
                 ),
-                duration: const Duration(seconds: 8),
               ),
             );
           }
@@ -320,9 +376,6 @@ class _HomePageState extends State<HomePage> {
 
     try {
       await flutterLocalNotificationsPlugin.cancelAll();
-      if (kDebugMode) {
-        print('✓ Cleared all old notifications');
-      }
     } catch (e) {
       if (kDebugMode) {
         print('⚠️ Error clearing notifications: $e');
@@ -337,8 +390,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _autoRescheduleOverdueMedications(String userId) async {
     try {
       final now = DateTime.now();
-      final meds =
-          await FirebaseFirestore.instance.collection(userId).limit(12).get();
+      final meds = await _getMedicationsCollection(userId).limit(12).get();
 
       for (var doc in meds.docs) {
         final medication = medicationFromDoc(doc);
@@ -431,10 +483,9 @@ class _HomePageState extends State<HomePage> {
               daysOfWeek: medication.daysOfWeek,
               lastTaken: medication.lastTaken,
             );
-            await FirebaseFirestore.instance
-                .collection(userId)
-                .doc(doc.id)
-                .update(updatedMedication.toMap());
+            await _getMedicationsCollection(
+              userId,
+            ).doc(doc.id).update(updatedMedication.toMap());
           }
           await scheduleMedicationNotification(
             null,
@@ -455,8 +506,7 @@ class _HomePageState extends State<HomePage> {
     if (kIsWeb) return;
 
     try {
-      final meds =
-          await FirebaseFirestore.instance.collection(userId).limit(12).get();
+      final meds = await _getMedicationsCollection(userId).limit(12).get();
       final List<Map<String, dynamic>> lowStockMeds = [];
 
       for (var doc in meds.docs) {
@@ -472,19 +522,17 @@ class _HomePageState extends State<HomePage> {
           lowStockMeds.add({'medication': medication, 'docId': doc.id});
 
           if (medication.refillNotified != true) {
-            await FirebaseFirestore.instance
-                .collection(userId)
-                .doc(doc.id)
-                .update({'refillNotified': true});
+            await _getMedicationsCollection(
+              userId,
+            ).doc(doc.id).update({'refillNotified': true});
           }
           await scheduleWeeklyRefillNotification(medication, doc.id);
         } else {
           await cancelRefillNotifications(doc.id);
           if (medication.refillNotified == true) {
-            await FirebaseFirestore.instance
-                .collection(userId)
-                .doc(doc.id)
-                .update({'refillNotified': false});
+            await _getMedicationsCollection(
+              userId,
+            ).doc(doc.id).update({'refillNotified': false});
           }
         }
       }
@@ -714,7 +762,12 @@ class _HomePageState extends State<HomePage> {
     try {
       final now = DateTime.now();
       final meds =
-          await FirebaseFirestore.instance.collection(user.uid).limit(12).get();
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .collection('medications')
+              .limit(12)
+              .get();
 
       for (var doc in meds.docs) {
         final medication = medicationFromDoc(doc);
@@ -936,6 +989,7 @@ class _HomePageState extends State<HomePage> {
         _recentlyDeletedData != null &&
         _recentlyDeletedDocId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         final deletedMedication = _recentlyDeletedMedication;
         final deletedData = _recentlyDeletedData;
         final deletedDocId = _recentlyDeletedDocId;
@@ -953,15 +1007,15 @@ class _HomePageState extends State<HomePage> {
                 fontFamily: 'Inter',
               ),
             ),
+            persist: false,
             action: SnackBarAction(
               label: AppLocalizations.of(context)!.undo,
               textColor: Colors.red,
               onPressed: () async {
                 try {
-                  await firestore
-                      .collection(widget.uid!)
-                      .doc(deletedDocId!)
-                      .set(deletedData!);
+                  await _getMedicationsCollection(
+                    widget.uid!,
+                  ).doc(deletedDocId!).set(deletedData!);
                   await scheduleMedicationNotification(
                     context,
                     deletedDocId,
@@ -979,19 +1033,22 @@ class _HomePageState extends State<HomePage> {
                   }
                   if (mounted) setState(() {});
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: const Color(0xFF8AC249),
-                      content: Text(
-                        '${AppLocalizations.of(context)!.couldNotUpdateMedication} $e',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: const Color(0xFF8AC249),
+                        content: Text(
+                          '${AppLocalizations.of(context)!.couldNotUpdateMedication} $e',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                          ),
                         ),
+                        persist: false,
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
             ),
@@ -1068,11 +1125,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream:
-            FirebaseFirestore.instance
-                .collection(user.uid)
-                .limit(12)
-                .snapshots(),
+        stream: _getMedicationsCollection(user.uid).limit(12).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -1164,6 +1217,9 @@ class _HomePageState extends State<HomePage> {
                         itemCount: docs.length,
                         itemBuilder: (context, index) {
                           final medication = medicationFromDoc(docs[index]);
+                          final docId = docs[index].id;
+                          final docData =
+                              docs[index].data() as Map<String, dynamic>?;
                           final isRTL =
                               Directionality.of(context) == TextDirection.rtl;
                           return Padding(
@@ -2436,6 +2492,7 @@ class _HomePageState extends State<HomePage> {
                                                                   'Inter',
                                                             ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                       return;
@@ -2476,6 +2533,7 @@ class _HomePageState extends State<HomePage> {
                                                                   'Inter',
                                                             ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                       return;
@@ -2522,6 +2580,7 @@ class _HomePageState extends State<HomePage> {
                                                                     'Inter',
                                                               ),
                                                             ),
+                                                            persist: false,
                                                           ),
                                                         );
                                                         return;
@@ -2551,6 +2610,7 @@ class _HomePageState extends State<HomePage> {
                                                                     'Inter',
                                                               ),
                                                             ),
+                                                            persist: false,
                                                           ),
                                                         );
                                                         return;
@@ -2561,8 +2621,36 @@ class _HomePageState extends State<HomePage> {
                                                                 as Map<
                                                                   String,
                                                                   dynamic
-                                                                >;
-                                                        await firestore.collection(widget.uid!).doc(docs[index].id).update({
+                                                                >?;
+                                                        if (oldData == null) {
+                                                          if (mounted) {
+                                                            ScaffoldMessenger.of(
+                                                              context,
+                                                            ).showSnackBar(
+                                                              SnackBar(
+                                                                backgroundColor:
+                                                                    const Color(
+                                                                      0xFF8AC249,
+                                                                    ),
+                                                                content: Text(
+                                                                  AppLocalizations.of(
+                                                                    context,
+                                                                  )!.couldNotUpdateMedication,
+                                                                  style: const TextStyle(
+                                                                    color:
+                                                                        Colors
+                                                                            .white,
+                                                                  ),
+                                                                ),
+                                                                persist: false,
+                                                              ),
+                                                            );
+                                                          }
+                                                          return;
+                                                        }
+                                                        await _getMedicationsCollection(
+                                                          widget.uid!,
+                                                        ).doc(docId).update({
                                                           'name':
                                                               nameController
                                                                   .text,
@@ -2626,15 +2714,9 @@ class _HomePageState extends State<HomePage> {
                                                                   : null,
                                                         });
                                                         final updatedDoc =
-                                                            await firestore
-                                                                .collection(
-                                                                  widget.uid!,
-                                                                )
-                                                                .doc(
-                                                                  docs[index]
-                                                                      .id,
-                                                                )
-                                                                .get();
+                                                            await _getMedicationsCollection(
+                                                              widget.uid!,
+                                                            ).doc(docId).get();
                                                         final updatedMedication =
                                                             medicationFromDoc(
                                                               updatedDoc,
@@ -2642,7 +2724,7 @@ class _HomePageState extends State<HomePage> {
 
                                                         await scheduleMedicationNotification(
                                                           context,
-                                                          docs[index].id,
+                                                          docId,
                                                           updatedMedication,
                                                           userId: widget.uid,
                                                         );
@@ -2659,11 +2741,11 @@ class _HomePageState extends State<HomePage> {
                                                                   .refillThreshold!) {
                                                             await scheduleWeeklyRefillNotification(
                                                               updatedMedication,
-                                                              docs[index].id,
+                                                              docId,
                                                             );
                                                           } else {
                                                             await cancelRefillNotifications(
-                                                              docs[index].id,
+                                                              docId,
                                                             );
                                                           }
                                                         }
@@ -2700,6 +2782,7 @@ class _HomePageState extends State<HomePage> {
                                                                     'Inter',
                                                               ),
                                                             ),
+                                                            persist: false,
                                                             action: SnackBarAction(
                                                               label:
                                                                   AppLocalizations.of(
@@ -2708,8 +2791,7 @@ class _HomePageState extends State<HomePage> {
                                                               textColor:
                                                                   Colors.red,
                                                               onPressed: () async {
-                                                                await firestore
-                                                                    .collection(
+                                                                await _getMedicationsCollection(
                                                                       widget
                                                                           .uid!,
                                                                     )
@@ -2725,8 +2807,7 @@ class _HomePageState extends State<HomePage> {
                                                                   docs[index]
                                                                       .id,
                                                                   medicationFromDoc(
-                                                                    await firestore
-                                                                        .collection(
+                                                                    await _getMedicationsCollection(
                                                                           widget
                                                                               .uid!,
                                                                         )
@@ -2736,6 +2817,9 @@ class _HomePageState extends State<HomePage> {
                                                                         )
                                                                         .get(),
                                                                   ),
+                                                                  userId:
+                                                                      widget
+                                                                          .uid,
                                                                 );
                                                                 if (mounted) {
                                                                   setState(
@@ -2768,6 +2852,7 @@ class _HomePageState extends State<HomePage> {
                                                                     'Inter',
                                                               ),
                                                             ),
+                                                            persist: false,
                                                           ),
                                                         );
                                                       }
@@ -2797,6 +2882,7 @@ class _HomePageState extends State<HomePage> {
                                                                       'Inter',
                                                                 ),
                                                           ),
+                                                          persist: false,
                                                         ),
                                                       );
                                                     }
@@ -2831,32 +2917,42 @@ class _HomePageState extends State<HomePage> {
                               },
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.endToStart) {
-                                  final deletedDocId = docs[index].id;
-                                  final deletedData =
-                                      docs[index].data()
-                                          as Map<String, dynamic>;
-                                  final deletedMedication = medicationFromDoc(
-                                    docs[index],
-                                  );
+                                  if (docData == null) {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: const Color(
+                                            0xFF8AC249,
+                                          ),
+                                          content: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.couldNotUpdateMedication,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          persist: false,
+                                        ),
+                                      );
+                                    }
+                                    return;
+                                  }
                                   try {
-                                    await firestore
-                                        .collection(widget.uid!)
-                                        .doc(deletedDocId)
-                                        .delete();
+                                    await _getMedicationsCollection(
+                                      widget.uid!,
+                                    ).doc(docId).delete();
                                     await flutterLocalNotificationsPlugin
-                                        .cancel(deletedDocId.hashCode);
-                                    await cancelMedicationReminders(
-                                      deletedDocId,
-                                    );
-                                    await cancelRefillNotifications(
-                                      deletedDocId,
-                                    );
+                                        .cancel(docId.hashCode);
+                                    await cancelMedicationReminders(docId);
+                                    await cancelRefillNotifications(docId);
 
                                     setState(() {
-                                      _recentlyDeletedMedication =
-                                          deletedMedication;
-                                      _recentlyDeletedData = deletedData;
-                                      _recentlyDeletedDocId = deletedDocId;
+                                      _recentlyDeletedMedication = medication;
+                                      _recentlyDeletedData = docData;
+                                      _recentlyDeletedDocId = docId;
                                     });
                                   } catch (e) {
                                     WidgetsBinding.instance
@@ -2878,6 +2974,7 @@ class _HomePageState extends State<HomePage> {
                                                   fontFamily: 'Inter',
                                                 ),
                                               ),
+                                              persist: false,
                                             ),
                                           );
                                         });
@@ -3091,32 +3188,28 @@ class _HomePageState extends State<HomePage> {
                                                 medication.amount;
                                             final docId = docs[index].id;
                                             try {
-                                              await firestore
-                                                  .collection(widget.uid!)
-                                                  .doc(docId)
-                                                  .update({
-                                                    'amount':
-                                                        medication.amount -
-                                                                    medication
-                                                                        .dosage <
-                                                                0
-                                                            ? 0
-                                                            : medication
-                                                                    .amount -
+                                              await _getMedicationsCollection(
+                                                widget.uid!,
+                                              ).doc(docId).update({
+                                                'amount':
+                                                    medication.amount -
                                                                 medication
-                                                                    .dosage,
-                                                    'lastTaken':
-                                                        DateTime.now()
-                                                            .toIso8601String(),
-                                                  });
+                                                                    .dosage <
+                                                            0
+                                                        ? 0
+                                                        : medication.amount -
+                                                            medication.dosage,
+                                                'lastTaken':
+                                                    DateTime.now()
+                                                        .toIso8601String(),
+                                              });
                                               await cancelMedicationReminders(
                                                 docId,
                                               );
                                               final updatedDoc =
-                                                  await firestore
-                                                      .collection(widget.uid!)
-                                                      .doc(docId)
-                                                      .get();
+                                                  await _getMedicationsCollection(
+                                                    widget.uid!,
+                                                  ).doc(docId).get();
                                               final updatedMedication =
                                                   medicationFromDoc(updatedDoc);
                                               await scheduleMedicationNotification(
@@ -3319,6 +3412,7 @@ class _HomePageState extends State<HomePage> {
                                                       fontFamily: 'Inter',
                                                     ),
                                                   ),
+                                                  persist: false,
                                                   action: SnackBarAction(
                                                     label:
                                                         AppLocalizations.of(
@@ -3326,25 +3420,17 @@ class _HomePageState extends State<HomePage> {
                                                         )!.undo,
                                                     textColor: Colors.red,
                                                     onPressed: () async {
-                                                      await firestore
-                                                          .collection(
-                                                            widget.uid!,
-                                                          )
-                                                          .doc(docs[index].id)
-                                                          .update({
-                                                            'amount':
-                                                                previousAmount,
-                                                            'lastTaken': null,
-                                                          });
+                                                      await _getMedicationsCollection(
+                                                        widget.uid!,
+                                                      ).doc(docId).update({
+                                                        'amount':
+                                                            previousAmount,
+                                                        'lastTaken': null,
+                                                      });
                                                       final restoredDoc =
-                                                          await firestore
-                                                              .collection(
-                                                                widget.uid!,
-                                                              )
-                                                              .doc(
-                                                                docs[index].id,
-                                                              )
-                                                              .get();
+                                                          await _getMedicationsCollection(
+                                                            widget.uid!,
+                                                          ).doc(docId).get();
                                                       final restoredMedication =
                                                           medicationFromDoc(
                                                             restoredDoc,
@@ -3398,7 +3484,7 @@ class _HomePageState extends State<HomePage> {
                                                                 )) {
                                                               await scheduleMedicationNotification(
                                                                 context,
-                                                                docs[index].id,
+                                                                docId,
                                                                 restoredMedication,
                                                               );
                                                               scheduled = true;
@@ -3430,6 +3516,7 @@ class _HomePageState extends State<HomePage> {
                                                                     'Inter',
                                                               ),
                                                             ),
+                                                            persist: false,
                                                           ),
                                                         );
                                                       }
@@ -3441,79 +3528,29 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               );
                                             } catch (e) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  backgroundColor: const Color(
-                                                    0xFF8AC249,
-                                                  ),
-                                                  content: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.couldNotUpdateMedication,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Inter',
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  backgroundColor: Colors.red,
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.youreOutOfMedication(
-                                                      medication.name,
-                                                    ),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  content: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    )!.pleaseRefillYourMedication(
-                                                      medication.name,
-                                                    ),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop();
-                                                      },
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.ok,
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                              if (mounted) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    backgroundColor:
+                                                        const Color(0xFF8AC249),
+                                                    content: Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.couldNotUpdateMedication,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Inter',
                                                       ),
                                                     ),
-                                                  ],
+                                                    persist: false,
+                                                  ),
                                                 );
-                                              },
-                                            );
+                                              }
+                                            }
                                           }
                                         }
                                       },

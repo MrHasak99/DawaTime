@@ -106,7 +106,9 @@ class _AddMedicationsState extends State<AddMedications> {
         if (user != null) {
           final doc =
               await FirebaseFirestore.instance
-                  .collection(user.uid)
+                  .collection('Users')
+                  .doc(user.uid)
+                  .collection('medications')
                   .doc(payload)
                   .get();
           if (doc.exists) {
@@ -166,7 +168,13 @@ class _AddMedicationsState extends State<AddMedications> {
     }
 
     return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection(user.uid).limit(12).get(),
+      future:
+          FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .collection('medications')
+              .limit(12)
+              .get(),
       builder: (context, snapshot) {
         final medicationCount = snapshot.data?.docs.length ?? 0;
         final isAtLimit = medicationCount >= 12;
@@ -1003,6 +1011,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             fontFamily: 'Inter',
                                                           ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                     return;
@@ -1080,6 +1089,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                     'Inter',
                                                               ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                     return;
@@ -1103,13 +1113,14 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             fontFamily: 'Inter',
                                                           ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                     return;
                                                   }
                                                   try {
                                                     if (widget.docId != null) {
-                                                      await firestore.collection(widget.uid).doc(widget.docId).update({
+                                                      await firestore.collection('Users').doc(widget.uid).collection('medications').doc(widget.docId).update({
                                                         'name':
                                                             nameController.text,
                                                         'typeOfMedication':
@@ -1188,7 +1199,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         userId: widget.uid,
                                                       );
                                                     } else {
-                                                      final docRef = await firestore.collection(widget.uid).add({
+                                                      final docRef = await firestore.collection('Users').doc(widget.uid).collection('medications').add({
                                                         'name':
                                                             nameController.text,
                                                         'typeOfMedication':
@@ -1289,6 +1300,7 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                     'Inter',
                                                               ),
                                                         ),
+                                                        persist: false,
                                                       ),
                                                     );
                                                   }

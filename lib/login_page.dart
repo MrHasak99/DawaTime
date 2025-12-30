@@ -102,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontFamily: 'Inter',
               ),
             ),
+            persist: false,
           ),
         );
       });
@@ -269,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                                         fontFamily: 'Inter',
                                       ),
                                     ),
+                                    persist: false,
                                   ),
                                 );
                               }
@@ -302,6 +304,7 @@ class _LoginPageState extends State<LoginPage> {
                                     fontFamily: 'Inter',
                                   ),
                                 ),
+                                persist: false,
                               ),
                             );
                           } finally {
@@ -453,6 +456,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontFamily: 'Inter',
                                 ),
                               ),
+                              persist: false,
                             ),
                           );
                         }
@@ -469,6 +473,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontFamily: 'Inter',
                                 ),
                               ),
+                              persist: false,
                             ),
                           );
                         }

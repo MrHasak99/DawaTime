@@ -2,6 +2,80 @@
 
 ## Recent Changes (December 2025)
 
+**Current Version**: v1.4.4+18 (Production Ready)
+**Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
+**Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active
+
+---
+
+### Duplicate FCM Notification Fix (December 30, 2025)
+**Status**: ✅ **FIXED** - Removed duplicate notification creation in background handler
+
+**Issue**: Users receiving 2 identical update notifications instead of 1 when app is backgrounded/terminated.
+
+**Root Cause**: 
+- Cloud Function sends complete `notification` payload (title + body) which system auto-displays
+- Background handler (`_firebaseMessagingBackgroundHandler`) was ALSO creating a local notification
+- Result: Two notifications appeared simultaneously
+
+**Fix Applied** (main.dart):
+- Removed all local notification creation code from `_firebaseMessagingBackgroundHandler`
+- Background handler now just exists as entry point (Firebase requires it), but doesn't create notifications
+- System automatically displays notification from Cloud Function's payload when app is backgrounded
+- Foreground handler (`onMessage` listener) still creates local notification (required for foreground display)
+
+**Files Updated**:
+- `/lib/main.dart` (1422 → 1367 lines, removed 55 lines of duplicate notification code)
+
+**Result**: Only 1 notification appears in all scenarios. Background/terminated app uses system notification, foreground uses local notification.
+
+### SnackBar Persistence Fix (December 30, 2025)
+**Status**: ✅ **FIXED** - Added persist: false to all SnackBars with actions
+
+**Issue**: SnackBars with action buttons showing persistent close icon that remains on screen.
+
+**Root Cause**: 
+- Recent Flutter update changed default behavior for SnackBars with actions
+- SnackBars with `action: SnackBarAction(...)` now show persistent close icon by default
+- This prevents the auto-dismiss behavior expected for temporary notifications
+
+**Fix Applied**:
+- Added `persist: false` to all 5 SnackBars that have action buttons:
+  1. Exact alarm permission prompt (home_page.dart line ~343)
+  2. Undo medication deletion (home_page.dart line ~998)
+  3. Undo swipe delete (home_page.dart line ~2786)
+  4. Undo take medication (home_page.dart line ~3416)
+  5. Exact alarm permission in notifications utility (medication_notifications.dart line ~397)
+
+**Files Updated**:
+- `/lib/home_page.dart` (4 snackbars fixed)
+- `/lib/utils/medication_notifications.dart` (1 snackbar fixed)
+
+**Result**: SnackBars behave as expected - they auto-dismiss without persistent close icons, while action buttons remain functional.
+
+### Database Operations Update (December 29, 2025)
+**Status**: ✅ **COMPLETE** - All Firestore operations now use new database structure
+
+**Issue**: After making new structure default, add/edit operations still used old collection paths causing "not-found" errors.
+
+**Fixes Applied**: Updated all direct Firestore operations across the codebase to use new subcollection structure:
+- Medication creation (`.add()`)
+- Medication editing (`.update()`)
+- Medication deletion (`.delete()`)
+- Inline edit dialogs
+- "Take Medication" button
+- Notification tap handlers
+- Account deletion cleanup
+- Medication count checks (12-limit)
+
+**Files Updated**:
+- `/lib/add_medications.dart` (1414 → 1419 lines)
+- `/lib/home_page.dart` (3938 → 3938 lines)
+- `/lib/settings.dart` (2306 → 2316 lines)
+
+**Result**: All operations (add, edit, delete, query) now consistently use `/Users/{userId}/medications/{medicationId}`. App is fully functional with new database structure.
+
 ### Critical iOS Notification Fixes
 **Issue**: Users reported no medication reminders on iOS for 2 weeks, only receiving incorrect refill alerts.
 
@@ -22,6 +96,42 @@
 - `/lib/home_page.dart` (3785 → 3856 lines)
 
 **Testing Verification**: Deploy to physical iOS device, add test medication for 2-3 minutes ahead, verify notification fires at exact time with follow-ups.
+
+### Database Migration & Permission Fixes (December 29, 2025)
+**Issue**: Multiple issues discovered during v1.4.4 testing and migration deployment.
+
+**Root Causes Identified**:
+1. Permission-denied errors when reading AppConfig collection (legal documents, version checks)
+2. FCM initialization null check error when checking platform for iOS
+3. Duplicate FCM token cleanup causing permission errors with cross-user queries
+4. Migration cleanup failing due to Firestore security rules requiring validation on delete
+5. Duplicate notification permission dialogs on fresh install (AppDelegate + FCM both requesting)
+6. New database structure not defaulting correctly (showing "using old location" logs)
+
+**Fixes Applied**:
+- **firestore.rules**: Added `AppConfig` read permission for all authenticated users (needed for legal document version checks)
+- **firestore.rules**: Separated `allow delete` from `allow update` to remove validation requirement during migration cleanup
+- **main.dart**: Changed iOS platform check from `Theme.of(context).platform` to `Platform.isIOS` (fixes null check error)
+- **main.dart**: Removed client-side duplicate FCM token cleanup (now handled by Cloud Function only)
+- **main.dart**: Removed redundant permission requests (kept only FCM's `requestPermission()`)
+- **AppDelegate.swift**: Removed `requestAuthorization()` call - permission now requested only by Firebase Messaging
+- **home_page.dart**: Changed `_useNewStructure` default behavior to use new structure by default (null or true)
+- **home_page.dart**: Removed duplicate "Using OLD/NEW location" logging from `_getMedicationsCollection()`
+- **functions/index.js**: Added `checkVersionAdoption` Cloud Function for monitoring user version distribution
+
+**Files Updated**:
+- `/firestore.rules` (60 → 67 lines) - Added AppConfig read, separated delete from update validation
+- `/lib/main.dart` (1423 → 1422 lines) - Fixed iOS platform check, removed duplicate permissions/token cleanup
+- `/ios/Runner/AppDelegate.swift` (45 → 31 lines) - Removed duplicate permission request
+- `/lib/home_page.dart` (3950 → 3938 lines) - New structure default, cleaner logging
+- `/functions/index.js` (567 → 694 lines) - Added version adoption monitoring function
+
+**Testing Verification**: 
+- Fresh app install shows only ONE notification permission dialog
+- No permission-denied errors in console
+- Migration cleanup successfully deletes old data
+- Console shows clean logs: "✅ Only new location has data - using new structure"
+- Version tracking active via `lastAppVersion` field
 
 ### iOS FCM Token Registration Fixes (December 2025)
 **Issue**: iPhone not receiving remote update notifications from Cloud Function.
@@ -59,7 +169,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
 ## Architecture & Key Components
 
 ### Core Files Structure
-- **`lib/main.dart`** (1423 lines): App entry point with critical initialization sequence:
+- **`lib/main.dart`** (1367 lines): App entry point with critical initialization sequence:
   - Firebase initialization with timeout handling
   - Workmanager background task registration (`medicationRescheduleTask` runs hourly)
   - Timezone initialization via `flutter_timezone` (fallback to UTC if fails)
@@ -73,17 +183,19 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - **FCM token refresh listener**: Auto-updates Firestore when tokens expire/change via `onTokenRefresh`
   - **FCM debug logging**: Console output for token acquisition, APNs status, and save confirmation
 
-- **`lib/home_page.dart`** (3856 lines): Main UI and medication list display:
+- **`lib/home_page.dart`** (3938 lines): Main UI and medication list display:
   - `StreamBuilder<QuerySnapshot>` for real-time Firestore medication updates
   - `Dismissible` widgets for swipe-to-edit (left/right) and swipe-to-delete (end-to-start)
   - Utility functions: `medicationFromDoc()`, `rescheduleAllMedications()`, `initializeNotifications()`
   - Auto-reschedule logic in `_autoRescheduleOverdueMedications()` (runs on app open)
   - **Startup cleanup**: `_scheduleAfterPermissionCheck()` calls `cancelAll()` to clear stale notifications before rescheduling (critical for preventing incorrect refill alerts)
+  - **Migration detection**: `_checkMigrationStatus()` auto-detects migration and cleans up old data (lines 140-214)
+  - **New structure default**: `_useNewStructure` defaults to true (uses new subcollection structure by default)
   - Notification handling via imports from `lib/utils/medication_notifications.dart`
   - Helper functions via imports from `lib/utils/medication_helpers.dart`
   - **Intro guide**: 6-step onboarding shown on first app launch (stored in `SharedPreferences` as `seenIntroGuide`)
 
-- **`lib/add_medications.dart`** (1414 lines): Medication CRUD operations:
+- **`lib/add_medications.dart`** (1419 lines): Medication CRUD operations:
   - Two frequency modes via `FrequencyType` enum: `everyXDays` (interval-based) or `daysOfWeek` (specific weekdays)
   - 12-medication limit enforcement (checked via Firestore query count)
   - Inline edit dialogs within `home_page.dart` use same validation logic
@@ -91,7 +203,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Notification scheduling via imports from `lib/utils/medication_notifications.dart`
   - String utilities via imports from `lib/utils/string_utils.dart`
 
-- **`lib/settings.dart`** (2306 lines): User profile and app configuration:
+- **`lib/settings.dart`** (2316 lines): User profile and app configuration:
   - Theme switching (light/dark/system) with `ValueNotifier<ThemeMode>` + `SharedPreferences` persistence
   - Language toggle (English/Arabic) with `ValueNotifier<Locale?>` + Firestore user profile update
   - Account deletion flow (calls Cloud Function `requestAccountDeletion`)
@@ -180,6 +292,8 @@ class Medications {
   - **`acceptedTermsVersion`**: Version of T&C user accepted (e.g., "1.0"). On signup, this is fetched from `/AppConfig/LegalDocuments`.
   - **`acceptedPrivacyVersion`**: Version of Privacy Policy user accepted (e.g., "1.0"). On signup, this is fetched from `/AppConfig/LegalDocuments`.
   - **`legalAcceptanceDate`**: ISO timestamp of when user accepted legal docs
+  - **`lastAppVersion`**: App version user is currently running (e.g., "1.4.4"). Updated on every app launch starting from v1.4.4.
+  - **`lastAccessedAt`**: Firestore server timestamp of last app access. Used to track active users and migration progress.
 - **`/{userId}/{medicationId}`**: Medication documents (scoped per user)
 - **`/AppConfig/Version`**: App version control (triggers Cloud Function on update)
 - **`/AppConfig/LegalDocuments`**: Legal document version tracking
@@ -190,12 +304,43 @@ class Medications {
 - **`/Messages/{document}`**: Public read/write (used for support messages)
 
 #### Firestore Security Rules Pattern
+**New Structure (Default for v1.4.4+):**
 ```javascript
-match /{userId}/{medicationId} {
-  allow read, write: if request.auth != null && request.auth.uid == userId;
+match /Users/{userId}/medications/{medicationId} {
+  allow list, get: if request.auth != null && request.auth.uid == userId;
+  allow delete: if request.auth != null && request.auth.uid == userId;
+  allow update: if request.auth != null && request.auth.uid == userId
+    && request.resource.data.amount >= 0
+    && request.resource.data.dosage > 0
+    && request.resource.data.frequency > 0;
+  allow create: if request.auth != null && request.auth.uid == userId
+    && request.resource.data.amount >= 0
+    && request.resource.data.dosage > 0
+    && request.resource.data.frequency > 0;
 }
 ```
-All user data is strictly isolated by authenticated UID - never use shared collections for medication data.
+
+**Legacy Structure (Backward compatibility for v1.3.4):**
+```javascript
+match /{userId}/{medicationId} {
+  allow list, get: if request.auth != null && request.auth.uid == userId;
+  allow delete: if request.auth != null && request.auth.uid == userId;
+  allow update: if request.auth != null && request.auth.uid == userId
+    && request.resource.data.amount >= 0;
+}
+```
+
+**AppConfig (Read-only for all authenticated users):**
+```javascript
+match /AppConfig/{document} {
+  allow read: if request.auth != null;
+}
+```
+
+**Important**: 
+- `allow delete` is separate from `allow update` (request.resource.data is null during delete)
+- Use `allow list, get` instead of `allow read` for collection queries
+- All user data is strictly isolated by authenticated UID
 
 ### Notification System Architecture
 
@@ -528,13 +673,20 @@ Future<void> _saveFCMToken(String uid) async {
     final token = await messaging.getToken();
     
     if (token != null) {
+      // Get current app version for tracking
+      final packageInfo = await PackageInfo.fromPlatform();
+      final appVersion = packageInfo.version; // e.g., "1.4.4"
+      
       await FirebaseFirestore.instance.collection('Users').doc(uid).set({
         'fcmToken': token,
         'preferredLanguage': preferredLang,
+        'lastAppVersion': appVersion,
+        'lastAccessedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
       
       if (kDebugMode) {
         print('✓ FCM token saved for user: $uid');
+        print('  App Version: $appVersion');
       }
     } else {
       if (kDebugMode) {
@@ -561,11 +713,17 @@ Future<void> _saveFCMToken(String uid) async {
 - `✓ FCM token saved for user: <uid>`
 
 #### Firestore Query Patterns
-- **Get all medications**: `FirebaseFirestore.instance.collection(userId).get()`
-- **Real-time updates**: `FirebaseFirestore.instance.collection(userId).snapshots()` (used in HomePage)
-- **Single medication**: `FirebaseFirestore.instance.collection(userId).doc(docId).get()`
-- **Update medication**: `.update({...})` (partial update)
-- **Delete medication**: `.delete()` + cancel notifications
+**New Structure (v1.4.4+ default):**
+- **Get all medications**: `FirebaseFirestore.instance.collection('Users').doc(userId).collection('medications').get()`
+- **Real-time updates**: `FirebaseFirestore.instance.collection('Users').doc(userId).collection('medications').snapshots()` (used in HomePage via `_getMedicationsCollection()` helper)
+- **Single medication**: `FirebaseFirestore.instance.collection('Users').doc(userId).collection('medications').doc(docId).get()`
+- **Add medication**: `collection('Users').doc(userId).collection('medications').add({...})`
+- **Update medication**: `collection('Users').doc(userId).collection('medications').doc(docId).update({...})`
+- **Delete medication**: `collection('Users').doc(userId).collection('medications').doc(docId).delete()` + cancel notifications
+
+**Legacy Structure (v1.3.4 backward compatibility):**
+- Still supported via dual security rules during migration period
+- App auto-detects which structure to use via `_checkMigrationStatus()`
 
 #### Firebase Hosting Configuration (`firebase.json`)
 **WWW Subdomain Redirect**:
@@ -684,20 +842,13 @@ import UserNotifications
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     
-    // Register for remote notifications
+    // Set up notification center delegate for foreground notifications
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self
-      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-      UNUserNotificationCenter.current().requestAuthorization(
-        options: authOptions,
-        completionHandler: { _, _ in }
-      )
-    } else {
-      let settings: UIUserNotificationSettings =
-        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-      application.registerUserNotificationSettings(settings)
     }
     
+    // Register for remote notifications (APNs)
+    // Permission request is handled by Firebase Messaging in Flutter code
     application.registerForRemoteNotifications()
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -721,6 +872,7 @@ import UserNotifications
 - Without proper registration, `getAPNSToken()` returns null
 - FCM token generation fails silently without APNs token
 - Update notifications won't be received on iOS devices
+- **Permission request MUST be handled by FCM only** - duplicate requests cause two permission dialogs
 
 **Output location**: `build/ios/ipa/dawatime.ipa`
 
@@ -740,19 +892,22 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+16` (current version)
+1. **`pubspec.yaml`**: `version: 1.4.4+18` (current development version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+16` = version 1.4.4, build 16
+  - Example: `1.4.4+18` = version 1.4.4, build 18
+  - **Production deployed**: v1.3.4 (App Store)
+  - **Development**: v1.4.4+18 (ready for next release)
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 16
+  versionCode = 18
   versionName = "1.4.4"
   ```
 
 3. **Firebase Firestore** (manual update):
    - Update `/AppConfig/Version` document field `version: "1.4.4"`
    - This triggers Cloud Function to send FCM notifications to all users
+   - **Current production version in Firestore**: "1.3.4"
 
 
 **Version number incrementation definition (using 1.2.3 as example):**
@@ -770,8 +925,20 @@ For any release (major, minor, or hotfix), always increment the relevant number 
 
 **Build number incrementation for testing:**
 - The build number (the number after the +, e.g., 1.2.3+16) can be incremented for internal testing or CI/CD builds, even if the main version number does not change. This allows for distributing test builds without affecting the public versioning scheme.
-- **IMPORTANT**: When asked to "increment build number", ONLY increment the number after the + sign (e.g., 1.4.4+16 → 1.4.4+17). Do NOT change the version number itself (1.4.4 stays 1.4.4).
-- When asked to "increment version number", increment the appropriate version segment AND RESET the build number to 1 (e.g., 1.4.4+16 → 1.4.5+1 for patch, 1.4.4+16 → 1.5.0+1 for minor, 1.4.4+16 → 2.0.0+1 for major).
+- **IMPORTANT**: When asked to "increment build number", ONLY increment the number after the + sign (e.g., 1.4.4+17 → 1.4.4+18). Do NOT change the version number itself (1.4.4 stays 1.4.4).
+- When asked to "increment version number", increment the appropriate version segment AND RESET the build number to 1 (e.g., 1.4.4+16 → 1.4.5+1 for patch, 1.4.4+16 → 1.5.4+1 for minor, 1.4.4+16 → 2.4.4+1 for major).
+
+**Version Planning for Database Migration:**
+- **v1.3.4**: Current production (App Store) - uses old structure `/{userId}/{medicationId}`
+- **v1.4.4**: Smart bridge version - **auto-detects migration and cleans up old data**
+  - Includes `_checkMigrationStatus()` in home_page.dart initState
+  - If both old and new structures exist → Deletes old, uses new
+  - If only old exists → Uses old (migration not run yet)
+  - If only new exists → Uses new (already migrated)
+  - **Result**: Each user auto-cleans their old data on first app open after migration
+- **v1.5.4**: Post-migration version - uses new subcollection structure `/ Users/{userId}/medications/{medicationId}`
+  - By this point, most old data already cleaned up by v1.4.4 users
+- Migration timeline: Run migration → Deploy v1.4.4 → Wait for adoption → Most cleanup happens automatically
 
 ### Localization Workflow
 
@@ -946,6 +1113,20 @@ If notifications fire at wrong times:
      child: AppBar(backgroundColor: Colors.transparent, elevation: 0, ...),
    )
    ```
+
+4. **SnackBars with Actions**: Always set `persist: false` to prevent persistent close icon
+   ```dart
+   SnackBar(
+     backgroundColor: const Color(0xFF8AC249),
+     content: Text('Message'),
+     persist: false,  // Required for SnackBars with actions
+     action: SnackBarAction(
+       label: 'Action',
+       onPressed: () { /* ... */ },
+     ),
+   )
+   ```
+   **Why?** Recent Flutter updates changed SnackBars with actions to show persistent close icons by default, preventing auto-dismiss behavior.
 
 ### Medication Card Color Logic
 
@@ -1133,7 +1314,12 @@ localeNotifier.addListener(() {
 #### Firestore Data (Real-time Updates)
 ```dart
 StreamBuilder<QuerySnapshot>(
-  stream: FirebaseFirestore.instance.collection(userId).snapshots(),
+  stream: _getMedicationsCollection(userId).snapshots(),
+  // Or explicitly: FirebaseFirestore.instance
+  //   .collection('Users')
+  //   .doc(userId)
+  //   .collection('medications')
+  //   .snapshots(),
   builder: (context, snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return CircularProgressIndicator();
@@ -1421,21 +1607,29 @@ if (medication.lastTaken != null &&
 
 ## Critical Integration Points
 
-### Permission Flow (Android)
+### Permission Flow (Android & iOS)
 
-#### Notification Permission (Android 13+)
+#### Notification Permission
+**Handled by Firebase Cloud Messaging** - single request for both platforms:
+
 ```dart
-// Request in main.dart initialization
-if (await Permission.notification.isDenied) {
-  await Permission.notification.request().timeout(Duration(seconds: 5));
-}
+// In main.dart initialization (line ~296)
+final messaging = FirebaseMessaging.instance;
+await messaging.requestPermission(alert: true, badge: true, sound: true);
 
-// Check permission status
-final status = await Permission.notification.status;
-if (status.isGranted) {
-  // Can show notifications
-}
+// This single call handles:
+// - iOS notification permission
+// - Android 13+ notification permission
+// - Local notifications
+// - Remote push notifications
 ```
+
+**Important**: Do NOT request permissions separately via:
+- ~~`permission_handler` package~~ (causes duplicate dialogs)
+- ~~iOS `UNUserNotificationCenter.requestAuthorization()`~~ (causes duplicate dialogs)
+- ~~Local notification plugin's `requestPermissions()`~~ (redundant)
+
+Only `FirebaseMessaging.instance.requestPermission()` should be used.
 
 #### Exact Alarm Permission (Android 13+)
 **Critical difference**: Cannot be requested programmatically - must open system settings.
@@ -1453,6 +1647,7 @@ ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
     backgroundColor: const Color(0xFF8AC249),
     content: Text(AppLocalizations.of(context)!.allowSettings),
+    persist: false,  // Prevent persistent close icon
     action: SnackBarAction(
       label: AppLocalizations.of(context)!.openSettings,
       onPressed: openExactAlarmSettings,
@@ -1482,8 +1677,8 @@ Future<void> openExactAlarmSettings() async {
 1. Developer updates version in Firestore `/AppConfig/Version` document
 2. Cloud Function `notifyOnVersionUpdate` triggers and sends FCM to all users
 3. User's device receives FCM message while app is in background
-4. `_firebaseMessagingBackgroundHandler` in main.dart shows local notification
-5. User taps notification → `onDidReceiveNotificationResponse` called with payload `'update_available'`
+4. System automatically displays notification from Cloud Function's `notification` payload
+5. User taps notification → `onMessageOpenedApp` or `getInitialMessage` handlers trigger
 6. App shows non-dismissible dialog with store links
 
 #### Implementation Details
@@ -1508,10 +1703,9 @@ exports.notifyOnVersionUpdate = functions
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  if (message.data['type'] == 'update_available') {
-    // Show local notification with payload 'update_available'
-    await flutterLocalNotificationsPlugin.show(999999, title, body, details, payload: 'update_available');
-  }
+  // No need to create a local notification here - the Cloud Function sends a
+  // complete 'notification' payload that is automatically displayed by the system.
+  // The onMessageOpenedApp and getInitialMessage handlers will handle user taps.
 }
 ```
 

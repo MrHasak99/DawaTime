@@ -313,6 +313,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     fontFamily: 'Inter',
                                   ),
                                 ),
+                                persist: false,
                               ),
                             );
                             return;
@@ -334,18 +335,28 @@ class _SignUpPageState extends State<SignUpPage> {
                                     fontFamily: 'Inter',
                                   ),
                                 ),
+                                persist: false,
                               ),
                             );
                             return;
                           }
                           setState(() => isLoading = true);
                           try {
-                            final legalDocSnap = await FirebaseFirestore.instance
-                                .collection('AppConfig')
-                                .doc('LegalDocuments')
-                                .get();
-                            final termsVersion = legalDocSnap.data()?['termsVersion']?.toString() ?? '1.0';
-                            final privacyVersion = legalDocSnap.data()?['privacyVersion']?.toString() ?? '1.0';
+                            final legalDocSnap =
+                                await FirebaseFirestore.instance
+                                    .collection('AppConfig')
+                                    .doc('LegalDocuments')
+                                    .get();
+                            final termsVersion =
+                                legalDocSnap
+                                    .data()?['termsVersion']
+                                    ?.toString() ??
+                                '1.0';
+                            final privacyVersion =
+                                legalDocSnap
+                                    .data()?['privacyVersion']
+                                    ?.toString() ??
+                                '1.0';
 
                             final userCredential = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
@@ -384,6 +395,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     fontFamily: 'Inter',
                                   ),
                                 ),
+                                persist: false,
                               ),
                             );
                             Navigator.pop(context);
@@ -400,6 +412,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     fontFamily: 'Inter',
                                   ),
                                 ),
+                                persist: false,
                               ),
                             );
                           } finally {

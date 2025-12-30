@@ -48,7 +48,12 @@ Future<void> rescheduleAllMedications(String uid) async {
   if (uid.isEmpty) return;
   try {
     final meds =
-        await FirebaseFirestore.instance.collection(uid).limit(12).get();
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(uid)
+            .collection('medications')
+            .limit(12)
+            .get();
     for (var doc in meds.docs) {
       final medication = medicationFromDoc(doc);
       await scheduleMedicationNotification(
