@@ -2,48 +2,58 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+24 (Production Ready)
+**Current Version**: v1.4.4+25 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, legal document check in AuthGate
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks
 
 ---
 
-### Legal Document Check in AuthGate (January 1, 2026)
-**Status**: ✅ **IMPLEMENTED** - Legal document version check added to AuthGate gatekeeper pattern
+### Legal Document Check - Dual Entry Point Architecture (January 1, 2026)
+**Status**: ✅ **IMPLEMENTED** - Legal checks at both login and app startup
 
-**Issue**: Users needed to close and reopen app after login to see legal document update dialog. Dialog was showing after HomePage had already loaded in background.
+**Architecture**: Two separate entry points require two separate legal checks:
 
-**Implementation** (main.dart AuthGate):
-- Added `_showingLegalDialog` flag to block HomePage rendering while dialog is active
-- Legal check happens in FutureBuilder before HomePage navigation
-- Dialog shows on loading screen (CircularProgressIndicator), not on top of HomePage
-- `_lastCheckedUserId` tracks which user has been checked this session
-- FCM token and metadata only update after legal acceptance (or if no update needed)
+**Entry Point 1: Fresh Login (login_page.dart)**
+- User actively logs in via email/password
+- After successful authentication:
+  1. Check legal document versions via `_checkLegalDocumentVersions(uid)`
+  2. If update needed → Show dialog via `_showLegalUpdateDialog(uid)`
+  3. User accepts → Update Firestore legal acceptance fields
+  4. If user declines → Sign out and stay on login page
+  5. Update metadata (FCM token, lastAppVersion, lastAccessedAt) via `_updateLoginMetadata(uid)`
+  6. Navigate directly to HomePage
 
-**Logic Flow**:
-1. User logs in → AuthGate StreamBuilder detects authenticated user
-2. FutureBuilder calls `_checkLegalDocumentVersions(uid)` to compare versions
-3. If update needed: Set `_showingLegalDialog = true` and show dialog via addPostFrameCallback
-4. While `_showingLegalDialog = true`: Loading screen stays visible, HomePage blocked
-5. User accepts → Update Firestore, set `_lastCheckedUserId = uid`, set `_showingLegalDialog = false`
-6. FutureBuilder rebuilds → Condition false → Calls `_saveFCMToken(uid)` → Shows HomePage
-7. User declines → Sign out, reset flags
+**Entry Point 2: App Startup (AuthGate in main.dart)**
+- App opens, user already logged in from previous session
+- AuthGate StreamBuilder detects authenticated user
+- FutureBuilder checks legal document versions before HomePage navigation
+- If update needed → Show dialog with `_showingLegalDialog` flag blocking HomePage
+- User accepts → Update Firestore, set `_lastCheckedUserId = uid`, set `_showingLegalDialog = false`
+- Update metadata via `_saveFCMToken(uid)`
+- Show HomePage
+
+**Implementation Details**:
+- Both entry points have identical legal check logic (version comparison)
+- Both entry points have identical legal update dialog UI
+- Both entry points update metadata ONLY after legal acceptance (or if no update needed)
+- login_page.dart navigates directly to HomePage (existing architecture preserved)
+- AuthGate handles app startup with existing session
 
 **Files Updated**:
 - `/lib/main.dart` (AuthGate):
-  - Added `_showingLegalDialog` boolean flag
-  - Modified FutureBuilder condition: `(legalSnapshot.data == true && _lastCheckedUserId != user.uid) || _showingLegalDialog`
-  - Set `_lastCheckedUserId = uid` after acceptance (not before)
-  - Reset both flags on logout
+  - `_showingLegalDialog` flag prevents HomePage rendering during legal check
+  - `_lastCheckedUserId` tracks which user has been checked this session
+  - `_saveFCMToken(uid)` updates metadata after legal check passes
 - `/lib/login_page.dart`:
-  - Removed unused `_checkLegalDocumentVersions()` method
-  - Removed unused `_showLegalUpdateDialog()` method
-  - Removed `_updateLoginMetadata()` method and its call - metadata now only updates in AuthGate after legal check
-- `/pubspec.yaml` - Version: 1.4.4+23 → 1.4.4+24
-- `/android/app/build.gradle.kts` - versionCode: 23 → 24
+  - Restored `_checkLegalDocumentVersions()` method
+  - Restored `_showLegalUpdateDialog()` method
+  - Restored `_updateLoginMetadata()` method
+  - Updated login flow: Auth → Legal check → Metadata update → HomePage navigation
+- `/pubspec.yaml` - Version: 1.4.4+24 → 1.4.4+25
+- `/android/app/build.gradle.kts` - versionCode: 24 → 25
 
-**Result**: Legal dialog appears immediately after login on loading screen, blocking HomePage access until user accepts or declines. No more background HomePage rendering during legal check.
+**Result**: Legal compliance enforced at both entry points. Fresh logins and app restarts both check for updated legal documents before allowing app access. Metadata only updates after legal acceptance.
 
 ### 12th Medication Save Navigation Bug Fix (December 30, 2025)
 **Status**: ✅ **FIXED** - Replaced FutureBuilder with initState check for medication limit
@@ -288,7 +298,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Terms & Conditions and Privacy Policy acceptance required (checkbox validation)
   - Creates Firestore `/Users/{uid}` document on successful signup
   - **Legal document version fetch on signup**: On signup, the app fetches the current `termsVersion` and `privacyVersion` from Firestore `/AppConfig/LegalDocuments` and sets them for the new user. No hardcoded version numbers in code.
-  - **Login page does NOT handle legal check or metadata updates**: Legal document version checking and FCM token/metadata updates are handled by AuthGate (main.dart), not login_page.dart. Login page only handles authentication.
+  - **Login page handles fresh login legal checks**: After successful authentication, checks legal document versions, shows dialog if update needed, updates metadata after acceptance, then navigates directly to HomePage (see Dual Entry Point Architecture above).
 
 ### Shared Utilities (lib/utils/)
 

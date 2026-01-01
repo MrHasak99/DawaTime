@@ -6,6 +6,11 @@ import 'package:dawatime/signup_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -83,6 +88,293 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ],
+          ),
+    );
+  }
+
+  Future<void> _updateLoginMetadata(String uid) async {
+    if (kIsWeb) return;
+
+    try {
+      final messaging = FirebaseMessaging.instance;
+
+      if (Platform.isIOS) {
+        try {
+          final apnsToken = await messaging.getAPNSToken();
+          if (apnsToken == null) {
+            await Future.delayed(const Duration(seconds: 2));
+            await messaging.getAPNSToken();
+          }
+        } catch (_) {}
+      }
+
+      final token = await messaging.getToken();
+
+      if (token != null) {
+        final prefs = await SharedPreferences.getInstance();
+        final preferredLang = prefs.getString('preferredLanguage') ?? 'en';
+        final packageInfo = await PackageInfo.fromPlatform();
+        final appVersion = packageInfo.version;
+
+        await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+          'fcmToken': token,
+          'preferredLanguage': preferredLang,
+          'lastAppVersion': appVersion,
+          'lastAccessedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      }
+    } catch (_) {}
+  }
+
+  Future<bool> _checkLegalDocumentVersions(String uid) async {
+    try {
+      final configDoc =
+          await FirebaseFirestore.instance
+              .collection('AppConfig')
+              .doc('LegalDocuments')
+              .get();
+
+      if (!configDoc.exists) {
+        return false;
+      }
+
+      final currentTermsVersion = configDoc.data()?['termsVersion'] ?? '1.0';
+      final currentPrivacyVersion =
+          configDoc.data()?['privacyVersion'] ?? '1.0';
+
+      final userDoc =
+          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+
+      if (!userDoc.exists) {
+        return false;
+      }
+
+      final acceptedTermsVersion =
+          userDoc.data()?['acceptedTermsVersion'] ?? '0.0';
+      final acceptedPrivacyVersion =
+          userDoc.data()?['acceptedPrivacyVersion'] ?? '0.0';
+
+      return acceptedTermsVersion != currentTermsVersion ||
+          acceptedPrivacyVersion != currentPrivacyVersion;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _showLegalUpdateDialog(String uid) async {
+    bool accepted = false;
+    final loc = AppLocalizations.of(context)!;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => StatefulBuilder(
+            builder: (context, setDialogState) {
+              return PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) {},
+                child: AlertDialog(
+                  backgroundColor: const Color(0xFF8AC249),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          loc.legalUpdateRequired,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontFamily: 'Nunito',
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          loc.legalUpdateMessage,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await launchUrl(
+                                    Uri.parse(
+                                      'https://dawatime.com/Terms&Conditions.pdf',
+                                    ),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: const Color(0xFF8AC249),
+                                  minimumSize: const Size(220, 45),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  loc.viewTerms,
+                                  style: const TextStyle(fontFamily: 'Inter'),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await launchUrl(
+                                    Uri.parse(
+                                      'https://dawatime.com/PrivacyPolicy.pdf',
+                                    ),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: const Color(0xFF8AC249),
+                                  minimumSize: const Size(220, 45),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  loc.viewPrivacy,
+                                  style: const TextStyle(fontFamily: 'Inter'),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: CheckboxListTile(
+                            value: accepted,
+                            onChanged: (value) {
+                              setDialogState(() {
+                                accepted = value ?? false;
+                              });
+                            },
+                            title: Text(
+                              loc.acceptUpdatedLegal,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                            activeColor: Colors.white,
+                            checkColor: const Color(0xFF8AC249),
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        if (!context.mounted) return;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        loc.declineAndLogout,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed:
+                          accepted
+                              ? () async {
+                                try {
+                                  final configDoc =
+                                      await FirebaseFirestore.instance
+                                          .collection('AppConfig')
+                                          .doc('LegalDocuments')
+                                          .get();
+
+                                  final currentTermsVersion =
+                                      configDoc.data()?['termsVersion'] ??
+                                      '1.0';
+                                  final currentPrivacyVersion =
+                                      configDoc.data()?['privacyVersion'] ??
+                                      '1.0';
+
+                                  await FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(uid)
+                                      .update({
+                                        'acceptedTermsVersion':
+                                            currentTermsVersion,
+                                        'acceptedPrivacyVersion':
+                                            currentPrivacyVersion,
+                                        'legalAcceptanceDate':
+                                            DateTime.now().toIso8601String(),
+                                      });
+
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pop();
+                                } catch (e) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Error updating acceptance. Please try again.',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      persist: false,
+                                    ),
+                                  );
+                                }
+                              }
+                              : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF8AC249),
+                        disabledBackgroundColor: Colors.white.withValues(
+                          alpha: 0.5,
+                        ),
+                        disabledForegroundColor: const Color(
+                          0xFF8AC249,
+                        ).withValues(alpha: 0.5),
+                      ),
+                      child: Text(
+                        loc.acceptButton,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
     );
   }
@@ -283,6 +575,18 @@ class _LoginPageState extends State<LoginPage> {
                                   .collection('Users')
                                   .doc(user.uid)
                                   .update({'isVerified': true});
+                              final legalUpdateNeeded =
+                                  await _checkLegalDocumentVersions(user.uid);
+                              if (legalUpdateNeeded) {
+                                await _showLegalUpdateDialog(user.uid);
+                                final currentUser =
+                                    FirebaseAuth.instance.currentUser;
+                                if (currentUser == null) {
+                                  setState(() => isLoading = false);
+                                  return;
+                                }
+                              }
+                              await _updateLoginMetadata(user.uid);
                             }
                             if (!context.mounted) return;
                             Navigator.pushReplacement(
