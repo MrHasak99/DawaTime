@@ -62,9 +62,10 @@ service cloud.firestore {
         && request.resource.data.typeOfMedication is string;
     }
     
-    // AppConfig - read-only for all authenticated users
+    // AppConfig - publicly readable (needed for signup legal document versions)
+    // Users must know current Terms/Privacy versions before creating account
     match /AppConfig/{document} {
-      allow read: if request.auth != null;
+      allow read: if true;
     }
     
     // Messages - public read/write (support)

@@ -27,7 +27,7 @@ android {
         minSdkVersion(24)
         targetSdkVersion(34)
         
-        versionCode = 26
+        versionCode = 27
         versionName = "1.4.4"
     }
 

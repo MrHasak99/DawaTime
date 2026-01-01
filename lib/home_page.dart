@@ -879,6 +879,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkIntroGuide() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || !user.emailVerified) {
+      return;
+    }
+    
     final prefs = await SharedPreferences.getInstance();
     final seenGuide = prefs.getBool('seenIntroGuide') ?? false;
     if (!seenGuide && mounted) {
