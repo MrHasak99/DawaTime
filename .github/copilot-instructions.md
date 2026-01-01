@@ -1,13 +1,49 @@
 # DawaTime - AI Coding Agent Instructions
 
-## Recent Changes (December 2025)
+## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+21 (Production Ready)
+**Current Version**: v1.4.4+24 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, legal document check in AuthGate
 
 ---
+
+### Legal Document Check in AuthGate (January 1, 2026)
+**Status**: ✅ **IMPLEMENTED** - Legal document version check added to AuthGate gatekeeper pattern
+
+**Issue**: Users needed to close and reopen app after login to see legal document update dialog. Dialog was showing after HomePage had already loaded in background.
+
+**Implementation** (main.dart AuthGate):
+- Added `_showingLegalDialog` flag to block HomePage rendering while dialog is active
+- Legal check happens in FutureBuilder before HomePage navigation
+- Dialog shows on loading screen (CircularProgressIndicator), not on top of HomePage
+- `_lastCheckedUserId` tracks which user has been checked this session
+- FCM token and metadata only update after legal acceptance (or if no update needed)
+
+**Logic Flow**:
+1. User logs in → AuthGate StreamBuilder detects authenticated user
+2. FutureBuilder calls `_checkLegalDocumentVersions(uid)` to compare versions
+3. If update needed: Set `_showingLegalDialog = true` and show dialog via addPostFrameCallback
+4. While `_showingLegalDialog = true`: Loading screen stays visible, HomePage blocked
+5. User accepts → Update Firestore, set `_lastCheckedUserId = uid`, set `_showingLegalDialog = false`
+6. FutureBuilder rebuilds → Condition false → Calls `_saveFCMToken(uid)` → Shows HomePage
+7. User declines → Sign out, reset flags
+
+**Files Updated**:
+- `/lib/main.dart` (AuthGate):
+  - Added `_showingLegalDialog` boolean flag
+  - Modified FutureBuilder condition: `(legalSnapshot.data == true && _lastCheckedUserId != user.uid) || _showingLegalDialog`
+  - Set `_lastCheckedUserId = uid` after acceptance (not before)
+  - Reset both flags on logout
+- `/lib/login_page.dart`:
+  - Removed unused `_checkLegalDocumentVersions()` method
+  - Removed unused `_showLegalUpdateDialog()` method
+  - Removed `_updateLoginMetadata()` method and its call - metadata now only updates in AuthGate after legal check
+- `/pubspec.yaml` - Version: 1.4.4+23 → 1.4.4+24
+- `/android/app/build.gradle.kts` - versionCode: 23 → 24
+
+**Result**: Legal dialog appears immediately after login on loading screen, blocking HomePage access until user accepts or declines. No more background HomePage rendering during legal check.
 
 ### 12th Medication Save Navigation Bug Fix (December 30, 2025)
 **Status**: ✅ **FIXED** - Replaced FutureBuilder with initState check for medication limit
@@ -252,6 +288,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, supporting 
   - Terms & Conditions and Privacy Policy acceptance required (checkbox validation)
   - Creates Firestore `/Users/{uid}` document on successful signup
   - **Legal document version fetch on signup**: On signup, the app fetches the current `termsVersion` and `privacyVersion` from Firestore `/AppConfig/LegalDocuments` and sets them for the new user. No hardcoded version numbers in code.
+  - **Login page does NOT handle legal check or metadata updates**: Legal document version checking and FCM token/metadata updates are handled by AuthGate (main.dart), not login_page.dart. Login page only handles authentication.
 
 ### Shared Utilities (lib/utils/)
 
