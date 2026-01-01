@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   bool isLoading = false;
   bool _obscurePassword = true;
+  bool _emailError = false;
+  bool _passwordError = false;
 
   void _showIntroGuide() {
     showDialog(
@@ -60,8 +62,9 @@ class _LoginPageState extends State<LoginPage> {
                     '${AppLocalizations.of(context)!.setReminders}\n'
                     '${AppLocalizations.of(context)!.viewDetails}\n'
                     '${AppLocalizations.of(context)!.swipe}\n'
+                    '${AppLocalizations.of(context)!.stockRefillGuide}\n'
                     '${AppLocalizations.of(context)!.checkReminders}\n'
-                    '${AppLocalizations.of(context)!.manageProfile}.\n',
+                    '${AppLocalizations.of(context)!.manageProfile}\n',
                     style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   SizedBox(height: 16),
@@ -479,18 +482,30 @@ class _LoginPageState extends State<LoginPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_emailError && value.isNotEmpty) {
+                        setState(() => _emailError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.email,
                       labelStyle: TextStyle(
-                        color: Color(0xFF8AC249),
+                        color: _emailError ? Colors.red : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color: _emailError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color: _emailError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
+                      errorText: _emailError
+                          ? AppLocalizations.of(context)!.pleaseFillAllFields
+                          : null,
                     ),
                   ),
                   TextField(
@@ -501,16 +516,27 @@ class _LoginPageState extends State<LoginPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_passwordError && value.isNotEmpty) {
+                        setState(() => _passwordError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.password,
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color:
+                              _passwordError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color:
+                              _passwordError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF8AC249),
+                      labelStyle: TextStyle(
+                        color: _passwordError ? Colors.red : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       suffixIcon: IconButton(
@@ -526,6 +552,9 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
+                      errorText: _passwordError
+                          ? AppLocalizations.of(context)!.pleaseFillAllFields
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -538,6 +567,24 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: Color(0xFF8AC249),
                         ),
                         onPressed: () async {
+                          setState(() {
+                            _emailError = false;
+                            _passwordError = false;
+                          });
+
+                          if (emailController.text.trim().isEmpty ||
+                              passwordController.text.trim().isEmpty) {
+                            setState(() {
+                              if (emailController.text.trim().isEmpty) {
+                                _emailError = true;
+                              }
+                              if (passwordController.text.trim().isEmpty) {
+                                _passwordError = true;
+                              }
+                            });
+                            return;
+                          }
+
                           setState(() => isLoading = true);
                           try {
                             final userCredential = await FirebaseAuth.instance

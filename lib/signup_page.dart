@@ -24,6 +24,11 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _acceptedTerms = false;
   bool _acceptedPrivacy = false;
 
+  bool _nameError = false;
+  bool _emailError = false;
+  bool _passwordError = false;
+  bool _confirmPasswordError = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,20 +76,35 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_nameError && value.isNotEmpty) {
+                        setState(() => _nameError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.name,
                       labelStyle: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(
-                        color: Color(0xFF8AC249),
+                        color: _nameError ? Colors.red : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: _nameError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: _nameError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
+                      errorText:
+                          _nameError
+                              ? AppLocalizations.of(
+                                context,
+                              )!.pleaseFillAllFields
+                              : null,
                     ),
                   ),
                   TextField(
@@ -94,20 +114,33 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_emailError && value.isNotEmpty) {
+                        setState(() => _emailError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.email,
                       labelStyle: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(
-                        color: Color(0xFF8AC249),
+                        color: _emailError ? Colors.red : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: _emailError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: _emailError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
+                      errorText:
+                          _emailError
+                              ? AppLocalizations.of(context)!.invalidEmail
+                              : null,
                     ),
                   ),
                   TextField(
@@ -118,17 +151,28 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_passwordError && value.isNotEmpty) {
+                        setState(() => _passwordError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.password,
                       labelStyle: TextStyle(
-                        color: Color(0xFF8AC249),
+                        color: _passwordError ? Colors.red : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color:
+                              _passwordError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color:
+                              _passwordError ? Colors.red : Color(0xFF8AC249),
+                        ),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -143,6 +187,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         },
                       ),
+                      errorText:
+                          _passwordError
+                              ? 'Password must be at least 6 characters'
+                              : null,
                     ),
                   ),
                   TextField(
@@ -153,17 +201,35 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (_confirmPasswordError && value.isNotEmpty) {
+                        setState(() => _confirmPasswordError = false);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.confirmPassword,
                       labelStyle: TextStyle(
-                        color: Color(0xFF8AC249),
+                        color:
+                            _confirmPasswordError
+                                ? Colors.red
+                                : Color(0xFF8AC249),
                         fontWeight: FontWeight.bold,
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color:
+                              _confirmPasswordError
+                                  ? Colors.red
+                                  : Color(0xFF8AC249),
+                        ),
                       ),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF8AC249)),
+                        borderSide: BorderSide(
+                          color:
+                              _confirmPasswordError
+                                  ? Colors.red
+                                  : Color(0xFF8AC249),
+                        ),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -178,6 +244,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           });
                         },
                       ),
+                      errorText:
+                          _confirmPasswordError
+                              ? AppLocalizations.of(context)!.passwordsDontMatch
+                              : null,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -301,6 +371,90 @@ class _SignUpPageState extends State<SignUpPage> {
                           backgroundColor: Color(0xFF8AC249),
                         ),
                         onPressed: () async {
+                          setState(() {
+                            _nameError = false;
+                            _emailError = false;
+                            _passwordError = false;
+                            _confirmPasswordError = false;
+                          });
+
+                          if (nameController.text.trim().isEmpty ||
+                              emailController.text.trim().isEmpty ||
+                              passwordController.text.trim().isEmpty ||
+                              confirmPasswordController.text.trim().isEmpty) {
+                            setState(() {
+                              if (nameController.text.trim().isEmpty) {
+                                _nameError = true;
+                              }
+                              if (emailController.text.trim().isEmpty) {
+                                _emailError = true;
+                              }
+                              if (passwordController.text.trim().isEmpty) {
+                                _passwordError = true;
+                              }
+                              if (confirmPasswordController.text
+                                  .trim()
+                                  .isEmpty) {
+                                _confirmPasswordError = true;
+                              }
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.pleaseFillAllFields,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                persist: false,
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (!emailController.text.trim().contains('@')) {
+                            setState(() => _emailError = true);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  AppLocalizations.of(context)!.invalidEmail,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                persist: false,
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (passwordController.text.trim().length < 6) {
+                            setState(() => _passwordError = true);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: const Text(
+                                  'Password must be at least 6 characters',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                persist: false,
+                              ),
+                            );
+                            return;
+                          }
+
                           if (!_acceptedTerms || !_acceptedPrivacy) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -320,6 +474,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           }
                           if (passwordController.text !=
                               confirmPasswordController.text) {
+                            setState(() => _confirmPasswordError = true);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 backgroundColor: Colors.red,
