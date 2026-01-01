@@ -2,10 +2,53 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+25 (Production Ready)
+**Current Version**: v1.4.4+28 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks
+
+---
+
+### Form Validation & Security Updates (January 1, 2026)
+**Status**: ✅ **IMPLEMENTED** - Enhanced UX and security patches
+
+**Visual Form Validation**:
+- Added red TextField error effects to login and signup forms (matching medication form patterns)
+- Implemented boolean error flags: `_emailError`, `_passwordError`, `_nameError`, `_confirmPasswordError`
+- Conditional styling on InputDecoration: borders, labels, and errorText turn red on validation failure
+- Auto-clearing errors via `onChanged` callbacks when user starts typing
+- Pattern: `if (_emailError && value.isNotEmpty) { setState(() => _emailError = false); }`
+
+**Enhanced Signup Debugging**:
+- Integrated `dart:developer` with named logger pattern: `developer.log('message', name: 'SignUp')`
+- Added visible SnackBar feedback at three stages:
+  - Blue SnackBar: "Validating legal documents..."
+  - Orange SnackBar: "Creating your account..."
+  - Green SnackBar: "Account created successfully!"
+- Added 10-second timeout handling for Firestore operations
+- Comprehensive error catching with stack traces for debugging
+- Console logs track: Button press → Legal doc fetch → Auth creation → Completion
+
+**Security & Architecture Fixes**:
+- **Firestore Rules**: Updated `AppConfig` to allow public read access (required for unauthenticated users during signup to fetch legal document versions)
+- **Intro Guide Race Condition**: Added email verification check in `_checkIntroGuide()` to prevent guide from flashing during signup flow
+- **npm Security Vulnerability**: Fixed qs package DoS vulnerability (GHSA-6rw7-vpxm-498p)
+  - Upgraded qs from <6.14.1 to ≥6.14.1 via `npm audit fix`
+  - Fixed in both root `package.json` and `functions/package.json`
+  - Vulnerability: arrayLimit bypass causing memory exhaustion via transitive dependencies (express, body-parser)
+  - Status: 0 vulnerabilities in both directories
+
+**Files Updated**:
+- `/lib/login_page.dart` (added error flags, conditional styling, onChanged handlers)
+- `/lib/signup_page.dart` (added developer.log, SnackBar feedback, timeout handling, comprehensive error catching)
+- `/lib/home_page.dart` (added email verification check to `_checkIntroGuide()`)
+- `/firestore.rules` (changed AppConfig from `if request.auth != null` to `if true` for public read)
+- `/functions/package.json` - npm audit fix applied
+- `/package.json` - npm audit fix applied
+- `/pubspec.yaml` - Version: 1.4.4+25 → 1.4.4+28
+- `/android/app/build.gradle.kts` - versionCode: 25 → 28
+
+**Result**: Login and signup forms now match medication forms' validation UX. Signup flow is fully instrumented with visible feedback and comprehensive logging. Security vulnerabilities resolved with zero npm audit findings.
 
 ---
 
