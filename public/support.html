@@ -24,6 +24,8 @@
       :root {
         --bg-color: #ffffff;
         --container-bg: #f5f5f5;
+        --card-bg: #f5f5f5;
+        --card-border: rgba(138, 194, 73, 0.2);
         --text-color: #000000;
         --secondary-text-color: #333333;
         --muted-text-color: #666666;
@@ -35,6 +37,8 @@
       [data-theme="dark"] {
         --bg-color: #000000;
         --container-bg: #1a1a1a;
+        --card-bg: #1a1a1a;
+        --card-border: rgba(138, 194, 73, 0.3);
         --text-color: #ffffff;
         --secondary-text-color: #e0e0e0;
         --muted-text-color: #b0b0b0;
@@ -105,110 +109,6 @@
       a:hover {
         text-decoration: underline;
       }
-      .dark-mode-toggle {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 56px;
-        height: 56px;
-        font-size: 1.3rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(138, 194, 73, 0.3);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .dark-mode-toggle #theme-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-      }
-      .dark-mode-toggle:hover {
-        transform: scale(1.1) translateY(-2px);
-        box-shadow: 0 8px 24px rgba(138, 194, 73, 0.4);
-      }
-      .dark-mode-toggle:active {
-        transform: scale(0.95);
-      }
-      .dark-mode-toggle::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 70px;
-        right: 50%;
-        transform: translateX(50%);
-        background: var(--container-bg);
-        color: var(--text-color);
-        padding: 0.5rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border-color);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        font-family: "Inter", Arial, sans-serif;
-        font-weight: 500;
-      }
-      .dark-mode-toggle:hover::after {
-        opacity: 1;
-        transform: translateX(50%) translateY(-5px);
-      }
-      .language-toggle {
-        position: fixed;
-        bottom: 2rem;
-        left: 2rem;
-        background: var(--text-color);
-        color: var(--bg-color);
-        border: none;
-        border-radius: 8px;
-        width: 48px;
-        height: 32px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "Inter", Arial, sans-serif;
-      }
-      .language-toggle:hover {
-        transform: scale(1.05) translateY(-1px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      }
-      .icon-light,
-      .icon-dark,
-      .icon-auto {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        position: relative;
-        display: block;
-        margin: 0;
-      }
-      .icon-light {
-        border: 2px solid white;
-        background: transparent;
-      }
-      .icon-dark {
-        background: white;
-        border: 2px solid white;
-      }
-      .icon-auto {
-        background: linear-gradient(90deg, transparent 50%, white 50%);
-        border: 2px solid white;
-      }
       @media (max-width: 500px) {
         .container {
           padding: 18px 6px;
@@ -219,6 +119,8 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="shared-toggles.css?v=2">
+    <script src="shared-toggles.js?v=2"></script>
   </head>
   <body>
     <div class="container">
@@ -238,7 +140,7 @@
         <li>
           <b data-en="Delete account:" data-ar="حذف الحساب:">Delete account:</b>
           <a
-            href="account-deletion.html"
+            href="account-deletion"
             data-en="Request account deletion"
             data-ar="طلب حذف الحساب"
             >Request account deletion</a
@@ -249,11 +151,19 @@
             >Privacy Policy:</b
           >
           <a
+            href="privacy-policy"
+            target="_blank"
+            data-en="View Online"
+            data-ar="عرض على الإنترنت"
+            >View Online</a
+          >
+          |
+          <a
             href="PrivacyPolicy.pdf"
             target="_blank"
-            data-en="View PDF"
-            data-ar="عرض PDF"
-            >View PDF</a
+            data-en="PDF"
+            data-ar="PDF"
+            >PDF</a
           >
         </li>
         <li>
@@ -261,11 +171,19 @@
             >Terms &amp; Conditions:</b
           >
           <a
+            href="terms-and-conditions"
+            target="_blank"
+            data-en="View Online"
+            data-ar="عرض على الإنترنت"
+            >View Online</a
+          >
+          |
+          <a
             href="Terms&Conditions.pdf"
             target="_blank"
-            data-en="View PDF"
-            data-ar="عرض PDF"
-            >View PDF</a
+            data-en="PDF"
+            data-ar="PDF"
+            >PDF</a
           >
         </li>
       </ul>
@@ -281,115 +199,8 @@
         We aim to respond to all support requests within 1-2 business days.
       </p>
     </div>
-    <button
-      class="dark-mode-toggle"
-      onclick="toggleDarkMode()"
-      id="theme-toggle"
-      title="System Theme (Auto)"
-      data-tooltip="System Theme"
-    >
-      <span id="theme-icon"><div class="icon-auto"></div></span>
-    </button>
-    <button
-      class="language-toggle"
-      onclick="toggleLanguage()"
-      id="language-toggle"
-      title="Switch Language"
-    >
-      <span id="language-icon">EN</span>
-    </button>
 
     <script>
-      let currentLanguage = localStorage.getItem("language") || "en";
-      let currentThemeMode = "system";
-      function initTheme() {
-        const savedTheme = localStorage.getItem("theme") || "system";
-        currentThemeMode = savedTheme;
-        if (savedTheme === "system") {
-          applySystemTheme();
-        } else if (savedTheme === "dark") {
-          document.body.setAttribute("data-theme", "dark");
-        } else {
-          document.body.removeAttribute("data-theme");
-        }
-        updateThemeButton();
-        setupSystemThemeListener();
-      }
-      function updateThemeButton() {
-        const button = document.getElementById("theme-toggle");
-        const themeIcon = document.getElementById("theme-icon");
-
-        if (currentThemeMode === "system") {
-          button.title = "System Theme (Auto)";
-          button.setAttribute("data-tooltip", "System Theme");
-          themeIcon.innerHTML = '<div class="icon-auto"></div>';
-        } else if (currentThemeMode === "light") {
-          button.title = "Light Theme";
-          button.setAttribute("data-tooltip", "Light Theme");
-          themeIcon.innerHTML = '<div class="icon-light"></div>';
-        } else {
-          button.title = "Dark Theme";
-          button.setAttribute("data-tooltip", "Dark Theme");
-          themeIcon.innerHTML = '<div class="icon-dark"></div>';
-        }
-      }
-      function toggleDarkMode() {
-        const body = document.body;
-        if (currentThemeMode === "system") {
-          currentThemeMode = "light";
-          body.removeAttribute("data-theme");
-          localStorage.setItem("theme", "light");
-        } else if (currentThemeMode === "light") {
-          currentThemeMode = "dark";
-          body.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "dark");
-        } else {
-          currentThemeMode = "system";
-          applySystemTheme();
-          localStorage.setItem("theme", "system");
-        }
-        updateThemeButton();
-      }
-      function applySystemTheme() {
-        const body = document.body;
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-
-        if (prefersDark) {
-          body.setAttribute("data-theme", "dark");
-        } else {
-          body.removeAttribute("data-theme");
-        }
-      }
-      function setupSystemThemeListener() {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        mediaQuery.addListener((e) => {
-          if (currentThemeMode === "system") {
-            applySystemTheme();
-          }
-        });
-      }
-      function updateLanguage() {
-        const isArabic = currentLanguage === "ar";
-        document.documentElement.setAttribute("lang", currentLanguage);
-        document.documentElement.setAttribute("dir", isArabic ? "rtl" : "ltr");
-        const elements = document.querySelectorAll("[data-en][data-ar]");
-        elements.forEach((element) => {
-          element.textContent = element.getAttribute(`data-${currentLanguage}`);
-        });
-        document.getElementById("language-icon").textContent = isArabic
-          ? "EN"
-          : "ع";
-        document.title = isArabic ? "دعم دواء تايم" : "DawaTime Support";
-      }
-      function toggleLanguage() {
-        currentLanguage = currentLanguage === "en" ? "ar" : "en";
-        localStorage.setItem("language", currentLanguage);
-        updateLanguage();
-      }
-      initTheme();
-      updateLanguage();
     </script>
   </body>
 </html>

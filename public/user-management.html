@@ -291,6 +291,8 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="shared-toggles.css">
+    <script src="shared-toggles.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script>
@@ -316,92 +318,7 @@
         ><span data-en="." data-ar=".">.</span>
       </p>
     </div>
-    <button
-      class="dark-mode-toggle"
-      onclick="toggleDarkMode()"
-      id="theme-toggle"
-      title="System Theme (Auto)"
-      data-tooltip="System Theme"
-    >
-      <span id="theme-icon"><div class="icon-auto"></div></span>
-    </button>
-    <button
-      class="language-toggle"
-      onclick="toggleLanguage()"
-      id="language-toggle"
-      title="Switch Language"
-    >
-      <span id="language-icon">EN</span>
-    </button>
     <script>
-      let currentLanguage = localStorage.getItem("language") || "en";
-      let currentThemeMode = "system";
-      function initTheme() {
-        const savedTheme = localStorage.getItem("theme") || "system";
-        currentThemeMode = savedTheme;
-        if (savedTheme === "system") {
-          applySystemTheme();
-        } else if (savedTheme === "dark") {
-          document.body.setAttribute("data-theme", "dark");
-        } else {
-          document.body.removeAttribute("data-theme");
-        }
-        updateThemeButton();
-        setupSystemThemeListener();
-      }
-      function updateThemeButton() {
-        const button = document.getElementById("theme-toggle");
-        const themeIcon = document.getElementById("theme-icon");
-        if (currentThemeMode === "system") {
-          button.title = "System Theme (Auto)";
-          button.setAttribute("data-tooltip", "System Theme");
-          themeIcon.innerHTML = '<div class="icon-auto"></div>';
-        } else if (currentThemeMode === "light") {
-          button.title = "Light Theme";
-          button.setAttribute("data-tooltip", "Light Theme");
-          themeIcon.innerHTML = '<div class="icon-light"></div>';
-        } else {
-          button.title = "Dark Theme";
-          button.setAttribute("data-tooltip", "Dark Theme");
-          themeIcon.innerHTML = '<div class="icon-dark"></div>';
-        }
-      }
-      function toggleDarkMode() {
-        const body = document.body;
-        if (currentThemeMode === "system") {
-          currentThemeMode = "light";
-          body.removeAttribute("data-theme");
-          localStorage.setItem("theme", "light");
-        } else if (currentThemeMode === "light") {
-          currentThemeMode = "dark";
-          body.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "dark");
-        } else {
-          currentThemeMode = "system";
-          applySystemTheme();
-          localStorage.setItem("theme", "system");
-        }
-        updateThemeButton();
-      }
-      function applySystemTheme() {
-        const body = document.body;
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        if (prefersDark) {
-          body.setAttribute("data-theme", "dark");
-        } else {
-          body.removeAttribute("data-theme");
-        }
-      }
-      function setupSystemThemeListener() {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        mediaQuery.addListener((e) => {
-          if (currentThemeMode === "system") {
-            applySystemTheme();
-          }
-        });
-      }
       const translations = {
         en: {
           accountManagement: "Account Management",
@@ -481,28 +398,8 @@
       const mainTitle = document.getElementById("mainTitle");
       const mainContent = document.getElementById("mainContent");
       function t(key) {
+        const currentLanguage = document.documentElement.getAttribute('lang') || 'en';
         return translations[currentLanguage][key] || key;
-      }
-      function updateLanguage() {
-        const isArabic = currentLanguage === "ar";
-        document.documentElement.setAttribute("lang", currentLanguage);
-        document.documentElement.setAttribute("dir", isArabic ? "rtl" : "ltr");
-        const elements = document.querySelectorAll("[data-en][data-ar]");
-        elements.forEach((element) => {
-          element.textContent = element.getAttribute(`data-${currentLanguage}`);
-        });
-        document.getElementById("language-icon").textContent = isArabic
-          ? "EN"
-          : "ع";
-        document.title = isArabic
-          ? "إدارة حساب دواء تايم"
-          : "DawaTime Account Management";
-        renderMainContent();
-      }
-      function toggleLanguage() {
-        currentLanguage = currentLanguage === "en" ? "ar" : "en";
-        localStorage.setItem("language", currentLanguage);
-        updateLanguage();
       }
       function showMessage(msg, type) {
         mainContent.innerHTML = `<div class="${type}">${msg}</div>`;
@@ -637,11 +534,7 @@
             }
           });
       }
-      initTheme();
-      updateLanguage();
-      document
-        .getElementById("theme-toggle")
-        .addEventListener("click", toggleDarkMode);
+      renderMainContent();
     </script>
   </body>
 </html>

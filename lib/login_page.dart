@@ -219,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/Terms&Conditions.pdf',
+                                      'https://dawatime.com/terms-and-conditions.html',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -243,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/PrivacyPolicy.pdf',
+                                      'https://dawatime.com/privacy-policy.html',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -858,7 +858,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () {
                           launchUrl(
-                            Uri.parse('https://dawatime.com/PrivacyPolicy.pdf'),
+                            Uri.parse('https://dawatime.com/privacy-policy.html'),
                             mode: LaunchMode.externalApplication,
                           );
                         },
@@ -875,7 +875,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           launchUrl(
                             Uri.parse(
-                              'https://dawatime.com/Terms&Conditions.pdf',
+                              'https://dawatime.com/terms-and-conditions.html',
                             ),
                             mode: LaunchMode.externalApplication,
                           );

@@ -352,14 +352,30 @@ exports.requestAccountDeletion = functions
         } catch (e) {
           console.warn("User doc not found or already deleted:", e);
         }
+
+        try {
+          const snapshot = await admin
+              .firestore()
+              .collection("Users")
+              .doc(uid)
+              .collection("medications")
+              .get();
+          const batch = admin.firestore().batch();
+          snapshot.forEach((doc) => batch.delete(doc.ref));
+          await batch.commit();
+          console.log(`Deleted medications subcollection for ${uid}`);
+        } catch (e) {
+          console.warn("Medications not found or already deleted:", e);
+        }
+
         try {
           const snapshot = await admin.firestore().collection(uid).get();
           const batch = admin.firestore().batch();
           snapshot.forEach((doc) => batch.delete(doc.ref));
           await batch.commit();
-          console.log(`Deleted user collection for ${uid}`);
+          console.log(`Deleted legacy collection for ${uid}`);
         } catch (e) {
-          console.warn("User collection not found or already deleted:", e);
+          console.warn("Legacy collection not found or already deleted:", e);
         }
 
         try {
@@ -373,14 +389,29 @@ exports.requestAccountDeletion = functions
           }
         }
 
-        await admin
-            .firestore()
-            .collection("deletion_requests")
-            .add({
-              email,
-              reason: reason || "",
-              requestedAt: admin.firestore.FieldValue.serverTimestamp(),
-            });
+        if (reason && reason.trim()) {
+          try {
+            const mailOptions = {
+              from: "admin@dawatime.com",
+              to: "help@dawatime.com",
+              subject: "Account Deletion - User Feedback",
+              text: `User ${email} deleted their account.\n\nReason for deletion:\n${reason}\n\nDeleted at: ${new Date().toISOString()}`,
+              html: `
+                <h2>Account Deletion - User Feedback</h2>
+                <p><strong>User:</strong> ${email}</p>
+                <p><strong>Deleted at:</strong> ${new Date().toLocaleString()}</p>
+                <p><strong>Reason for deletion:</strong></p>
+                <blockquote style="border-left: 4px solid #8ac249; padding-left: 16px; margin: 16px 0; color: #333;">
+                  ${reason.replace(/\n/g, "<br>")}
+                </blockquote>
+              `,
+            };
+            await transporter.sendMail(mailOptions);
+            console.log(`Sent deletion feedback email for ${email}`);
+          } catch (emailError) {
+            console.error("Error sending deletion feedback email:", emailError);
+          }
+        }
 
         console.log(`Account deletion completed for ${email}`);
         return res.status(200).send("Account and data deleted");

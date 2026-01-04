@@ -59,6 +59,31 @@
         "source": "https://www.dawatime.com{,/**}",
         "destination": "https://dawatime.com",
         "type": 301
+      },
+      {
+        "source": "/account-deletion.html",
+        "destination": "/account-deletion",
+        "type": 301
+      },
+      {
+        "source": "/user-management.html",
+        "destination": "/user-management",
+        "type": 301
+      },
+      {
+        "source": "/support.html",
+        "destination": "/support",
+        "type": 301
+      },
+      {
+        "source": "/privacy-policy.html",
+        "destination": "/privacy-policy",
+        "type": 301
+      },
+      {
+        "source": "/terms-and-conditions.html",
+        "destination": "/terms-and-conditions",
+        "type": 301
       }
     ],
     "rewrites": [
@@ -68,6 +93,8 @@
       },
       { "source": "/user-management", "destination": "/user-management.html" },
       { "source": "/support", "destination": "/support.html" },
+      { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+      { "source": "/terms-and-conditions", "destination": "/terms-and-conditions.html" },
       { "source": "/", "destination": "/index.html" }
     ]
   }

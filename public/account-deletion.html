@@ -228,110 +228,6 @@
       .footer-note a:hover {
         text-decoration: underline;
       }
-      .dark-mode-toggle {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 56px;
-        height: 56px;
-        font-size: 1.3rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(138, 194, 73, 0.3);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .dark-mode-toggle #theme-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-      }
-      .dark-mode-toggle:hover {
-        transform: scale(1.1) translateY(-2px);
-        box-shadow: 0 8px 24px rgba(138, 194, 73, 0.4);
-      }
-      .dark-mode-toggle:active {
-        transform: scale(0.95);
-      }
-      .dark-mode-toggle::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 70px;
-        right: 50%;
-        transform: translateX(50%);
-        background: var(--container-bg);
-        color: var(--text-color);
-        padding: 0.5rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border-color);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        font-family: "Inter", Arial, sans-serif;
-        font-weight: 500;
-      }
-      .dark-mode-toggle:hover::after {
-        opacity: 1;
-        transform: translateX(50%) translateY(-5px);
-      }
-      .language-toggle {
-        position: fixed;
-        bottom: 2rem;
-        left: 2rem;
-        background: var(--text-color);
-        color: var(--bg-color);
-        border: none;
-        border-radius: 8px;
-        width: 48px;
-        height: 32px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: "Inter", Arial, sans-serif;
-      }
-      .language-toggle:hover {
-        transform: scale(1.05) translateY(-1px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      }
-      .icon-light,
-      .icon-dark,
-      .icon-auto {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        position: relative;
-        display: block;
-        margin: 0;
-      }
-      .icon-light {
-        border: 2px solid white;
-        background: transparent;
-      }
-      .icon-dark {
-        background: white;
-        border: 2px solid white;
-      }
-      .icon-auto {
-        background: linear-gradient(90deg, transparent 50%, white 50%);
-        border: 2px solid white;
-      }
       @media (max-width: 500px) {
         .container {
           padding: 18px 6px;
@@ -342,6 +238,8 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="shared-toggles.css">
+    <script src="shared-toggles.js"></script>
   </head>
   <body>
     <div class="container">
@@ -351,15 +249,15 @@
       </h1>
       <p class="intro">
         <span
-          data-en="Fill out the form below to request deletion of your DawaTime account and all associated data."
-          data-ar="املأ النموذج أدناه لطلب حذف حساب دواء تايم الخاص بك وجميع البيانات المرتبطة به."
-          >Fill out the form below to request deletion of your DawaTime account
+          data-en="Enter your credentials below to permanently delete your DawaTime account and all associated data."
+          data-ar="أدخل بيانات اعتمادك أدناه لحذف حساب دواء تايم الخاص بك وجميع البيانات المرتبطة به نهائياً."
+          >Enter your credentials below to permanently delete your DawaTime account
           and all associated data.</span
         ><br />
-        <span data-en="This process is" data-ar="هذه العملية"
-          >This process is</span
+        <span data-en="This action is" data-ar="هذا الإجراء"
+          >This action is</span
         >
-        <b data-en="irreversible" data-ar="غير قابلة للإلغاء">irreversible</b
+        <b data-en="immediate and irreversible" data-ar="فوري وغير قابل للإلغاء">immediate and irreversible</b
         ><span data-en="." data-ar=".">.</span>
       </p>
       <form id="deleteForm" autocomplete="off">
@@ -433,171 +331,24 @@
         </div>
         <button
           type="submit"
-          data-en="Request Account Deletion"
-          data-ar="طلب حذف الحساب"
+          data-en="Delete My Account Now"
+          data-ar="حذف حسابي الآن"
         >
-          Request Account Deletion
+          Delete My Account Now
         </button>
         <div id="formMessage"></div>
       </form>
       <p class="footer-note">
         <span
-          data-en="For privacy and security, only the account owner can request deletion. If you have questions, contact"
-          data-ar="للخصوصية والأمان، يمكن لمالك الحساب فقط طلب الحذف. إذا كان لديك أسئلة، تواصل مع"
-          >For privacy and security, only the account owner can request
-          deletion. If you have questions, contact</span
+          data-en="For privacy and security, only the account owner can delete their account. Your account will be deleted immediately upon submission. If you have questions, contact"
+          data-ar="للخصوصية والأمان، يمكن لمالك الحساب فقط حذف حسابه. سيتم حذف حسابك فوراً عند الإرسال. إذا كان لديك أسئلة، تواصل مع"
+          >For privacy and security, only the account owner can delete their account. Your account will be deleted immediately upon submission. If you have questions, contact</span
         >
         <a href="mailto:help@dawatime.com">help@dawatime.com</a
         ><span data-en="." data-ar=".">.</span>
       </p>
     </div>
-    <button
-      class="dark-mode-toggle"
-      onclick="toggleDarkMode()"
-      id="theme-toggle"
-      title="System Theme (Auto)"
-      data-tooltip="System Theme"
-    >
-      <span id="theme-icon"><div class="icon-auto"></div></span>
-    </button>
-    <button
-      class="language-toggle"
-      onclick="toggleLanguage()"
-      id="language-toggle"
-      title="Switch Language"
-    >
-      <span id="language-icon">EN</span>
-    </button>
     <script>
-      let currentLanguage = localStorage.getItem("language") || "en";
-      let currentThemeMode = "system";
-      function initTheme() {
-        const savedTheme = localStorage.getItem("theme") || "system";
-        currentThemeMode = savedTheme;
-        if (savedTheme === "system") {
-          applySystemTheme();
-        } else if (savedTheme === "dark") {
-          document.body.setAttribute("data-theme", "dark");
-        } else {
-          document.body.removeAttribute("data-theme");
-        }
-        updateThemeButton();
-        setupSystemThemeListener();
-      }
-      function updateThemeButton() {
-        const button = document.getElementById("theme-toggle");
-        const themeIcon = document.getElementById("theme-icon");
-        if (currentThemeMode === "system") {
-          button.title = "System Theme (Auto)";
-          button.setAttribute("data-tooltip", "System Theme");
-          themeIcon.innerHTML = '<div class="icon-auto"></div>';
-        } else if (currentThemeMode === "light") {
-          button.title = "Light Theme";
-          button.setAttribute("data-tooltip", "Light Theme");
-          themeIcon.innerHTML = '<div class="icon-light"></div>';
-        } else {
-          button.title = "Dark Theme";
-          button.setAttribute("data-tooltip", "Dark Theme");
-          themeIcon.innerHTML = '<div class="icon-dark"></div>';
-        }
-      }
-      function toggleDarkMode() {
-        const body = document.body;
-        if (currentThemeMode === "system") {
-          currentThemeMode = "light";
-          body.removeAttribute("data-theme");
-          localStorage.setItem("theme", "light");
-        } else if (currentThemeMode === "light") {
-          currentThemeMode = "dark";
-          body.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "dark");
-        } else {
-          currentThemeMode = "system";
-          applySystemTheme();
-          localStorage.setItem("theme", "system");
-        }
-        updateThemeButton();
-      }
-      function applySystemTheme() {
-        const body = document.body;
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        if (prefersDark) {
-          body.setAttribute("data-theme", "dark");
-        } else {
-          body.removeAttribute("data-theme");
-        }
-      }
-      function setupSystemThemeListener() {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-        mediaQuery.addListener((e) => {
-          if (currentThemeMode === "system") {
-            applySystemTheme();
-          }
-        });
-      }
-      function updateLanguage() {
-        const isArabic = currentLanguage === "ar";
-        document.documentElement.setAttribute("lang", currentLanguage);
-        document.documentElement.setAttribute("dir", isArabic ? "rtl" : "ltr");
-        const elements = document.querySelectorAll("[data-en][data-ar]");
-        elements.forEach((element) => {
-          element.textContent = element.getAttribute(`data-${currentLanguage}`);
-        });
-        const placeholderElements = document.querySelectorAll(
-          "[data-placeholder-en][data-placeholder-ar]"
-        );
-        placeholderElements.forEach((element) => {
-          element.placeholder = element.getAttribute(
-            `data-placeholder-${currentLanguage}`
-          );
-        });
-        const ariaElements = document.querySelectorAll(
-          "[data-aria-en][data-aria-ar]"
-        );
-        ariaElements.forEach((element) => {
-          element.setAttribute(
-            "aria-label",
-            element.getAttribute(`data-aria-${currentLanguage}`)
-          );
-        });
-        document.getElementById("language-icon").textContent = isArabic
-          ? "EN"
-          : "ع";
-        if (isArabic) {
-          document.title = "حذف حساب دواء تايم";
-          document.querySelector('meta[name="description"]').content =
-            "طلب حذف حساب دواء تايم الخاص بك وجميع البيانات المرتبطة به.";
-        } else {
-          document.title = "Delete DawaTime Account";
-          document.querySelector('meta[name="description"]').content =
-            "Request deletion of your DawaTime account and all associated data.";
-        }
-        updateFormMessages();
-      }
-
-      function toggleLanguage() {
-        currentLanguage = currentLanguage === "en" ? "ar" : "en";
-        localStorage.setItem("language", currentLanguage);
-        updateLanguage();
-      }
-      function updateFormMessages() {
-        const messageDiv = document.getElementById("formMessage");
-        if (messageDiv.textContent && currentLanguage === "ar") {
-          if (messageDiv.className === "success") {
-            messageDiv.textContent = "تم حذف حسابك وبياناتك. نأسف لرحيلك.";
-          } else if (messageDiv.className === "error") {
-            if (messageDiv.textContent.includes("Network error")) {
-              messageDiv.textContent =
-                "خطأ في الشبكة. يرجى المحاولة مرة أخرى لاحقاً.";
-            } else if (messageDiv.textContent.includes("problem submitting")) {
-              messageDiv.textContent =
-                "كانت هناك مشكلة في إرسال طلبك. يرجى المحاولة مرة أخرى.";
-            }
-          }
-        }
-      }
       const passwordInput = document.getElementById("password");
       const togglePassword = document.getElementById("togglePassword");
       let passwordVisible = false;
@@ -629,7 +380,8 @@
               }
             );
             if (response.ok) {
-              if (currentLanguage === "ar") {
+              const currentLang = document.documentElement.getAttribute('lang') || 'en';
+              if (currentLang === "ar") {
                 messageDiv.textContent = "تم حذف حسابك وبياناتك. نأسف لرحيلك.";
               } else {
                 messageDiv.textContent =
@@ -639,7 +391,8 @@
               document.getElementById("deleteForm").reset();
             } else {
               const errorText = await response.text();
-              if (currentLanguage === "ar") {
+              const currentLang = document.documentElement.getAttribute('lang') || 'en';
+              if (currentLang === "ar") {
                 messageDiv.textContent =
                   "كانت هناك مشكلة في إرسال طلبك: " + errorText;
               } else {
@@ -649,7 +402,8 @@
               messageDiv.className = "error";
             }
           } catch (err) {
-            if (currentLanguage === "ar") {
+            const currentLang = document.documentElement.getAttribute('lang') || 'en';
+            if (currentLang === "ar") {
               messageDiv.textContent =
                 "خطأ في الشبكة. يرجى المحاولة مرة أخرى لاحقاً.";
             } else {
@@ -658,8 +412,6 @@
             messageDiv.className = "error";
           }
         });
-      initTheme();
-      updateLanguage();
     </script>
   </body>
 </html>

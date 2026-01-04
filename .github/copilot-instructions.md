@@ -146,6 +146,180 @@
 
 ---
 
+### Legal Document Webpages & App Integration (December 2025)
+**Status**: ✅ **COMPLETE** - Dedicated legal document pages created and integrated into app
+
+**Problem**: App had inline text-only legal documents in dialogs with no way to update content without app releases. Users couldn't easily review documents or see version history.
+
+**Solution**: Created dedicated bilingual webpages for Terms & Conditions and Privacy Policy with version tracking system.
+
+**Website Implementation**:
+
+1. **Created Legal Document Pages**:
+   - `/public/terms-and-conditions.html` - Full Terms & Conditions with English/Arabic
+   - `/public/privacy-policy.html` - Full Privacy Policy with English/Arabic
+   - Both pages use `.en-content`/`.ar-content` class-based translation pattern
+   - Fully responsive design with theme support (light/dark mode)
+   - Professional legal document formatting with sections, subsections, and highlights
+
+2. **Firebase Hosting Rewrites** (firebase.json):
+   **All website pages** configured with clean URLs (no `.html` extensions):
+   ```json
+   "rewrites": [
+     {"source": "/account-deletion", "destination": "/account-deletion.html"},
+     {"source": "/user-management", "destination": "/user-management.html"},
+     {"source": "/support", "destination": "/support.html"},
+     {"source": "/privacy-policy", "destination": "/privacy-policy.html"},
+     {"source": "/terms-and-conditions", "destination": "/terms-and-conditions.html"},
+     {"source": "/", "destination": "/index.html"}
+   ]
+   ```
+   - **Clean URL Pattern**: All 6 pages accessible without `.html` extension
+   - **301 Redirects**: Configured from `.html` URLs to clean URLs for SEO
+   - **Examples**: 
+     - `https://dawatime.com/terms-and-conditions` (not `/terms-and-conditions.html`)
+     - `https://dawatime.com/support` (not `/support.html`)
+     - `https://dawatime.com/account-deletion` (not `/account-deletion.html`)
+
+3. **Version Tracking System** (Firestore):
+   - Created `/AppConfig/LegalDocuments` collection with fields:
+     - `termsVersion`: "1.0" (current Terms version)
+     - `privacyVersion`: "1.0" (current Privacy version)
+     - `lastUpdated`: ISO date string
+   - Enables version checking without hardcoded values in app
+
+**App Integration**:
+
+1. **User Document Tracking** (Firestore `/Users/{uid}` collection):
+   - `acceptedTermsVersion`: "1.0" (version user accepted)
+   - `acceptedPrivacyVersion`: "1.0" (version user accepted)
+   - `legalAcceptanceDate`: ISO timestamp
+   - Set automatically during signup by fetching current versions from Firestore
+
+2. **Signup Flow Updates** (signup_page.dart):
+   - Checkbox validation for T&C and Privacy Policy acceptance
+   - Links open webpages in browser: `https://dawatime.com/terms-and-conditions`
+   - On successful signup, fetches current versions from `/AppConfig/LegalDocuments`
+   - Stores accepted versions in user profile (no hardcoded version numbers)
+
+3. **Legal Update Detection System**:
+   - **Dual Entry Point Architecture** (see separate section below):
+     - Entry Point 1: Login page checks after authentication
+     - Entry Point 2: App startup checks for existing sessions
+   - Compares user's `acceptedTermsVersion`/`acceptedPrivacyVersion` with current versions
+   - If mismatch → Shows non-dismissible dialog requiring acceptance
+   - User accepts → Updates Firestore with new versions and current timestamp
+   - User declines → Signs out (on login) or blocked from app (on startup)
+
+4. **Settings Page Links** (settings.dart):
+   - Privacy Policy button: Opens `https://dawatime.com/privacy-policy` in browser
+   - Terms & Conditions button: Opens `https://dawatime.com/terms-and-conditions` in browser
+   - Users can review documents anytime without being forced to accept
+
+5. **Support Page Links** (support.html):
+   - Both "View Online" and "PDF" links for each document
+   - PDF versions generated from webpages for offline access
+
+**Benefits**:
+- ✅ **Update documents without app releases**: Change webpage content anytime
+- ✅ **Version tracking**: Increment version in Firestore, app detects automatically
+- ✅ **User consent tracking**: Know exactly which version each user accepted
+- ✅ **Audit trail**: `legalAcceptanceDate` provides timestamp of acceptance
+- ✅ **Bilingual support**: Full English/Arabic translations with theme support
+- ✅ **Professional presentation**: Proper legal document formatting and styling
+- ✅ **Always accessible**: Users can review documents anytime via Settings or website
+
+**Files Created**:
+- `/public/terms-and-conditions.html` - Full T&C page with bilingual content
+- `/public/privacy-policy.html` - Full Privacy Policy page with bilingual content
+
+**Files Updated**:
+- `/firebase.json` - Added URL rewrites for clean paths
+- `/lib/signup_page.dart` - Checkbox validation, Firestore version fetch, link integration
+- `/lib/settings.dart` - Added legal document links to settings page
+- `/lib/main.dart` - Legal version check on app startup (AuthGate)
+- `/lib/login_page.dart` - Legal version check after login
+- `/firestore.rules` - Public read access to `/AppConfig` for version fetching
+
+**Version Update Process**:
+1. Update content in `/public/terms-and-conditions.html` or `/public/privacy-policy.html`
+2. Deploy website: `firebase deploy --only hosting`
+3. Update version in Firestore `/AppConfig/LegalDocuments`:
+   - Increment `termsVersion` to "1.1" (or `privacyVersion`)
+   - Update `lastUpdated` timestamp
+4. Next time users open app, they'll be prompted to accept new version
+5. User acceptance tracked automatically in their profile
+
+---
+
+### Website Toggle System Centralization (January 5, 2026)
+**Status**: ✅ **COMPLETE** - Centralized theme/language toggle system across all website pages
+
+**Problem**: All 6 website pages (index.html, support.html, account-deletion.html, terms-and-conditions.html, privacy-policy.html, user-management.html) had duplicate toggle button implementations (~100-150 lines each = 600+ lines total) causing maintenance issues and styling inconsistencies.
+
+**Solution**: Created shared toggle system with single source of truth:
+- `shared-toggles.css` (134 lines): Centralized styling for toggle buttons
+- `shared-toggles.js` (210 lines): Centralized toggle logic with IIFE pattern
+
+**Issues Fixed During Migration**:
+
+1. **Conflicting Variables** (index.html):
+   - Problem: Had `let currentLanguage` and `let currentThemeMode` variables that conflicted with shared system
+   - Solution: Removed conflicting variables, kept only `window.translations` object
+
+2. **Duplicate CSS** (all pages):
+   - Problem: index.html, account-deletion.html, support.html, terms-and-conditions.html, privacy-policy.html had inline CSS for `.dark-mode-toggle`, `.language-toggle`, `.icon-*` classes
+   - Solution: Removed ~150 lines from index.html, ~115 lines from each other page
+   - Total: ~600+ lines of duplicate code eliminated
+
+3. **Theme Toggle Icon Colors** (shared-toggles.css):
+   - Problem: Icons used `#333` (dark gray) instead of `white`, causing inconsistent appearance
+   - Solution: Changed all icon colors to `white` for proper contrast
+   - Fixed: `.icon-light`, `.icon-dark`, `.icon-auto` border and background colors
+
+4. **Missing CSS Variables** (support.html):
+   - Problem: Lacked `--card-bg` and `--card-border` variables, causing tooltip to use fallback colors
+   - Solution: Added missing variables to both `:root` and `[data-theme="dark"]`
+   - Light: `--card-bg: #f5f5f5`, `--card-border: rgba(138, 194, 73, 0.2)`
+   - Dark: `--card-bg: #1a1a1a`, `--card-border: rgba(138, 194, 73, 0.3)`
+
+5. **Cache-Busting** (index.html, support.html):
+   - Problem: Browser caching old versions of shared files
+   - Solution: Added `?v=2` parameter to force reload: `shared-toggles.css?v=2` and `shared-toggles.js?v=2`
+
+**Translation Pattern Support** (shared-toggles.js):
+The shared system supports three different translation patterns across pages:
+1. **Class-based** (terms-and-conditions.html, privacy-policy.html): `.en-content`/`.ar-content` with display toggling
+2. **Attribute-based** (support.html, account-deletion.html, user-management.html): `data-en`/`data-ar` with innerHTML replacement
+3. **Object-based** (index.html): `data-translate` with `window.translations` object lookup
+
+**Files Updated**:
+- `/public/shared-toggles.css` - **CREATED** (134 lines)
+- `/public/shared-toggles.js` - **CREATED** (210 lines)
+- `/public/index.html` - Removed ~150 lines of duplicate CSS, removed conflicting variables, added `?v=2`
+- `/public/support.html` - Removed ~115 lines of duplicate CSS, added missing CSS variables, added `?v=2`
+- `/public/account-deletion.html` - Removed ~115 lines of duplicate CSS
+- `/public/terms-and-conditions.html` - Removed ~140 lines of duplicate CSS
+- `/public/privacy-policy.html` - Removed ~140 lines of duplicate CSS
+- `/public/user-management.html` - Already cleaned in previous sessions
+
+**Benefits**:
+- ✅ Single source of truth: Changes to toggle logic only need to happen once
+- ✅ Consistent styling: All pages look identical
+- ✅ 70% code reduction: ~600 lines → 344 lines total
+- ✅ Better maintainability: New pages just need 2 lines: `<link>` + `<script>`
+- ✅ Cache-busting: Version parameters prevent stale browser caches
+- ✅ Full theme support: Tooltips adapt properly to light/dark themes
+
+**Architecture Notes**:
+- Shared files use IIFE (Immediately Invoked Function Expression) to avoid global scope pollution
+- Toggle buttons injected dynamically via `createToggles()` function
+- State persisted in localStorage: `language` and `theme` keys
+- Language attribute stored in `document.documentElement.getAttribute('lang')`
+- Theme applied via `data-theme` attribute on `<body>`
+
+---
+
 ### Localization Cleanup (January 4, 2026)
 **Status**: ✅ **COMPLETE** - Translation files cleaned and optimized
 
