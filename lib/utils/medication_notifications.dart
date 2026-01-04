@@ -2,6 +2,7 @@ library;
 
 import 'dart:io' show Platform;
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,10 +53,13 @@ Future<void> scheduleMedicationNotification(
 
     if (isWithinWindow &&
         medication.lastTaken != null &&
-        medication.lastTaken!.isAfter(todayScheduledTime)) {return;
+        medication.lastTaken!.isAfter(todayScheduledTime)) {
+      return;
     }
 
-    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {} else if (isWithinWindow) {for (int j = 0; j <= 4; j++) {
+    if (isTodayScheduled && now.isAfter(twoHoursAfter)) {
+    } else if (isWithinWindow) {
+      for (int j = 0; j <= 4; j++) {
         final followUpTime = todayScheduledTime.add(Duration(minutes: 30 * j));
         if (followUpTime.isAfter(now)) {
           final scheduledTZ = tz.TZDateTime.from(followUpTime, tz.local);
@@ -63,7 +67,6 @@ Future<void> scheduleMedicationNotification(
           final notificationMessage = AppLocalizations.of(
             context ?? navigatorKey.currentContext!,
           )!.reminderTakeMedication(medication.name);
-
 
           await flutterLocalNotificationsPlugin.zonedSchedule(
             notificationId,
@@ -97,10 +100,10 @@ Future<void> scheduleMedicationNotification(
             ),
             payload: docId,
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          );} else {
-
-        }
-      }return;
+          );
+        } else {}
+      }
+      return;
     }
 
     DateTime? nextOccurrence;
@@ -196,14 +199,14 @@ Future<void> scheduleMedicationNotification(
       medication.lastTaken != null &&
       medication.lastTaken!.isAfter(baseDate)) {
   } else if (isWithinWindowOfToday) {
-
     try {
       final baseScheduledTime = scheduledTime;
       final twoHoursAfter = scheduledTime.add(const Duration(hours: 2));
       final isWithinWindow =
           now.isAfter(scheduledTime) && now.isBefore(twoHoursAfter);
 
-      if (now.isAfter(twoHoursAfter)) {return;
+      if (now.isAfter(twoHoursAfter)) {
+        return;
       }
 
       if (scheduledTime.isAfter(now)) {
@@ -355,7 +358,6 @@ Future<void> scheduleMedicationNotification(
     scheduledTime = scheduledTime.add(Duration(days: medication.frequency));
   }
 
-
   for (int i = 0; i <= 4; i++) {
     final followUpTime = scheduledTime.add(Duration(minutes: 30 * i));
     final notificationMessage =
@@ -400,7 +402,8 @@ Future<void> scheduleMedicationNotification(
       ),
       payload: docId,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );}
+    );
+  }
 }
 
 Future<void> cancelMedicationReminders(String docId) async {
@@ -419,20 +422,59 @@ Future<void> cancelMedicationReminders(String docId) async {
 Future<void> scheduleWeeklyRefillNotification(
   Medications medication,
   String docId,
+  String userId,
 ) async {
   if (kIsWeb) return;
 
   try {
     await cancelRefillNotifications(docId);
 
+    int refillDay = 7;
+    int refillHour = 10;
+    int refillMinute = 0;
+
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(userId)
+              .get();
+      if (userDoc.exists) {
+        refillDay = userDoc.data()?['refillReminderDay'] ?? 7;
+        final timeString = userDoc.data()?['refillReminderTime'] as String?;
+        if (timeString != null) {
+          final parts = timeString.split(':');
+          if (parts.length == 2) {
+            refillHour = int.tryParse(parts[0]) ?? 10;
+            refillMinute = int.tryParse(parts[1]) ?? 0;
+          }
+        }
+      }
+    } catch (_) {}
+
     final now = DateTime.now();
-    final nextWeek = now.add(const Duration(days: 7));
+
+    int daysUntilTarget = (refillDay - now.weekday) % 7;
+    if (daysUntilTarget == 0) {
+      final targetTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        refillHour,
+        refillMinute,
+      );
+      if (now.isAfter(targetTime)) {
+        daysUntilTarget = 7;
+      }
+    }
+
+    final targetDate = now.add(Duration(days: daysUntilTarget));
     final scheduledTime = DateTime(
-      nextWeek.year,
-      nextWeek.month,
-      nextWeek.day,
-      10,
-      0,
+      targetDate.year,
+      targetDate.month,
+      targetDate.day,
+      refillHour,
+      refillMinute,
     );
 
     final scheduledTZ = tz.TZDateTime.from(scheduledTime, tz.local);

@@ -535,7 +535,7 @@ class _HomePageState extends State<HomePage> {
               userId,
             ).doc(doc.id).update({'refillNotified': true});
           }
-          await scheduleWeeklyRefillNotification(medication, doc.id);
+          await scheduleWeeklyRefillNotification(medication, doc.id, userId);
         } else {
           await cancelRefillNotifications(doc.id);
           if (medication.refillNotified == true) {
@@ -883,7 +883,7 @@ class _HomePageState extends State<HomePage> {
     if (user == null || !user.emailVerified) {
       return;
     }
-    
+
     final prefs = await SharedPreferences.getInstance();
     final seenGuide = prefs.getBool('seenIntroGuide') ?? false;
     if (!seenGuide && mounted) {
@@ -1034,6 +1034,7 @@ class _HomePageState extends State<HomePage> {
                     await scheduleWeeklyRefillNotification(
                       deletedMedication,
                       deletedDocId,
+                      widget.uid!,
                     );
                   }
                   if (mounted) setState(() {});
@@ -2748,6 +2749,7 @@ class _HomePageState extends State<HomePage> {
                                                             await scheduleWeeklyRefillNotification(
                                                               updatedMedication,
                                                               docId,
+                                                              widget.uid!,
                                                             );
                                                           } else {
                                                             await cancelRefillNotifications(
@@ -3236,6 +3238,7 @@ class _HomePageState extends State<HomePage> {
                                                   await scheduleWeeklyRefillNotification(
                                                     updatedMedication,
                                                     docs[index].id,
+                                                    widget.uid!,
                                                   );
                                                 } else {
                                                   await cancelRefillNotifications(

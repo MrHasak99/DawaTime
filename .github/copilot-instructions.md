@@ -2,10 +2,73 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+28 (Production Ready)
+**Current Version**: v1.4.4+33 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
+
+---
+
+### Refill Reminder Settings Customization (January 4, 2026)
+**Status**: ✅ **IMPLEMENTED** - Users can customize when they receive weekly low-stock alerts
+
+**Feature Overview**:
+- Added user-configurable day of week and time of day for refill reminders
+- Collective setting: applies to ALL medications with refill thresholds (not per-medication)
+- Default: Sunday at 10:00 AM (preserved for existing users)
+- Settings persist in Firestore user document
+
+**User Experience**:
+- Inline UI in Settings page: "Sunday at 10:00 am" format with dropdown + time picker
+- Matches existing Theme/Language settings style (ListTile with subtitle)
+- Day dropdown: Sunday-Saturday order (Sunday first as day 7)
+- Time picker: 12-hour format with AM/PM, full theming matching add medications page
+- Real-time rescheduling: Changes apply immediately to all low-stock medications
+
+**Implementation Details**:
+- **Firestore Fields** (User document):
+  - `refillReminderDay`: int (1-7 where 1=Monday, 7=Sunday), default: 7
+  - `refillReminderTime`: string ("HH:mm" 24-hour format), default: "10:00"
+- **Scheduling Logic** (medication_notifications.dart):
+  - `scheduleWeeklyRefillNotification()` now accepts `userId` parameter
+  - Reads user preferences from Firestore before scheduling
+  - Calculates next occurrence: `daysUntilTarget = (refillDay - now.weekday) % 7`
+  - Handles same-day scheduling with time comparison
+- **UI Structure** (settings.dart):
+  - FutureBuilder fetches user document for current settings
+  - Row with baseline alignment: DropdownButton<int> + Text("at") + InkWell time picker
+  - Time picker Container: 2px bottom padding, subtle underline (alpha: 0.12)
+  - Helper functions: `getDayName(int day)`, `formatTime(String time24)`
+  - `_rescheduleAllRefillReminders(userId)` called after any change
+- **Auto-Rescheduling**:
+  - HomePage `_checkRefillReminders()` runs on app open (in `_scheduleAfterPermissionCheck()`)
+  - Checks all medications for low stock and schedules/cancels accordingly
+  - No manual intervention needed - settings changes take effect on next homepage visit
+
+**Localization**:
+- Added "at" key in app_en.arb and app_ar.arb
+- English: "at"
+- Arabic: "عند الساعة"
+
+**Files Updated**:
+- `/lib/settings.dart` (2726 lines):
+  - Added refill reminder settings section with ListTile structure
+  - FutureBuilder pattern matching Theme/Language sections
+  - Inline day/time selectors with baseline alignment
+  - `_rescheduleAllRefillReminders()` method
+- `/lib/utils/medication_notifications.dart` (637 lines):
+  - Updated `scheduleWeeklyRefillNotification()` signature with userId parameter
+  - Added Firestore query to fetch user preferences
+  - Dynamic scheduling based on user's chosen day/time
+- `/lib/home_page.dart` (3902 lines):
+  - Updated all 4 calls to `scheduleWeeklyRefillNotification()` to pass userId
+  - Existing `_checkRefillReminders()` ensures auto-rescheduling on homepage access
+- `/lib/l10n/app_en.arb` & `/lib/l10n/app_ar.arb`:
+  - Added "at" translation for inline time display
+- `/pubspec.yaml` - Version: 1.4.4+28 → 1.4.4+33
+- `/android/app/build.gradle.kts` - versionCode: 28 → 33
+
+**Result**: Users can customize refill reminder timing to match their pharmacy visit schedule. All low-stock alerts fire at the same user-chosen day/time. Changes apply automatically when homepage is accessed.
 
 ---
 
@@ -420,6 +483,8 @@ class Medications {
   - **`legalAcceptanceDate`**: ISO timestamp of when user accepted legal docs
   - **`lastAppVersion`**: App version user is currently running (e.g., "1.4.4"). Updated on every app launch starting from v1.4.4.
   - **`lastAccessedAt`**: Firestore server timestamp of last app access. Used to track active users and migration progress.
+  - **`refillReminderDay`**: int (1-7 where 1=Monday, 7=Sunday), default: 7 (Sunday). User's preferred day of week for refill reminders. Added January 2026.
+  - **`refillReminderTime`**: string ("HH:mm" 24-hour format), default: "10:00". User's preferred time of day for refill reminders. Added January 2026.
 - **`/{userId}/{medicationId}`**: Medication documents (scoped per user)
 - **`/AppConfig/Version`**: App version control (triggers Cloud Function on update)
 - **`/AppConfig/LegalDocuments`**: Legal document version tracking
@@ -523,12 +588,16 @@ await flutterLocalNotificationsPlugin.initialize(
 - **Debug logging**: Console output shows scheduling details, notification IDs, and timing for troubleshooting
 
 **Function: `scheduleWeeklyRefillNotification()` (lib/utils/medication_notifications.dart)**
-- Schedules weekly recurring notification at 10:00 AM
+- Schedules weekly recurring notification at user-configurable day/time (default: Sunday at 10:00 AM)
+- **User Preferences** (January 2026): Reads `refillReminderDay` and `refillReminderTime` from Firestore user document
+- Calculates next occurrence: `daysUntilTarget = (refillDay - now.weekday) % 7`
+- Handles same-day scheduling: if target day is today but time already passed, schedules for next week
 - Uses `matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime` for weekly repeat
 - Separate channel ID `'refill_channel'` with orange color (`0xFFFF9800`)
 - Notification ID: `('refill_weekly_$docId').hashCode`
 - Includes `interruptionLevel: InterruptionLevel.timeSensitive` for iOS 15+ delivery
 - Debug logging shows medication name, current amount, threshold, notification ID, and next fire time
+- **Signature**: `scheduleWeeklyRefillNotification(Medications medication, String docId, String userId)` - userId parameter added January 2026
 
 **Function: `cancelMedicationReminders()` (lib/utils/medication_notifications.dart)**
 - Cancels notifications with IDs: `('${docId}_$i').hashCode` where i=0 to 8
@@ -1018,15 +1087,15 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+21` (current development version)
+1. **`pubspec.yaml`**: `version: 1.4.4+33` (current development version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+21` = version 1.4.4, build 21
+  - Example: `1.4.4+33` = version 1.4.4, build 33
   - **Production deployed**: v1.3.4 (App Store)
-  - **Development**: v1.4.4+21 (ready for next release)
+  - **Development**: v1.4.4+33 (ready for next release)
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 21
+  versionCode = 33
   versionName = "1.4.4"
   ```
 

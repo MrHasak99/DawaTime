@@ -202,6 +202,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String get language => 'اللغة';
 
   @override
+  String get refillReminderSettings => 'إعدادات تنبيه التعبئة';
+
+  @override
+  String get refillReminderDay => 'يوم التنبيه';
+
+  @override
+  String get refillReminderTime => 'وقت التنبيه';
+
+  @override
+  String get at => 'عند الساعة';
+
+  @override
+  String get monday => 'الإثنين';
+
+  @override
+  String get tuesday => 'الثلاثاء';
+
+  @override
+  String get wednesday => 'الأربعاء';
+
+  @override
+  String get thursday => 'الخميس';
+
+  @override
+  String get friday => 'الجمعة';
+
+  @override
+  String get saturday => 'السبت';
+
+  @override
+  String get sunday => 'الأحد';
+
+  @override
   String get systemTheme => 'حسب النظام';
 
   @override

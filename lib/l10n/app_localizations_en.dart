@@ -202,6 +202,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
+  String get refillReminderSettings => 'Refill Reminder Settings';
+
+  @override
+  String get refillReminderDay => 'Reminder Day';
+
+  @override
+  String get refillReminderTime => 'Reminder Time';
+
+  @override
+  String get at => 'at';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
   String get systemTheme => 'System Default';
 
   @override

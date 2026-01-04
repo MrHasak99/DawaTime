@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dawatime/home_page.dart';
 import 'package:dawatime/utils/medication_helpers.dart';
+import 'package:dawatime/utils/medication_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -2317,6 +2318,345 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 18),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white10
+                                          : const Color(0xFFF1F8E9),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                child: FutureBuilder<DocumentSnapshot>(
+                                  future:
+                                      FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .doc(user.uid)
+                                          .get(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    final userData =
+                                        snapshot.data!.data()
+                                            as Map<String, dynamic>?;
+                                    final refillDay =
+                                        userData?['refillReminderDay'] ?? 7;
+                                    final refillTime =
+                                        userData?['refillReminderTime'] ??
+                                        '10:00';
+
+                                    String getDayName(int day) {
+                                      final loc = AppLocalizations.of(context)!;
+                                      switch (day) {
+                                        case 1:
+                                          return loc.monday;
+                                        case 2:
+                                          return loc.tuesday;
+                                        case 3:
+                                          return loc.wednesday;
+                                        case 4:
+                                          return loc.thursday;
+                                        case 5:
+                                          return loc.friday;
+                                        case 6:
+                                          return loc.saturday;
+                                        case 7:
+                                          return loc.sunday;
+                                        default:
+                                          return loc.sunday;
+                                      }
+                                    }
+
+                                    String formatTime(String time24) {
+                                      final parts = time24.split(':');
+                                      final hour = int.tryParse(parts[0]) ?? 10;
+                                      final minute =
+                                          int.tryParse(parts[1]) ?? 0;
+                                      final period = hour >= 12 ? 'pm' : 'am';
+                                      final hour12 =
+                                          hour > 12
+                                              ? hour - 12
+                                              : (hour == 0 ? 12 : hour);
+                                      return '$hour12:${minute.toString().padLeft(2, '0')} $period';
+                                    }
+
+                                    return ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: const Icon(
+                                        Icons.event_repeat_rounded,
+                                        color: Color(0xFF8AC249),
+                                      ),
+                                      title: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.refillReminderSettings,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      subtitle: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.baseline,
+                                        textBaseline: TextBaseline.alphabetic,
+                                        children: [
+                                          DropdownButton<int>(
+                                            value: refillDay,
+                                            dropdownColor:
+                                                Theme.of(context).cardColor,
+                                            items:
+                                                [7, 1, 2, 3, 4, 5, 6].map((
+                                                  day,
+                                                ) {
+                                                  return DropdownMenuItem(
+                                                    value: day,
+                                                    child: Text(
+                                                      getDayName(day),
+                                                      style:
+                                                          Theme.of(
+                                                            context,
+                                                          ).textTheme.bodyLarge,
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                            onChanged: (int? newDay) async {
+                                              if (newDay != null) {
+                                                await FirebaseFirestore.instance
+                                                    .collection('Users')
+                                                    .doc(user.uid)
+                                                    .set({
+                                                      'refillReminderDay':
+                                                          newDay,
+                                                    }, SetOptions(merge: true));
+                                                await _rescheduleAllRefillReminders(
+                                                  user.uid,
+                                                );
+                                                if (mounted) {
+                                                  setState(() {});
+                                                }
+                                              }
+                                            },
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            AppLocalizations.of(context)!.at,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).textTheme.bodyLarge?.color,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          InkWell(
+                                            onTap: () async {
+                                              final timeParts = refillTime
+                                                  .split(':');
+                                              final currentTime = TimeOfDay(
+                                                hour:
+                                                    int.tryParse(
+                                                      timeParts[0],
+                                                    ) ??
+                                                    10,
+                                                minute:
+                                                    int.tryParse(
+                                                      timeParts[1],
+                                                    ) ??
+                                                    0,
+                                              );
+
+                                              final isDark =
+                                                  Theme.of(
+                                                    context,
+                                                  ).brightness ==
+                                                  Brightness.dark;
+                                              final primaryColor = const Color(
+                                                0xFF8AC249,
+                                              );
+                                              final surfaceColor =
+                                                  isDark
+                                                      ? const Color(0xFF222222)
+                                                      : Colors.white;
+                                              final hourMinuteBg =
+                                                  isDark
+                                                      ? primaryColor.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                      : primaryColor.withValues(
+                                                        alpha: 0.08,
+                                                      );
+
+                                              final TimeOfDay?
+                                              picked = await showTimePicker(
+                                                context: context,
+                                                initialTime: currentTime,
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(
+                                                      context,
+                                                    ).copyWith(
+                                                      timePickerTheme: TimePickerThemeData(
+                                                        backgroundColor:
+                                                            surfaceColor,
+                                                        hourMinuteTextColor:
+                                                            primaryColor,
+                                                        hourMinuteColor:
+                                                            hourMinuteBg,
+                                                        dayPeriodTextColor:
+                                                            primaryColor,
+                                                        dayPeriodColor:
+                                                            hourMinuteBg,
+                                                        dialHandColor:
+                                                            primaryColor,
+                                                        dialBackgroundColor:
+                                                            hourMinuteBg,
+                                                        entryModeIconColor:
+                                                            primaryColor,
+                                                        helpTextStyle:
+                                                            TextStyle(
+                                                              color:
+                                                                  primaryColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                        hourMinuteTextStyle:
+                                                            TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 28,
+                                                              color:
+                                                                  primaryColor,
+                                                            ),
+                                                        dayPeriodTextStyle:
+                                                            TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 16,
+                                                              color:
+                                                                  primaryColor,
+                                                            ),
+                                                        dialTextStyle:
+                                                            TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 20,
+                                                              color:
+                                                                  primaryColor,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                24,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      textButtonTheme:
+                                                          TextButtonThemeData(
+                                                            style: TextButton.styleFrom(
+                                                              foregroundColor:
+                                                                  primaryColor,
+                                                              textStyle:
+                                                                  const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                      colorScheme: ColorScheme(
+                                                        brightness:
+                                                            isDark
+                                                                ? Brightness
+                                                                    .dark
+                                                                : Brightness
+                                                                    .light,
+                                                        primary: primaryColor,
+                                                        onPrimary: Colors.white,
+                                                        secondary: primaryColor,
+                                                        onSecondary:
+                                                            Colors.white,
+                                                        error: Colors.red,
+                                                        onError: Colors.white,
+                                                        surface: surfaceColor,
+                                                        onSurface:
+                                                            isDark
+                                                                ? Colors.white
+                                                                : primaryColor,
+                                                      ),
+                                                    ),
+                                                    child: child!,
+                                                  );
+                                                },
+                                              );
+
+                                              if (picked != null) {
+                                                final newTime =
+                                                    '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+                                                await FirebaseFirestore.instance
+                                                    .collection('Users')
+                                                    .doc(user.uid)
+                                                    .set({
+                                                      'refillReminderTime':
+                                                          newTime,
+                                                    }, SetOptions(merge: true));
+                                                await _rescheduleAllRefillReminders(
+                                                  user.uid,
+                                                );
+                                                if (mounted) {
+                                                  setState(() {});
+                                                }
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                bottom: 5,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withValues(
+                                                          alpha: 0.12,
+                                                        ),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                formatTime(refillTime),
+                                                style:
+                                                    Theme.of(
+                                                      context,
+                                                    ).textTheme.bodyLarge,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 18),
                             ],
                           ),
                         ),
@@ -2330,5 +2670,27 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _rescheduleAllRefillReminders(String userId) async {
+    try {
+      final meds =
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(userId)
+              .collection('medications')
+              .limit(12)
+              .get();
+
+      for (var doc in meds.docs) {
+        final medication = medicationFromDoc(doc);
+
+        if (medication.refillThreshold != null &&
+            medication.refillThreshold! > 0 &&
+            medication.amount <= medication.refillThreshold!) {
+          await scheduleWeeklyRefillNotification(medication, doc.id, userId);
+        }
+      }
+    } catch (_) {}
   }
 }
