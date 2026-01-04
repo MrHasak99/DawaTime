@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'login_page.dart';
 import 'package:dawatime/main.dart'
     show
-        MainApp,
         flutterLocalNotificationsPlugin,
         notificationsInitialized,
         themeModeNotifier,
@@ -2271,49 +2270,53 @@ class _SettingsPageState extends State<SettingsPage> {
                                     style: Theme.of(context).textTheme.bodyLarge
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  subtitle: DropdownButton<Locale?>(
-                                    value: localeNotifier.value,
-                                    items: [
-                                      DropdownMenuItem(
-                                        value: null,
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.systemTheme,
-                                        ),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: const Locale('en'),
-                                        child: Text('English'),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: const Locale('ar'),
-                                        child: Text('العربية'),
-                                      ),
-                                    ],
-                                    onChanged: (Locale? locale) async {
-                                      MainApp.setLocale(
-                                        context,
-                                        locale ?? const Locale('en'),
+                                  subtitle: ValueListenableBuilder<Locale?>(
+                                    valueListenable: localeNotifier,
+                                    builder: (context, locale, _) {
+                                      return DropdownButton<Locale?>(
+                                        value: locale,
+                                        items: [
+                                          DropdownMenuItem(
+                                            value: null,
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.systemTheme,
+                                            ),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: const Locale('en'),
+                                            child: Text('English'),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: const Locale('ar'),
+                                            child: Text('العربية'),
+                                          ),
+                                        ],
+                                        onChanged: (Locale? locale) async {
+                                          final savedValue =
+                                              locale?.languageCode ?? 'system';
+
+                                          localeNotifier.value = locale;
+                                          final prefs =
+                                              await SharedPreferences.getInstance();
+                                          await prefs.setString(
+                                            'preferredLanguage',
+                                            savedValue,
+                                          );
+                                          final user =
+                                              FirebaseAuth.instance.currentUser;
+                                          if (user != null) {
+                                            await FirebaseFirestore.instance
+                                                .collection('Users')
+                                                .doc(user.uid)
+                                                .set({
+                                                  'preferredLanguage':
+                                                      savedValue,
+                                                }, SetOptions(merge: true));
+                                          }
+                                        },
                                       );
-                                      localeNotifier.value = locale;
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setString(
-                                        'preferredLanguage',
-                                        locale?.languageCode ?? 'en',
-                                      );
-                                      final user =
-                                          FirebaseAuth.instance.currentUser;
-                                      if (user != null) {
-                                        await FirebaseFirestore.instance
-                                            .collection('Users')
-                                            .doc(user.uid)
-                                            .set({
-                                              'preferredLanguage':
-                                                  locale?.languageCode ?? 'en',
-                                            }, SetOptions(merge: true));
-                                      }
                                     },
                                   ),
                                 ),
@@ -2352,6 +2355,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                         userData?['refillReminderTime'] ??
                                         '10:00';
 
+                                    final timeParts = refillTime.split(':');
+                                    final refillTimeOfDay = TimeOfDay(
+                                      hour: int.tryParse(timeParts[0]) ?? 10,
+                                      minute: int.tryParse(timeParts[1]) ?? 0,
+                                    );
+
                                     String getDayName(int day) {
                                       final loc = AppLocalizations.of(context)!;
                                       switch (day) {
@@ -2372,19 +2381,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         default:
                                           return loc.sunday;
                                       }
-                                    }
-
-                                    String formatTime(String time24) {
-                                      final parts = time24.split(':');
-                                      final hour = int.tryParse(parts[0]) ?? 10;
-                                      final minute =
-                                          int.tryParse(parts[1]) ?? 0;
-                                      final period = hour >= 12 ? 'pm' : 'am';
-                                      final hour12 =
-                                          hour > 12
-                                              ? hour - 12
-                                              : (hour == 0 ? 12 : hour);
-                                      return '$hour12:${minute.toString().padLeft(2, '0')} $period';
                                     }
 
                                     return ListTile(
@@ -2642,7 +2638,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 ),
                                               ),
                                               child: Text(
-                                                formatTime(refillTime),
+                                                refillTimeOfDay.format(context),
                                                 style:
                                                     Theme.of(
                                                       context,

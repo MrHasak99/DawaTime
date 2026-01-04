@@ -2,10 +2,42 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+33 (Production Ready)
+**Current Version**: v1.4.4+36 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
+
+---
+
+### Android & iOS Deployment Fixes (January 4, 2026)
+**Status**: ✅ **COMPLETE** - Both platforms ready for production deployment
+
+**Android Build Fixes**:
+- **Security**: Moved signing credentials to `android/key.properties` (excluded from git)
+- **Java Version**: Downgraded from 21 → 17 for better device compatibility
+- **Target SDK**: Updated from 34 → 35 (Google Play requirement)
+- **Android Gradle Plugin**: 8.7.0 → 8.9.1
+- **Gradle Wrapper**: 8.9 → 8.11.1
+- **Build Output**: 60MB APK, signed and ready for website distribution
+
+**iOS Build Fixes**:
+- **APNs Environment**: Changed from `development` → `production` (required for App Store push notifications)
+- **Deployment Target**: Standardized all configurations to iOS 15.0 (previously: Debug=13.0, Release=15.6, Podfile=15.0)
+- **Location Permissions**: Validated as required (used for country-based restriction checks via geofencing)
+- **Build Output**: 56.5MB app, ready for App Store submission
+
+**Files Modified**:
+- `/android/key.properties` - **CREATED** (signing credentials, git-ignored)
+- `/android/app/build.gradle.kts` - Security, Java 17, targetSdk 35, keystore properties loader
+- `/android/settings.gradle.kts` - AGP version bump
+- `/android/gradle/wrapper/gradle-wrapper.properties` - Gradle version bump
+- `/ios/Runner.xcodeproj/project.pbxproj` - Deployment target standardization (6 occurrences)
+- `/ios/Runner/Runner.entitlements` - Production APNs environment
+
+**Version Tracking**:
+- pubspec.yaml: 1.4.4+36
+- android/app/build.gradle.kts: versionCode 36, versionName "1.4.4"
+- iOS: Uses FLUTTER_BUILD_NUMBER (36) and FLUTTER_BUILD_NAME (1.4.4)
 
 ---
 
@@ -24,6 +56,7 @@
 - Day dropdown: Sunday-Saturday order (Sunday first as day 7)
 - Time picker: 12-hour format with AM/PM, full theming matching add medications page
 - Real-time rescheduling: Changes apply immediately to all low-stock medications
+- **Time display uses Flutter's built-in localization**: `TimeOfDay.format(context)` for proper AM/PM (English) and ص-م (Arabic)
 
 **Implementation Details**:
 - **Firestore Fields** (User document):
@@ -38,7 +71,9 @@
   - FutureBuilder fetches user document for current settings
   - Row with baseline alignment: DropdownButton<int> + Text("at") + InkWell time picker
   - Time picker Container: 2px bottom padding, subtle underline (alpha: 0.12)
-  - Helper functions: `getDayName(int day)`, `formatTime(String time24)`
+  - Converts stored time string to TimeOfDay: `TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]))`
+  - Displays using `refillTimeOfDay.format(context)` for proper localization (matches home page pattern)
+  - Helper function: `getDayName(int day)` for weekday localization
   - `_rescheduleAllRefillReminders(userId)` called after any change
 - **Auto-Rescheduling**:
   - HomePage `_checkRefillReminders()` runs on app open (in `_scheduleAfterPermissionCheck()`)
@@ -51,10 +86,11 @@
 - Arabic: "عند الساعة"
 
 **Files Updated**:
-- `/lib/settings.dart` (2726 lines):
+- `/lib/settings.dart` (2691 lines):
   - Added refill reminder settings section with ListTile structure
   - FutureBuilder pattern matching Theme/Language sections
-  - Inline day/time selectors with baseline alignment
+  - Inline day/time selectors with baseline alignment (CrossAxisAlignment.baseline)
+  - TimeOfDay conversion and `refillTimeOfDay.format(context)` for localized display
   - `_rescheduleAllRefillReminders()` method
 - `/lib/utils/medication_notifications.dart` (637 lines):
   - Updated `scheduleWeeklyRefillNotification()` signature with userId parameter
@@ -65,8 +101,8 @@
   - Existing `_checkRefillReminders()` ensures auto-rescheduling on homepage access
 - `/lib/l10n/app_en.arb` & `/lib/l10n/app_ar.arb`:
   - Added "at" translation for inline time display
-- `/pubspec.yaml` - Version: 1.4.4+28 → 1.4.4+33
-- `/android/app/build.gradle.kts` - versionCode: 28 → 33
+- `/pubspec.yaml` - Version: 1.4.4+28 → 1.4.4+34
+- `/android/app/build.gradle.kts` - versionCode: 28 → 34
 
 **Result**: Users can customize refill reminder timing to match their pharmacy visit schedule. All low-stock alerts fire at the same user-chosen day/time. Changes apply automatically when homepage is accessed.
 
@@ -1087,15 +1123,15 @@ flutter build ipa
 
 When releasing a new version, update **all three** in sync:
 
-1. **`pubspec.yaml`**: `version: 1.4.4+33` (current development version)
+1. **`pubspec.yaml`**: `version: 1.4.4+36` (current development version)
   - Format: `<major>.<minor>.<patch>+<buildNumber>`
-  - Example: `1.4.4+33` = version 1.4.4, build 33
+  - Example: `1.4.4+36` = version 1.4.4, build 36
   - **Production deployed**: v1.3.4 (App Store)
-  - **Development**: v1.4.4+33 (ready for next release)
+  - **Development**: v1.4.4+36 (ready for next release)
 
 2. **`android/app/build.gradle.kts`**:
   ```kotlin
-  versionCode = 33
+  versionCode = 36
   versionName = "1.4.4"
   ```
 

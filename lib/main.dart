@@ -121,7 +121,7 @@ Future<void> main() async {
     }
   });
   final preferredLang = prefs.getString('preferredLanguage');
-  if (preferredLang != null) {
+  if (preferredLang != null && preferredLang != 'system') {
     localeNotifier.value = Locale(preferredLang);
   }
 
