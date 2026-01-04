@@ -1,11 +1,192 @@
 # DawaTime - AI Coding Agent Instructions
 
+## Development History
+
+### Early Development (May - July 2025)
+**Initial Concept**: DawaTime began as a medication reminder app built with Flutter, focusing on helping users manage medication schedules with local notifications.
+
+**Core Features Established (May-June 2025)**:
+- Basic medication CRUD operations (add, edit, delete)
+- Firebase Authentication (email/password)
+- Firestore database for medication storage
+- Local notifications using `flutter_local_notifications`
+- Swipe gestures (Dismissible widgets for edit/delete)
+- Android scheduled notification implementation
+
+**Key Milestones**:
+- **May 22, 2025** (d91754b): Initial project upload - basic medication management
+- **May 24-27, 2025**: Notification system foundation - specialized scheduler file created
+- **May 28, 2025**: Custom app logo added
+- **June 2025**: Database architecture established - medications collection per user
+- **June 10, 2025**: Password reset and email change features added
+- **June 16, 2025**: Undo delete functionality implemented
+- **June 18, 2025** (428696e): Pre-production version - Android notification issues resolved
+- **June 23, 2025**: App renamed to "DawaTime" (Arabic: دواء = medicine)
+- **June 25, 2025**: Domain dawatime.com purchased from Porkbun
+- **June 26, 2025**: Firebase configuration finalized with production credentials
+- **June 27, 2025**: Background task for medication rescheduling implemented
+- **July 2, 2025**: App icons, fonts, and color scheme updated (#8AC249 brand green)
+- **July 3, 2025**: Package structure renamed to reflect DawaTime branding
+- **July 5-6, 2025**: Settings page enhancements, splash screen, force update mechanism
+- **July 8, 2025**: Started using Cloudflare DNS for dawatime.com domain
+- **July 9, 2025**: Firebase Crashlytics, Analytics, and Performance monitoring integrated
+- **July 10, 2025**: Privacy policy and terms links added, start date selection for medications
+
+**Architecture Decisions (June-July 2025)**:
+- **Database Structure (v1)**: Flat collection structure `/{userId}/{medicationId}` (later migrated to subcollections in Dec 2025)
+- **Notification Strategy**: Local notifications with follow-up reminders every 30 minutes (up to 5 total)
+- **Authentication Flow**: Email/password with verification emails
+- **Theme System**: Light/dark mode with brand green (#8AC249)
+
+**Feature Evolution (July 2025)**:
+- App icon and branding finalized (DawaTime.png, brand green #8AC249)
+- Settings page redesigned with user profile editing
+- Password reset functionality with confirmation dialogs
+- Splash screen with version checking
+- Force update mechanism via Firestore
+- Account deletion flow with Firebase Cloud Function
+- User management web pages for support
+- Start date selection for medications (July 10)
+- Intro guide for first-time users (July 12-13)
+- App uploaded to App Store Connect (July 14)
+- iOS deployment target set to 15.6 (July 5)
+
+### Pre-v1.3.4 Refinements (August - October 2025)
+**Development Focus**: Localization system, weekday scheduling, and production readiness.
+
+**Key Improvements (August 2025)**:
+- Adaptive launcher icons for Android (August 5)
+- App guide integrated into login and splash screens (August 10)
+- Version 1.1.1 released to App Store (August 12)
+- **Arabic localization added (August 17, 2025)**: Complete Arabic/English bilingual support with ARB files, RTL layout
+- RTL text directionality implementation (August 23-25)
+- Localization strings expanded across all UI elements (August 25)
+- Launch screens updated for iOS and Android (August 26)
+- **Days of week scheduling** feature added (August 29)
+- Splash and background images added (August 29)
+
+**Production Polish (September-October 2025)**:
+- Weekday notification scheduling refinements (September 2)
+- Enhanced medication management with days-of-week support (October 23-24)
+- Website pages created (https://dawatime.com with App Store links) (October 22)
+- Security fixes (nodemailer 7.0.7, form-data 2.5.4) (October 24)
+- Android build artifacts optimization (October 24)
+- App initialization error handling (October 24)
+- Force update dialog improvements
+- Version 1.3.4 finalized and released (October 26)
+
+### Initial Deployments
+**First iOS App Store Release - v1.1.1 (August 14, 2025)**:
+- Initial public release on Apple App Store
+- Core medication reminder functionality
+- Local notifications with follow-ups
+- Basic theme switching
+- English-only (Arabic localization added 3 days later in update)
+
+**First Android Website Release - v1.3.4 (October 26, 2025)**:
+- First publicly distributed Android APK via website (https://dawatime.com)
+- Enhanced weekday scheduling features
+- Improved notification reliability
+- Production-ready Firebase configuration
+
+### Stable Feature Set (v1.3.4)
+**Deployment Status**: iOS v1.1.1+ on App Store, Android v1.3.4 on website
+
+**Core Features**:
+- Medication management with frequency modes (every X days, specific weekdays)
+- Follow-up reminders (T+0, T+30, T+60, T+90, T+120 minutes)
+- Refill threshold alerts with weekly notifications
+- Arabic/English localization with RTL support
+- Light/dark/system theme modes
+- Account management (password change, account deletion)
+- Force update mechanism via FCM
+- Contact form for user support
+
+**Known Limitations (v1.3.4)**:
+- Flat database structure (single collection per user)
+- iOS notification delivery inconsistent
+- No legal document version tracking
+- Single notification permission request pattern unclear
+- Background task reliability issues on iOS
+
+### Post-v1.3.4 Development Cycle (November - December 2025)
+**Development Focus**: Reliability improvements, iOS fixes, and database architecture modernization.
+
+**Major Features Added**:
+- CarPlay integration attempted (later removed Dec 8, 2025)
+- Country blocking for restricted regions
+- Notification rescheduling improvements
+- iOS notification interruption levels for time-sensitive alerts
+- Firebase Cloud Functions for version notifications
+- Resource optimization and cleanup
+
+**December 2025 Major Refactoring**:
+- **Database Migration**: Transitioned from `/{userId}/{medicationId}` to `/Users/{userId}/medications/{medicationId}` subcollection structure
+- **Legal Documents System**: Added Terms & Conditions and Privacy Policy version tracking
+- **iOS Notification Overhaul**: Fixed missing main scheduling loop, added `interruptionLevel` parameter
+- **FCM Integration**: iOS APNs token handling, token refresh listeners
+- **Startup Cleanup**: Nuclear notification cleanup to prevent ghost alerts
+- **Dual Entry Point Legal Checks**: Enforcement at both login and app startup
+
+**Version Progression (December 2025)**:
+- v1.4.0: Database migration foundation
+- v1.4.1: iOS notification fixes
+- v1.4.2: Legal document acceptance flow
+- v1.4.3: Deployment preparation (Android SDK 35, Java 17)
+- v1.4.4: Customizable refill reminders, production ready
+
+---
+
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+36 (Production Ready)
+**Current Version**: v1.4.4+41 (Production Ready)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
+
+---
+
+### Localization Cleanup (January 4, 2026)
+**Status**: ✅ **COMPLETE** - Translation files cleaned and optimized
+
+**Work Performed**:
+- Analyzed all 161 translation keys in app_en.arb and app_ar.arb
+- Identified truly unused translations after comprehensive codebase scan
+- Removed 12 genuinely unused translation keys from both English and Arabic files
+- Added 7 missing Arabic translations that were present in English but not translated
+- All Flutter analyzer errors resolved (0 errors)
+- All localization warnings resolved (0 untranslated messages)
+
+**Removed Unused Keys (12 total)**:
+- `contactMeTitle` - Duplicate/unused contact form title
+- `contactMeSent` - Unused success message variant
+- `contactMeFailed` - Duplicate error message (using `messageFailed` instead)
+- `refillReminderDay` - Old refill reminder setting (feature was redesigned)
+- `refillReminderTime` - Old refill reminder setting (feature was redesigned)
+- `lightTheme` - Using `light` instead
+- `darkTheme` - Using `dark` instead
+- `error` - Generic unused error label
+- `medications` - Unused plural label
+- `newUpdateAvailable` - Unused update notification title
+- `updateAvailableBody` - Unused update notification body
+- `mustAcceptLegalUpdates` - Unused legal dialog message
+
+**Added Missing Arabic Translations (7 total)**:
+- `noUser` → "لا يوجد مستخدم مسجل الدخول حالياً"
+- `enterPasswordTwice` → "يرجى إدخال كلمة المرور مرتين."
+- `delete` → "امسح"
+- `noUserEmail` → "لا يوجد بريد إلكتروني للمستخدم"
+- `accountDeletedSuccess` → "تم مسح الحساب بنجاح"
+- `mustBeLoggedIn` → "يجب أن تكون مسجلاً للدخول لإرسال رسالة"
+- `messageSent` → "تم إرسال الرسالة بنجاح!"
+
+**Files Updated**:
+- `/lib/l10n/app_en.arb` - Removed 12 unused keys
+- `/lib/l10n/app_ar.arb` - Removed 12 unused keys, added 7 missing translations
+- `/pubspec.yaml` - Version: 1.4.4+40 → 1.4.4+41
+- `/android/app/build.gradle.kts` - versionCode: 40 → 41
+
+**Result**: Cleaner, more maintainable localization files with complete Arabic translations. Translation file sizes optimized while maintaining all actively-used strings.
 
 ---
 
@@ -35,9 +216,9 @@
 - `/ios/Runner/Runner.entitlements` - Production APNs environment
 
 **Version Tracking**:
-- pubspec.yaml: 1.4.4+36
-- android/app/build.gradle.kts: versionCode 36, versionName "1.4.4"
-- iOS: Uses FLUTTER_BUILD_NUMBER (36) and FLUTTER_BUILD_NAME (1.4.4)
+- pubspec.yaml: 1.4.4+41
+- android/app/build.gradle.kts: versionCode 41, versionName "1.4.4"
+- iOS: Uses FLUTTER_BUILD_NUMBER (41) and FLUTTER_BUILD_NAME (1.4.4)
 
 ---
 
@@ -105,6 +286,57 @@
 - `/android/app/build.gradle.kts` - versionCode: 28 → 34
 
 **Result**: Users can customize refill reminder timing to match their pharmacy visit schedule. All low-stock alerts fire at the same user-chosen day/time. Changes apply automatically when homepage is accessed.
+
+---
+
+### Android Notification Fixes (January 4, 2026)
+**Status**: ✅ **FIXED** - Critical notification issues resolved
+
+**Issue 1: Android Release Build - Notification Icon Not Found**
+**Problem**: Release APK crashed with `PlatformException(Invalid_icon, The resource dawatime_notify could not be found...)`. Debug builds worked fine.
+
+**Root Cause**: R8 resource shrinker (enabled with `isShrinkResources = true`) removed notification icon drawables from release builds because they're referenced dynamically by string name, not direct resource ID.
+
+**Solution**: Created `android/app/src/main/res/raw/keep.xml` with tools:keep directive:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/dawatime_notify,@drawable/dawatime_foreground,@drawable/background" />
+```
+
+**Files Created**:
+- `/android/app/src/main/res/raw/keep.xml` - Prevents R8 from removing notification icons
+
+**Issue 2: Days of Week Notifications Scheduling for Next Week**
+**Problem**: When today (e.g., Sunday) was in the selected weekdays, Android notifications scheduled for next week instead of checking if today's time had passed.
+
+**Root Cause**: Line 114 logic in medication_notifications.dart: `if (daysUntil <= 0) daysUntil += 7` always added 7 days when current day matched selected weekday, even if scheduled time hadn't passed yet today.
+
+**Solution**: Changed logic to check if today's scheduled DateTime passed before adding 7 days:
+```dart
+if (daysUntil == 0) {
+  // Today is a selected day, check if time has passed
+  final todayScheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+  if (todayScheduledTime.isAfter(now)) {
+    // Time hasn't passed yet today - schedule for today
+    scheduledTime = todayScheduledTime;
+  } else {
+    // Time already passed - schedule for next week
+    daysUntil = 7;
+  }
+} else if (daysUntil < 0) {
+  daysUntil += 7;
+}
+```
+
+**Files Updated**:
+- `/lib/utils/medication_notifications.dart` (lines 112-143) - Fixed weekday calculation logic
+- `/pubspec.yaml` - Version: 1.4.4+20 → 1.4.4+21
+- `/android/app/build.gradle.kts` - versionCode: 20 → 21
+
+**Debug Process**: Added extensive print logging to trace weekday processing, discovered daysUntil=0 always became daysUntil=7. User confirmed notification fired correctly for today (Sunday 17:41) after fix.
+
+**Result**: Release builds include notification icons successfully. Days of week notifications fire correctly for today when selected. Both Android and iOS notifications now work reliably.
 
 ---
 
@@ -979,6 +1211,8 @@ Future<void> _saveFCMToken(String uid) async {
 
 **DNS Configuration** (Cloudflare):
 **CRITICAL**: DNS is managed by Cloudflare (nameservers: rick.ns.cloudflare.com), NOT Porkbun.
+- **Domain registrar**: Porkbun (purchased June 25, 2025)
+- **DNS provider**: Cloudflare (configured July 8, 2025)
 
 **WWW Subdomain Setup**:
 - Type: CNAME

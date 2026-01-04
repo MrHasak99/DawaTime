@@ -839,6 +839,10 @@ class _AuthGateState extends State<AuthGate> {
                 );
               }
 
+              if (_lastCheckedUserId != user.uid) {
+                _lastCheckedUserId = user.uid;
+              }
+
               _saveFCMToken(user.uid);
               return HomePage(uid: user.uid);
             },

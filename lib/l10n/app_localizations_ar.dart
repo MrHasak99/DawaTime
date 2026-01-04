@@ -202,15 +202,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get language => 'اللغة';
 
   @override
-  String get refillReminderSettings => 'إعدادات تنبيه التعبئة';
-
-  @override
-  String get refillReminderDay => 'يوم التنبيه';
-
-  @override
-  String get refillReminderTime => 'وقت التنبيه';
-
-  @override
   String get at => 'عند الساعة';
 
   @override
@@ -238,10 +229,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get systemTheme => 'حسب النظام';
 
   @override
-  String get lightTheme => 'فاتح';
+  String get light => 'فاتح';
 
   @override
-  String get darkTheme => 'داكن';
+  String get dark => 'داكن';
+
+  @override
+  String get refillReminderSettings => 'تذكير التعبئة الأسبوعي';
 
   @override
   String get editProfile => 'تعديل الملف الشخصي';
@@ -277,15 +271,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get writeYourMessageHere => 'اكتب رسالتك هنا...';
-
-  @override
-  String get contactMeTitle => 'تواصل معي';
-
-  @override
-  String get contactMeSent => 'تم إرسال الرسالة بنجاح!';
-
-  @override
-  String get contactMeFailed => 'فشل إرسال الرسالة، يرجى المحاولة مرة أخرى';
 
   @override
   String get notifications => 'التنبيهات';
@@ -375,12 +360,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appInfo => 'معلومات التطبيق';
-
-  @override
-  String get light => 'فاتح';
-
-  @override
-  String get dark => 'داكن';
 
   @override
   String get failedToLoadUserData => 'فشل تحميل بيانات المستخدم';
@@ -497,9 +476,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedUpdateCheck => 'تعذر التحقق من وجود تحديثات. الرجاء المحاولة مرة أخرى لاحقاً';
 
   @override
-  String get error => 'خطأ';
-
-  @override
   String get gotIt => 'حسناً!';
 
   @override
@@ -605,19 +581,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lowStock => 'مخزون منخفض';
 
   @override
-  String get medications => 'الأدوية';
-
-  @override
   String get needRefill => 'الأدوية التالية تحتاج إلى إعادة تعبئة:';
 
   @override
   String get needRefillShort => 'أدوية تحتاج إعادة تعبئة';
-
-  @override
-  String get newUpdateAvailable => 'تحديث جديد متوفر!';
-
-  @override
-  String get updateAvailableBody => 'إصدار جديد من داوا تايم متاح. انقر للتحديث الآن.';
 
   @override
   String get legalUpdateRequired => 'تحديث المستندات القانونية';
@@ -636,7 +603,4 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get declineAndLogout => 'رفض و تسجيل الخروج';
-
-  @override
-  String get mustAcceptLegalUpdates => 'يجب عليك قبول المستندات القانونية المحدثة للمتابعة';
 }

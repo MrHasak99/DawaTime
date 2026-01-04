@@ -202,15 +202,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get refillReminderSettings => 'Refill Reminder Settings';
-
-  @override
-  String get refillReminderDay => 'Reminder Day';
-
-  @override
-  String get refillReminderTime => 'Reminder Time';
-
-  @override
   String get at => 'at';
 
   @override
@@ -238,10 +229,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemTheme => 'System Default';
 
   @override
-  String get lightTheme => 'Light';
+  String get light => 'Light';
 
   @override
-  String get darkTheme => 'Dark';
+  String get dark => 'Dark';
+
+  @override
+  String get refillReminderSettings => 'Weekly Refill Reminder';
 
   @override
   String get editProfile => 'Edit Profile';
@@ -277,15 +271,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get writeYourMessageHere => 'Write your message here...';
-
-  @override
-  String get contactMeTitle => 'Contact Me';
-
-  @override
-  String get contactMeSent => 'Message sent successfully!';
-
-  @override
-  String get contactMeFailed => 'Failed to send message, please try again';
 
   @override
   String get notifications => 'Notifications';
@@ -375,12 +360,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appInfo => 'App Info';
-
-  @override
-  String get light => 'Light';
-
-  @override
-  String get dark => 'Dark';
 
   @override
   String get failedToLoadUserData => 'Failed to load user data';
@@ -497,9 +476,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedUpdateCheck => 'Failed to check for updates, please try again later';
 
   @override
-  String get error => 'Error';
-
-  @override
   String get gotIt => 'Got it!';
 
   @override
@@ -605,19 +581,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lowStock => 'Low Stock';
 
   @override
-  String get medications => 'Medications';
-
-  @override
   String get needRefill => 'The following medications need refilling:';
 
   @override
   String get needRefillShort => 'medications need refilling';
-
-  @override
-  String get newUpdateAvailable => 'New Update Available!';
-
-  @override
-  String get updateAvailableBody => 'A new version of DawaTime is available. Tap to update now.';
 
   @override
   String get legalUpdateRequired => 'Legal Documents Updated';
@@ -636,7 +603,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get declineAndLogout => 'Decline & Logout';
-
-  @override
-  String get mustAcceptLegalUpdates => 'You must accept the updated legal documents to continue';
 }

@@ -461,24 +461,6 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get language;
 
-  /// No description provided for @refillReminderSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Refill Reminder Settings'**
-  String get refillReminderSettings;
-
-  /// No description provided for @refillReminderDay.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminder Day'**
-  String get refillReminderDay;
-
-  /// No description provided for @refillReminderTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminder Time'**
-  String get refillReminderTime;
-
   /// No description provided for @at.
   ///
   /// In en, this message translates to:
@@ -533,17 +515,23 @@ abstract class AppLocalizations {
   /// **'System Default'**
   String get systemTheme;
 
-  /// No description provided for @lightTheme.
+  /// No description provided for @light.
   ///
   /// In en, this message translates to:
   /// **'Light'**
-  String get lightTheme;
+  String get light;
 
-  /// No description provided for @darkTheme.
+  /// No description provided for @dark.
   ///
   /// In en, this message translates to:
   /// **'Dark'**
-  String get darkTheme;
+  String get dark;
+
+  /// No description provided for @refillReminderSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Refill Reminder'**
+  String get refillReminderSettings;
 
   /// No description provided for @editProfile.
   ///
@@ -610,24 +598,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write your message here...'**
   String get writeYourMessageHere;
-
-  /// No description provided for @contactMeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact Me'**
-  String get contactMeTitle;
-
-  /// No description provided for @contactMeSent.
-  ///
-  /// In en, this message translates to:
-  /// **'Message sent successfully!'**
-  String get contactMeSent;
-
-  /// No description provided for @contactMeFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to send message, please try again'**
-  String get contactMeFailed;
 
   /// No description provided for @notifications.
   ///
@@ -790,18 +760,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App Info'**
   String get appInfo;
-
-  /// No description provided for @light.
-  ///
-  /// In en, this message translates to:
-  /// **'Light'**
-  String get light;
-
-  /// No description provided for @dark.
-  ///
-  /// In en, this message translates to:
-  /// **'Dark'**
-  String get dark;
 
   /// No description provided for @failedToLoadUserData.
   ///
@@ -1031,12 +989,6 @@ abstract class AppLocalizations {
   /// **'Failed to check for updates, please try again later'**
   String get failedUpdateCheck;
 
-  /// No description provided for @error.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
-  String get error;
-
   /// No description provided for @gotIt.
   ///
   /// In en, this message translates to:
@@ -1235,12 +1187,6 @@ abstract class AppLocalizations {
   /// **'Low Stock'**
   String get lowStock;
 
-  /// No description provided for @medications.
-  ///
-  /// In en, this message translates to:
-  /// **'Medications'**
-  String get medications;
-
   /// No description provided for @needRefill.
   ///
   /// In en, this message translates to:
@@ -1252,18 +1198,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'medications need refilling'**
   String get needRefillShort;
-
-  /// No description provided for @newUpdateAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'New Update Available!'**
-  String get newUpdateAvailable;
-
-  /// No description provided for @updateAvailableBody.
-  ///
-  /// In en, this message translates to:
-  /// **'A new version of DawaTime is available. Tap to update now.'**
-  String get updateAvailableBody;
 
   /// No description provided for @legalUpdateRequired.
   ///
@@ -1300,12 +1234,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Decline & Logout'**
   String get declineAndLogout;
-
-  /// No description provided for @mustAcceptLegalUpdates.
-  ///
-  /// In en, this message translates to:
-  /// **'You must accept the updated legal documents to continue'**
-  String get mustAcceptLegalUpdates;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

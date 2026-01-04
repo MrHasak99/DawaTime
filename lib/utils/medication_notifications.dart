@@ -111,7 +111,21 @@ Future<void> scheduleMedicationNotification(
 
     for (final weekday in daysOfWeek) {
       int daysUntil = (weekday - now.weekday) % 7;
-      if (daysUntil <= 0) daysUntil += 7;
+      if (daysUntil == 0) {
+        final todayScheduledTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          hour,
+          minute,
+        );
+        if (now.isAfter(todayScheduledTime)) {
+          daysUntil = 7;
+        }
+      } else if (daysUntil < 0) {
+        daysUntil += 7;
+      }
+
       final candidateDate = now.add(Duration(days: daysUntil));
       final candidateTime = DateTime(
         candidateDate.year,
