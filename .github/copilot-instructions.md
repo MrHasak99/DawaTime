@@ -139,10 +139,16 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+42 (Production Ready)
+**Current Version**: v1.4.4+42 (Production Deployed)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
+
+**Deployment Status (January 5, 2026)**:
+- 🔄 **iOS App Store**: v1.4.4+42 waiting for review (submitted)
+- ✅ **Android Website**: v1.4.4+42 APK deployed to https://dawatime.com (live)
+- ✅ **Web App**: v1.4.4+42 deployed to https://webapp.dawatime.com (live via Netlify)
+- 🔄 **Google Play Store**: v1.4.4+42 AAB in review (Internal Testing track)
 
 ---
 
@@ -452,6 +458,138 @@ The shared system supports three different translation patterns across pages:
 - `/android/app/build.gradle.kts` - versionCode: 40 → 41
 
 **Result**: Cleaner, more maintainable localization files with complete Arabic translations. Translation file sizes optimized while maintaining all actively-used strings.
+
+---
+
+### Google Play Store Distribution Attempt (January 5, 2026)
+**Status**: 🔄 **IN PROGRESS** - First attempt at Google Play Console distribution
+
+**Context**: After previous inability to distribute on Google Play Store due to personal developer account restrictions for health/medical apps, reattempting distribution via Google Play Console with proper category and data safety declarations.
+
+**Distribution History**:
+- **iOS**: Successfully distributed via Apple App Store since August 2025
+- **Android (Previous)**: Website-only distribution (https://dawatime.com) since October 2025
+- **Android (Current)**: Attempting Google Play Console Internal Testing track
+
+**Play Console Setup Completed (January 5, 2026)**:
+1. **Health Apps Declaration**: Selected "Medication and treatment management" (safe for personal accounts)
+2. **Data Safety Form**: Declared data collection accurately:
+   - Location: Approximate (for country restrictions)
+   - Personal info: Name, Email, User IDs
+   - Messages: Emails (contact form)
+   - App activity: Interactions, User-generated content (medication data)
+   - App info: Crash logs, Diagnostics, Performance (Firebase)
+   - ❌ Health info: NOT checked (critical - medication names are user-entered text, not health sensor data)
+3. **Authentication**: Username and password
+4. **Account Deletion**: https://dawatime.com/account-deletion
+5. **Data Encryption**: Yes (Firebase HTTPS/SSL)
+
+**App Bundle Build**:
+- **File**: `build/app/outputs/bundle/release/app-release.aab`
+- **Size**: 54.1MB
+- **Version**: 1.4.4 (Build 42)
+- **Target SDK**: Android 35 (Google Play requirement)
+- **Build Time**: 62.4s
+- **Optimizations**: ProGuard enabled, resource shrinking active
+
+**App Store Metadata Prepared**:
+- **Description**: Enhanced bilingual description emphasizing 5 follow-up reminders, refill tracking, Arabic support
+- **Short Description**: "Never miss a dose. Smart medication reminders with refill tracking. Free!"
+- **Keywords** (98 chars): `pill,reminder,medication,medicine,tracker,refill,dose,prescription,vitamin,alarm,alert,schedule,rx`
+- **Category**: Health & Fitness (NOT Medical - avoids organization account requirement)
+- **Slogan**: "Never miss a dose. | لا تفوّت جرعة بعد اليوم"
+
+**Release Notes** (Internal Testing):
+First internal testing release of DawaTime on Google Play Console. Core features: medication reminders with 5 follow-ups, refill tracking, bilingual support (English/Arabic), dark mode, swipe gestures.
+
+**Risk Mitigation**:
+- Avoided "Medical" category (triggers organization requirements)
+- Did NOT check "Health info" in data safety (medication names = user content, not health sensor data)
+- Properly declared as "Medication and treatment management" (consumer tool, not clinical)
+- All permissions (notifications, exact alarms) are standard for reminder apps
+
+**Next Steps**:
+- Upload AAB to Play Console Internal Testing track
+- Add internal testers (email addresses)
+- Complete remaining Play Console setup (content rating, target audience, store listing)
+- Test on physical Android devices before wider release
+
+**Files Generated**:
+- `/build/app/outputs/bundle/release/app-release.aab` - Google Play App Bundle (54.1MB)
+
+**Confidence Level**: High - App is properly categorized as consumer medication tracker, not health data collector
+
+---
+
+### v1.4.4+42 Multi-Platform Deployment (January 5, 2026)
+**Status**: ✅ **COMPLETE** - All platforms deployed with latest version
+
+**Build Artifacts Generated**:
+1. **Android APK**: 60MB signed release APK for website distribution
+2. **Android AAB**: 54.1MB App Bundle for Google Play Console
+3. **iOS IPA**: 44MB App Store package
+4. **Web Build**: Flutter web app with version.json
+
+**Deployment Execution**:
+
+**iOS App Store (App Store Connect)**:
+- Uploaded: v1.4.4 (Build 42)
+- Size: 44MB IPA
+- Status: Waiting for Review (submitted)
+- Deployment target: iOS 15.0+
+- APNs: Production environment
+- Copyright: Updated to 2026
+
+**Android Website (Firebase Hosting)**:
+- Deployed: https://dawatime.com
+- File: dawatime-v1.4.4.apk (60MB)
+- Verification: MD5 checksum confirmed
+- Distribution: Public download via website
+- Hosting: 16 files deployed
+
+**Web App (Netlify)**:
+- Deployed: https://webapp.dawatime.com
+- Assets: 7 files uploaded to CDN
+- Version tracking: version.json with build number
+- Build time: 22.3s
+- Deploy ID: 695b7be0ba8ac7b532bda500
+
+**Google Play Console (Internal Testing)**:
+- Uploaded: app-release.aab (54.1MB)
+- Track: Internal Testing
+- Release notes: First internal test release
+- Status: In review
+
+**App Store Metadata Updates**:
+- **Description**: New bilingual description with 5 follow-up reminders emphasis
+- **Keywords**: `pill,reminder,medication,medicine,tracker,refill,dose,prescription,vitamin,alarm,alert,schedule,rx` (98 chars)
+- **Short Description**: "Never miss a dose. Smart medication reminders with refill tracking. Free!"
+- **Slogan**: "Never miss a dose. | لا تفوّت جرعة بعد اليوم"
+- **Copyright**: 2026 Hamad AlKhalaf
+
+**Files Generated**:
+- `/build/app/outputs/flutter-apk/app-release.apk` - Website APK (60MB)
+- `/build/app/outputs/bundle/release/app-release.aab` - Play Store AAB (54.1MB)
+- `/build/ios/ipa/DawaTime.ipa` - App Store IPA (44MB)
+- `/build/web/` - Web application bundle with version.json
+- `/public/dawatime-v1.4.4.apk` - Deployed website APK
+
+**Version Consistency Verification**:
+- ✅ pubspec.yaml: 1.4.4+42
+- ✅ Android versionCode: 42, versionName: "1.4.4"
+- ✅ iOS CFBundleVersion: 42, CFBundleShortVersionString: 1.4.4
+- ✅ Web version.json: {"version":"1.4.4","build_number":"42"}
+
+**Deployment Timeline** (January 5, 2026):
+- 10:44 - Android APK built (108.3s)
+- 10:50 - iOS IPA built (300.9s)
+- 11:45 - APK deployed to Firebase Hosting
+- 11:51 - Web app built (24.1s)
+- 11:57 - Web app deployed to Netlify (30.7s)
+- 17:01 - Android AAB built for Play Console (62.4s)
+- Status: All platforms live/ready for review
+
+**Result**: Full multi-platform release successfully deployed. v1.4.4+42 is now live on website and web app, submitted to iOS App Store, and uploaded to Play Console Internal Testing.
 
 ---
 
