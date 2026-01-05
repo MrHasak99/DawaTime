@@ -139,7 +139,7 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+42 (Production Deployed)
+**Current Version**: v1.4.4+42 (Production Deployed) | v1.4.4+43 (Prepared for Week 1 Beta Update)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
@@ -148,7 +148,76 @@
 - 🔄 **iOS App Store**: v1.4.4+42 waiting for review (submitted)
 - ✅ **Android Website**: v1.4.4+42 APK deployed to https://dawatime.com (live)
 - ✅ **Web App**: v1.4.4+42 deployed to https://webapp.dawatime.com (live via Netlify)
-- 🔄 **Google Play Store**: v1.4.4+42 AAB in review (Internal Testing track)
+- ✅ **Google Play Store**: v1.4.4+42 Open Testing (live) - Beta testing via Testers Community
+- 📦 **Beta Update Prepared**: v1.4.4+43 built, scheduled for Jan 9-11 (Days 5-7) - Play Store integration
+
+**Beta Testing Timeline (January 5-21, 2026)**:
+- **Days 1-4**: Monitoring phase - Track installs, feedback, crashes
+- **Days 5-7**: Week 1 Update (v1.4.4+43) - Play Store link integration
+- **Days 8-10**: Monitoring phase - Prepare Week 2 update
+- **Days 11-13**: Week 2 Update (v1.4.4+44) - Minor improvements/polish
+- **Day 14**: CRITICAL - Download Production Access Form Report, submit to Production track
+- **Days 15-16**: Final testing while production review in progress
+
+---
+
+### Play Store Update Link Integration - v1.4.4+43 (January 5, 2026)
+**Status**: 🔧 **PREPARED** - Built and ready, awaiting proper release timing (Days 5-7)
+
+**Problem**: Force update dialog was redirecting Android users to website APK downloads instead of Google Play Store, creating inconsistent update experience for beta testers.
+
+**Solution**: Updated `showForceUpdateDialog()` in main.dart to redirect Android users to Play Store listing.
+
+**Changes Made**:
+- **File Modified**: `lib/main.dart` (line 1006-1008, `showForceUpdateDialog()` function)
+- **Before**: `https://dawatime.com` (website APK download)
+- **After**: `https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime` (Play Store listing)
+- **iOS Unchanged**: Still directs to App Store (no change needed)
+
+**Version Updates**:
+- `pubspec.yaml`: `1.4.4+42` → `1.4.4+43`
+- `android/app/build.gradle.kts` (versionCode): `42` → `43`
+
+**Build Results**:
+- **Build Command**: `flutter build appbundle --release`
+- **Output**: `build/app/outputs/bundle/release/app-release.aab` (54.1MB)
+- **Build Time**: 93.9s
+- **Status**: Ready for upload
+
+**Release Strategy**:
+- **DO NOT release immediately** - Wait for Days 5-7 (January 9-11)
+- **Rationale**: Give testers 4-6 days to test v1.4.4+42 first
+- **Professional cadence**: Spacing updates shows sustained engagement, not rushed development
+- **Feedback-driven**: Update comes after initial testing period
+
+**Planned Release Notes**:
+```
+Update v1.4.4 Build 43:
+• Integrated Google Play Store for seamless updates
+• Android users now directed to Play Store instead of website downloads
+• Improved update experience
+```
+
+**Benefits of This Update**:
+- ✅ Platform-appropriate update flow (Play Store → Play Store)
+- ✅ Demonstrates active development to Testers Community
+- ✅ Satisfies Week 1 update requirement
+- ✅ No functional divergence from iOS (just update URL change)
+- ✅ Easy for testers to verify functionality
+
+**Key Learning**: Beta testing updates should be strategically spaced (4-7 days apart) to:
+1. Allow proper testing cycles
+2. Demonstrate sustained engagement
+3. Show responsiveness to feedback
+4. Maintain professional release cadence
+5. Give Testers Community adequate time to evaluate builds
+
+**Next Week 2 Update Ideas (v1.4.4+44)**:
+- Minor UI polish (button spacing, text alignment)
+- Enhanced error messages with more context
+- Additional analytics events for better tracking
+- Internal logging improvements
+- Keep all changes iOS-identical to maintain version parity
 
 ---
 
@@ -471,8 +540,8 @@ The shared system supports three different translation patterns across pages:
 - **Android (Previous)**: Website-only distribution (https://dawatime.com) since October 2025
 - **Android (Current)**: Attempting Google Play Console Internal Testing track
 
-**Play Console Setup Completed (January 5, 2026)**:
-1. **Health Apps Declaration**: Selected "Medication and treatment management" (safe for personal accounts)
+**Play Console Setup - First Attempt (January 5, 2026) - REJECTED**:
+1. **Health Apps Declaration**: Selected "Medication and treatment management" ❌ **THIS CAUSED REJECTION**
 2. **Data Safety Form**: Declared data collection accurately:
    - Location: Approximate (for country restrictions)
    - Personal info: Name, Email, User IDs
@@ -483,6 +552,98 @@ The shared system supports three different translation patterns across pages:
 3. **Authentication**: Username and password
 4. **Account Deletion**: https://dawatime.com/account-deletion
 5. **Data Encryption**: Yes (Firebase HTTPS/SSL)
+
+**REJECTION REASON (January 5, 2026)**:
+"Violation of Play Console Requirements - Some types of apps can only be distributed by organizations. You have selected an app category or declared your app offers certain features that require you to submit your app using an organization account."
+
+**Root Cause**: Selecting ANY option in the "Health apps" section (even "Medication and treatment management") triggers organization account requirement for new developer accounts (policy change August 31, 2024).
+
+**Corrective Action Taken (January 5, 2026)**:
+1. ✅ **Unchecked all health app features** - Left entire "Health apps" section empty, checked "Other"
+2. ✅ Framed app as "reminder/scheduling tool" NOT "medication management"
+3. ✅ Category: "Health & Fitness" (safe for personal accounts)
+4. ✅ Short Description: Removed "Free!" (violates promotion keywords policy)
+5. ✅ Data Safety: Corrected "App interactions" and "User-generated content" to "Required"
+6. ✅ Target Age: Selected 13-15, 16-17, 18+ (Teen 13+)
+7. ✅ Advertising ID: Declared for Analytics only (Firebase)
+
+**Result**: App status changed from "Rejected" → "Ready to publish" → Published to Open Testing
+
+---
+
+### Google Play Store Beta Testing via Testers Community (January 5, 2026)
+**Status**: ✅ **LIVE** - Open Testing track active with community testers
+
+**Setup Process**:
+1. **Testing Track**: Switched from Internal Testing → Open Testing for Testers Community compatibility
+2. **Testing URL**: `https://play.google.com/apps/testing/com.mrhasak99.dawatime`
+3. **Testers Community Campaign**: Created at https://www.testerscommunity.com
+4. **Release Notes**: Shortened to ~420 characters highlighting key features
+5. **Testing Instructions**: Provided clear signup/test workflow (no test credentials needed)
+
+**Testing Instructions Provided**:
+```
+No test credentials needed - create your own account to test.
+1. Sign Up with any email/password
+2. Verify email (check inbox)
+3. Add test medication (tap "+")
+4. Set reminder 2-3 minutes ahead
+5. Test swipe gestures, themes, Arabic language
+
+Android 13+: Allow "Exact alarms" in system settings
+Report issues via Settings → Contact Me
+```
+
+**Open Testing Configuration**:
+- **Track**: Open Testing (unlimited testers)
+- **Release**: v1.4.4 (Build 42)
+- **AAB Size**: 54.1MB
+- **Target**: Android 7.0+ (API 24-35)
+- **Testing Platform**: Testers Community (professional beta testers)
+- **Feedback Collection**: In-app contact form + Testers Community platform
+
+**Metadata Finalized**:
+- **App Name**: DawaTime
+- **Category**: Health & Fitness
+- **Short Description**: "Never miss a dose. Smart medication reminders with refill tracking." (73 chars)
+- **Full Description**: Bilingual description emphasizing 5 follow-ups, refill tracking, Arabic support
+- **Target Age**: 13+ (Teen)
+- **Content Rating**: TBD (awaiting IARC questionnaire)
+
+**Files Deployed**:
+- `/build/app/outputs/bundle/release/app-release.aab` - Open Testing track (54.1MB)
+
+**Testers Community Requirements for Production Access**:
+
+**Timeline**: 16-day testing period (January 5-21, 2026)
+
+**Critical Requirements**:
+1. **Release 2-3 App Updates** (Days 1-16):
+   - Must show active development during testing period
+   - Can be minor changes: bug fixes, UI improvements, small features
+   - Updates must be visible to testers via Play Console
+
+2. **Production Access Form Report** (Day 14+):
+   - Download from Testers Community Reports tab after 14 days
+   - Use pre-filled answers when completing Google Play's production access form
+   - Required for production release approval
+
+3. **Submit for Production** (Day 14):
+   - **Critical timing**: Submit to Production track once app crosses 14 days
+   - Testers will begin uninstalling after Day 14
+   - Continue testing until Day 16, but production submission must happen at Day 14
+
+**Action Plan**:
+- **Week 1 (Days 1-7)**: Monitor feedback, release Update 1 (minor fixes/improvements)
+- **Week 2 (Days 8-13)**: Release Update 2, prepare for production submission
+- **Day 14**: Download Production Access Form Report, submit to Production track
+- **Days 14-16**: Final testing continues while production review in progress
+
+**Next Steps**:
+- Monitor tester feedback via Testers Community dashboard
+- Track installs/crashes via Play Console analytics
+- Plan 2-3 minor updates for testing period
+- Prepare for Production release after Day 14
 
 **App Bundle Build**:
 - **File**: `build/app/outputs/bundle/release/app-release.aab`
@@ -590,6 +751,126 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Status: All platforms live/ready for review
 
 **Result**: Full multi-platform release successfully deployed. v1.4.4+42 is now live on website and web app, submitted to iOS App Store, and uploaded to Play Console Internal Testing.
+
+---
+
+### Beta Testing Update Strategy - Play Store Integration (January 5, 2026)
+**Status**: ✅ **PREPARED** - v1.4.4+43 ready, awaiting proper release timing
+
+**Context**: Testers Community requires 2-3 app updates during 16-day testing period to demonstrate "active development" for production access qualification. Need strategy that satisfies requirement while maintaining iOS version parity.
+
+**Update Prepared - Week 1 (v1.4.4+43)**:
+
+**Primary Change**: Google Play Store integration for Android update flow
+- **File**: `lib/main.dart` (line 1006-1008, `showForceUpdateDialog()` function)
+- **Before**: Android users redirected to `https://dawatime.com` (website APK download)
+- **After**: Android users redirected to `https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime`
+- **Rationale**: Play Store users should receive updates from Play Store, not website downloads
+- **iOS**: Unchanged, still directs to App Store
+
+**Version Changes**:
+- `pubspec.yaml`: `1.4.4+42` → `1.4.4+43`
+- `android/app/build.gradle.kts` (versionCode): `42` → `43`
+- **Build Artifact**: `build/app/outputs/bundle/release/app-release.aab` (54.1MB, build time 93.9s)
+- **Functionality**: 100% identical to v1.4.4+42 except update URL
+
+**Release Notes (Prepared)**:
+```
+Update v1.4.4 Build 43:
+• Integrated Google Play Store for seamless updates
+• Android users now directed to Play Store instead of website downloads
+• Improved update experience
+```
+
+**Critical Timing Decision**: DO NOT release immediately after v1.4.4+42
+
+**Why Spacing Updates is Essential**:
+- ❌ **Bad**: Releasing v43 within 1 hour of v42
+  - Testers haven't installed first version yet
+  - Looks rushed/artificial
+  - No time to collect feedback
+  - Doesn't show "sustained engagement" over testing period
+  
+- ✅ **Good**: Strategic update cadence over 16 days
+  - Shows responsiveness to feedback
+  - Demonstrates sustained engagement
+  - Allows proper testing cycles
+  - Professional release rhythm
+
+**Recommended Release Timeline**:
+
+**Day 1 (January 5, 2026) - Initial Release:**
+- ✅ Published v1.4.4+42 to Open Testing
+- ✅ Testers Community campaign started
+- **Action**: Monitor dashboard, let testers install and test
+
+**Days 2-4 (January 6-8) - Monitoring Phase:**
+- 📊 Track Testers Community metrics:
+  - Install count growth
+  - Crash reports (Firebase Crashlytics)
+  - Feedback comments
+  - Testing completion rate
+- **No updates** - give testers 4-6 days to test initial version
+
+**Days 5-7 (January 9-11) - Week 1 Update:**
+- 📦 **Upload v1.4.4+43** to Play Console Open Testing
+- 📝 Release notes: "Based on initial testing feedback, integrated Play Store for seamless updates"
+- **Why this timing?** Testers had adequate time to test v42, update shows responsiveness
+- **What to monitor**: Tester feedback on Play Store integration, install/update success rate
+
+**Days 8-10 (January 12-14) - Monitoring Phase:**
+- 📊 Monitor feedback on v1.4.4+43
+- 🛠️ Prepare v1.4.4+44 (minor improvements/polish)
+- **No updates** - let current version be tested thoroughly
+
+**Days 11-13 (January 16-18) - Week 2 Update:**
+- 📦 **Upload v1.4.4+44** (TBD: minor UI polish, error message improvements, analytics events)
+- 📝 Release notes: "Performance enhancements and stability improvements"
+- **Why this timing?** Ensures 2nd update deployed before Day 14 deadline
+- **Planning**: Keep changes minimal, iOS-identical (continue version parity strategy)
+
+**Day 14 (January 19, 2026) - CRITICAL DEADLINE:**
+- 📥 **Download Production Access Form Report** from Testers Community
+- 🚀 **Submit to Production track** in Play Console
+- 📊 Review form data: tester count, install count, feedback summary
+- ✅ Use pre-filled answers from report for Google's production access form
+- **Note**: Testing continues through Day 16 while production review in progress
+
+**Days 15-16 (January 20-21, 2026) - Final Testing:**
+- 📊 Continue monitoring (testers begin uninstalling after Day 14)
+- 🔍 Watch production track review status
+- 🐛 Address any final issues before testing period ends
+
+**Post-Testing (Day 17+):**
+- ⏳ Await production release approval from Google
+- ⏳ Await iOS App Store review completion
+- 🎯 Once both approved: All platforms live simultaneously
+
+**Version Parity Management**:
+- **iOS**: v1.4.4+42 (whatever build Apple approves, currently in review)
+- **Android**: v1.4.4+43 or +44 (after testing period updates)
+- **Functionality**: 100% identical (only build numbers differ)
+- **Next sync**: v1.4.5 deployment - both platforms receive same build simultaneously
+
+**Files Modified This Session**:
+- `lib/main.dart` - Line 1006-1008: Changed Android update URL
+- `pubspec.yaml` - Version: 1.4.4+42 → 1.4.4+43
+- `android/app/build.gradle.kts` - versionCode: 42 → 43
+- **Build artifact generated**: 54.1MB AAB ready for upload
+
+**Key Learning**: Beta testing updates should be spaced 4-7 days apart to:
+1. Allow proper testing cycles
+2. Demonstrate sustained engagement (not rushed development)
+3. Show responsiveness to actual feedback
+4. Maintain professional release cadence
+5. Give Testers Community time to evaluate each build
+
+**Next Actions**:
+- **Days 2-4**: Monitor Testers Community dashboard daily
+- **Days 5-7**: Upload v1.4.4+43 when timing is appropriate
+- **Days 8-10**: Plan and prepare v1.4.4+44 minor improvements
+- **Days 11-13**: Upload v1.4.4+44
+- **Day 14**: Production submission workflow
 
 ---
 

@@ -1003,7 +1003,7 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
                 final url =
                     Theme.of(context).platform == TargetPlatform.iOS
                         ? 'https://apps.apple.com/app/6748280994'
-                        : 'https://dawatime.com';
+                        : 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime';
                 launchUrl(Uri.parse(url));
               },
               child: Text(
