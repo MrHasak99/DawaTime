@@ -1344,7 +1344,36 @@ if (daysUntil == 0) {
 ---
 
 ## Project Overview
-DawaTime is a Flutter medication reminder app with Firebase backend, supporting Arabic/English localization. The app manages medication schedules, local notifications, and refill reminders with background task execution. Target platforms: Android (SDK 24+) and iOS.
+DawaTime is a Flutter medication reminder app with Firebase backend, designed for the Kuwaiti and GCC market with Arabic as a primary language (not just localization). The app manages medication schedules, local notifications, and refill reminders with background task execution. Target platforms: Android (SDK 24+) and iOS.
+
+### Target Market & Regional Context
+
+**Primary Market**: Kuwait
+- Developer is Kuwaiti (Hamad AlKhalaf)
+- App name "DawaTime" uses Arabic word دواء (dawaa = medicine)
+- Arabic language is primary, not secondary
+- Design decisions reflect Kuwaiti/GCC cultural context
+
+**Secondary Markets**: GCC Region
+- Saudi Arabia, UAE, Qatar, Bahrain, Oman
+- Shared language (Arabic)
+- Similar healthcare systems and medication practices
+- Regional pharmacy networks
+
+**Regional Considerations**:
+- **Country blocking**: Some GCC countries have content restrictions
+- **Location permissions**: Used for regional compliance and country-based restriction checks
+- **Language priority**: Arabic is equal to English, not a translation afterthought
+- **Time formats**: Support for both 12-hour (common in GCC) and 24-hour formats
+- **Currency**: Future pricing features should use KWD (Kuwaiti Dinar) as default
+- **Pharmacy partnerships**: Should focus on Kuwaiti chains (Al-Dawaiya, Boots, etc.) before expanding regionally
+
+**Why This Matters for Development**:
+- Feature priorities should reflect Kuwaiti user needs
+- UI/UX decisions should consider Arabic-first design
+- Pharmacy integrations should target regional providers
+- Marketing and app store presence optimized for GCC
+- Compliance with Kuwaiti health data regulations
 
 ## Architecture & Key Components
 
@@ -3064,11 +3093,14 @@ await flutterLocalNotificationsPlugin.zonedSchedule(..., scheduledTZ, ...);
 **Recommendation**: Remove from dependencies in next version to reduce APK size.
 
 ### geolocator: ^14.0.2 & geocoding: ^4.0.0
-**Status**: Included but **timezone detection uses `flutter_timezone` instead**.
+**Status**: Included for **country-based restriction checks** (GCC regional compliance).
 
-**Reason for inclusion**: Possibly planned feature for location-based reminders or clinic finder.
+**Usage**: 
+- Country detection for regional compliance (some GCC countries have content restrictions)
+- Future: Kuwait pharmacy locator, clinic finder
+- **Not used for**: Timezone detection (handled by `flutter_timezone` instead)
 
-**Current usage**: None - consider removing if no future plans for geolocation features.
+**Considerations**: Location permissions required, privacy-sensitive data
 
 ### permission_handler: ^12.0.0+1
 **Usage**: Handles notification and exact alarm permissions.
@@ -3314,3 +3346,219 @@ pod install --repo-update
 - **Launcher icon**: PNG, max 1024x1024px
 - **Splash screen**: PNG, max 2048x2048px
 - **Notification icons**: Use vector drawable (Android) - stored in `android/app/src/main/res/drawable/`
+
+---
+
+## Future Feature Roadmap
+
+**Last Updated**: December 8, 2025
+
+This section documents planned features for future DawaTime releases. Features are prioritized as **Major** (significant new functionality requiring substantial development) and **Minor** (smaller enhancements or quality-of-life improvements).
+
+### Major Features (Planned)
+
+**1. Medication Log/Progress Bar/Streaks**
+- **Purpose**: Track medication adherence over time with visual progress indicators
+- **Features**:
+  - Calendar view showing taken/missed doses
+  - Streak counter (consecutive days without missing doses)
+  - Progress bar showing daily/weekly/monthly adherence percentage
+  - Historical log with filtering by date range
+- **Complexity**: High (requires new Firestore schema for dose history, new UI screens)
+- **Estimated Effort**: 2-3 weeks
+- **Dependencies**: None
+
+**2. Caregiver (Carelink 💙) Mode**
+- **Purpose**: Allow caregivers to manage medications for family members/patients
+- **Features**:
+  - Caregiver account linking (invite system)
+  - View/manage medications for multiple care recipients
+  - Receive notifications for patient's medication times
+  - Shared medication history and adherence reports
+- **Complexity**: High (requires user relationship management, permission system)
+- **Estimated Effort**: 3-4 weeks
+- **Dependencies**: May require organization developer account for healthcare features
+- **Considerations**: HIPAA compliance implications, privacy policy updates needed
+
+**3. AutoFill Medication Information**
+- **Purpose**: Reduce manual data entry by auto-populating medication details
+- **Features**:
+  - Integration with medication database API
+  - Search by name (English + Arabic medication names)
+  - Pre-fill dosage, frequency, common instructions
+  - Drug interaction warnings (stretch goal)
+- **Complexity**: High (requires external API integration, caching strategy)
+- **Estimated Effort**: 2-3 weeks
+- **Dependencies**: API access, internet connectivity required
+- **API Options**:
+  - **Kuwait focus**: Kuwait Drug Index (if available), GCC medication databases
+  - **Fallback**: FDA OpenFDA (US), RxNorm, or European Medicines Agency
+  - **Challenge**: Most global APIs lack Arabic medication names common in Kuwait
+- **Considerations**: 
+  - API rate limits, offline fallback
+  - Arabic medication name mapping (e.g., باراسيتامول = Paracetamol)
+  - Regional brand names may differ from US/EU databases
+
+**4. Pharmacy Partnership (Kuwait/GCC Focus)**
+- **Purpose**: Connect Kuwaiti users with local pharmacies for refill coordination
+- **Features**:
+  - Pharmacy locator (GPS-based, Kuwait first)
+  - Direct refill requests to pharmacy
+  - Integration with Kuwaiti pharmacy chains (Al-Dawaiya, Boots Kuwait, etc.)
+  - Pricing comparison in KWD (stretch goal)
+- **Complexity**: Very High (requires pharmacy API partnerships, legal compliance)
+- **Estimated Effort**: 4-6 weeks initial (Kuwait only), +2-3 weeks per additional GCC country
+- **Dependencies**: 
+  - Kuwaiti pharmacy partners (Al-Dawaiya Pharmacy, Boots, Ibn Hayyan)
+  - Business development in Kuwait
+  - Kuwaiti health data regulations compliance
+  - May require organization developer account
+- **Considerations**: 
+  - Start with Kuwait market validation before GCC expansion
+  - Kuwait Ministry of Health regulations
+  - Pharmacy licensing and data sharing agreements
+  - Not HIPAA (US-only), but similar GCC health data privacy standards
+- **Status**: Exploratory - complex but more feasible with regional focus than global approach
+- **Alternative**: Simple "Shopping List" export for Kuwait pharmacies as Phase 1
+
+---
+
+### Minor Features (Planned)
+
+**1. Medication Notes**
+- **Purpose**: Allow users to add custom notes to each medication
+- **Features**:
+  - Free-text notes field per medication
+  - Display notes in medication details dialog
+  - Optional notes in reminder notifications
+- **Complexity**: Low (single field addition to Firestore document)
+- **Estimated Effort**: 2-3 days
+- **Implementation**: Add `notes` field to Medications class, update add/edit forms
+
+**2. Choose Your Own Medication Icons**
+- **Purpose**: Visual differentiation with customizable icons and colors
+- **Features**:
+  - Icon selection: Pill, Injection, Ointment, Liquid, Inhaler
+  - Color picker for medication cards
+  - Icons persist in medication list and reminders
+- **Complexity**: Medium (requires asset management, color picker UI)
+- **Estimated Effort**: 1 week
+- **Implementation**: Add `iconType` and `colorHex` fields, create icon asset library
+
+**3. Multiple Daily Reminders**
+- **Purpose**: Support medications taken multiple times per day at specific times
+- **Features**:
+  - "X times per day" scheduling pattern (e.g., 3 times daily)
+  - Multiple time picker for each daily dose
+  - Specify times: Morning, Afternoon, Evening (or custom times)
+  - Works with existing frequency modes (`everyXDays`, `daysOfWeek`)
+- **Complexity**: Medium (extends existing time picker UI, requires schema update)
+- **Estimated Effort**: 1 week
+- **Implementation**: Change `notifyTime` from single `String` to `List<String>` in Medications model
+- **Considerations**: 
+  - UI: Multiple time pickers in add/edit form (scrollable list)
+  - Notifications: Schedule 5 follow-ups for each time slot
+  - Display: Show all times in medication card (e.g., "8 AM, 2 PM, 8 PM")
+  - Backward compatible: Single time = existing behavior
+- **User Benefit**: Clearer than "every X hours" - users think in "times per day" not intervals
+
+**4. Alternative Edit/Delete Medications Methods**
+- **Purpose**: Provide additional UI patterns for medication management beyond swipe gestures
+- **Features**:
+  - Long-press context menu
+  - Three-dot menu button on cards
+  - Batch selection mode for multi-delete
+- **Complexity**: Low-Medium (UI enhancements, no schema changes)
+- **Estimated Effort**: 3-5 days
+- **Rationale**: Some users may not discover swipe gestures
+
+**5. Optional End Date**
+- **Purpose**: Automatically stop reminders after a specified date (e.g., antibiotics course)
+- **Features**:
+  - End date picker in add/edit form
+  - Automatic reminder cancellation when end date reached
+  - Visual indicator for time-limited medications
+- **Complexity**: Low (date field addition, scheduling check)
+- **Estimated Effort**: 2-3 days
+- **Implementation**: Add `endDate` field, check in scheduling logic
+
+---
+
+### Completed Features ✓
+
+**1. Refill Reminder System** (Implemented January 2026)
+- Weekly refill notifications when stock below threshold
+- Customizable day of week and time (default: Sunday 10:00 AM)
+- Color-coded cards (orange = low stock, red = out of stock)
+
+**2. Days of the Week Reminders** (Implemented August 2025)
+- Schedule medications for specific weekdays (e.g., Mon/Wed/Fri)
+- Supports complex patterns (e.g., Monday-Friday only)
+- Independent from "every X days" frequency mode
+
+**3. Arabic Language** (Implemented August 2025)
+- Full bilingual support (English/Arabic)
+- RTL layout for Arabic text
+- Localized date/time formatting
+- 192 English strings, 194 Arabic strings
+
+---
+
+## Feature Implementation Guidance
+
+**When implementing new features**:
+
+1. **Start with Design**:
+   - Create user flow diagrams
+   - Sketch UI mockups
+   - Identify Firestore schema changes
+
+2. **Consider Migration**:
+   - Will existing users need data migration?
+   - Can new features coexist with old data?
+   - Plan backward compatibility strategy
+
+3. **Update Firestore Rules**:
+   - Add validation for new fields
+   - Maintain security for user data isolation
+
+4. **Localization First** (Arabic-Primary Approach):
+   - Add all strings to `app_en.arb` and `app_ar.arb` simultaneously
+   - Test RTL layout for Arabic first (primary audience)
+   - Use `AppLocalizations.of(context)!` everywhere
+   - Consider Arabic text length in UI design (often longer than English)
+   - Validate cultural appropriateness for GCC market
+
+5. **Notification Integration**:
+   - How does feature affect notification scheduling?
+   - Update `medication_notifications.dart` if needed
+   - Test all 5 follow-up reminder patterns
+
+6. **Version Management**:
+   - Increment minor version for features (e.g., 1.4.4 → 1.5.0)
+   - Increment patch version for bugs (e.g., 1.4.4 → 1.4.5)
+   - Update both iOS and Android simultaneously
+
+7. **Documentation**:
+   - Update copilot-instructions.md with architecture details
+   - Document new database fields
+   - Add code examples for complex logic
+
+---
+
+**Priority Recommendations**:
+
+**Quick Wins (Implement Soon)**:
+- Medication Notes (low complexity, high user value)
+- Optional End Date (low complexity, common use case)
+- Alternative Edit/Delete Methods (accessibility improvement)
+
+**Medium-Term Goals**:
+- Multiple Daily Reminders (fills scheduling gap, cleaner than interval-based)
+- Choose Your Own Medication Icons (personalization, user engagement)
+- Medication Log/Progress Bar/Streaks (gamification, adherence tracking)
+
+**Long-Term Investments**:
+- AutoFill Medication Information (requires API partnership, Arabic medication names)
+- Caregiver Mode (requires significant architecture changes)
+- Pharmacy Partnership (Kuwait-focused makes this more feasible than global approach)
