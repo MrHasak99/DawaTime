@@ -144,20 +144,56 @@
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling
 
-**Deployment Status (January 5, 2026)**:
-- 🔄 **iOS App Store**: v1.4.4+42 waiting for review (submitted)
+**Deployment Status (January 6, 2026)**:
+- 🔄 **iOS App Store**: v1.4.4+42 reached "Pending Developer Release" - CANCELED to maintain version parity. Will upload v1.4.4+44 directly (skips v43).
 - ✅ **Android Website**: v1.4.4+42 APK deployed to https://dawatime.com (live)
 - ✅ **Web App**: v1.4.4+42 deployed to https://webapp.dawatime.com (live via Netlify)
-- ✅ **Google Play Store**: v1.4.4+42 Open Testing (live) - Beta testing via Testers Community
+- ✅ **Google Play Store**: v1.4.4+42 Closed Testing (live) - 12+ testers opted-in, actively testing
 - 📦 **Beta Update Prepared**: v1.4.4+43 built, scheduled for Jan 9-11 (Days 5-7) - Play Store integration
 
 **Beta Testing Timeline (January 5-21, 2026)**:
 - **Days 1-4**: Monitoring phase - Track installs, feedback, crashes
-- **Days 5-7**: Week 1 Update (v1.4.4+43) - Play Store link integration
+- **Days 5-7**: Week 1 Update (v1.4.4+43) - Play Store integration (Android only)
 - **Days 8-10**: Monitoring phase - Prepare Week 2 update
-- **Days 11-13**: Week 2 Update (v1.4.4+44) - Minor improvements/polish
+- **Days 11-13**: Week 2 Update (v1.4.4+44) - Both platforms upload simultaneously
 - **Day 14**: CRITICAL - Download Production Access Form Report, submit to Production track
 - **Days 15-16**: Final testing while production review in progress
+
+---
+
+### iOS Release Hold for Version Parity (January 6, 2026)
+**Status**: ✅ **STRATEGIC DECISION** - Canceled iOS v1.4.4+42 release to maintain version alignment
+
+**Background**: 
+- iOS v1.4.4+42 reached "Pending Developer Release" status (Apple approved, ready to publish)
+- Google Play Closed Testing v1.4.4+42 launched with 12+ testers opted-in and actively testing
+- v1.4.4+43 prepared for Week 1 beta update (Play Store integration)
+
+**Decision**: Cancel iOS v1.4.4+42 release and wait to upload v1.4.4+44 (final version) instead
+
+**Rationale**:
+- **Version Parity**: Both platforms should ship with same build number when going live
+- **Efficient Strategy**: Upload iOS once (v44) instead of uploading v43 then canceling for v44
+- **Final Build**: v1.4.4+44 will be the production version for both platforms
+- **Professional Approach**: Coordinated multi-platform launch shows polish
+- **Better User Experience**: Users on both platforms get identical app simultaneously
+
+**Revised Timeline**:
+- **Days 5-7 (Jan 9-11)**: Upload v1.4.4+43 to Google Play Closed Testing (Android only)
+- **Days 11-13 (Jan 16-18)**: Upload v1.4.4+44 to Google Play Closed Testing AND iOS App Store Connect simultaneously
+- **Result**: iOS skips v43, both platforms launch production with v1.4.4+44
+
+**Google Play Testing Progress (Day 2)**:
+- ✅ 12+ testers opted-in to closed test phase
+- ✅ Closed Testing track active and functional (2 tracks)
+- ✅ No critical crashes reported yet
+- ✅ Testers Community campaign progressing
+
+**Next Steps**:
+1. Monitor feedback through Days 2-4 (Jan 6-8)
+2. Upload v1.4.4+43 AAB to Android Closed Testing (Days 5-7)
+3. Build and upload v1.4.4+44 to both platforms simultaneously (Days 11-13)
+4. Both platforms launch production at same time (post-Day 14)
 
 ---
 
@@ -218,6 +254,7 @@ Update v1.4.4 Build 43:
 - Additional analytics events for better tracking
 - Internal logging improvements
 - Keep all changes iOS-identical to maintain version parity
+- **Note**: This will be the iOS upload version - both platforms will launch with v44
 
 ---
 
@@ -572,10 +609,10 @@ The shared system supports three different translation patterns across pages:
 ---
 
 ### Google Play Store Beta Testing via Testers Community (January 5, 2026)
-**Status**: ✅ **LIVE** - Open Testing track active with community testers
+**Status**: ✅ **LIVE** - Closed Testing track active with community testers
 
 **Setup Process**:
-1. **Testing Track**: Switched from Internal Testing → Open Testing for Testers Community compatibility
+1. **Testing Track**: Switched from Internal Testing → Closed Testing for Testers Community compatibility
 2. **Testing URL**: `https://play.google.com/apps/testing/com.mrhasak99.dawatime`
 3. **Testers Community Campaign**: Created at https://www.testerscommunity.com
 4. **Release Notes**: Shortened to ~420 characters highlighting key features
@@ -594,8 +631,8 @@ Android 13+: Allow "Exact alarms" in system settings
 Report issues via Settings → Contact Me
 ```
 
-**Open Testing Configuration**:
-- **Track**: Open Testing (unlimited testers)
+**Closed Testing Configuration**:
+- **Track**: Closed Testing (Active - 2 tracks)
 - **Release**: v1.4.4 (Build 42)
 - **AAB Size**: 54.1MB
 - **Target**: Android 7.0+ (API 24-35)
@@ -611,7 +648,7 @@ Report issues via Settings → Contact Me
 - **Content Rating**: TBD (awaiting IARC questionnaire)
 
 **Files Deployed**:
-- `/build/app/outputs/bundle/release/app-release.aab` - Open Testing track (54.1MB)
+- `/build/app/outputs/bundle/release/app-release.aab` - Closed Testing track (54.1MB)
 
 **Testers Community Requirements for Production Access**:
 
@@ -696,7 +733,8 @@ First internal testing release of DawaTime on Google Play Console. Core features
 **iOS App Store (App Store Connect)**:
 - Uploaded: v1.4.4 (Build 42)
 - Size: 44MB IPA
-- Status: Waiting for Review (submitted)
+- Status: Reached "Pending Developer Release" (Jan 6) → CANCELED for version parity
+- Reason: Will upload v1.4.4+43 to match Android Play Store version
 - Deployment target: iOS 15.0+
 - APNs: Production environment
 - Copyright: Updated to 2026
@@ -715,11 +753,11 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Build time: 22.3s
 - Deploy ID: 695b7be0ba8ac7b532bda500
 
-**Google Play Console (Internal Testing)**:
+**Google Play Console (Closed Testing)**:
 - Uploaded: app-release.aab (54.1MB)
-- Track: Internal Testing
-- Release notes: First internal test release
-- Status: In review
+- Track: Closed Testing (Testers Community)
+- Release notes: First beta testing release
+- Status: Live with 12+ testers opted-in and actively testing (as of Jan 6)
 
 **App Store Metadata Updates**:
 - **Description**: New bilingual description with 5 follow-up reminders emphasis
@@ -800,7 +838,7 @@ Update v1.4.4 Build 43:
 **Recommended Release Timeline**:
 
 **Day 1 (January 5, 2026) - Initial Release:**
-- ✅ Published v1.4.4+42 to Open Testing
+- ✅ Published v1.4.4+42 to Closed Testing
 - ✅ Testers Community campaign started
 - **Action**: Monitor dashboard, let testers install and test
 
@@ -813,7 +851,7 @@ Update v1.4.4 Build 43:
 - **No updates** - give testers 4-6 days to test initial version
 
 **Days 5-7 (January 9-11) - Week 1 Update:**
-- 📦 **Upload v1.4.4+43** to Play Console Open Testing
+- 📦 **Upload v1.4.4+43** to Play Console Closed Testing (Android only)
 - 📝 Release notes: "Based on initial testing feedback, integrated Play Store for seamless updates"
 - **Why this timing?** Testers had adequate time to test v42, update shows responsiveness
 - **What to monitor**: Tester feedback on Play Store integration, install/update success rate
@@ -824,10 +862,11 @@ Update v1.4.4 Build 43:
 - **No updates** - let current version be tested thoroughly
 
 **Days 11-13 (January 16-18) - Week 2 Update:**
-- 📦 **Upload v1.4.4+44** (TBD: minor UI polish, error message improvements, analytics events)
+- 📦 **Upload v1.4.4+44 AAB to Play Console Closed Testing** AND **v1.4.4+44 IPA to iOS App Store Connect** simultaneously
 - 📝 Release notes: "Performance enhancements and stability improvements"
-- **Why this timing?** Ensures 2nd update deployed before Day 14 deadline
+- **Why this timing?** Ensures 2nd update deployed before Day 14 deadline, iOS gets final version directly
 - **Planning**: Keep changes minimal, iOS-identical (continue version parity strategy)
+- **Strategy**: iOS skips v43, both platforms launch production with same build number (v44)
 
 **Day 14 (January 19, 2026) - CRITICAL DEADLINE:**
 - 📥 **Download Production Access Form Report** from Testers Community
@@ -847,10 +886,11 @@ Update v1.4.4 Build 43:
 - 🎯 Once both approved: All platforms live simultaneously
 
 **Version Parity Management**:
-- **iOS**: v1.4.4+42 (whatever build Apple approves, currently in review)
-- **Android**: v1.4.4+43 or +44 (after testing period updates)
-- **Functionality**: 100% identical (only build numbers differ)
-- **Next sync**: v1.4.5 deployment - both platforms receive same build simultaneously
+- **iOS**: Will upload v1.4.4+44 directly (skips v43 entirely)
+- **Android**: v1.4.4+42 → v1.4.4+43 (Week 1) → v1.4.4+44 (Week 2)
+- **Production Launch**: Both platforms ship with v1.4.4+44
+- **Functionality**: 100% identical (only build numbers differ during beta)
+- **Next sync**: Both platforms already in sync at v1.4.4+44 for production
 
 **Files Modified This Session**:
 - `lib/main.dart` - Line 1006-1008: Changed Android update URL
@@ -867,9 +907,9 @@ Update v1.4.4 Build 43:
 
 **Next Actions**:
 - **Days 2-4**: Monitor Testers Community dashboard daily
-- **Days 5-7**: Upload v1.4.4+43 when timing is appropriate
+- **Days 5-7**: Upload v1.4.4+43 AAB to Android Closed Testing (iOS waits)
 - **Days 8-10**: Plan and prepare v1.4.4+44 minor improvements
-- **Days 11-13**: Upload v1.4.4+44
+- **Days 11-13**: Upload v1.4.4+44 to both Android Closed Testing AND iOS App Store Connect
 - **Day 14**: Production submission workflow
 
 ---
