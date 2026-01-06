@@ -3435,7 +3435,38 @@ This section documents planned features for future DawaTime releases. Features a
 - **Estimated Effort**: 2-3 days
 - **Implementation**: Add `notes` field to Medications class, update add/edit forms
 
-**2. Choose Your Own Medication Icons**
+**2. Google/Apple Sign-In (OAuth)**
+- **Purpose**: Faster onboarding with one-tap social authentication
+- **Features**:
+  - Google Sign-In integration
+  - Apple Sign-In integration (required for App Store if offering third-party login)
+  - Auto-populate user profile from OAuth data (name, email, photo)
+  - Pre-verified email (skip verification step)
+  - Legal document acceptance dialog for first-time OAuth users
+  - Seamless switching between email/password and OAuth accounts
+- **Complexity**: Low-Medium (OAuth well-documented in Firebase)
+- **Estimated Effort**: 2-3 days
+- **Implementation**: 
+  - Add packages: `google_sign_in: ^6.2.2`, `sign_in_with_apple: ^6.1.3`
+  - Enable providers in Firebase Console
+  - Add SHA-1 fingerprint for Android (Google)
+  - Configure Apple Service ID in Apple Developer portal
+  - Update login/signup pages with social login buttons
+  - Handle first-time OAuth users (legal document acceptance, Firestore profile creation)
+- **Platform Requirements**:
+  - Android: SHA-1/SHA-256 certificate fingerprints
+  - iOS: Sign In with Apple capability in Xcode (if offering any third-party login)
+- **Regional Considerations**:
+  - Google: Widely used in Kuwait/GCC (Gmail dominant)
+  - Apple: Very popular (high iPhone penetration in Kuwait)
+  - Both providers equally important for GCC market
+- **Benefits**:
+  - Higher conversion rate (no email verification wait)
+  - Better UX for users already signed in to Google/Apple
+  - Leverages provider security infrastructure
+  - Fits GCC smartphone usage patterns
+
+**3. Choose Your Own Medication Icons**
 - **Purpose**: Visual differentiation with customizable icons and colors
 - **Features**:
   - Icon selection: Pill, Injection, Ointment, Liquid, Inhaler
@@ -3445,7 +3476,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Estimated Effort**: 1 week
 - **Implementation**: Add `iconType` and `colorHex` fields, create icon asset library
 
-**3. Multiple Daily Reminders**
+**4. Multiple Daily Reminders**
 - **Purpose**: Support medications taken multiple times per day at specific times
 - **Features**:
   - "X times per day" scheduling pattern (e.g., 3 times daily)
@@ -3462,7 +3493,7 @@ This section documents planned features for future DawaTime releases. Features a
   - Backward compatible: Single time = existing behavior
 - **User Benefit**: Clearer than "every X hours" - users think in "times per day" not intervals
 
-**4. Alternative Edit/Delete Medications Methods**
+**5. Alternative Edit/Delete Medications Methods**
 - **Purpose**: Provide additional UI patterns for medication management beyond swipe gestures
 - **Features**:
   - Long-press context menu
@@ -3472,7 +3503,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Estimated Effort**: 3-5 days
 - **Rationale**: Some users may not discover swipe gestures
 
-**5. Optional End Date**
+**6. Optional End Date**
 - **Purpose**: Automatically stop reminders after a specified date (e.g., antibiotics course)
 - **Features**:
   - End date picker in add/edit form
@@ -3554,6 +3585,7 @@ This section documents planned features for future DawaTime releases. Features a
 - Alternative Edit/Delete Methods (accessibility improvement)
 
 **Medium-Term Goals**:
+- Google/Apple Sign-In (higher conversion, better UX, fits GCC market)
 - Multiple Daily Reminders (fills scheduling gap, cleaner than interval-based)
 - Choose Your Own Medication Icons (personalization, user engagement)
 - Medication Log/Progress Bar/Streaks (gamification, adherence tracking)
