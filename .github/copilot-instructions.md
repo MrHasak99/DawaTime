@@ -192,7 +192,7 @@
 ### Critical Production Crash Fixes - v1.4.4+44 (January 7, 2026)
 **Status**: ✅ **COMPLETE** - All 5 fatal exceptions fixed and validated
 
-**1. Login Page setState Crash** ([login_page.dart:616](../lib/login_page.dart#L616))
+**1. Login Page setState Crash** ([login_page.dart](../lib/login_page.dart) line 616)
 - **Error**: `Null check operator used on a null value at State.setState`
 - **Root Cause**: setState called after user navigated away during email verification check
 - **Fix**: Added `if (mounted)` check before setState
@@ -204,7 +204,7 @@
   ```
 - **Impact**: Prevents crash when users back out during login flow
 
-**2. Home Page Migration Status Crash** ([home_page.dart:168](../lib/home_page.dart#L168))
+**2. Home Page Migration Status Crash** ([home_page.dart](../lib/home_page.dart) line 168)
 - **Error**: `Null check operator used on a null value at _HomePageState._checkMigrationStatus`
 - **Root Cause**: setState called after widget disposed during database migration retry
 - **Fix**: Added `if (mounted)` check in catch block
@@ -218,7 +218,7 @@
   ```
 - **Impact**: Prevents crash during auto-migration from old to new database structure
 
-**3. ScaffoldMessenger Context Crash** ([home_page.dart:2842](../lib/home_page.dart#L2842))
+**3. ScaffoldMessenger Context Crash** ([home_page.dart](../lib/home_page.dart) line 2842)
 - **Error**: `Null check operator used on a null value at ScaffoldMessenger.of`
 - **Root Cause**: Context becomes invalid in nested exception handler during medication operations
 - **Fix**: Added `if (context.mounted)` check before ScaffoldMessenger access
@@ -230,7 +230,7 @@
   ```
 - **Impact**: Prevents crash when displaying error messages after async operations
 
-**4. RenderFlex Overflow** ([home_page.dart:3857](../lib/home_page.dart#L3857))
+**4. RenderFlex Overflow** ([home_page.dart](../lib/home_page.dart) line 3857)
 - **Error**: `A RenderFlex overflowed by 25 pixels on the right`
 - **Root Cause**: Label text in `_DetailRow` widget not constrained, long Arabic/English labels exceed width
 - **Fix**: Wrapped label in `Flexible(flex: 0)` with `overflow: TextOverflow.ellipsis` and `maxLines: 1`
@@ -250,7 +250,7 @@
 **5. Android Notification Icon Crash** (Native Android)
 - **Error**: `Invalid notification (no valid small icon): Notification(...)`
 - **Root Cause**: R8 resource shrinker stripping notification icon drawable despite keep.xml
-- **Fix**: Added explicit ProGuard rules in [proguard-rules.pro](../android/app/proguard-rules.pro)
+- **Fix**: Added explicit ProGuard rules in android/app/proguard-rules.pro
 - **Code**:
   ```proguard
   -keep class **.R$drawable { *; }
@@ -261,11 +261,11 @@
 - **Impact**: Ensures notification icons survive R8 optimization in release builds
 
 **Files Modified**:
-- `lib/login_page.dart` - Added mounted check before setState (line 616)
-- `lib/home_page.dart` - Added mounted checks (lines 168, 2842) + fixed _DetailRow overflow (line 3857)
-- `android/app/proguard-rules.pro` - Added drawable keep rules (lines 151-154)
-- `pubspec.yaml` - Version: 1.4.4+43 → 1.4.4+44
-- `android/app/build.gradle.kts` - versionCode: 43 → 44
+- lib/login_page.dart - Added mounted check before setState (line 616)
+- lib/home_page.dart - Added mounted checks (lines 168, 2842) + fixed _DetailRow overflow (line 3857)
+- android/app/proguard-rules.pro - Added drawable keep rules (lines 151-154)
+- pubspec.yaml - Version: 1.4.4+43 → 1.4.4+44
+- android/app/build.gradle.kts - versionCode: 43 → 44
 
 **Testing Verification**:
 - ✅ `flutter analyze` - 0 errors, 0 warnings
@@ -283,7 +283,7 @@
 
 **Solution**: Added build phase to Xcode project for automatic dSYM upload to Firebase Crashlytics.
 
-**Implementation** ([ios/Runner.xcodeproj/project.pbxproj](../ios/Runner.xcodeproj/project.pbxproj)):
+**Implementation** in ios/Runner.xcodeproj/project.pbxproj:
 - **Build Phase ID**: FB8A3C5D2A1E4F8B00C7D9E1
 - **Name**: `[Firebase Crashlytics] Upload dSYM Files`
 - **Script**: `"${PODS_ROOT}/FirebaseCrashlytics/upload-symbols" -gsp "${PROJECT_DIR}/Runner/GoogleService-Info.plist" -p ios "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}"`
@@ -351,14 +351,14 @@
 **Solution**: Updated `showForceUpdateDialog()` in main.dart to redirect Android users to Play Store listing.
 
 **Changes Made**:
-- **File Modified**: `lib/main.dart` (line 1006-1008, `showForceUpdateDialog()` function)
-- **Before**: `https://dawatime.com` (website APK download)
-- **After**: `https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime` (Play Store listing)
+- **File Modified**: lib/main.dart (line 1006-1008, showForceUpdateDialog() function)
+- **Before**: https://dawatime.com (website APK download)
+- **After**: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime (Play Store listing)
 - **iOS Unchanged**: Still directs to App Store (no change needed)
 
 **Version Updates**:
-- `pubspec.yaml`: `1.4.4+42` → `1.4.4+43`
-- `android/app/build.gradle.kts` (versionCode): `42` → `43`
+- pubspec.yaml: 1.4.4+42 → 1.4.4+43
+- android/app/build.gradle.kts (versionCode): 42 → 43
 
 **Build Results**:
 - **Build Command**: `flutter build appbundle --release`
