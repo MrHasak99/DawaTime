@@ -613,7 +613,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 );
                               }
-                              setState(() => isLoading = false);
+                              if (mounted) {
+                                setState(() => isLoading = false);
+                              }
                               return;
                             }
                             final uid = user?.uid;

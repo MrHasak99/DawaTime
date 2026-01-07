@@ -2839,16 +2839,17 @@ class _HomePageState extends State<HomePage> {
                                                           ),
                                                         );
                                                       } catch (e) {
-                                                        ScaffoldMessenger.of(
-                                                          context,
-                                                        ).showSnackBar(
-                                                          SnackBar(
-                                                            backgroundColor:
-                                                                const Color(
-                                                                  0xFF8AC249,
-                                                                ),
-                                                            content: Text(
-                                                              '${AppLocalizations.of(context)!.addMedicationFailed} $e',
+                                                        if (context.mounted) {
+                                                          ScaffoldMessenger.of(
+                                                            context,
+                                                          ).showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  const Color(
+                                                                    0xFF8AC249,
+                                                                  ),
+                                                              content: Text(
+                                                                '${AppLocalizations.of(context)!.addMedicationFailed} $e',
                                                               style: const TextStyle(
                                                                 color:
                                                                     Colors
@@ -2863,6 +2864,7 @@ class _HomePageState extends State<HomePage> {
                                                             persist: false,
                                                           ),
                                                         );
+                                                        }
                                                       }
                                                     } else {
                                                       if (!mounted) return;
@@ -3852,13 +3854,18 @@ class _DetailRow extends StatelessWidget {
       children: [
         Icon(icon, color: const Color(0xFF8AC249), size: 22),
         const SizedBox(width: 10),
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-            color: Color(0xFF8AC249),
-            fontFamily: 'Inter',
+        Flexible(
+          flex: 0,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: Color(0xFF8AC249),
+              fontFamily: 'Inter',
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
         const SizedBox(width: 8),

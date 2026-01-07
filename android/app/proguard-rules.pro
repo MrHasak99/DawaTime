@@ -147,3 +147,9 @@
 # System Chrome and Flutter services
 -keep class android.view.WindowManager** { *; }
 -keep class android.app.Activity** { *; }
+
+# Keep notification icon drawables (prevent R8 from removing them)
+-keep class **.R$drawable { *; }
+-keepclassmembers class **.R { public static <fields>; }
+-keepclassmembers class **.R$* { public static <fields>; }
+-keep class com.mrhasak99.dawatime.R$drawable { *; }
