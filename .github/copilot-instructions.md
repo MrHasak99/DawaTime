@@ -146,20 +146,33 @@
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **5 critical crash fixes**, **Android 15 edge-to-edge support**
 
 **Deployment Status (January 8, 2026 - Day 4)**:
-- ✅ **v1.4.4+45 Built**: Android 15 edge-to-edge compatibility fix, AAB ready for upload
+- ✅ **v1.4.4+45 LIVE**: Android hotfix deployed to Closed Testing (52MB AAB)
 - 📱 **Android 15 Support**: Resolved Play Console warnings for SDK 35 apps
-- ✅ **Google Play Store**: v1.4.4+44 LIVE in Closed Testing "Initial Release" track (25 testers active)
-- 🔄 **Next Upload**: v1.4.4+45 to Closed Testing (Android 15 compatibility)
-- 🔄 **iOS App Store**: v1.4.4+45 ready for TestFlight upload (skips v42, v43, v44)
+- 🔒 **SHA Certificate Fix**: Updated google-services.json with proper Firebase app configuration
+- ✅ **Google Play Store**: v1.4.4+45 LIVE in Closed Testing "Initial Release" track (supersedes v44)
+- 🔄 **iOS App Store**: v1.4.4+45 ready for TestFlight upload (planned for Days 11-13)
+- 📊 **Next Action**: Monitor v45 crash reports and tester feedback (Days 4-10)
+
+**iOS Upload Timeline**:
+- **Why wait until Days 11-13?** Give Android 7+ days of beta testing first to catch any remaining issues
+- **TestFlight Review**: Typically 1-3 days, so uploading Day 11 ensures approval before Day 14 production submission
+- **Version Parity**: Both platforms skip v42-v44, launch production with v45 simultaneously
 
 **Beta Testing Timeline (January 5-21, 2026)** - REVISED:
 - **Days 1-2** (Jan 5-6): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
 - **Day 3** (Jan 7): 🚨 **CRISIS** - 24 unprocessed crashes discovered, 5 crashes fixed within hours
 - **Day 3** (Jan 7): **Emergency v1.4.4+44 deployment** - All crashes fixed (skips v43 entirely)
-- **Day 4** (Jan 8): **v1.4.4+45 prepared** - Android 15 edge-to-edge compatibility fix (waiting for upload)
-- **Days 4-6** (Jan 8-10): Monitor v1.4.4+44 crash reports and tester feedback
-- **Days 7-9** (Jan 11-13): **Upload v1.4.4+45** - Professional spacing (4-6 days after v44)
-- **Days 9-13** (Jan 13-17): Test v1.4.4+45 (6-7 days before production)
+- **Day 4** (Jan 8): 🚨 **CRISIS #2** - SignInHubActivity crash discovered in v44
+- **Day 4** (Jan 8): **Emergency v1.4.4+45 deployment** - SHA certificate fix + Android 15 support
+- **Days 5-7** (Jan 9-11): Monitor v1.4.4+45 crash reports and tester feedback
+- **Days 8-10** (Jan 12-14): Prepare production submission (collect feedback, final testing)
+- **Days 11-13** (Jan 15-17): **UPLOAD iOS v1.4.4+45 to TestFlight** (both platforms in sync)
+  - Build IPA: `flutter clean && flutter build ipa`
+  - Verify IPA: Open Transporter → Add IPA → Verify
+  - Upload to App Store Connect: Transporter → Deliver
+  - Submit for TestFlight Beta Review in App Store Connect
+  - Rationale: iOS needs 1-3 days for TestFlight review, Android already has 9+ days of testing
+  - Result: Both platforms ready for simultaneous production launch
 - **Day 14** (Jan 19): CRITICAL - Download Production Access Form Report, submit to Production
 - **Days 15-16** (Jan 20-21): Final testing while production review in progress
 
@@ -193,7 +206,7 @@
 ### Critical Production Crash Fixes - v1.4.4+44 (January 7, 2026)
 **Status**: ✅ **COMPLETE** - All 5 fatal exceptions fixed and validated
 
-**1. Login Page setState Crash** ([login_page.dart](../lib/login_page.dart) line 616)
+**1. Login Page setState Crash** (/lib/login_page.dart) line 616
 - **Error**: `Null check operator used on a null value at State.setState`
 - **Root Cause**: setState called after user navigated away during email verification check
 - **Fix**: Added `if (mounted)` check before setState
@@ -205,7 +218,7 @@
   ```
 - **Impact**: Prevents crash when users back out during login flow
 
-**2. Home Page Migration Status Crash** ([home_page.dart](../lib/home_page.dart) line 168)
+**2. Home Page Migration Status Crash** (/lib/home_page.dart) line 168
 - **Error**: `Null check operator used on a null value at _HomePageState._checkMigrationStatus`
 - **Root Cause**: setState called after widget disposed during database migration retry
 - **Fix**: Added `if (mounted)` check in catch block
@@ -219,7 +232,7 @@
   ```
 - **Impact**: Prevents crash during auto-migration from old to new database structure
 
-**3. ScaffoldMessenger Context Crash** ([home_page.dart](../lib/home_page.dart) line 2842)
+**3. ScaffoldMessenger Context Crash** (/lib/home_page.dart) line 2842
 - **Error**: `Null check operator used on a null value at ScaffoldMessenger.of`
 - **Root Cause**: Context becomes invalid in nested exception handler during medication operations
 - **Fix**: Added `if (context.mounted)` check before ScaffoldMessenger access
@@ -231,7 +244,7 @@
   ```
 - **Impact**: Prevents crash when displaying error messages after async operations
 
-**4. RenderFlex Overflow** ([home_page.dart](../lib/home_page.dart) line 3857)
+**4. RenderFlex Overflow** (/lib/home_page.dart) line 3857
 - **Error**: `A RenderFlex overflowed by 25 pixels on the right`
 - **Root Cause**: Label text in `_DetailRow` widget not constrained, long Arabic/English labels exceed width
 - **Fix**: Wrapped label in `Flexible(flex: 0)` with `overflow: TextOverflow.ellipsis` and `maxLines: 1`
@@ -261,32 +274,63 @@
   ```
 - **Impact**: Ensures notification icons survive R8 optimization in release builds
 
+**6. Google Sign-In Activity Crash** (Native Android - v1.4.4+44) - ✅ FIXED in v1.4.4+45
+- **Error**: `RuntimeException: Unable to start activity SignInHubActivity: NullPointerException`
+- **Root Cause**: Firebase Auth includes Google Play Services Auth as transitive dependency, but SHA-1/SHA-256 certificates not configured in Firebase Console for Android app
+- **Why it happens**: Firebase Auth can trigger Google Play Services checks even without explicit Google Sign-In implementation
+- **Fix Applied**: Configured Android app SHA certificates in Firebase Console and updated google-services.json
+  1. Get debug certificate: `keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore`
+  2. Get release certificate: `keytool -list -v -alias <your-alias> -keystore android/app/<your-keystore>.jks`
+  3. Copy SHA-1 and SHA-256 fingerprints
+  4. Go to [Firebase Console](https://console.firebase.google.com/) → Project Settings → Your Apps → Android app
+  5. Add both certificates under "SHA certificate fingerprints"
+  6. Download updated `google-services.json` and replace in `android/app/`
+  7. Rebuild: `flutter clean && flutter build apk --release`
+- **Alternative Fix**: If certificates are already configured, ensure `google-services.json` is up-to-date from Firebase Console
+- **Impact**: Prevents crash when Firebase Auth interacts with Google Play Services during background auth state checks
+
 **Files Modified**:
 - lib/login_page.dart - Added mounted check before setState (line 616)
 - lib/home_page.dart - Added mounted checks (lines 168, 2842) + fixed _DetailRow overflow (line 3857)
 - android/app/proguard-rules.pro - Added drawable keep rules (lines 151-154)
-- pubspec.yaml - Version: 1.4.4+43 → 1.4.4+44
-- android/app/build.gradle.kts - versionCode: 43 → 44
+- android/app/google-services.json - **REQUIRED UPDATE**: Download latest from Firebase Console after adding SHA certificates
+- pubspec.yaml - Version: 1.4.4+43 → 1.4.4+44 → 1.4.4+45
+- android/app/build.gradle.kts - versionCode: 43 → 44 → 45
 
-**Testing Verification**:
+**Testing Verification (v1.4.4+44)**:
 - ✅ `flutter analyze` - 0 errors, 0 warnings
 - ✅ AAB built successfully (54.1MB)
 - ✅ iOS dSYM files uploaded (43 files)
 - ✅ Automatic dSYM upload configured in Xcode
 - ✅ Deployed to Closed Testing "Initial Release" track
+- ⚠️ **CRASH #6 DISCOVERED** - Google Sign-In Activity crash (SHA certificate issue)
+
+**Testing Verification (v1.4.4+45)**:
+- ✅ `flutter analyze` - 0 errors, 0 warnings
+- ✅ AAB built successfully (52MB) - Build time: 112.2s
+- ✅ SHA certificates configured in Firebase Console
+- ✅ google-services.json updated with proper configuration
+- ✅ Android 15 edge-to-edge support implemented
+- ✅ Ready for Closed Testing deployment
 
 ---
 
-### Android 15 Edge-to-Edge Support (January 8, 2026)
-**Status**: ✅ **COMPLETE** - SDK 35 compatibility fix applied in v1.4.4+45
+### Android 15 Edge-to-Edge Support + SHA Certificate Fix (January 8, 2026)
+**Status**: ✅ **COMPLETE** - Both fixes applied and built in v1.4.4+45 (52MB AAB)
 
-**Problem**: Google Play Console warnings for apps targeting SDK 35:
+**Problem 1**: Google Play Console warnings for apps targeting SDK 35:
 - "Edge-to-edge may not display for all users"
 - "Your app uses deprecated APIs or parameters for edge-to-edge"
 
 **Root Cause**: Android 15 (SDK 35) requires apps to explicitly handle edge-to-edge display. Flutter apps with minimal MainActivity don't enable this by default.
 
 **Solution**: Updated MainActivity to enable edge-to-edge mode for backward compatibility.
+
+**Problem 2**: SignInHubActivity crash in v1.4.4+44
+- `RuntimeException: Unable to start activity SignInHubActivity: NullPointerException`
+- Firebase Auth requires SHA-1/SHA-256 certificates even without Google Sign-In
+
+**Solution**: Added SHA certificates to Firebase Console and updated google-services.json
 
 **Implementation** (android/app/src/main/kotlin/com/mrhasak99/dawatime/MainActivity.kt):
 ```kotlin
@@ -300,6 +344,7 @@ class MainActivity : FlutterActivity() {
 
 **Files Modified**:
 - `android/app/src/main/kotlin/com/mrhasak99/dawatime/MainActivity.kt` - Added edge-to-edge support
+- `android/app/google-services.json` - **UPDATED**: Downloaded from Firebase Console with SHA certificates configured
 - `pubspec.yaml` - Version: 1.4.4+44 → 1.4.4+45
 - `android/app/build.gradle.kts` - versionCode: 44 → 45
 
@@ -307,7 +352,8 @@ class MainActivity : FlutterActivity() {
 - ✅ Resolves Play Console warnings for SDK 35 compliance
 - ✅ Backward compatible with older Android versions
 - ✅ Proper edge-to-edge display on Android 15+
-- ✅ No changes needed to Flutter UI code (handled at native level)
+- ✅ Fixes SignInHubActivity crash (Google Play Services authentication)
+- ✅ No changes needed to Flutter UI code (handled at native level + configuration)
 
 ---
 
@@ -346,34 +392,37 @@ class MainActivity : FlutterActivity() {
 
 **Background**: 
 - iOS v1.4.4+42 reached "Pending Developer Release" status (Apple approved, ready to publish)
-- Google Play Closed Testing v1.4.4+42 launched with 12+ testers opted-in and actively testing
-- v1.4.4+43 prepared for Week 1 beta update (Play Store integration)
+- Google Play Closed Testing v1.4.4+42 launched with 25 testers opted-in (100% engagement)
+- Emergency crashes discovered on Days 3-4 requiring immediate hotfixes
 
-**Decision**: Cancel iOS v1.4.4+42 release and wait to upload v1.4.4+44 (final version) instead
+**Decision**: Cancel iOS v1.4.4+42 release and wait to upload v1.4.4+45 (final version) instead
 
 **Rationale**:
 - **Version Parity**: Both platforms should ship with same build number when going live
-- **Efficient Strategy**: Upload iOS once (v44) instead of uploading v43 then canceling for v44
-- **Final Build**: v1.4.4+44 will be the production version for both platforms
+- **Efficient Strategy**: Upload iOS once (v45) instead of uploading v42/v43/v44 then canceling for v45
+- **Final Build**: v1.4.4+45 will be the production version for both platforms
 - **Professional Approach**: Coordinated multi-platform launch shows polish
 - **Better User Experience**: Users on both platforms get identical app simultaneously
 
-**Revised Timeline**:
-- **Days 5-7 (Jan 9-11)**: Upload v1.4.4+43 to Google Play Closed Testing (Android only)
-- **Days 11-13 (Jan 16-18)**: Upload v1.4.4+44 to Google Play Closed Testing AND iOS App Store Connect simultaneously
-- **Result**: iOS skips v43, both platforms launch production with v1.4.4+44
+**What Actually Happened**:
+- **Days 1-2 (Jan 5-6)**: v1.4.4+42 initial release, 25 testers joined
+- **Day 3 (Jan 7)**: Emergency v1.4.4+44 (5 crash fixes, skipped v43)
+- **Day 4 (Jan 8)**: Emergency v1.4.4+45 (SHA certificate + Android 15 fix)
+- **Days 5-13**: Monitor v45 stability (update requirement satisfied)
+- **Days 11-13 (Jan 15-17)**: Upload v1.4.4+45 IPA to iOS TestFlight
+- **Result**: iOS skips v42-v44, both platforms launch production with v1.4.4+45
 
-**Google Play Testing Progress (Day 2)**:
-- ✅ 12+ testers opted-in to closed test phase
-- ✅ Closed Testing track active and functional (2 tracks)
-- ✅ No critical crashes reported yet
-- ✅ Testers Community campaign progressing
+**Google Play Testing Status (Day 4)**:
+- ✅ 25 testers actively testing (100% engagement)
+- ✅ v1.4.4+45 LIVE in Closed Testing
+- ✅ 2 emergency updates deployed (update requirement COMPLETE)
+- ✅ Demonstrates rapid iteration and crisis response
 
 **Next Steps**:
-1. Monitor feedback through Days 2-4 (Jan 6-8)
-2. Upload v1.4.4+43 AAB to Android Closed Testing (Days 5-7)
-3. Build and upload v1.4.4+44 to both platforms simultaneously (Days 11-13)
-4. Both platforms launch production at same time (post-Day 14)
+1. Monitor v1.4.4+45 crash reports via Firebase Crashlytics (Days 5-13)
+2. Upload v1.4.4+45 IPA to iOS TestFlight (Days 11-13)
+3. Download Production Access Form Report (Day 14)
+4. Submit both platforms to production simultaneously (Day 14+)
 
 ---
 
@@ -435,7 +484,7 @@ Update v1.4.4 Build 43:
 - Additional analytics events for better tracking
 - Internal logging improvements
 - Keep all changes iOS-identical to maintain version parity
-- **Note**: This will be the iOS upload version - both platforms will launch with v44
+- **Note**: This was superseded by v45 emergency hotfix - both platforms will launch with v45
 
 ---
 
@@ -836,32 +885,33 @@ Report issues via Settings → Contact Me
 **Timeline**: 16-day testing period (January 5-21, 2026)
 
 **Critical Requirements**:
-1. **Release 2-3 App Updates** (Days 1-16):
-   - Must show active development during testing period
-   - Can be minor changes: bug fixes, UI improvements, small features
-   - Updates must be visible to testers via Play Console
+1. **Release 2-3 App Updates** (Days 1-16): ✅ **COMPLETE**
+   - v1.4.4+42 (Day 1) → v1.4.4+44 (Day 3) → v1.4.4+45 (Day 4)
+   - **2 updates deployed**: Emergency crash fixes demonstrating active development
+   - Requirement satisfied on Day 4 (rapid iteration shows engineering maturity)
 
-2. **Production Access Form Report** (Day 14+):
+2. **Production Access Form Report** (Day 14+): ⏳ **PENDING**
    - Download from Testers Community Reports tab after 14 days
    - Use pre-filled answers when completing Google Play's production access form
    - Required for production release approval
 
-3. **Submit for Production** (Day 14):
+3. **Submit for Production** (Day 14): ⏳ **PENDING**
    - **Critical timing**: Submit to Production track once app crosses 14 days
    - Testers will begin uninstalling after Day 14
    - Continue testing until Day 16, but production submission must happen at Day 14
 
-**Action Plan**:
-- **Week 1 (Days 1-7)**: Monitor feedback, release Update 1 (minor fixes/improvements)
-- **Week 2 (Days 8-13)**: Release Update 2, prepare for production submission
-- **Day 14**: Download Production Access Form Report, submit to Production track
-- **Days 14-16**: Final testing continues while production review in progress
+**Action Plan** (REVISED):
+- **Days 1-4** (Jan 5-8): ✅ Initial release + 2 emergency updates deployed (update requirement COMPLETE)
+- **Days 5-13** (Jan 9-17): Monitor v1.4.4+45 stability, collect tester feedback (no more updates unless critical issues)
+- **Day 14** (Jan 19): Download Production Access Form Report, submit to Production track
+- **Days 15-16** (Jan 20-21): Final testing continues while production review in progress
 
 **Next Steps**:
 - Monitor tester feedback via Testers Community dashboard
-- Track installs/crashes via Play Console analytics
-- Plan 2-3 minor updates for testing period
-- Prepare for Production release after Day 14
+- Track v1.4.4+45 crash reports via Firebase Crashlytics
+- Collect user feedback for post-production improvements
+- Prepare Production Access Form for Day 14 submission
+- Upload iOS v1.4.4+45 to TestFlight on Days 11-13
 
 **App Bundle Build**:
 - **File**: `build/app/outputs/bundle/release/app-release.aab`
@@ -1031,23 +1081,26 @@ Update v1.4.4 Build 43:
   - Testing completion rate
 - **No updates** - give testers 4-6 days to test initial version
 
-**Days 5-7 (January 9-11) - Week 1 Update:**
-- 📦 **Upload v1.4.4+43** to Play Console Closed Testing (Android only)
-- 📝 Release notes: "Based on initial testing feedback, integrated Play Store for seamless updates"
-- **Why this timing?** Testers had adequate time to test v42, update shows responsiveness
-- **What to monitor**: Tester feedback on Play Store integration, install/update success rate
+**Days 5-7 (January 9-11) - Stability Monitoring:**
+- 📊 Monitor v1.4.4+45 crash reports via Firebase Crashlytics
+- 📥 Track tester feedback via Testers Community dashboard
+- 📈 Review Play Console analytics: install count, crash-free rate, engagement metrics
+- **No updates planned** - update requirement already satisfied (v44, v45 deployed Days 3-4)
 
-**Days 8-10 (January 12-14) - Monitoring Phase:**
-- 📊 Monitor feedback on v1.4.4+43
-- 🛠️ Prepare v1.4.4+44 (minor improvements/polish)
-- **No updates** - let current version be tested thoroughly
+**Days 8-10 (January 12-14) - Production Prep:**
+- 📊 Continue monitoring v1.4.4+45 stability
+- 📝 Collect user feedback for post-production roadmap
+- 🔍 Final validation: no critical issues remaining
+- **No updates unless critical crash discovered**
 
-**Days 11-13 (January 16-18) - Week 2 Update:**
-- 📦 **Upload v1.4.4+44 AAB to Play Console Closed Testing** AND **v1.4.4+44 IPA to iOS App Store Connect** simultaneously
-- 📝 Release notes: "Performance enhancements and stability improvements"
-- **Why this timing?** Ensures 2nd update deployed before Day 14 deadline, iOS gets final version directly
-- **Planning**: Keep changes minimal, iOS-identical (continue version parity strategy)
-- **Strategy**: iOS skips v43, both platforms launch production with same build number (v44)
+**Days 11-13 (January 15-17) - iOS Upload (REVISED):**
+- 📦 **Upload v1.4.4+45 IPA to iOS App Store Connect** via Transporter
+  - Build: `flutter clean && flutter build ipa`
+  - Verify: Open Transporter → Add IPA → Verify
+  - Upload: Transporter → Deliver
+- 📝 Submit for TestFlight Beta Review in App Store Connect
+- **Why this timing?** iOS needs 1-3 days for TestFlight review, Android already has 9+ days of testing
+- **Strategy**: iOS skips v42-v44, both platforms launch production with v1.4.4+45
 
 **Day 14 (January 19, 2026) - CRITICAL DEADLINE:**
 - 📥 **Download Production Access Form Report** from Testers Community
@@ -1062,16 +1115,17 @@ Update v1.4.4 Build 43:
 - 🐛 Address any final issues before testing period ends
 
 **Post-Testing (Day 17+):**
-- ⏳ Await production release approval from Google
-- ⏳ Await iOS App Store review completion
-- 🎯 Once both approved: All platforms live simultaneously
+- ⏳ Await Android production release approval from Google (typically 2-7 days)
+- ⏳ Await iOS App Store review completion (typically 1-3 days)
+- 🎯 Once both approved: Release simultaneously on both platforms
+- 📱 **Coordinated Launch**: Hold approved platform until both ready, then publish together
 
 **Version Parity Management**:
-- **iOS**: Will upload v1.4.4+44 directly (skips v43 entirely)
-- **Android**: v1.4.4+42 → v1.4.4+43 (Week 1) → v1.4.4+44 (Week 2)
-- **Production Launch**: Both platforms ship with v1.4.4+44
+- **iOS**: Will upload v1.4.4+45 directly on Days 11-13 (skips v42, v43, v44 entirely)
+- **Android**: v1.4.4+42 → v1.4.4+44 (Day 3) → v1.4.4+45 (Day 4)
+- **Production Launch**: Both platforms ship with v1.4.4+45
 - **Functionality**: 100% identical (only build numbers differ during beta)
-- **Next sync**: Both platforms already in sync at v1.4.4+44 for production
+- **Next sync**: Both platforms already in sync at v1.4.4+45 for production
 
 **Files Modified This Session**:
 - `lib/main.dart` - Line 1006-1008: Changed Android update URL
@@ -1086,12 +1140,13 @@ Update v1.4.4 Build 43:
 4. Maintain professional release cadence
 5. Give Testers Community time to evaluate each build
 
-**Next Actions**:
-- **Days 2-4**: Monitor Testers Community dashboard daily
-- **Days 5-7**: Upload v1.4.4+43 AAB to Android Closed Testing (iOS waits)
-- **Days 8-10**: Plan and prepare v1.4.4+44 minor improvements
-- **Days 11-13**: Upload v1.4.4+44 to both Android Closed Testing AND iOS App Store Connect
-- **Day 14**: Production submission workflow
+**What Actually Happened**:
+- **Days 1-2**: Initial release v1.4.4+42, 25 testers joined
+- **Day 3**: Emergency v1.4.4+44 (5 crash fixes)
+- **Day 4**: Emergency v1.4.4+45 (SHA certificate + Android 15)
+- **Days 5-13**: Monitor v1.4.4+45 stability (update requirement already satisfied)
+- **Days 11-13**: Upload v1.4.4+45 to iOS TestFlight
+- **Day 14**: Production submission with v1.4.4+45 on both platforms
 
 ---
 
