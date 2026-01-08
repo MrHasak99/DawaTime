@@ -139,25 +139,24 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+44 (Emergency Stability Release - Day 3)
-**Previous Version**: v1.4.4+42 (Days 1-2) | v1.4.4+43 (Skipped)
+**Current Version**: v1.4.4+45 (Android 15 Compatibility Update - Day 4)
+**Previous Versions**: v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **5 critical crash fixes**
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **5 critical crash fixes**, **Android 15 edge-to-edge support**
 
-**Deployment Status (January 7, 2026 - Day 3)**:
-- 🚨 **EMERGENCY**: 24 unprocessed crashes + 5 fatal exceptions discovered on Day 3
-- 📦 **v1.4.4+44 Built**: All crashes fixed, AAB built successfully (54.1MB)
-- ⚡ **Timeline Revised**: Skip v43, deploy v44 immediately (Day 3 vs Days 11-13)
-- ✅ **Android Website**: v1.4.4+42 APK deployed to https://dawatime.com (will update to v44)
-- ✅ **Web App**: v1.4.4+42 deployed to https://webapp.dawatime.com (live via Netlify)
+**Deployment Status (January 8, 2026 - Day 4)**:
+- ✅ **v1.4.4+45 Built**: Android 15 edge-to-edge compatibility fix, AAB ready for upload
+- 📱 **Android 15 Support**: Resolved Play Console warnings for SDK 35 apps
 - ✅ **Google Play Store**: v1.4.4+44 LIVE in Closed Testing "Initial Release" track (25 testers active)
-- 🔄 **iOS App Store**: v1.4.4+44 ready for TestFlight upload (skips v42 and v43)
+- 🔄 **Next Upload**: v1.4.4+45 to Closed Testing (Android 15 compatibility)
+- 🔄 **iOS App Store**: v1.4.4+45 ready for TestFlight upload (skips v42, v43, v44)
 
 **Beta Testing Timeline (January 5-21, 2026)** - REVISED:
 - **Days 1-2** (Jan 5-6): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
 - **Day 3** (Jan 7): 🚨 **CRISIS** - 24 unprocessed crashes discovered, 5 crashes fixed within hours
-- **Days 3-4** (Jan 7-8): **Emergency v1.4.4+44 deployment** (skips v43 entirely)
+- **Day 3** (Jan 7): **Emergency v1.4.4+44 deployment** - All crashes fixed (skips v43 entirely)
+- **Day 4** (Jan 8): **v1.4.4+45 prepared** - Android 15 edge-to-edge compatibility fix
 - **Days 4-13** (Jan 8-17): Extended testing of v1.4.4+44 (10+ days before production)
 - **Day 14** (Jan 19): CRITICAL - Download Production Access Form Report, submit to Production
 - **Days 15-16** (Jan 20-21): Final testing while production review in progress
@@ -273,6 +272,40 @@
 - ✅ iOS dSYM files uploaded (43 files)
 - ✅ Automatic dSYM upload configured in Xcode
 - ✅ Deployed to Closed Testing "Initial Release" track
+
+---
+
+### Android 15 Edge-to-Edge Support (January 8, 2026)
+**Status**: ✅ **COMPLETE** - SDK 35 compatibility fix applied in v1.4.4+45
+
+**Problem**: Google Play Console warnings for apps targeting SDK 35:
+- "Edge-to-edge may not display for all users"
+- "Your app uses deprecated APIs or parameters for edge-to-edge"
+
+**Root Cause**: Android 15 (SDK 35) requires apps to explicitly handle edge-to-edge display. Flutter apps with minimal MainActivity don't enable this by default.
+
+**Solution**: Updated MainActivity to enable edge-to-edge mode for backward compatibility.
+
+**Implementation** (android/app/src/main/kotlin/com/mrhasak99/dawatime/MainActivity.kt):
+```kotlin
+class MainActivity : FlutterActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        super.onCreate(savedInstanceState)
+    }
+}
+```
+
+**Files Modified**:
+- `android/app/src/main/kotlin/com/mrhasak99/dawatime/MainActivity.kt` - Added edge-to-edge support
+- `pubspec.yaml` - Version: 1.4.4+44 → 1.4.4+45
+- `android/app/build.gradle.kts` - versionCode: 44 → 45
+
+**Benefits**:
+- ✅ Resolves Play Console warnings for SDK 35 compliance
+- ✅ Backward compatible with older Android versions
+- ✅ Proper edge-to-edge display on Android 15+
+- ✅ No changes needed to Flutter UI code (handled at native level)
 
 ---
 
