@@ -145,18 +145,19 @@
 **Migration Status**: Complete - smart bridge auto-cleanup implemented, all database operations updated
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **5 critical crash fixes**, **Android 15 edge-to-edge support**
 
-**Deployment Status (January 8, 2026 - Day 4)**:
+**Deployment Status (January 9, 2026 - Day 5)**:
 - ✅ **v1.4.4+45 LIVE**: Android hotfix deployed to Closed Testing (52MB AAB)
 - 📱 **Android 15 Support**: Resolved Play Console warnings for SDK 35 apps
 - 🔒 **SHA Certificate Fix**: Updated google-services.json with proper Firebase app configuration
 - ✅ **Google Play Store**: v1.4.4+45 LIVE in Closed Testing "Initial Release" track (supersedes v44)
-- 🔄 **iOS App Store**: v1.4.4+45 ready for TestFlight upload (planned for Days 11-13)
-- 📊 **Next Action**: Monitor v45 crash reports and tester feedback (Days 4-10)
+- ⏳ **iOS App Store**: v1.4.4+45 in TestFlight Beta Review (status: "Waiting for Review", expect approval Jan 10-12)
+- 📊 **Next Action**: Await iOS TestFlight approval notification, continue Android stability monitoring
 
 **iOS Upload Timeline**:
-- **Why wait until Days 11-13?** Give Android 7+ days of beta testing first to catch any remaining issues
-- **TestFlight Review**: Typically 1-3 days, so uploading Day 11 ensures approval before Day 14 production submission
-- **Version Parity**: Both platforms skip v42-v44, launch production with v45 simultaneously
+- **Actual Decision: Day 5 Upload** - Proceeded with early upload based on clean Crashlytics data (0 crashes after 24 hours)
+- **Rationale**: Extended iOS testing period (6+ days vs 3), lower risk profile (config/compliance changes only), parallel platform testing
+- **TestFlight Review**: Submitted January 9, status "Waiting for Review", expect approval by January 10-12 (1-3 days typical)
+- **Version Parity**: Both platforms launch production with v1.4.4+45 simultaneously
 
 **Beta Testing Timeline (January 5-21, 2026)** - REVISED:
 - **Days 1-2** (Jan 5-6): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
@@ -1081,26 +1082,27 @@ Update v1.4.4 Build 43:
   - Testing completion rate
 - **No updates** - give testers 4-6 days to test initial version
 
-**Days 5-7 (January 9-11) - Stability Monitoring:**
-- 📊 Monitor v1.4.4+45 crash reports via Firebase Crashlytics
+**Days 5-7 (January 9-11) - iOS Upload & Stability Monitoring:**
+- 📤 **Day 5 (January 9)**: iOS v1.4.4+45 uploaded to TestFlight, submitted for Beta Review
+- 📊 Monitor v1.4.4+45 crash reports via Firebase Crashlytics (Android + iOS after approval)
 - 📥 Track tester feedback via Testers Community dashboard
 - 📈 Review Play Console analytics: install count, crash-free rate, engagement metrics
-- **No updates planned** - update requirement already satisfied (v44, v45 deployed Days 3-4)
+- ⏳ Await iOS TestFlight approval (expected January 10-12)
+- **No further updates planned** - update requirement already satisfied (v44, v45 deployed Days 3-4)
 
 **Days 8-10 (January 12-14) - Production Prep:**
-- 📊 Continue monitoring v1.4.4+45 stability
+- ✅ iOS TestFlight approved and live (expected by this period)
+- 📊 Monitor v1.4.4+45 stability on both Android and iOS
 - 📝 Collect user feedback for post-production roadmap
-- 🔍 Final validation: no critical issues remaining
+- 🔍 Final validation: no critical issues remaining on either platform
 - **No updates unless critical crash discovered**
 
-**Days 11-13 (January 15-17) - iOS Upload (REVISED):**
-- 📦 **Upload v1.4.4+45 IPA to iOS App Store Connect** via Transporter
-  - Build: `flutter clean && flutter build ipa`
-  - Verify: Open Transporter → Add IPA → Verify
-  - Upload: Transporter → Deliver
-- 📝 Submit for TestFlight Beta Review in App Store Connect
-- **Why this timing?** iOS needs 1-3 days for TestFlight review, Android already has 9+ days of testing
-- **Strategy**: iOS skips v42-v44, both platforms launch production with v1.4.4+45
+**Days 11-13 (January 15-17) - Pre-Production Testing:**
+- ✅ **iOS already uploaded Day 5** - TestFlight approved and live by this period
+- 📊 Final stability validation on both platforms (iOS 6+ days testing, Android 11+ days)
+- 📝 Review aggregated feedback from both platforms
+- 🔍 Last chance to catch any edge cases before Day 14 production submission
+- **Strategy**: Both platforms ready with v1.4.4+45 for simultaneous production launch
 
 **Day 14 (January 19, 2026) - CRITICAL DEADLINE:**
 - 📥 **Download Production Access Form Report** from Testers Community
