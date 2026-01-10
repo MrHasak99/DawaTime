@@ -151,6 +151,12 @@ class _HomePageState extends State<HomePage> {
       if (hasNewData && hasOldData) {
         try {
           final allOldDocs = await oldLocation.get();
+
+          for (var doc in allOldDocs.docs) {
+            final data = doc.data();
+            await newLocation.doc(doc.id).set(data, SetOptions(merge: true));
+          }
+
           for (var doc in allOldDocs.docs) {
             await doc.reference.delete();
           }
@@ -2850,20 +2856,20 @@ class _HomePageState extends State<HomePage> {
                                                                   ),
                                                               content: Text(
                                                                 '${AppLocalizations.of(context)!.addMedicationFailed} $e',
-                                                              style: const TextStyle(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontFamily:
-                                                                    'Inter',
+                                                                style: const TextStyle(
+                                                                  color:
+                                                                      Colors
+                                                                          .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                ),
                                                               ),
+                                                              persist: false,
                                                             ),
-                                                            persist: false,
-                                                          ),
-                                                        );
+                                                          );
                                                         }
                                                       }
                                                     } else {
