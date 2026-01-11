@@ -109,9 +109,11 @@ class _AddMedicationsState extends State<AddMedications> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        setState(() {
-          _isLoadingCount = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoadingCount = false;
+          });
+        }
         return;
       }
 
@@ -123,14 +125,18 @@ class _AddMedicationsState extends State<AddMedications> {
               .limit(12)
               .get();
 
-      setState(() {
-        _isLoadingCount = false;
-        _isAtLimit = medicationsSnapshot.docs.length >= 12;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingCount = false;
+          _isAtLimit = medicationsSnapshot.docs.length >= 12;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoadingCount = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingCount = false;
+        });
+      }
     }
   }
 

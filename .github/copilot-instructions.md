@@ -157,20 +157,20 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+46 (Migration Data Safety Fix - Day 6)
-**Previous Versions**: v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 (Skipped)
+**Current Version**: v1.4.4+47 (setState Crash Fix - Day 7)
+**Previous Versions**: v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - smart bridge auto-cleanup implemented with safe copy-then-delete pattern
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **5 critical crash fixes**, **Android 15 edge-to-edge support**, **Two-phase migration prevents data loss**
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **6 critical crash fixes**, **Android 15 edge-to-edge support**, **Two-phase migration prevents data loss**
 
-**Deployment Status (January 10, 2026 - Day 6)**:
+**Deployment Status (January 11, 2026 - Day 7)**:
 
-- 🚨 **EMERGENCY v1.4.4+46 DEPLOYMENT**: Critical data safety fix for migration bug
-- ✅ **Android**: v1.4.4+46 LIVE in Closed Testing (54.2MB AAB) - 25 testers can now upgrade
-- ⏳ **iOS**: v1.4.4+46 uploaded to App Store Connect, status "Waiting for Review" (expect approval Jan 11-13)
-- ⚠️ **v1.4.4+45 CRITICAL BUG**: Smart bridge deleted old data without copying first (data loss risk)
-- ✅ **v1.4.4+46 FIX**: Two-phase copy-then-delete migration prevents data loss
-- 📊 **Next Action**: Monitor Android v46 stability, await iOS approval
+- 🚨 **EMERGENCY v1.4.4+47 DEPLOYMENT**: Critical setState crash fix in add_medications.dart
+- ✅ **Android**: v1.4.4+47 LIVE in Closed Testing (54.2MB AAB) - 25 testers upgraded from v46
+- ⏳ **iOS**: v1.4.4+47 uploaded to App Store Connect, status "Waiting for Review" (supersedes v46)
+- 🐛 **v1.4.4+46 CRASH**: Discovered via Crashlytics - Null check operator error in _checkMedicationLimit
+- ✅ **v1.4.4+47 FIX**: Added if (mounted) checks before all 3 setState calls in medication limit check
+- 📊 **Next Action**: Monitor v47 crash resolution, await iOS approval, track Crashlytics Days 7-13
 
 **iOS Upload Timeline**:
 
@@ -193,7 +193,10 @@
 - **Day 6** (Jan 10): ✅ Both v46 builds uploaded: Android "In review", iOS "Waiting for Review"
 - **Day 6** (Jan 10): ✅ Android v46 released to Closed Testing - LIVE with 25 testers
 - **Day 6** (Jan 10): ✅ Testers Community generated Production and Feedback reports (available 8 days early)
-- **Days 7-13** (Jan 11-17): Monitor v1.4.4+46 stability on both platforms, await iOS approval
+- **Day 7** (Jan 11): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (_checkMedicationLimit)
+- **Day 7** (Jan 11): **Emergency v1.4.4+47 deployment** - Added mounted checks before setState calls
+- **Day 7** (Jan 11): ✅ Both v47 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
+- **Days 7-13** (Jan 11-17): Monitor v1.4.4+47 stability, track crash resolution, await iOS v47 approval
   - Android v46 LIVE - monitor Crashlytics and tester feedback
   - iOS v46 expected approval Jan 11-13 (TestFlight Beta Review 1-3 days)
   - Collect tester feedback for post-production roadmap
