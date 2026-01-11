@@ -148,25 +148,34 @@ class _HomePageState extends State<HomePage> {
       final oldSnapshot = await oldLocation.limit(1).get();
       final hasOldData = oldSnapshot.docs.isNotEmpty;
 
-      if (hasNewData && hasOldData) {
+      if (hasOldData) {
         try {
           final allOldDocs = await oldLocation.get();
 
+          final existingNewDocs = await newLocation.get();
+          for (var doc in existingNewDocs.docs) {
+            await doc.reference.delete();
+          }
+
           for (var doc in allOldDocs.docs) {
             final data = doc.data();
-            await newLocation.doc(doc.id).set(data, SetOptions(merge: true));
+            await newLocation.doc(doc.id).set(data);
           }
 
           for (var doc in allOldDocs.docs) {
             await doc.reference.delete();
           }
-        } catch (_) {}
 
-        setState(() => _useNewStructure = true);
+          if (mounted) {
+            setState(() => _useNewStructure = true);
+          }
+        } catch (e) {
+          if (mounted) {
+            setState(() => _useNewStructure = false);
+          }
+        }
       } else if (hasNewData) {
         setState(() => _useNewStructure = true);
-      } else if (hasOldData) {
-        setState(() => _useNewStructure = false);
       } else {
         setState(() => _useNewStructure = true);
       }
