@@ -80,12 +80,6 @@
         font-size: 1.2rem;
         color: var(--text-secondary);
       }
-      .apk-info {
-        font-size: 0.9rem;
-        color: var(--text-tertiary);
-        margin-top: 0.5rem;
-        text-align: center;
-      }
       @media (max-width: 768px) {
         body {
           padding: 1.5rem 1rem;
@@ -127,7 +121,7 @@
       style="text-align: center; margin-bottom: 0.5rem"
       data-translate="description"
     >
-      Download from the App Store, get the APK directly, or use our web app
+      Download from the App Store or use our web app
     </p>
     <div
       style="
@@ -157,50 +151,29 @@
           style="height: 48px; border-radius: 8px"
         />
       </a>
-      <a
-        href="dawatime-v1.4.4.apk"
-        download="dawatime-v1.4.4.apk"
-        style="text-decoration: none"
+      <div
+        style="text-decoration: none; cursor: default"
       >
         <button
           style="
-            background: #3ddc84;
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.75), rgba(15, 157, 88, 0.75), rgba(219, 68, 55, 0.75), rgba(244, 180, 0, 0.75));
             color: #fff;
             border: none;
             border-radius: 8px;
             padding: 0.75rem 1.5rem;
             font-size: 1rem;
             font-family: 'Nunito', Arial, sans-serif;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
+            cursor: default;
           "
-          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
-          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+          disabled
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 16L7 11h3V3h4v8h3l-5 5zM5 18v2h14v-2H5z"
-              fill="currentColor"
-            />
-          </svg>
-          <span data-translate="download-apk"
-            >Download DawaTime v1.4.4 APK</span
+          <span data-translate="play-store-coming" style="font-family: 'League Spartan', 'Nunito', Arial, sans-serif;"
+            >Coming Soon</span
           >
         </button>
-      </a>
-      <a
-        href="https://webapp.dawatime.com"
-        target="_blank"
-        style="text-decoration: none"
+      </div>
+      <div
+        style="text-decoration: none; cursor: default"
       >
         <button
           style="
@@ -211,15 +184,14 @@
             padding: 0.75rem 1.5rem;
             font-size: 1rem;
             font-family: 'Nunito', Arial, sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            cursor: default;
+            opacity: 0.5;
           "
-          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
-          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+          disabled
         >
           <span data-translate="web-app">Continue to Web App</span>
         </button>
-      </a>
+      </div>
     </div>
     <div style="text-align: center; margin: 1.5rem 0">
       <a
@@ -243,109 +215,45 @@
         >
       </a>
     </div>
-    <div class="apk-info">
-      <p data-translate="apk-description">
-        Complete medication tracking and reminder management
-      </p>
-    </div>
-    <div
-      style="
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 1.5rem;
-        background: var(--card-bg);
-        border-radius: 12px;
-        border: 2px solid var(--card-border);
-        box-shadow: var(--shadow);
-      "
-    >
-      <h3
-        style="
-          color: var(--primary-color);
-          text-align: center;
-          margin-top: 0;
-          margin-bottom: 1rem;
-        "
-        data-translate="info-title"
-      >
-        APK Information & Safety
-      </h3>
-      <div
-        style="font-size: 14px; line-height: 1.8; color: var(--text-secondary)"
-      >
-        <p>
-          <strong data-translate="package-name-label">Package Name:</strong>
-          com.mrhasak99.dawatime
-        </p>
-        <p>
-          <strong data-translate="digital-signature-label"
-            >Digital Signature:</strong
-          >
-          <span data-translate="digital-signature-text"
-            >Officially signed and verified by DawaTime</span
-          >
-        </p>
-        <p>
-          <strong data-translate="installation-label">Installation:</strong>
-          <span data-translate="installation-text"
-            >Enable "Install from unknown sources" in your Android settings if
-            needed</span
-          >
-        </p>
-        <p>
-          <strong data-translate="security-label">Security:</strong>
-          <span data-translate="security-text"
-            >Only download from this official website (dawatime.com)</span
-          >
-        </p>
-      </div>
-    </div>
     <script>
       window.translations = {
         en: {
           "app-title": "DawaTime",
           subtitle: "Available Now on iOS & Android",
           description:
-            "Download from the App Store, get the APK directly, or use our web app",
+            "Download from the App Store or use our web app",
           "app-store-alt": "Download on the App Store",
-          "download-apk": "Download DawaTime v1.4.4 APK",
+          "play-store-coming": "Coming Soon",
           "web-app": "Continue to Web App",
-          "apk-description":
-            "Complete medication tracking and reminder management",
-          "info-title": "APK Information & Safety",
-          "package-name-label": "Package Name:",
-          "digital-signature-label": "Digital Signature:",
-          "digital-signature-text":
-            "Officially signed and verified by DawaTime",
-          "installation-label": "Installation:",
-          "installation-text":
-            'Enable "Install from unknown sources" in your Android settings if needed',
-          "security-label": "Security:",
-          "security-text":
-            "Only download from this official website (dawatime.com)",
           "support-link": "Need Help? Visit Support Center",
         },
         ar: {
           "app-title": "دواء تايم",
           subtitle: "متاح الآن على iOS و Android",
           description:
-            "حمّل من آب ستور، أو احصل على ملف APK مباشرة، أو استخدم تطبيق الويب",
+            "حمّل من آب ستور أو استخدم تطبيق الويب",
           "app-store-alt": "حمّل من آب ستور",
-          "download-apk": "حمّل دواء تايم v1.4.4 APK",
+          "play-store-coming": "قريباً",
           "web-app": "استمر لتطبيق الويب",
-          "apk-description": "إدارة أدويتك ومواعيدها بكل سهولة",
-          "info-title": "معلومات الأمان والتثبيت",
-          "package-name-label": "اسم الحزمة:",
-          "digital-signature-label": "التوقيع الرقمي:",
-          "digital-signature-text": "موثّق ومُوقع رسمياً من دواء تايم",
-          "installation-label": "طريقة التثبيت:",
-          "installation-text":
-            'فعّل "التثبيت من مصادر غير معروفة" في إعدادات اندرويد إذا احتجت',
-          "security-label": "الأمان:",
-          "security-text": "حمّل فقط من الموقع الرسمي (dawatime.com)",
           "support-link": "تحتاج مساعدة؟ زر مركز الدعم",
         },
       };
+
+      function updateAppStoreBadge() {
+        const badge = document.getElementById('app-store-badge');
+        const currentLang = document.documentElement.getAttribute('lang');
+        if (badge) {
+          badge.src = currentLang === 'ar' ? 'arblack.svg' : 'enblack.svg';
+        }
+      }
+
+      updateAppStoreBadge();
+
+      const observer = new MutationObserver(updateAppStoreBadge);
+      observer.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['lang'] 
+      });
     </script>
   </body>
 </html>

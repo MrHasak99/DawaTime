@@ -168,8 +168,10 @@
 - 🚨 **EMERGENCY v1.4.4+47 DEPLOYMENT**: Critical setState crash fix in add_medications.dart
 - ✅ **Android**: v1.4.4+47 LIVE in Closed Testing (54.2MB AAB) - 25 testers upgraded from v46
 - ⏳ **iOS**: v1.4.4+47 uploaded to App Store Connect, status "Waiting for Review" (supersedes v46)
-- 🐛 **v1.4.4+46 CRASH**: Discovered via Crashlytics - Null check operator error in _checkMedicationLimit
+- 🐛 **v1.4.4+46 CRASH**: Discovered via Crashlytics - Null check operator error in \_checkMedicationLimit
 - ✅ **v1.4.4+47 FIX**: Added if (mounted) checks before all 3 setState calls in medication limit check
+- � **WEBSITE EMERGENCY**: Discovered bad APK deployed Dec 16, 2025 (26 days prior) to dawatime.com
+- ✅ **WEBSITE CLEANUP**: Removed bad APK, replaced with teaser, deployed to Firebase Hosting
 - 📊 **Next Action**: Monitor v47 crash resolution, await iOS approval, track Crashlytics Days 7-13
 
 **iOS Upload Timeline**:
@@ -193,11 +195,14 @@
 - **Day 6** (Jan 10): ✅ Both v46 builds uploaded: Android "In review", iOS "Waiting for Review"
 - **Day 6** (Jan 10): ✅ Android v46 released to Closed Testing - LIVE with 25 testers
 - **Day 6** (Jan 10): ✅ Testers Community generated Production and Feedback reports (available 8 days early)
-- **Day 7** (Jan 11): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (_checkMedicationLimit)
+- **Day 7** (Jan 11): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (\_checkMedicationLimit)
 - **Day 7** (Jan 11): **Emergency v1.4.4+47 deployment** - Added mounted checks before setState calls
 - **Day 7** (Jan 11): ✅ Both v47 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
+- **Day 7** (Jan 11): 🚨 **WEBSITE EMERGENCY** - Discovered bad APK deployed Dec 16, 2025 (26 days prior) to dawatime.com
+- **Day 7** (Jan 11): **Emergency website cleanup** - Removed bad APK, replaced with teaser, deployed to Firebase Hosting
+- **Day 7** (Jan 11): **Git investigation** - Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month
 - **Days 7-13** (Jan 11-17): Monitor v1.4.4+47 stability, track crash resolution, await iOS v47 approval
-  - Android v46 LIVE - monitor Crashlytics and tester feedback
+  - Android v47 LIVE - monitor Crashlytics and tester feedback
   - iOS v46 expected approval Jan 11-13 (TestFlight Beta Review 1-3 days)
   - Collect tester feedback for post-production roadmap
   - Production reports ready for Day 14 submission
@@ -808,6 +813,137 @@ Update v1.4.4 Build 43:
 - Internal logging improvements
 - Keep all changes iOS-identical to maintain version parity
 - **Note**: This was superseded by v45 emergency hotfix - both platforms will launch with v45
+
+---
+
+### Website Emergency - Bad APK Deployment (December 16, 2025 - January 11, 2026)
+
+**Status**: ✅ **RESOLVED** - Bad APK removed, website cleaned, teaser deployed to Firebase Hosting
+
+**Deployment Timeline** (Git History Analysis - January 11, 2026):
+
+- **Original deployment**: December 16, 2025 at 2:15 PM Kuwait time (commit 96758f0)
+- **Exposure duration**: 26 days (Dec 16, 2025 → Jan 11, 2026)
+- **Git commit**: "feat: Update version to 1.4.4, enhance notification handling, and improve Firebase hosting configuration"
+- **Website changes**: Changed all references from `dawatime-v1.3.4.apk` to `dawatime-v1.4.4.apk` in index.html (lines 313-491)
+- **APK upload**: Likely same day to Firebase Hosting, though exact timestamp unconfirmed (APK files excluded from git via `.gitignore`)
+- **Build nature**: Early beta/development build of v1.4.4, not production-ready version
+- **Issues present**: Build likely contained bugs later fixed in emergency updates v42→v44→v45→v46→v47 (6 critical crash fixes)
+- **Holiday exposure**: Available through December holidays (Christmas/New Year) and into January 2026
+- **Download count**: Unknown, but 26-day window significantly increases potential affected user base
+
+**Crisis Discovery** (Day 7 - January 11, 2026):
+
+- User revealed accidental deployment of old/unfinished v1.4.4 build to dawatime.com
+- Bad APK was publicly accessible at `https://dawatime.com/dawatime-v1.4.4.apk` for 26 days
+- **Discovery context**: User asked about removing website APK for marketing (Play Store launch coming)
+- **Critical revelation**: "The reason why I'm suggesting this is because I've accidentally deployed an old unfinished build of v1.4.4 onto the website"
+- **Git investigation**: Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month before discovery
+
+**Emergency Response Timeline** (Day 7 - January 11, 2026):
+
+1. **Immediate File Analysis**: Read index.html to locate APK download section
+   - Found APK download button at lines 161-198
+   - Green Android button with download icon linking to bad APK
+   - Located translation strings referencing APK in JavaScript section
+
+2. **APK Download Replacement**: Replaced download button with "Coming Soon to Play Store" teaser
+   - Changed from clickable `<a>` download link to disabled `<button>`
+   - Updated background: Solid green → Google colors gradient (135° at 75% opacity: #4285f4, #0f9d58, #db4437, #f4b400)
+   - Changed font: Nunito → League Spartan for "Coming Soon" text
+   - Removed checkmark icon, kept text-only design
+   - Matches Instagram Story teaser posted same morning
+
+3. **Content Cleanup**: Removed all APK-related content from website
+   - Removed hardcoded "get the APK directly" text from description
+   - Removed "APK Information & Safety" card section (package name, signature, installation instructions)
+   - Removed all APK translation strings from both English and Arabic
+   - Removed `.apk-info` CSS class
+   - Result: Website now shows only App Store badge + "Coming Soon" teaser + Web App button
+
+4. **Localization Enhancement**: Added dynamic App Store badge switching
+   - English users see: `enblack.svg` (English App Store badge)
+   - Arabic users see: `arblack.svg` (Arabic App Store badge)
+   - Implemented MutationObserver to detect language changes
+   - Badge updates automatically when language toggle used
+
+5. **Web App Disable**: Temporarily disabled Web App button
+   - Changed from clickable link to disabled button
+   - Added 50% opacity to indicate unavailable state
+   - Keeps button visible but non-functional
+
+6. **File Deletion**: Removed bad APK and unnecessary files
+   - Deleted: `dawatime-v1.4.4.apk` (CRITICAL - bad build)
+   - Deleted: `.DS_Store` (macOS system file)
+   - Kept: `GetItOnGooglePlay_Badge_Web_color_*.svg` (for Day 17+ Play Store launch announcement)
+   - Kept: `PrivacyPolicy.pdf` and `Terms&Conditions.pdf` (used in support.html)
+
+7. **Firebase Deployment**: Deployed cleaned website immediately
+   - Command: `firebase deploy --only hosting`
+   - Result: Bad APK no longer accessible, teaser button live
+   - Website: https://dawatime.com
+
+**Files Modified**:
+
+- `/public/index.html`:
+  - Lines 161-198: Replaced APK download button with teaser button
+  - Background: `linear-gradient(135deg, rgba(66, 133, 244, 0.75), rgba(15, 157, 88, 0.75), rgba(219, 68, 55, 0.75), rgba(244, 180, 0, 0.75))`
+  - Font: `font-family: 'League Spartan', 'Nunito', Arial, sans-serif;`
+  - Removed: Lines 224-282 (APK Information & Safety card)
+  - Removed: APK translation strings from both English and Arabic
+  - Removed: `.apk-info` CSS class definition
+  - Added: Dynamic App Store badge switching with MutationObserver
+  - Disabled: Web App button (temporary)
+
+**Files Deleted**:
+
+- `/public/dawatime-v1.4.4.apk` - Bad/unfinished build (CRITICAL removal)
+- `/public/.DS_Store` - macOS system file
+
+**Impact Assessment**:
+
+- **User Safety Risk**: Unknown number of users may have downloaded bad build during 26-day exposure
+- **Exposure Timeline**: December 16, 2025 - January 11, 2026 (26 days)
+- **High-Risk Period**: December holidays and New Year 2026 (potentially higher download volume)
+- **Likely Issues in Bad Build**:
+  - setState after widget disposal crashes (fixed in v44)
+  - Migration data safety issues (fixed in v46)
+  - Google Sign-In authentication crashes (fixed in v45)
+  - RenderFlex overflow with long labels (fixed in v44)
+  - Android notification icon crashes (fixed in v44)
+  - iOS notification delivery issues (fixed in v45)
+- **Mitigation**: Bad APK removed within hours of discovery on Day 7
+- **Monitoring Required**: Watch Firebase Crashlytics for v1.4.4 crashes not from v47 build (Days 7-14)
+- **Contact Form**: Check in-app support form for "app not working" reports
+- **Website Status**: Clean teaser design, no broken links, mystery maintained
+
+**Prevention Measures**:
+
+- Always verify correct build file before deploying to Firebase Hosting
+- Maintain Firebase Hosting deployment history for rollback capability
+- Consider staging environment for website changes before production
+- Document which APK version is "good" for production vs beta vs deprecated
+
+**Marketing Strategy Maintained**:
+
+- Website now shows mysterious "Coming Soon" teaser matching Instagram Story
+- Gradient button uses Google brand colors (hints at Play Store without being explicit)
+- Description avoids mentioning "Android" or "Play Store" to keep mystery
+- Will replace teaser with actual Play Store badge on Day 17+ when production launches
+
+**Lessons Learned**:
+
+- **Emergency disclosures critical**: User revealing true reason changed entire approach from "marketing cleanup" to "user safety emergency"
+- **Git history investigation essential**: Used `git log -p -S"v1.4.4" -- public/index.html` to determine 26-day exposure (Dec 16 - Jan 11)
+- **Build deployment verification**: Should verify correct build file before uploading to Firebase Hosting
+- **Staging environment needed**: Consider separate staging website to test deployments before production
+- **Firebase rollback preparation**: Maintain deployment history knowledge for quick rollback capability
+- **Dual concerns possible**: Can have successful app deployment (v47) AND website emergency simultaneously
+- **Rapid website cleanup faster**: Removing APK download from website much faster than removing deployed app
+- **User safety first**: Website emergency took priority over celebrating v47 deployment success
+- **.gitignore limitations**: APK files excluded from git prevented tracking actual file upload date, only HTML references tracked
+
+**Result**: Bad APK removed from public access, website cleaned and redesigned with teaser button, mystery campaign maintained, users protected from downloading broken build.
 
 ---
 
@@ -1507,7 +1643,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 ### Social Media Launch Strategy - Google Play Announcement (January 2026)
 
-**Status**: 🎯 **PLANNED** - Instagram teaser campaign for Google Play launch
+**Status**: ✅ **PHASE 1 COMPLETE** - Mystery teaser posted Day 7, Phase 2-3 in progress
 
 **Context**:
 
@@ -1525,17 +1661,17 @@ This is NOT a new app launch - it's an **upgrade story**:
 
 **Teaser Strategy - Mystery Campaign:**
 
-**Phase 1: Mystery Teaser (Sunday, January 12, 2026 at 11:00 AM Kuwait time)**
+**Phase 1: Mystery Teaser ✅ COMPLETED (Sunday, January 11, 2026 at 11:00 AM Kuwait time)**
 
 - **Platform**: Instagram Story (not Feed post - Story first for FOMO)
-- **Content**: Teaser graphic showing:
+- **Content Posted**: Teaser graphic showing:
   - DawaTime logo with clock
   - "Download on the App Store" badge (iOS already live)
-  - "Coming Soon" badge with subtle Google colors gradient
+  - "Coming Soon" badge with subtle Google colors gradient (matching website teaser)
   - No text explaining what's "coming soon"
-- **Caption**: Minimal mystery - "Something big is coming... 👀" or just "🤫"
-- **Engagement**: Add poll sticker ("Can you guess what it is?") and question sticker ("Drop your guesses 👇")
-- **Timing Rationale**: Sunday 11 AM = first work day after Kuwait weekend, mid-morning break when people are bored at desks and scrolling
+- **Engagement**: Poll sticker ("Can you guess what it is?") and question sticker ("Drop your guesses 👇")
+- **Timing Executed**: Sunday 11 AM = first work day after Kuwait weekend, mid-morning break when people are bored at desks and scrolling
+- **Coordination**: Posted same morning as website emergency cleanup (website teaser button designed to match Instagram Story)
 
 **Phase 2: Speculation Building (Days 8-13)**
 
@@ -1585,8 +1721,8 @@ This is NOT a new app launch - it's an **upgrade story**:
 - Intentionally subtle: Google colors in gradient not obvious to casual viewer
 - Design quality: Professional, production-ready
 
-**Key Decision (January 9, 2026)**:
-Post mystery teaser **Sunday, January 12 at 11 AM** when Kuwait audience returns to work and is browsing during coffee break. Maximum engagement from work boredom scrolling. Maintain mystery until production launch Day 17+.
+**Execution Confirmed (January 11, 2026 - Day 7)**:
+Mystery teaser posted **Sunday, January 11 at 11:00 AM Kuwait time** when audience returns to work and is browsing during coffee break. Perfect timing for maximum engagement from work boredom scrolling. Mystery maintained successfully - website teaser button matches Instagram Story design exactly. Phase 2 begins Days 8-13 with cryptic engagement responses.
 
 ---
 
