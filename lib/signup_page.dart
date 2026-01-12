@@ -289,7 +289,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     TapGestureRecognizer()
                                       ..onTap = () async {
                                         final url = Uri.parse(
-                                          'https://dawatime.com/terms-and-conditions.html',
+                                          'https://dawatime.com/terms-and-conditions',
                                         );
                                         if (await canLaunchUrl(url)) {
                                           await launchUrl(
@@ -344,7 +344,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     TapGestureRecognizer()
                                       ..onTap = () async {
                                         final url = Uri.parse(
-                                          'https://dawatime.com/privacy-policy.html',
+                                          'https://dawatime.com/privacy-policy',
                                         );
                                         if (await canLaunchUrl(url)) {
                                           await launchUrl(

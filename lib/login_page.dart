@@ -219,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/terms-and-conditions.html',
+                                      'https://dawatime.com/terms-and-conditions',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -243,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/privacy-policy.html',
+                                      'https://dawatime.com/privacy-policy',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -503,9 +503,12 @@ class _LoginPageState extends State<LoginPage> {
                           color: _emailError ? Colors.red : Color(0xFF8AC249),
                         ),
                       ),
-                      errorText: _emailError
-                          ? AppLocalizations.of(context)!.pleaseFillAllFields
-                          : null,
+                      errorText:
+                          _emailError
+                              ? AppLocalizations.of(
+                                context,
+                              )!.pleaseFillAllFields
+                              : null,
                     ),
                   ),
                   TextField(
@@ -552,9 +555,12 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
-                      errorText: _passwordError
-                          ? AppLocalizations.of(context)!.pleaseFillAllFields
-                          : null,
+                      errorText:
+                          _passwordError
+                              ? AppLocalizations.of(
+                                context,
+                              )!.pleaseFillAllFields
+                              : null,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -860,7 +866,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () {
                           launchUrl(
-                            Uri.parse('https://dawatime.com/privacy-policy.html'),
+                            Uri.parse('https://dawatime.com/privacy-policy'),
                             mode: LaunchMode.externalApplication,
                           );
                         },
@@ -877,7 +883,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           launchUrl(
                             Uri.parse(
-                              'https://dawatime.com/terms-and-conditions.html',
+                              'https://dawatime.com/terms-and-conditions',
                             ),
                             mode: LaunchMode.externalApplication,
                           );

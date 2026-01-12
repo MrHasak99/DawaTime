@@ -323,7 +323,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Navigator.pop(context);
                                           launchUrl(
                                             Uri.parse(
-                                              'https://dawatime.com/privacy-policy.html',
+                                              'https://dawatime.com/privacy-policy',
                                             ),
                                             mode:
                                                 LaunchMode.externalApplication,
@@ -351,7 +351,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Navigator.pop(context);
                                           launchUrl(
                                             Uri.parse(
-                                              'https://dawatime.com/terms-and-conditions.html',
+                                              'https://dawatime.com/terms-and-conditions',
                                             ),
                                             mode:
                                                 LaunchMode.externalApplication,

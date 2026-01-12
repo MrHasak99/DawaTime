@@ -610,7 +610,7 @@ class _AuthGateState extends State<AuthGate> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/terms-and-conditions.html',
+                                      'https://dawatime.com/terms-and-conditions',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -634,7 +634,7 @@ class _AuthGateState extends State<AuthGate> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/privacy-policy.html',
+                                      'https://dawatime.com/privacy-policy',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -1275,7 +1275,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/terms-and-conditions.html',
+                                      'https://dawatime.com/terms-and-conditions',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -1307,7 +1307,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 onPressed: () async {
                                   await launchUrl(
                                     Uri.parse(
-                                      'https://dawatime.com/privacy-policy.html',
+                                      'https://dawatime.com/privacy-policy',
                                     ),
                                     mode: LaunchMode.externalApplication,
                                   );
@@ -1495,7 +1495,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 TextButton(
                   onPressed: () {
                     launchUrl(
-                      Uri.parse('https://dawatime.com/privacy-policy.html'),
+                      Uri.parse('https://dawatime.com/privacy-policy'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -1508,9 +1508,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 TextButton(
                   onPressed: () {
                     launchUrl(
-                      Uri.parse(
-                        'https://dawatime.com/terms-and-conditions.html',
-                      ),
+                      Uri.parse('https://dawatime.com/terms-and-conditions'),
                       mode: LaunchMode.externalApplication,
                     );
                   },
