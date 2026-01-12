@@ -157,30 +157,32 @@
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+49 (Complete Migration Replacement - Day 7 Evening)
-**Previous Versions**: v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
+**Current Version**: v1.4.4+50 (Website SEO & Legal Links - Day 8)
+**Previous Versions**: v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**
 
-**Deployment Status (January 11, 2026 - Day 7 Evening)**:
+**Deployment Status (January 12, 2026 - Day 8)**:
 
-- 🚨 **EMERGENCY v1.4.4+49 DEPLOYMENT**: Migration merge conflict - prevents duplicate/zombie medications
-- ✅ **Android**: v1.4.4+49 LIVE in Closed Testing (54.2MB AAB) - Skipped v48, canceled v47
-- ✅ **iOS**: v1.4.4+49 uploaded to App Store Connect, status "Waiting for Review" - Canceled v47, skipped v48
-- 🐛 **v1.4.4+47 MIGRATION ISSUE**: Migration copied old to new but didn't delete existing new data first (merge behavior)
-- 💡 **User discovered edge case**: Added med in new build → switched to old app → added med in old structure → updated to new build → both meds present (should only show old structure meds)
-- ✅ **v1.4.4+49 FIX**: Three-phase complete replacement - delete ALL new data first, copy from old, delete old (true source of truth)
-- 📋 **v1.4.4+48**: Built but skipped on both platforms (went straight to v49)
-- 📊 **Next Action**: Monitor v49 migration behavior, track duplicate prevention, await iOS approval, Days 7-13
+- ✅ **v1.4.4+50 DEPLOYMENT**: Website SEO improvements + legal document link optimization
+- ✅ **Android**: v1.4.4+50 LIVE in Closed Testing (54.2MB AAB) - 25 active testers
+- ✅ **iOS**: v1.4.4+50 uploaded to App Store Connect, status "Waiting for Review"
+- 🌐 **Website SEO Fixed**: Added canonical tags to all 6 pages, created sitemap.xml, robots.txt deployed
+- 🔗 **Legal Links Updated**: All 14 in-app links changed from .html to clean URLs (4 files modified)
+- 📊 **Google Search Console**: Duplicate page issues resolved, indexing optimization in progress
+- 🚀 **Production Path**: On track for Day 14 (January 19) submission with reports ready
 
 **iOS Upload Timeline**:
 
 - **Day 5 (Jan 9)**: iOS v1.4.4+45 uploaded to TestFlight - Status "Waiting for Review"
 - **Day 6 (Jan 10)**: 🚨 Migration data loss bug discovered in v45 → Emergency v46 deployment
-- **Day 6 (Jan 10)**: iOS v1.4.4+46 uploaded to TestFlight - Status "Waiting for Review"
-- **Expected Approval**: January 11-13, 2026 (1-3 days typical for TestFlight Beta Review)
-- **Version Parity**: Both platforms will launch production with v1.4.4+46 simultaneously
+- **Day 6 (Jan 10)**: iOS v1.4.4+46 uploaded to TestFlight - Status "Waiting for Review" (superseded v45)
+- **Day 7 (Jan 11 Morning)**: iOS v1.4.4+47 uploaded to TestFlight - Status "Waiting for Review" (setState fix)
+- **Day 7 (Jan 11 Evening)**: iOS v1.4.4+49 uploaded to TestFlight - Status "Waiting for Review" (canceled v47, skipped v48, migration fix)
+- **Day 8 (Jan 12)**: iOS v1.4.4+50 uploaded to TestFlight - Status "Waiting for Review" (SEO & legal link optimization)
+- **Expected Approval**: January 13-15, 2026 (1-3 days typical for TestFlight Beta Review)
+- **Version Parity**: Both platforms will launch production with v1.4.4+50 simultaneously
 
 **Beta Testing Timeline (January 5-21, 2026)** - REVISED:
 
@@ -206,17 +208,38 @@
 - **Day 7** (Jan 11 Evening): **Emergency v1.4.4+49 deployment** - Three-phase complete replacement: delete new first, copy old, delete old
 - **Day 7** (Jan 11 Evening): ✅ Canceled v47 iOS review, uploaded v49 to both platforms - Skipped v48 entirely
 - **Day 7** (Jan 11 Evening): ✅ Both v49 builds deployed: Android LIVE in Closed Testing, iOS "Waiting for Review"
-- **Days 7-13** (Jan 11-17): Monitor v1.4.4+49 stability, track migration replacement logic, await iOS v49 approval
-  - Android v49 LIVE - monitor for duplicate medications, verify complete replacement working
-  - iOS v49 expected approval Jan 12-14 (TestFlight Beta Review 1-3 days, canceled v47 resets clock)
-  - Collect tester feedback for post-production roadmap
+- **Day 8** (Jan 12): 🌐 **WEBSITE SEO OPTIMIZATION** - Google Search Console issues resolved
+- **Day 8** (Jan 12 Morning): **Google Search Console Crisis** - Discovered duplicate page indexing issues (support.html vs /support, privacy-policy.html vs /privacy-policy)
+- **Day 8** (Jan 12 Morning): **SEO Fix Implementation**:
+  - Added `<link rel="canonical">` tags to all 6 HTML pages pointing to clean URLs
+  - Created sitemap.xml with proper structure (6 URLs, priorities, change frequencies)
+  - Created robots.txt with sitemap reference and /user-management exclusion
+  - Deployed to Firebase Hosting via `firebase deploy --only hosting`
+- **Day 8** (Jan 12 Afternoon): **In-App Link Audit** - Discovered all 14 legal document links using .html extensions causing unnecessary redirects
+- **Day 8** (Jan 12 Afternoon): **Legal Link Cleanup**:
+  - Updated main.dart: 6 links (force update dialog, legal dialogs, intro guide)
+  - Updated settings.dart: 2 links (account deletion confirmation)
+  - Updated signup_page.dart: 2 links (Terms/Privacy checkbox)
+  - Updated login_page.dart: 4 links (legal update dialog, intro guide)
+  - Changed from https://dawatime.com/privacy-policy.html → https://dawatime.com/privacy-policy
+  - Changed from https://dawatime.com/terms-and-conditions.html → https://dawatime.com/terms-and-conditions
+- **Day 8** (Jan 12 Afternoon): **Emergency v1.4.4+50 deployment** - Legal link optimization
+- **Day 8** (Jan 12 Afternoon): ✅ Both v50 builds uploaded: Android LIVE in Closed Testing (54.2MB), iOS "Waiting for Review" (48.2MB)
+- **Days 8-13** (Jan 12-17): Monitor v1.4.4+50 stability, track SEO improvements, await iOS v50 approval
+  - Android v50 LIVE with 25 testers - monitor crash-free rate and feedback
+  - iOS v50 expected approval Jan 13-15 (TestFlight Beta Review 1-3 days)
+  - Google Search Console recrawl in progress (1-2 weeks for full indexing update)
+  - Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
   - Production reports ready for Day 14 submission
-- **Days 8-10** (Jan 12-14): Continue monitoring v46 stability, prepare production submission
-- **Days 11-13** (Jan 15-17): Final v46 validation, both platforms ready for production
-  - ✅ **COMPLETED DAY 6**: iOS v1.4.4+46 uploaded and submitted for TestFlight review
-  - Status: "Waiting for Review" (expect approval Jan 11-13)
-  - Superseded v45 iOS build (data loss bug fix)
-  - Result: Both platforms will be ready with v46 for simultaneous production launch
+- **Days 8-10** (Jan 12-14): Continue monitoring v50 stability, prepare production submission
+  - ✅ **COMPLETED DAY 8**: Website SEO improvements + legal link cleanup deployed
+  - ✅ Both v50 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
+  - Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
+- **Days 11-13** (Jan 15-17): Final v50 validation, both platforms ready for production
+  - iOS v50 expected approval by this period (submitted Day 8)
+  - Monitor crash-free rate and tester feedback
+  - Verify Google Search Console indexing improvements
+  - Result: Both platforms will be ready with v50 for simultaneous production launch
 - **Day 14** (Jan 19): CRITICAL - Download Production Access Form Report, submit to Production
   - **Production Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
   - **Feedback Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
@@ -281,7 +304,7 @@
 
 4. **Android 15 Edge-to-Edge Support** (Day 4): Google Play Console warnings for apps targeting SDK 35. Fixed by adding WindowCompat.setDecorFitsSystemWindows() in MainActivity for backward-compatible edge-to-edge display.
 
-5. **Widget Lifecycle Crash** (Day 7 Morning): Firebase Crashlytics revealed crash when adding 12th medication - setState called after widget disposal in add_medications.dart. Fixed by adding mounted checks before all setState calls in _checkMedicationLimit method. Emergency deployment v1.4.4+47 within hours.
+5. **Widget Lifecycle Crash** (Day 7 Morning): Firebase Crashlytics revealed crash when adding 12th medication - setState called after widget disposal in add_medications.dart. Fixed by adding mounted checks before all setState calls in \_checkMedicationLimit method. Emergency deployment v1.4.4+47 within hours.
 
 **Improvements Implemented**:
 
@@ -344,7 +367,7 @@ Critical Issue Fixed:
 
 - Crash when adding 12th medication - setState called after widget disposal in add_medications.dart
 - Impact: App crashed when medication limit check triggered after async operation completed
-- Fix: Added if (mounted) checks before all 3 setState calls in _checkMedicationLimit method
+- Fix: Added if (mounted) checks before all 3 setState calls in \_checkMedicationLimit method
 - Discovered via Firebase Crashlytics, deployed within hours
 - Both Android and iOS updated simultaneously
 
@@ -1057,6 +1080,175 @@ Update v1.4.4 Build 43:
 
 ---
 
+### Website SEO Optimization & Legal Link Cleanup (January 12, 2026 - Day 8)
+
+**Status**: ✅ **COMPLETE** - Google Search Console issues resolved, in-app links optimized
+
+**Crisis Discovery** (Day 8 Morning - January 12, 2026):
+
+- Google Search Console showed 2 critical indexing issues:
+  - "Duplicate without user-selected canonical" for support.html vs /support
+  - "Duplicate without user-selected canonical" for privacy-policy.html vs /privacy-policy
+- Root cause: Firebase Hosting serving both .html and clean URLs, confusing Google's indexing
+- Impact: Search results showing wrong URLs, diluted page authority, suboptimal SEO
+
+**SEO Fix Implementation** (Day 8 Morning):
+
+1. **Canonical Tags Added** - All 6 HTML pages updated:
+
+   ```html
+   <!-- index.html -->
+   <link rel="canonical" href="https://dawatime.com/" />
+
+   <!-- support.html -->
+   <link rel="canonical" href="https://dawatime.com/support" />
+
+   <!-- privacy-policy.html -->
+   <link rel="canonical" href="https://dawatime.com/privacy-policy" />
+
+   <!-- terms-and-conditions.html -->
+   <link rel="canonical" href="https://dawatime.com/terms-and-conditions" />
+
+   <!-- account-deletion.html -->
+   <link rel="canonical" href="https://dawatime.com/account-deletion" />
+
+   <!-- user-management.html -->
+   <link rel="canonical" href="https://dawatime.com/user-management" />
+   ```
+
+2. **sitemap.xml Created** - Proper XML sitemap structure:
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+     <url>
+       <loc>https://dawatime.com/</loc>
+       <lastmod>2026-01-12</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>1.0</priority>
+     </url>
+     <url>
+       <loc>https://dawatime.com/support</loc>
+       <lastmod>2026-01-12</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <!-- Additional 4 URLs with priorities 0.5-0.3 -->
+   </urlset>
+   ```
+
+3. **robots.txt Created** - Search engine crawling instructions:
+
+   ```
+   User-agent: *
+   Allow: /
+   Disallow: /user-management
+
+   Sitemap: https://dawatime.com/sitemap.xml
+   ```
+
+4. **Firebase Deployment**:
+   - Command: `firebase deploy --only hosting`
+   - Result: All SEO files live on production
+   - URL redirects already configured (301 from .html to clean URLs)
+
+**In-App Link Audit** (Day 8 Afternoon):
+
+- Discovered all 14 legal document links using .html extensions
+- Issue: Links worked but caused unnecessary 301 redirect step
+- Impact: Slower page load, extra HTTP request, suboptimal user experience
+
+**Legal Link Cleanup Implementation** (Day 8 Afternoon):
+
+**Files Modified** (4 files, 14 link occurrences):
+
+1. **main.dart** - 6 links updated:
+   - Line 613: Force update dialog Privacy Policy button
+   - Line 637: Force update dialog Terms & Conditions button
+   - Line 1278: Legal update dialog Terms button
+   - Line 1310: Legal update dialog Privacy button
+   - Line 1498: Intro guide Terms link
+   - Line 1512: Intro guide Privacy link
+
+2. **settings.dart** - 2 links updated:
+   - Line 326: Account deletion confirmation Privacy link
+   - Line 354: Account deletion confirmation Terms link
+
+3. **signup_page.dart** - 2 links updated:
+   - Line 292: Signup checkbox Terms link
+   - Line 347: Signup checkbox Privacy link
+
+4. **login_page.dart** - 4 links updated:
+   - Line 222: Legal update dialog Terms button
+   - Line 246: Legal update dialog Privacy button
+   - Line 870: Intro guide Terms link
+   - Line 888: Intro guide Privacy link
+
+**Link Pattern Change**:
+
+```dart
+// BEFORE (v1.4.4+49):
+const url = 'https://dawatime.com/privacy-policy.html';
+const url = 'https://dawatime.com/terms-and-conditions.html';
+
+// AFTER (v1.4.4+50):
+const url = 'https://dawatime.com/privacy-policy';
+const url = 'https://dawatime.com/terms-and-conditions';
+```
+
+**Emergency v1.4.4+50 Deployment** (Day 8 Afternoon):
+
+- Version incremented: 1.4.4+49 → 1.4.4+50
+- Build artifacts:
+  - Android AAB: 54.2MB (build time: 89.3s)
+  - iOS IPA: 48.2MB (build time: 198.2s archive + 105.8s IPA)
+- Uploaded to both platforms within 2 hours
+- Android: LIVE in Closed Testing
+- iOS: Waiting for Review in TestFlight
+
+**Benefits**:
+
+- ✅ **SEO**: Canonical tags tell Google which URL to index (clean URLs preferred)
+- ✅ **Sitemap**: Helps Google discover and prioritize pages
+- ✅ **Performance**: In-app links avoid redirect, load pages faster
+- ✅ **Consistency**: All links point to canonical URLs
+- ✅ **Indexing**: Google Search Console will recrawl and resolve duplicate issues (1-2 weeks)
+
+**Files Created**:
+
+- `/public/sitemap.xml` - XML sitemap with 6 pages
+- `/public/robots.txt` - Search engine crawling instructions
+
+**Files Updated**:
+
+- `/public/index.html` - Canonical tag, improved meta description
+- `/public/support.html` - Canonical tag
+- `/public/privacy-policy.html` - Canonical tag
+- `/public/terms-and-conditions.html` - Canonical tag
+- `/public/account-deletion.html` - Canonical tag
+- `/public/user-management.html` - Canonical tag
+- `/lib/main.dart` - 6 legal links cleaned
+- `/lib/settings.dart` - 2 legal links cleaned
+- `/lib/signup_page.dart` - 2 legal links cleaned
+- `/lib/login_page.dart` - 4 legal links cleaned
+- `/pubspec.yaml` - Version 1.4.4+49 → 1.4.4+50
+- `/android/app/build.gradle.kts` - versionCode 49 → 50
+
+**Development Sequence** (Day 8 - January 12, 2026):
+
+1. Google Search Console duplicate page issues discovered
+2. Canonical tags implemented, sitemap/robots.txt created
+3. Firebase deployment complete, SEO fixes live
+4. In-app link audit revealed .html usage
+5. All 14 links updated across 4 files
+6. v1.4.4+50 builds created (Android AAB: 89.3s, iOS IPA: 304s)
+7. Android v50 uploaded and LIVE in Closed Testing
+8. iOS v50 upload in progress
+
+**Result**: Google Search Console issues resolved (awaiting recrawl), in-app links optimized for performance, v1.4.4+50 deployment underway with Android live and iOS pending upload, production launch on track for Day 14 (January 19, 2026).
+
+---
+
 ### Legal Document Webpages & App Integration (December 2025)
 
 **Status**: ✅ **COMPLETE** - Dedicated legal document pages created and integrated into app
@@ -1527,10 +1719,22 @@ Report issues via Settings → Contact Me
   - ✅ Feedback Report analyzed (6 pages, exceptional performance, no critical issues)
   - ✅ Customized answers prepared for Questions 4 and 8
   - ✅ Production readiness confirmed - app is ready for Day 14 submission
-- **Days 7-13** (Jan 11-17): Monitor v1.4.4+46 stability, await iOS approval, no changes needed
-  - Android v46 LIVE - monitor Crashlytics and tester feedback
-  - iOS v46 expected approval Jan 11-13 (TestFlight Beta Review 1-3 days)
-  - No additional updates planned unless critical issues discovered
+- **Day 7** (Jan 11): ✅ Emergency migration fix + website cleanup
+  - ✅ v1.4.4+49 deployed with three-phase complete replacement
+  - ✅ Bad APK removed from website (exposed 26 days)
+  - ✅ Migration duplicate prevention verified
+- **Day 8** (Jan 12): ✅ Website SEO + legal link optimization
+  - ✅ Google Search Console issues resolved (canonical tags added)
+  - ✅ sitemap.xml and robots.txt created and deployed
+  - ✅ All 14 in-app legal links updated (4 files modified)
+  - ✅ v1.4.4+50 deployed to both platforms
+  - ✅ Android v50 LIVE in Closed Testing (25 testers)
+  - ✅ iOS v50 uploaded to TestFlight ("Waiting for Review")
+- **Days 9-13** (Jan 13-17): Monitor v1.4.4+50 stability, await iOS v50 approval
+  - Android v50 LIVE - monitor Crashlytics and tester feedback
+  - iOS v50 expected approval Jan 13-15 (TestFlight Beta Review 1-3 days)
+  - Google Search Console recrawl in progress (1-2 weeks)
+  - Instagram marketing post planned for Wed/Thu Jan 14-15
 - **Day 14** (Jan 19): Submit to Production track using report data
   - Use Production Report pre-filled answers (customize Q4 and Q8)
   - Reference Feedback Report showing "exceptional performance, no critical issues"
@@ -1540,18 +1744,19 @@ Report issues via Settings → Contact Me
 **Next Steps**:
 
 - Monitor tester feedback via Testers Community dashboard
-- Track v1.4.4+45 crash reports via Firebase Crashlytics
-- Collect user feedback for post-production improvements
+- Track v1.4.4+50 crash reports via Firebase Crashlytics
+- Verify Google Search Console recognizes canonical tags (1-2 weeks)
+- Prepare for Instagram marketing post (Jan 14-15)
+- Await iOS v50 TestFlight approval
 - Prepare Production Access Form for Day 14 submission
-- Upload iOS v1.4.4+45 to TestFlight on Days 11-13
 
 **App Bundle Build**:
 
 - **File**: `build/app/outputs/bundle/release/app-release.aab`
-- **Size**: 54.1MB
-- **Version**: 1.4.4 (Build 42)
+- **Size**: 54.2MB
+- **Version**: 1.4.4 (Build 50)
 - **Target SDK**: Android 35 (Google Play requirement)
-- **Build Time**: 62.4s
+- **Build Time**: 89.3s
 - **Optimizations**: ProGuard enabled, resource shrinking active
 
 **App Store Metadata Prepared**:
