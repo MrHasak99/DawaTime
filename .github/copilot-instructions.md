@@ -18,7 +18,7 @@
 **From Failed Student to Instructor** (July 2023 - Present):
 - **July 2023**: Joined CODED as Student Mentor for Kuwait Codes and UniCODE programs (volunteer role, 6 months after starting MEW)
 - **August 2024**: Promoted to Teacher Assistant (TA) - first paid contract position after 13 months of volunteering
-- **CODED Education Structure**: 
+- **CODED Education Structure**:
   - Student Mentor (volunteer) → Teacher Assistant (paid contract) → Instructor (paid contract)
   - Progression demonstrates proven value and institutional recognition
 - **Teaching Role**: Supporting the same UniCODE Flutter course he had taken (and personally failed) 7 months prior
@@ -140,7 +140,7 @@ Problem and solutions if found
 
 Had issues setting up and saving user data
 
-# Future Work 
+# Future Work
 Fix app and implement notifications and more detailed types of medication
 ```
 
@@ -5455,6 +5455,29 @@ This section documents planned features for future DawaTime releases. Features a
   - Prevent spam/abuse via contact form
   - Block fake apps from receiving FCM notifications
   - Foundation for future freemium license protection (Phase 2)
+
+**8. url_launcher iOS Crash Hotfix (Safe URL Opening)**
+
+- **Purpose**: Prevent iOS crashes when opening URLs using url_launcher (SafariViewController exception) by ensuring all launchUrl calls are safely guarded.
+- **Features**:
+  - Always check `await canLaunchUrl(uri)` before calling `launchUrl(uri)`
+  - Wrap `launchUrl` in a try-catch block and show a user-friendly error if it fails
+  - Never call `launchUrl` after widget disposal or during navigation transitions
+  - Consistent safe pattern across all files (main.dart, login_page.dart, settings.dart, etc.)
+- **Complexity**: Low (code hygiene, no new dependencies)
+- **Estimated Effort**: 1 day (audit and refactor all usages)
+- **Implementation**:
+  - Audit all usages of `launchUrl` in the codebase
+  - Refactor to use the safe pattern (see signup_page.dart for reference)
+  - Test on iOS devices to confirm crash is resolved
+- **Why Needed**:
+  - Prevents fatal FlutterError on iOS when SafariViewController fails to load
+  - Improves user experience with graceful error handling
+  - Required for App Store stability and crash-free metrics
+- **Deployment Strategy**:
+  - Schedule for next hotfix update (v1.4.5+)
+  - Do not release until all `launchUrl` calls are updated to the safe pattern
+  - Announce in release notes as a stability improvement
 
 ---
 
