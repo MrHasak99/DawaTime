@@ -258,13 +258,31 @@ Fix app and implement notifications and more detailed types of medication
 
 ### Initial Deployments
 
-**First iOS App Store Release - v1.1.1 (August 14, 2025)**:
+**iOS Production Release History**:
 
-- Initial public release on Apple App Store
+**v1.3.4** (October 28, 2025) - Weekday Scheduling:
+- Added ability to select specific days of week for each medication
+- Smart notifications only on chosen days
+- Enhanced splash screen design
+- Improved medication management interface with day selection
+- **Current Production Version** (as of January 2026)
+
+**v1.2.2** (August 31, 2025) - Bug Fixes:
+- Fixed launch screen image display bug
+- Added version update check
+- Corrected medication name display issue when confirming dose
+
+**v1.2.1** (August 28, 2025) - Arabic Localization:
+- Major feature: Full Arabic language support announced
+- Bilingual release notes (Arabic + English)
+- Complete RTL layout implementation
+
+**v1.1.1** (August 14, 2025) - Initial Release:
+- First public release on Apple App Store
 - Core medication reminder functionality
 - Local notifications with follow-ups
 - Basic theme switching
-- English-only (Arabic localization added 3 days later in update)
+- English-only (Arabic added in v1.2.1)
 
 **First Android Website Release - v1.3.4 (October 26, 2025)**:
 
@@ -336,6 +354,14 @@ Fix app and implement notifications and more detailed types of medication
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**
 
+**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 20-25, 2026):
+- **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
+- **Decision**: Deferred from Day 14 production launch to avoid risking v50 stability (100% crash-free rate)
+- **Rationale**: Health data protection important, but 6 days to launch too risky for new API integration
+- **Implementation**: 1-2 days post-launch as "security improvements" hotfix
+- **Testing**: Multiple device types, rooted devices, VPN scenarios before deployment
+- **See**: Future Feature Roadmap → Minor Features → #7 for full implementation details
+
 **Deployment Status (January 12, 2026 - Day 8)**:
 
 - ✅ **v1.4.4+50 DEPLOYMENT**: Website SEO improvements + legal document link optimization
@@ -400,10 +426,20 @@ Fix app and implement notifications and more detailed types of medication
 - **Day 8** (Jan 12 Afternoon): ✅ Both v50 builds uploaded: Android LIVE in Closed Testing (54.2MB), iOS "Waiting for Review" (48.2MB)
 - **Day 8** (Jan 12 Evening): **Play Store Access Gained** - Added developer email to internal testing, verified Play Store listing appearance
   - Confirmed store graphics, app description, permissions, and data safety sections display correctly
-  - **Release Notes Decision**: Chose blank release notes for initial production release (common practice for v1.0)
-  - Rationale: App description and screenshots handle feature communication; "What's new" unnecessary for first release
+  - **Release Notes Strategy**:
+    - **Android**: Blank release notes (first production release on Google Play - v1.0 moment)
+    - **iOS**: Full release notes as usual (update from v1.3.4 → v1.4.4)
+  - Rationale: Android never had Play Store release before (website APK only); iOS already at v1.3.4
   - Internal testing access allows preview of production listing before Day 14 submission
-- **Days 8-13** (Jan 12-17): Monitor v1.4.4+50 stability, track SEO improvements, await iOS v50 approval
+- **Day 9** (Jan 13): **STRATEGIC DECISION** - Play Integrity API deferred to post-launch
+  - Context: Evaluated Google Play Integrity API for app authenticity verification and health data protection
+  - Decision: Defer to v1.4.5 hotfix (Days 15-20, January 20-25, 2026)
+  - Rationale: Preserve 100% crash-free rate on v50, avoid integration risk 6 days before Day 14 production deadline
+  - Implementation: Post-launch "security improvements" hotfix with 1-2 days development + testing
+  - Integration points: Login, signup, medication CRUD, FCM token registration
+  - Benefits: App authenticity verification, prevent clones/tampering, MOH partnership positioning
+  - Status: Documented in Future Feature Roadmap → Minor Features #7
+- **Days 9-13** (Jan 13-17): Monitor v1.4.4+50 stability, track SEO improvements, await iOS v50 approval
   - Android v50 LIVE with 25 testers - monitor crash-free rate and feedback
   - iOS v50 expected approval Jan 13-15 (TestFlight Beta Review 1-3 days)
   - Google Search Console recrawl in progress (1-2 weeks for full indexing update)
@@ -1856,7 +1892,9 @@ Report issues via Settings → Contact Me
 - **Full Description**: Bilingual description emphasizing 5 follow-ups, refill tracking, Arabic support
 - **Target Age**: 13+ (Teen)
 - **Content Rating**: TBD (awaiting IARC questionnaire)
-- **Release Notes**: Blank (decision made Day 8 - common practice for initial v1.0 production release)
+- **Release Notes**:
+  - **Android**: Blank (first production release on Google Play - v1.0 moment)
+  - **iOS**: Full release notes as usual (update from v1.3.4 → v1.4.4)
 - **Play Store Listing**: Verified via internal testing access (Day 8)
 
 **Files Deployed**:
@@ -5374,6 +5412,49 @@ This section documents planned features for future DawaTime releases. Features a
 - **Complexity**: Low (date field addition, scheduling check)
 - **Estimated Effort**: 2-3 days
 - **Implementation**: Add `endDate` field, check in scheduling logic
+
+**7. Play Integrity API (Security)**
+
+- **Purpose**: Verify app authenticity and protect against tampering, clones, and abuse
+- **Features**:
+  - App binary verification (ensure it's genuine DawaTime from Play Store)
+  - Device integrity checks (detect rooted/compromised devices)
+  - License verification (detect sideloaded/pirated APKs)
+  - Backend token validation via Firebase Cloud Function
+  - Graceful degradation (log suspicious activity, don't hard-block users)
+  - Call at critical moments: login, signup, medication CRUD, FCM token registration
+- **Complexity**: Low-Medium (well-documented Google API, requires backend setup)
+- **Estimated Effort**: 1-2 days (implementation + testing)
+- **Implementation**:
+  - Add package: `play_integrity: ^1.0.0` (or latest)
+  - Create Firebase Cloud Function: `verifyPlayIntegrity` to verify tokens server-side
+  - Call `obtainIntegrityVerdict()` at security-critical operations
+  - Handle API responses: PLAY_RECOGNIZED, MEETS_DEVICE_INTEGRITY, MEETS_BASIC_INTEGRITY
+  - Log failures to Firebase Analytics for monitoring
+  - Graceful UX: Show warning for suspicious devices but allow access (avoid false positives)
+- **Why Needed**:
+  - Health data protection (prevent malicious clones stealing medication data)
+  - MOH partnership positioning (demonstrates serious security for government approval)
+  - User trust (health apps require higher security standards than typical apps)
+  - Prevent fake apps from hijacking notifications or credentials
+  - Play Store credibility (may improve approval/review process)
+- **Deployment Strategy**:
+  - **Deferred to v1.4.5 post-launch** (January 20-25, 2026)
+  - Decision made Day 9 (January 13, 2026) to avoid risking v50 stability before Day 14 production launch
+  - Will deploy as "security improvements" hotfix 1-2 weeks after production release
+  - Priority: Stability for Day 14 deadline > adding new APIs
+- **Testing Requirements**:
+  - Physical devices (multiple Android versions 7-15)
+  - Rooted devices (verify graceful degradation)
+  - Custom ROMs (OnePlus, Xiaomi, Samsung with Knox)
+  - VPN/proxy scenarios (ensure API works)
+  - Production Play Store install vs sideloaded APK detection
+- **Benefits**:
+  - Protect user health data from malicious clones
+  - Strengthen MOH partnership application ("enterprise-grade security")
+  - Prevent spam/abuse via contact form
+  - Block fake apps from receiving FCM notifications
+  - Foundation for future freemium license protection (Phase 2)
 
 ---
 
