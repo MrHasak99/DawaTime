@@ -5,17 +5,20 @@
 **Origin Story**: DawaTime is a reincarnation of a failed final project from a Flutter course program. Rather than abandoning the concept after the initial failure, the developer (Hamad AlKhalaf) chose to rebuild from scratch, applying lessons learned and professional development practices.
 
 **Original Failed Project**:
+
 - **Repository**: https://github.com/MrHasak99/UC-final-project-2 (uploaded December 20, 2022)
 - **Context**: CODED UniCODE Flutter course final project (2-week program, December 2022)
 - **Outcome**: Passed the course, but submitted broken/incomplete project at last possible minute
 - **Key Issues**: Rushed submission with critical bugs (save functionality broken, null safety crashes), acknowledged as personal failure despite passing grade
 
 **Professional Background**:
+
 - **January 12, 2023 - Present**: Full-time employee at Kuwait's Ministry of Electricity & Water & Renewable Energy (MEW)
 - **Context**: All teaching, learning, and development work (CODED, bootcamp, DawaTime) accomplished while maintaining full-time government employment
 - **Time Management**: Demonstrates ability to balance professional career with continuous learning and side projects
 
 **From Failed Student to Instructor** (July 2023 - Present):
+
 - **July 2023**: Joined CODED as Student Mentor for Kuwait Codes and UniCODE programs (volunteer role, 6 months after starting MEW)
 - **August 2024**: Promoted to Teacher Assistant (TA) - first paid contract position after 13 months of volunteering
 - **CODED Education Structure**:
@@ -26,18 +29,21 @@
 - **Perspective Shift**: Teaching experience reinforced understanding of proper software architecture and development practices
 
 **The Rebuild Journey** (May 2025 - Present):
+
 - **October 2024 - January 2025**: Enrolled in CODED Full-Stack Bootcamp (14-week MERN stack program: MongoDB, Express, React, Node.js)
 - **January 23, 2025**: Completed Full-Stack Bootcamp
 - **Late January - May 2025**: Programming break (~4 months)
 - **May 22, 2025**: Started DawaTime rebuild (first git commit), applying lessons learned from failed project
 - **May-July 2025**: Core functionality implementation (CRUD, notifications, Firebase integration)
 - **August 2025**: First production release (iOS App Store v1.1.1)
-- **October 2025**: Android website distribution begins
+- **August-October 2025**: Feature releases (v1.2.1 Arabic, v1.2.2 bug fixes, v1.3.4 weekday scheduling)
+- **October 2025**: Android website distribution begins, iOS v1.3.4 current production
 - **December 2025**: Major refactoring (database migration, iOS notification fixes)
-- **January 2026**: Google Play beta testing, 100 active users, strategic planning
+- **January 2026**: Google Play beta testing, 100 active users, strategic planning for Day 14 production launch
 
 **Portfolio Strategy**:
 DawaTime serves as the **first project** in Hamad's programming portfolio, demonstrating:
+
 - **Resilience**: Turning failure into learning opportunity
 - **Professional Growth**: Evolution from student code to production-ready app
 - **End-to-End Development**: Concept → Design → Development → Testing → Production → Growth
@@ -46,6 +52,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 - **Technical Breadth**: Flutter, Firebase, Cloud Functions, iOS/Android, web deployment, localization (Arabic/English)
 
 **Why This Story Matters**:
+
 - **For Employers**: Demonstrates perseverance, learning agility, and ability to ship real products while maintaining full-time government career
 - **For Collaborators**: Shows commitment to quality over quick wins (patient 3-year journey)
 - **For Interviews**: Powerful narrative: "I learned more from failing and rebuilding than from the course itself"
@@ -53,6 +60,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 - **Unique Angle**: Teaching the same course he failed demonstrates mastery - went from broken student project to 13 months volunteering to paid TA position, all while working full-time at MEW
 
 **Key Learnings from Failure → Success**:
+
 1. **Scope Management**: Started with MVP (medication reminders), added features incrementally
 2. **Architecture First**: Professional patterns (Firebase, Firestore rules, notification system) from day one
 3. **User Focus**: Real user testing (beta program), feedback integration, market validation
@@ -63,28 +71,32 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 **Root Causes of Original Project Failure** (Technical Analysis):
 
 **Critical Bug #1: Broken Save Functionality** 🔴 (Why Project Was Considered Failed Despite Passing)
+
 - **File**: `lib/pages/register_medicine.dart`
 - **Issue**: Variables declared but never initialized
+
   ```dart
   void registerMedicine() async {
     var nameController;  // ❌ Declared but NEVER initialized
     var quanityController;  // ❌ Declared but NEVER initialized
     var consumptionController;  // ❌ Declared but NEVER initialized
     var pref;  // ❌ Declared but NEVER initialized
-    
+
     final Medication medication = Medication(
         name: nameController.text,  // ❌ NULL REFERENCE ERROR
         quanity: quanityController.text,  // ❌ NULL REFERENCE ERROR
         consumption: consumptionController.text  // ❌ NULL REFERENCE ERROR
     );
-    
+
     pref.setString("medicineData", jsonString);  // ❌ NULL REFERENCE ERROR
   }
   ```
+
 - **Impact**: Save functionality completely broken - app crashes every time user tries to add medication
 - **DawaTime Fix**: Proper TextEditingController initialization in StatefulWidget with dispose cleanup
 
 **Critical Bug #2: Null Safety Crash on First Launch**
+
 - **File**: `lib/pages/home_page.dart`
 - **Issue**: Force unwrap (`!`) on nullable SharedPreferences data
   ```dart
@@ -96,12 +108,14 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 - **DawaTime Fix**: Proper null checks, StreamBuilder with Firestore snapshots, graceful empty state handling
 
 **Architecture Flaw #1: Single Medication Storage**
+
 - **Issue**: Only saves ONE medication object (`Medication medication = Medication(...)`)
 - **Storage**: Single key `"medicineData"` in SharedPreferences
 - **Impact**: Completely unusable for real medication management - users need multiple medications
 - **DawaTime Fix**: Firestore subcollections `/Users/{userId}/medications/{medicationId}` supporting unlimited medications
 
 **Architecture Flaw #2: Local-Only Storage**
+
 - **Technology**: SharedPreferences only (no Firebase, no cloud backend)
 - **Issues**:
   - Data lost if app deleted or device changed
@@ -111,6 +125,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 - **DawaTime Fix**: Firebase Firestore with real-time sync, automatic backups, cross-device access
 
 **Missing Core Features**:
+
 1. **No Notification System**: Despite being "medication reminder app", no `flutter_local_notifications` or any reminder implementation
    - DawaTime: 5 follow-up reminders every 30 minutes, weekly refill alerts, iOS 15+ interruption levels
 2. **No Authentication**: No user accounts, no Firebase Auth
@@ -121,6 +136,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
    - DawaTime: Comprehensive validation with error states, visual feedback, Arabic numeral conversion
 
 **Code Quality Issues**:
+
 1. **Model Typo**: "quanity" instead of "quantity" throughout entire codebase (model, UI, storage keys)
 2. **UI Typo**: "regaring" instead of "regarding" in `add_medication.dart` user-facing text
 3. **Generic Branding**: "medication_app" package name, no distinctive identity
@@ -129,44 +145,49 @@ DawaTime serves as the **first project** in Hamad's programming portfolio, demon
 5. **No Error Handling**: No try-catch blocks, no null checks, no graceful failures
 
 **Scope Creep**:
+
 - Included Windows/Linux/macOS platform boilerplate (CMakeLists.txt, runner.cpp, my_application.cc) but only mobile needed
 - Added complexity with zero benefit - desktop platforms never tested or functional
 - DawaTime: Focused mobile-only scope (iOS/Android), no unnecessary platform code
 
 **README Acknowledgement** (Student recognized failure but couldn't fix):
+
 ```markdown
 # Idea
+
 Problem and solutions if found
 
 Had issues setting up and saving user data
 
 # Future Work
+
 Fix app and implement notifications and more detailed types of medication
 ```
 
 **DawaTime vs Original Failed Project Comparison**:
 
-| **Original Failed Project** | **DawaTime Rebuild** |
-|------------------------------|----------------------|
+| **Original Failed Project**               | **DawaTime Rebuild**                                  |
+| ----------------------------------------- | ----------------------------------------------------- |
 | ❌ Uninitialized variables → save crashes | ✅ Proper state management, controller initialization |
-| ❌ Local-only SharedPreferences | ✅ Firebase Firestore cloud database |
-| ❌ Single medication storage (unusable) | ✅ Subcollection structure, unlimited medications |
-| ❌ No notification system | ✅ flutter_local_notifications + 5 follow-ups |
-| ❌ No authentication | ✅ Firebase Auth with email verification |
-| ❌ Broken delete button (empty handler) | ✅ Swipe gestures with confirmation + undo |
-| ❌ Null safety crashes | ✅ Proper null checks, mounted checks throughout |
-| ❌ Desktop platform bloat | ✅ Focused mobile-only (iOS/Android) |
-| ❌ Generic "medication_app" branding | ✅ Professional "DawaTime" brand (Arabic) |
-| ❌ Typos, poor code quality | ✅ Production monitoring (Crashlytics, Analytics) |
-| ❌ 0 users (never worked) | ✅ 100 active users in Kuwait market |
+| ❌ Local-only SharedPreferences           | ✅ Firebase Firestore cloud database                  |
+| ❌ Single medication storage (unusable)   | ✅ Subcollection structure, unlimited medications     |
+| ❌ No notification system                 | ✅ flutter_local_notifications + 5 follow-ups         |
+| ❌ No authentication                      | ✅ Firebase Auth with email verification              |
+| ❌ Broken delete button (empty handler)   | ✅ Swipe gestures with confirmation + undo            |
+| ❌ Null safety crashes                    | ✅ Proper null checks, mounted checks throughout      |
+| ❌ Desktop platform bloat                 | ✅ Focused mobile-only (iOS/Android)                  |
+| ❌ Generic "medication_app" branding      | ✅ Professional "DawaTime" brand (Arabic)             |
+| ❌ Typos, poor code quality               | ✅ Production monitoring (Crashlytics, Analytics)     |
+| ❌ 0 users (never worked)                 | ✅ 100 active users in Kuwait market                  |
 
 **Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
 
-**Interview Talking Point**: *"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."*
+**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."_
 
 **Current Status** (January 2026):
+
 - **Users**: ~100 active users in Kuwait
-- **Versions**: iOS v1.1.1 (App Store), Android v1.4.4+50 (Google Play Beta)
+- **Versions**: iOS v1.3.4 (App Store), Android v1.4.4+50 (Google Play Beta)
 - **Revenue**: $0 (strategic choice - growth phase)
 - **Next Milestone**: 500-1,000 users by March 2026 (Q1 target)
 - **Vision**: Public health tool first, commercial product second
@@ -261,6 +282,7 @@ Fix app and implement notifications and more detailed types of medication
 **iOS Production Release History**:
 
 **v1.3.4** (October 28, 2025) - Weekday Scheduling:
+
 - Added ability to select specific days of week for each medication
 - Smart notifications only on chosen days
 - Enhanced splash screen design
@@ -268,16 +290,19 @@ Fix app and implement notifications and more detailed types of medication
 - **Current Production Version** (as of January 2026)
 
 **v1.2.2** (August 31, 2025) - Bug Fixes:
+
 - Fixed launch screen image display bug
 - Added version update check
 - Corrected medication name display issue when confirming dose
 
 **v1.2.1** (August 28, 2025) - Arabic Localization:
+
 - Major feature: Full Arabic language support announced
 - Bilingual release notes (Arabic + English)
 - Complete RTL layout implementation
 
 **v1.1.1** (August 14, 2025) - Initial Release:
+
 - First public release on Apple App Store
 - Core medication reminder functionality
 - Local notifications with follow-ups
@@ -293,7 +318,7 @@ Fix app and implement notifications and more detailed types of medication
 
 ### Stable Feature Set (v1.3.4)
 
-**Deployment Status**: iOS v1.1.1+ on App Store, Android v1.3.4 on website
+**Deployment Status**: iOS v1.3.4 on App Store (October 2025), Android v1.3.4 on website (October 2025)
 
 **Core Features**:
 
@@ -350,27 +375,30 @@ Fix app and implement notifications and more detailed types of medication
 
 **Current Version**: v1.4.4+50 (Website SEO & Legal Links - Day 8)
 **Previous Versions**: v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
+**Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL Launching - post-launch, Days 15-20)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**
 
-**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 20-25, 2026):
-- **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
-- **Decision**: Deferred from Day 14 production launch to avoid risking v50 stability (100% crash-free rate)
-- **Rationale**: Health data protection important, but 6 days to launch too risky for new API integration
-- **Implementation**: 1-2 days post-launch as "security improvements" hotfix
-- **Testing**: Multiple device types, rooted devices, VPN scenarios before deployment
-- **See**: Future Feature Roadmap → Minor Features → #7 for full implementation details
+**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 19-24, 2026):
 
-**Deployment Status (January 12, 2026 - Day 8)**:
+- **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
+- **Safe URL Launching**: Fix iOS SafariViewController crashes with canLaunchUrl validation (14 locations)
+- **Decision**: Deferred from Day 14 production launch to avoid risking v50 stability (100% crash-free rate)
+- **Rationale**: Combined security and stability hotfix, 6 days to launch too risky for new integrations
+- **Implementation**: 1-2 days post-launch as "security & stability improvements" hotfix
+- **Testing**: Multiple device types, rooted devices, VPN scenarios, iOS link testing before deployment
+- **See**: Future Feature Roadmap → Minor Features → #7 (Play Integrity) & #8 (Safe URL)
+
+**Deployment Status (January 13, 2026 - Day 9)**:
 
 - ✅ **v1.4.4+50 DEPLOYMENT**: Website SEO improvements + legal document link optimization
 - ✅ **Android**: v1.4.4+50 LIVE in Closed Testing (54.2MB AAB) - 25 active testers
-- ✅ **iOS**: v1.4.4+50 uploaded to App Store Connect, status "Waiting for Review"
+- ✅ **iOS**: v1.4.4+50 **APPROVED** - Status "Pending Developer Release" (Apple approved Day 9)
 - 🌐 **Website SEO Fixed**: Added canonical tags to all 6 pages, created sitemap.xml, robots.txt deployed
 - 🔗 **Legal Links Updated**: All 14 in-app links changed from .html to clean URLs (4 files modified)
 - 📊 **Google Search Console**: Duplicate page issues resolved, indexing optimization in progress
-- 🚀 **Production Path**: On track for Day 14 (January 19) submission with reports ready
+- 🚀 **Production Path**: Both platforms approved and ready for Day 14 (January 18) simultaneous launch
 
 **iOS Upload Timeline**:
 
@@ -380,8 +408,10 @@ Fix app and implement notifications and more detailed types of medication
 - **Day 7 (Jan 11 Morning)**: iOS v1.4.4+47 uploaded to TestFlight - Status "Waiting for Review" (setState fix)
 - **Day 7 (Jan 11 Evening)**: iOS v1.4.4+49 uploaded to TestFlight - Status "Waiting for Review" (canceled v47, skipped v48, migration fix)
 - **Day 8 (Jan 12)**: iOS v1.4.4+50 uploaded to TestFlight - Status "Waiting for Review" (SEO & legal link optimization)
-- **Expected Approval**: January 13-15, 2026 (1-3 days typical for TestFlight Beta Review)
-- **Version Parity**: Both platforms will launch production with v1.4.4+50 simultaneously
+- **Day 9 (Jan 13)**: ✅ **iOS v1.4.4+50 APPROVED** - Status changed to "Pending Developer Release"
+- **Day 9 (Jan 13)**: 🚨 **CRISIS #6** - iOS SafariViewController crash discovered in production v1.1.1
+- **Day 9 (Jan 13)**: **Decision**: Defer SafariViewController fix to v1.4.5 post-launch hotfix (Days 15-20)
+- **Version Parity**: Both platforms approved and ready for Day 14 (January 18) simultaneous production launch
 
 **Beta Testing Timeline (January 5-21, 2026)** - REVISED:
 
@@ -430,38 +460,22 @@ Fix app and implement notifications and more detailed types of medication
     - **Android**: Blank release notes (first production release on Google Play - v1.0 moment)
     - **iOS**: Full release notes as usual (update from v1.3.4 → v1.4.4)
   - Rationale: Android never had Play Store release before (website APK only); iOS already at v1.3.4
-  - Internal testing access allows preview of production listing before Day 14 submission
-- **Day 9** (Jan 13): **STRATEGIC DECISION** - Play Integrity API deferred to post-launch
-  - Context: Evaluated Google Play Integrity API for app authenticity verification and health data protection
-  - Decision: Defer to v1.4.5 hotfix (Days 15-20, January 20-25, 2026)
-  - Rationale: Preserve 100% crash-free rate on v50, avoid integration risk 6 days before Day 14 production deadline
-  - Implementation: Post-launch "security improvements" hotfix with 1-2 days development + testing
-  - Integration points: Login, signup, medication CRUD, FCM token registration
-  - Benefits: App authenticity verification, prevent clones/tampering, MOH partnership positioning
-  - Status: Documented in Future Feature Roadmap → Minor Features #7
-- **Days 9-13** (Jan 13-17): Monitor v1.4.4+50 stability, track SEO improvements, await iOS v50 approval
-  - Android v50 LIVE with 25 testers - monitor crash-free rate and feedback
-  - iOS v50 expected approval Jan 13-15 (TestFlight Beta Review 1-3 days)
-  - Google Search Console recrawl in progress (1-2 weeks for full indexing update)
-  - Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
-  - Production reports ready for Day 14 submission
-  - **Play Store listing verified** via internal testing access (Day 8)
-- **Days 8-10** (Jan 12-14): Continue monitoring v50 stability, prepare production submission
-  - ✅ **COMPLETED DAY 8**: Website SEO improvements + legal link cleanup deployed + Play Store access gained
-  - ✅ Both v50 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
-  - ✅ Play Store listing verified via internal testing (all sections display correctly)
-  - ✅ Release notes finalized: Blank for initial production release
-  - Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
-- **Days 11-13** (Jan 15-17): Final v50 validation, both platforms ready for production
-  - iOS v50 expected approval by this period (submitted Day 8)
-  - Monitor crash-free rate and tester feedback
+- **Day 9** (Jan 13): iOS approval received, strategic decisions finalized
+  - ✅ **Day 9 (Jan 13)**: iOS v1.4.4+50 APPROVED by Apple - Status "Pending Developer Release"
+  - 🚨 **Day 9 (Jan 13)**: STRATEGIC DECISION - Play Integrity API + Safe URL fix deferred to v1.4.5 post-launch hotfix
+  - Rationale: Preserve 100% crash-free rate on v50, avoid integration risk 5 days before Day 14 production deadline
+  - **Both platforms approved and ready** for simultaneous Day 14 production launch
+- **Days 10-13** (Jan 14-17): Monitor v50 stability across both platforms
+  - Continue monitoring crash-free rate and tester feedback
   - Verify Google Search Console indexing improvements
-  - Result: Both platforms will be ready with v50 for simultaneous production launch
-- **Day 14** (Jan 19): CRITICAL - Download Production Access Form Report, submit to Production
+  - Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
+  - Result: Both platforms ready with v50 for Day 14 production launch
+
+- **Day 14** (Jan 18): CRITICAL - Download Production Access Form Report, submit to Production
   - **Production Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
   - **Feedback Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
   - Note: Reports available early - use these for Google Play production access form
-- **Days 15-16** (Jan 20-21): Final testing while production review in progress
+- **Days 15-16** (Jan 19-20): Final testing while production review in progress
 
 ---
 
@@ -1065,8 +1079,8 @@ class MainActivity : FlutterActivity() {
 **Rationale**:
 
 - **Version Parity**: Both platforms should ship with same build number when going live
-- **Efficient Strategy**: Upload iOS once (v45) instead of uploading v42/v43/v44 then canceling for v45
-- **Final Build**: v1.4.4+45 will be the production version for both platforms
+- **Efficient Strategy**: Upload iOS once (v50) instead of uploading v42-v49 individually
+- **Final Build**: v1.4.4+50 will be the production version for both platforms
 - **Professional Approach**: Coordinated multi-platform launch shows polish
 - **Better User Experience**: Users on both platforms get identical app simultaneously
 
@@ -1075,23 +1089,26 @@ class MainActivity : FlutterActivity() {
 - **Days 1-2 (Jan 5-6)**: v1.4.4+42 initial release, 25 testers joined
 - **Day 3 (Jan 7)**: Emergency v1.4.4+44 (5 crash fixes, skipped v43)
 - **Day 4 (Jan 8)**: Emergency v1.4.4+45 (SHA certificate + Android 15 fix)
-- **Days 5-13**: Monitor v45 stability (update requirement satisfied)
-- **Days 11-13 (Jan 15-17)**: Upload v1.4.4+45 IPA to iOS TestFlight
-- **Result**: iOS skips v42-v44, both platforms launch production with v1.4.4+45
+- **Day 6 (Jan 10)**: Emergency v1.4.4+46 (migration data safety fix)
+- **Day 7 (Jan 11)**: Emergency v1.4.4+47 and v1.4.4+49 (setState fix, migration replacement, skipped v48)
+- **Day 8 (Jan 12)**: v1.4.4+50 (website SEO, legal link optimization)
+- **Days 9-13**: Monitor v50 stability (update requirement satisfied)
+- **Result**: Both platforms approved and ready for Day 14 production launch
 
-**Google Play Testing Status (Day 4)**:
+**Google Play Testing Status (Day 9)**:
 
 - ✅ 25 testers actively testing (100% engagement)
-- ✅ v1.4.4+45 LIVE in Closed Testing
-- ✅ 2 emergency updates deployed (update requirement COMPLETE)
-- ✅ Demonstrates rapid iteration and crisis response
+- ✅ v1.4.4+50 LIVE in Closed Testing (Android)
+- ✅ v1.4.4+50 APPROVED "Pending Developer Release" (iOS)
+- ✅ 6 emergency updates deployed (v42→v44→v45→v46→v47→v49→v50)
+- ✅ Update requirement COMPLETE, demonstrates rapid iteration and crisis response
+- ✅ 100% crash-free rate on v50
 
 **Next Steps**:
 
-1. Monitor v1.4.4+45 crash reports via Firebase Crashlytics (Days 5-13)
-2. Upload v1.4.4+45 IPA to iOS TestFlight (Days 11-13)
-3. Download Production Access Form Report (Day 14)
-4. Submit both platforms to production simultaneously (Day 14+)
+1. Monitor v1.4.4+50 stability via Firebase Crashlytics (Days 9-13)
+2. Download Production Access Form Report (Day 14)
+3. Submit both platforms to production simultaneously (Day 14)
 
 ---
 
@@ -1162,7 +1179,7 @@ Update v1.4.4 Build 43:
 - Additional analytics events for better tracking
 - Internal logging improvements
 - Keep all changes iOS-identical to maintain version parity
-- **Note**: This was superseded by v45 emergency hotfix - both platforms will launch with v45
+- **Note**: This was superseded by multiple emergency hotfixes (v44→v50) - both platforms will launch with v50
 
 ---
 
@@ -1462,7 +1479,7 @@ const url = 'https://dawatime.com/terms-and-conditions';
 7. Android v50 uploaded and LIVE in Closed Testing
 8. iOS v50 upload in progress
 
-**Result**: Google Search Console issues resolved (awaiting recrawl), in-app links optimized for performance, v1.4.4+50 deployment underway with Android live and iOS pending upload, production launch on track for Day 14 (January 19, 2026).
+**Result**: Google Search Console issues resolved (awaiting recrawl), in-app links optimized for performance, v1.4.4+50 deployment underway with Android live and iOS pending upload, production launch on track for Day 14 (January 18, 2026).
 
 ---
 
@@ -2159,7 +2176,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Priority: Low (current graphic sufficient)
 
 **Key Decision (January 9, 2026)**:
-**Proceed with current graphics for Day 14 production launch.** Screenshots can be updated post-launch without requiring app re-review. Priority is hitting production deadline with stable v1.4.4+45, not perfect marketing materials.
+**Proceed with current graphics for Day 14 production launch.** Screenshots can be updated post-launch without requiring app re-review. Priority is hitting production deadline with stable v1.4.4+50, not perfect marketing materials.
 
 **Benefits of Post-Launch Update Approach**:
 
@@ -2335,7 +2352,7 @@ Update v1.4.4 Build 43:
 - ⏳ Await iOS TestFlight approval (expected January 10-12)
 - **No further updates planned** - update requirement already satisfied (v44, v45 deployed Days 3-4)
 
-**Days 8-10 (January 12-14) - Production Prep:**
+**Days 8-9 (January 12-13) - Production Prep:**
 
 - ✅ iOS TestFlight approved and live (expected by this period)
 - 📊 Monitor v1.4.4+45 stability on both Android and iOS
@@ -2343,15 +2360,15 @@ Update v1.4.4 Build 43:
 - 🔍 Final validation: no critical issues remaining on either platform
 - **No updates unless critical crash discovered**
 
-**Days 11-13 (January 15-17) - Pre-Production Testing:**
+**Days 10-13 (January 14-17) - Pre-Production Testing:**
 
 - ✅ **iOS already uploaded Day 5** - TestFlight approved and live by this period
 - 📊 Final stability validation on both platforms (iOS 6+ days testing, Android 11+ days)
 - 📝 Review aggregated feedback from both platforms
 - 🔍 Last chance to catch any edge cases before Day 14 production submission
-- **Strategy**: Both platforms ready with v1.4.4+45 for simultaneous production launch
+- **Strategy**: Both platforms ready with v1.4.4+50 for simultaneous production launch
 
-**Day 14 (January 19, 2026) - CRITICAL DEADLINE:**
+**Day 14 (January 18, 2026) - CRITICAL DEADLINE:**
 
 - 📥 **Download Production Access Form Report** from Testers Community
 - 🚀 **Submit to Production track** in Play Console
@@ -2359,7 +2376,7 @@ Update v1.4.4 Build 43:
 - ✅ Use pre-filled answers from report for Google's production access form
 - **Note**: Testing continues through Day 16 while production review in progress
 
-**Days 15-16 (January 20-21, 2026) - Final Testing:**
+**Days 15-16 (January 19-20, 2026) - Final Testing:**
 
 - 📊 Continue monitoring (testers begin uninstalling after Day 14)
 - 🔍 Watch production track review status
@@ -2374,11 +2391,11 @@ Update v1.4.4 Build 43:
 
 **Version Parity Management**:
 
-- **iOS**: Will upload v1.4.4+45 directly on Days 11-13 (skips v42, v43, v44 entirely)
-- **Android**: v1.4.4+42 → v1.4.4+44 (Day 3) → v1.4.4+45 (Day 4)
-- **Production Launch**: Both platforms ship with v1.4.4+45
-- **Functionality**: 100% identical (only build numbers differ during beta)
-- **Next sync**: Both platforms already in sync at v1.4.4+45 for production
+- **iOS**: Uploaded v1.4.4+50 on Day 8 (skips v42, v43, v44, v48 entirely)
+- **Android**: v1.4.4+42 → v1.4.4+44 → v1.4.4+45 → v1.4.4+46 → v1.4.4+47 → v1.4.4+49 → v1.4.4+50
+- **Production Launch**: Both platforms ship with v1.4.4+50
+- **Functionality**: 100% identical across all versions
+- **Version Sync**: Both platforms at v1.4.4+50 for Day 14 production launch
 
 **Files Modified This Session**:
 
@@ -2400,9 +2417,11 @@ Update v1.4.4 Build 43:
 - **Days 1-2**: Initial release v1.4.4+42, 25 testers joined
 - **Day 3**: Emergency v1.4.4+44 (5 crash fixes)
 - **Day 4**: Emergency v1.4.4+45 (SHA certificate + Android 15)
-- **Days 5-13**: Monitor v1.4.4+45 stability (update requirement already satisfied)
-- **Days 11-13**: Upload v1.4.4+45 to iOS TestFlight
-- **Day 14**: Production submission with v1.4.4+45 on both platforms
+- **Day 6**: Emergency v1.4.4+46 (migration data safety)
+- **Day 7**: Emergency v1.4.4+47 and v1.4.4+49 (setState fix, migration replacement)
+- **Day 8**: v1.4.4+50 (website SEO, legal link optimization)
+- **Days 9-13**: Monitor v1.4.4+50 stability (update requirement already satisfied)
+- **Day 14**: Production submission with v1.4.4+50 on both platforms
 
 ---
 
@@ -3743,7 +3762,7 @@ versionName = "1.4.4"
 3. **Firebase Firestore** (manual update):
    - Update `/AppConfig/Version` document field `version: "1.4.4"`
    - This triggers Cloud Function to send FCM notifications to all users
-   - **Current production version in Firestore**: "1.3.4"
+   - **Note**: Current production version in Firestore is "1.3.4" (will update to "1.4.4" on Day 14 production launch)
 
 **Version number incrementation definition (using 1.2.3 as example):**
 
@@ -5439,9 +5458,10 @@ This section documents planned features for future DawaTime releases. Features a
   - Prevent fake apps from hijacking notifications or credentials
   - Play Store credibility (may improve approval/review process)
 - **Deployment Strategy**:
-  - **Deferred to v1.4.5 post-launch** (January 20-25, 2026)
+  - **Part of v1.4.5 post-launch hotfix** (January 20-25, 2026)
   - Decision made Day 9 (January 13, 2026) to avoid risking v50 stability before Day 14 production launch
-  - Will deploy as "security improvements" hotfix 1-2 weeks after production release
+  - Will deploy alongside Safe URL Launching fix as "security improvements" hotfix
+  - Combined release: Security (Play Integrity) + Stability (URL validation)
   - Priority: Stability for Day 14 deadline > adding new APIs
 - **Testing Requirements**:
   - Physical devices (multiple Android versions 7-15)
@@ -5456,28 +5476,43 @@ This section documents planned features for future DawaTime releases. Features a
   - Block fake apps from receiving FCM notifications
   - Foundation for future freemium license protection (Phase 2)
 
-**8. url_launcher iOS Crash Hotfix (Safe URL Opening)**
+**8. Safe URL Launching (iOS SafariViewController Crash Fix)**
 
-- **Purpose**: Prevent iOS crashes when opening URLs using url_launcher (SafariViewController exception) by ensuring all launchUrl calls are safely guarded.
+- **Purpose**: Fix production iOS crash from url_launcher SafariViewController exceptions
 - **Features**:
-  - Always check `await canLaunchUrl(uri)` before calling `launchUrl(uri)`
-  - Wrap `launchUrl` in a try-catch block and show a user-friendly error if it fails
-  - Never call `launchUrl` after widget disposal or during navigation transitions
-  - Consistent safe pattern across all files (main.dart, login_page.dart, settings.dart, etc.)
-- **Complexity**: Low (code hygiene, no new dependencies)
-- **Estimated Effort**: 1 day (audit and refactor all usages)
+  - Validate all URLs with `canLaunchUrl()` before calling `launchUrl()`
+  - Prevent fatal FlutterError on iOS when SafariViewController fails to load
+  - Apply consistent safe pattern across all 14 launchUrl calls in codebase
+  - Graceful failure handling (silent fail if URL validation fails)
+  - Affects: Terms/Privacy links, external links (Instagram), update notifications
+- **Complexity**: Low (code hygiene, no new dependencies, 14 locations across 4 files)
+- **Estimated Effort**: 1 day (audit complete, fixes ready for deployment)
 - **Implementation**:
-  - Audit all usages of `launchUrl` in the codebase
-  - Refactor to use the safe pattern (see signup_page.dart for reference)
-  - Test on iOS devices to confirm crash is resolved
-- **Why Needed**:
-  - Prevents fatal FlutterError on iOS when SafariViewController fails to load
-  - Improves user experience with graceful error handling
-  - Required for App Store stability and crash-free metrics
+  - Pattern: Extract URL → `if (await canLaunchUrl(url))` → `await launchUrl(url)`
+  - Files to update: main.dart (7 calls), login_page.dart (4 calls), settings.dart (3 calls)
+  - Reference: signup_page.dart already has correct pattern (lines 294-295, 349-350)
+  - All fixes already coded in current codebase, ready for deployment
+- **Why Post-Launch Hotfix**:
+  - Crashlytics report discovered on Day 10 (January 13, 2026)
+  - Affects production v1.1.1-v1.3.4 users, but not blocking v1.4.4 launch
+  - Priority: Ship stable v1.4.4+50 on Day 14 > delay for non-critical crash fix
+  - Can deploy as emergency hotfix (v1.4.5 or v1.4.4+51) within 24-48 hours post-launch
+  - Better to have 100% crash-free v1.4.4+50 in production first
 - **Deployment Strategy**:
-  - Schedule for next hotfix update (v1.4.5+)
-  - Do not release until all `launchUrl` calls are updated to the safe pattern
-  - Announce in release notes as a stability improvement
+  - **Part of v1.4.5 post-launch hotfix** (January 20-25, 2026)
+  - Deploy 1-3 days after v1.4.4+50 production approval
+  - Combined with Play Integrity API (security improvements)
+  - Release notes: "Security & stability improvements: App authenticity verification + prevents crashes when opening links"
+  - Fast-track through TestFlight/Play Store (typically 1-2 day approval for critical fixes)
+- **Testing Requirements**:
+  - iOS physical devices (test Terms, Privacy, Instagram, Update links)
+  - Android devices (verify no regressions from pattern changes)
+  - Confirm no SafariViewController crashes in Crashlytics for 48 hours
+- **Benefits**:
+  - Fixes crash affecting real production users (v1.1.1 user base)
+  - Improves App Store crash-free metrics (currently affected by this issue)
+  - Shows rapid response to production issues (good for MOH partnership)
+  - Minimal risk hotfix (all changes defensive, no new features)
 
 ---
 
@@ -5621,6 +5656,7 @@ This section documents planned features for future DawaTime releases. Features a
 **Strategy**: Introduce gentle freemium model with generous free tier.
 
 **Prerequisite Milestones** (Must hit BEFORE launching freemium):
+
 - ✅ **3,000+ active users** (minimum viable conversion pool)
 - ✅ **4.5+ App Store rating** (50+ reviews minimum)
 - ✅ **40%+ 30-day retention** (users find value)
@@ -5675,6 +5711,7 @@ This section documents planned features for future DawaTime releases. Features a
 **Strategy**: Enterprise licensing to healthcare providers and insurers.
 
 **Prerequisite** (Must validate consumer model first):
+
 - ✅ **Freemium launched and stable** for 6+ months
 - ✅ **5%+ conversion rate validated** (proving value proposition)
 - ✅ **1,000+ paying subscribers** (demonstrates market demand)
@@ -5785,6 +5822,7 @@ This section documents planned features for future DawaTime releases. Features a
 **Current State** (January 2026 - Day 8): ~100 users, production launch imminent
 
 **Q1 2026** (Jan-Mar): **Production Launch & Stability**
+
 - Focus: Production approval, bug fixes, user feedback
 - Marketing: Instagram, Kuwait forums, word-of-mouth
 - Monetization: None
@@ -5792,6 +5830,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Decision Point**: If <500 users by March, analyze user acquisition strategy
 
 **Q2 2026** (Apr-Jun): **MOH Partnership & Quick Wins**
+
 - Focus: Submit MOH partnership request (2-4 weeks approval)
 - Build: Medication Notes, Optional End Date, Google/Apple Sign-In
 - Monetization: Optional donations button (soft ask)
@@ -5799,6 +5838,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Decision Point**: If <1,000 users by June, intensify marketing
 
 **Q3 2026** (Jul-Sep): **AutoFill Development**
+
 - Focus: Implement AutoFill Medication (with MOH approval)
 - Build: Multiple Daily Reminders, Alternative Edit/Delete Methods
 - Marketing: AutoFill as unique selling point
@@ -5806,6 +5846,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Decision Point**: If <2,000 users by September, reassess market fit
 
 **Q4 2026** (Oct-Dec): **CRITICAL DECISION POINT**
+
 - **Evaluate**: Do you have 3,000+ users?
   - ✅ **YES (3,000+)**: Proceed to freemium development (Q1-Q2 2027 launch)
     - Start building: Caregiver Mode, Medication Log, subscription system
@@ -5815,24 +5856,28 @@ This section documents planned features for future DawaTime releases. Features a
     - Analyze retention, consider pivot, evaluate market demand
 
 **Q1-Q2 2027** (Conditional): **Freemium Development** (if 3,000+ users)
+
 - Build: Caregiver Mode (3-4 weeks), Medication Log (2-3 weeks)
 - Implement: App Store subscriptions, Google Play Billing
 - Test: Pricing, messaging, grandfather logic
 - Marketing: Announce "New premium features coming!"
 
 **Q3 2027** (Conditional): **Freemium Launch** (if prerequisites met)
+
 - Launch: 4-medication free tier, premium tier with pricing
 - Monitor: Conversion rates, churn, user feedback
 - Iterate: Adjust pricing/features based on data
 - **Milestone Target**: 5% conversion rate (150-250 paying users)
 
 **Q4 2027-Q1 2028**: **Freemium Optimization**
+
 - Analyze: What drives conversions? What causes churn?
 - Improve: Premium features based on feedback
 - Market: Premium tier value proposition
 - **Milestone Target**: 1,000+ paying subscribers
 
 **2028+** (Conditional): **B2B Outreach** (if freemium validated)
+
 - Outreach: Kuwait health insurers, healthcare providers
 - Goal: First enterprise partnership
 - Prerequisite: Proven consumer model with stable revenue
