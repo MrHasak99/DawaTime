@@ -471,10 +471,25 @@ Fix app and implement notifications and more detailed types of medication
   - ✅ **Tester Feedback**: No critical issues reported via Testers Community
   - 📊 Continued monitoring across both platforms
   - 🔍 Google Search Console indexing improvements in progress
-  - 📱 Marketing: Instagram post planned for Wed/Thu Jan 14-15 (Day 10-11)
-- **Days 11-13** (Jan 15-17): Continue v50 stability monitoring
+- **Day 11** (Jan 15): ✅ **MARKETING POST PUBLISHED** - Refill reminder value proposition
+  - 📱 **Instagram Feed + Story**: Refill reminder poll posted with prescription bottle graphic
+  - **Caption**: Bilingual question "How often do you forget to refill your prescriptions?" + "DawaTime has you covered 💚 #comingsoon"
+  - **Poll Options**: A lot / Sometimes / Rarely / Never (Arabic translations included)
+  - **Strategy**: Show pain point + tease v1.4.4 refill reminders feature without revealing Google Play
+  - **Engagement**: Poll format drives Instagram algorithm, maintains mystery campaign
+  - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
+    - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
+    - Google Play Console: No crashes reported
+    - v1.4.4+50 proven stable for 3 days (Days 9-11)
+  - 🌐 **WEB APP SEO BLOCKED**: Added robots.txt to webapp.dawatime.com
+    - Created `/web/robots.txt` with `Disallow: /` directive
+    - Web app positioned as convenience tool (CRUD without notifications), not acquisition channel
+    - Search traffic should go to dawatime.com (marketing site) → mobile app downloads
+    - Deployed to Netlify: https://webapp.dawatime.com/robots.txt
+- **Days 12-13** (Jan 16-17): Continue v50 stability monitoring + light marketing engagement
   - Monitor crash-free rate and tester feedback
   - Verify Google Search Console indexing improvements
+  - Reply to poll comments with cryptic teases
   - Result: Both platforms ready with v50 for Day 14 production launch
 
 - **Day 14** (Jan 18): CRITICAL - Download Production Access Form Report, submit to Production
@@ -2084,6 +2099,10 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Version tracking: version.json with build number
 - Build time: 22.3s
 - Deploy ID: 695b7be0ba8ac7b532bda500
+- **SEO Strategy**: Blocked from search engines via robots.txt (Day 11)
+  - Purpose: Convenience tool for existing users (CRUD without notifications)
+  - Not an acquisition channel - search traffic directed to dawatime.com
+  - robots.txt deployed: https://webapp.dawatime.com/robots.txt
 
 **Google Play Console (Closed Testing)**:
 
@@ -2212,7 +2231,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 ### Social Media Launch Strategy - Google Play Announcement (January 2026)
 
-**Status**: ✅ **PHASE 1 COMPLETE** - Mystery teaser posted Day 7, Phase 2-3 in progress
+**Status**: ✅ **PHASE 1 & 2 COMPLETE** - Mystery teaser (Day 7) + Value prop poll (Day 11) posted, Phase 3 pending
 
 **Context**:
 
@@ -2242,12 +2261,33 @@ This is NOT a new app launch - it's an **upgrade story**:
 - **Timing Executed**: Sunday 11 AM = first work day after Kuwait weekend, mid-morning break when people are bored at desks and scrolling
 - **Coordination**: Posted same morning as website emergency cleanup (website teaser button designed to match Instagram Story)
 
-**Phase 2: Speculation Building (Days 8-13)**
+**Phase 2: Speculation Building (Days 8-13) - IN PROGRESS**
+
+**Day 11: Value Proposition Post ✅ COMPLETED (Wednesday, January 15, 2026)**
+
+- **Platform**: Instagram Feed + Story
+- **Content Posted**: Refill reminder poll/graphic
+  - Prescription bottle graphic with bilingual caption
+  - Poll question: "How often do you forget to refill your prescriptions?"
+  - Poll options: A lot / Sometimes / Rarely / Never (Arabic translations included)
+- **Caption Used**:
+  ```
+  How often do you forget to refill your prescriptions?
+  DawaTime has you covered 💚 #comingsoon
+  —————
+  شكثر تنسون تصرفون أدويتكم؟
+  دواء تايم يساعدكم 💚 #قريباً
+  ```
+- **Strategy**: Show real pain point (forgetting refills) + tease solution (refill reminders feature new in v1.4.4)
+- **Engagement**: Poll format drives Instagram algorithm, maintains mystery without revealing Google Play
+- **Amplification**: Shared to Story for dual visibility (Feed + Story viewers)
+
+**Days 12-13: Light Engagement**
 
 - **Monday-Tuesday**: Cryptic replies to comments ("Stay tuned 👀", "Maybe... 🤫")
-- **Wednesday-Thursday**: Repost to Story with subtle hints ("🤖", "One tap install")
+- **Repost poll results**: Share interesting engagement to Story
+- **Optional countdown**: "2 days until... 👀" (if building more hype)
 - **Save to Highlights**: Create "🤖 Coming Soon" or "📱 Announcement" highlight
-- **Feed Post Option**: If Story generates high engagement, post to Feed Day 9-10 with same image and cryptic caption
 
 **Phase 3: Official Reveal (Day 17+ - After Production Approval)**
 

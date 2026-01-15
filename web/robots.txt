@@ -1,0 +1,4 @@
+# DawaTime Web App - Convenience Tool Only
+# Block from search engines - users should find dawatime.com instead
+User-agent: *
+Disallow: /
