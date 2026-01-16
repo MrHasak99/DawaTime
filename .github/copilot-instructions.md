@@ -16,6 +16,7 @@
 - **January 12, 2023 - Present**: Full-time employee at Kuwait's Ministry of Electricity & Water & Renewable Energy (MEW)
 - **Context**: All teaching, learning, and development work (CODED, bootcamp, DawaTime) accomplished while maintaining full-time government employment
 - **Time Management**: Demonstrates ability to balance professional career with continuous learning and side projects
+- **Business Registration Constraint**: As Kuwait government employee, cannot register commercial business (impacts monetization strategy and Google Play privacy options)
 
 **From Failed Student to Instructor** (July 2023 - Present):
 
@@ -184,11 +185,14 @@ Fix app and implement notifications and more detailed types of medication
 
 **Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."_
 
-**Current Status** (January 2026):
+**Current Status** (January 2026 - Day 12):
 
 - **Users**: ~100 active users in Kuwait
 - **Versions**: iOS v1.3.4 (App Store), Android v1.4.4+50 (Google Play Beta)
+- **Beta Testing**: 12 continuous testers for 10+ days (Day 12 - January 16)
+- **Production Launch**: Day 14 (January 18) - both iOS and Android
 - **Revenue**: $0 (strategic choice - growth phase)
+- **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
 - **Next Milestone**: 500-1,000 users by March 2026 (Q1 target)
 - **Vision**: Public health tool first, commercial product second
 
@@ -486,7 +490,22 @@ Fix app and implement notifications and more detailed types of medication
     - Web app positioned as convenience tool (CRUD without notifications), not acquisition channel
     - Search traffic should go to dawatime.com (marketing site) → mobile app downloads
     - Deployed to Netlify: https://webapp.dawatime.com/robots.txt
-- **Days 12-13** (Jan 16-17): Continue v50 stability monitoring + light marketing engagement
+- **Day 12** (Jan 16): ✅ **TESTER ENGAGEMENT UPDATE** - 12 continuous testers for 10 days
+  - **Google Play Console Status**: "12 testers have currently been opted in for 10 days continuously"
+  - Drop from 25 → 12 testers is normal (50% retention = high quality engagement)
+  - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
+    - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
+    - Google Play Console: No crashes reported
+    - v1.4.4+50 proven stable for 4 days (Days 9-12)
+  - 🚨 **GOOGLE PLAY PRIVACY CRISIS**: Developer address verification required
+    - Google Play requires legal name + home address matching Civil ID
+    - Address will be publicly visible on Play Store listing (Shuhada Bt S101 H55, Kuwait City 47781)
+    - Attempted multiple address variations → all rejected (must match Civil ID exactly)
+    - **MEW Employment Constraint**: Cannot register business as Kuwait government employee
+    - **Decision**: Proceed with home address exposure for Day 14 launch (temporary, can change after leaving MEW)
+    - Alternative considered: iOS-only production launch → Rejected, proceeding with dual platform launch as planned
+  - 📊 Production readiness metrics validated: 12 testers × 10 days = sufficient for production submission
+- **Day 13** (Jan 17): Continue v50 stability monitoring + light marketing engagement
   - Monitor crash-free rate and tester feedback
   - Verify Google Search Console indexing improvements
   - Reply to poll comments with cryptic teases
@@ -528,7 +547,7 @@ Fix app and implement notifications and more detailed types of medication
 
 **Question 2**: How easy was it to recruit testers?
 
-- ✅ **USE AS-IS**: Answer "Easy" (25 testers, 100% engagement)
+- ✅ **USE AS-IS**: Answer "Easy" (12 continuous testers for 10+ days, high quality engagement)
 
 **Question 3**: Describe tester engagement
 
@@ -1895,6 +1914,25 @@ The shared system supports three different translation patterns across pages:
 
 **Result**: App status changed from "Rejected" → "Ready to publish" → Published to Open Testing
 
+**Developer Address Verification (January 16, 2026) - Day 12**:
+
+**Privacy Challenge**: Google Play requires legal name + home address verification matching Civil ID for production release.
+
+**Issue**: Developer home address will be publicly visible on Play Store listing.
+
+**Attempted Solutions** (All Failed):
+- Attempted vague/partial address → Rejected (must match Civil ID exactly)
+- Cannot register business → Kuwait government employees (MEW) prohibited from commercial business registration
+- Cannot update Civil ID address → Would require family member's address or virtual office rental + Civil ID update (2-4 week delay)
+- iOS-only production launch → Rejected by developer, proceeding with dual platform strategy
+
+**Decision Made (Day 12)**: Proceed with home address exposure for Day 14 production launch
+- **Address Visible**: Shuhada Bt S101 H55, Kuwait City 47781, Kuwait
+- **Rationale**: Temporary solution until potential career change from MEW allows business registration
+- **Alternative Path**: When developer leaves MEW employment, can register business and update Google Play address
+
+**Long-term Solution**: Business registration at Kuwait Chamber of Commerce after leaving government employment, then update developer address in Play Console (no app resubmission required).
+
 ---
 
 ### Google Play Store Beta Testing via Testers Community (January 5, 2026)
@@ -2106,10 +2144,11 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Google Play Console (Closed Testing)**:
 
-- Uploaded: app-release.aab (54.1MB)
+- Uploaded: app-release.aab (54.2MB, v1.4.4+50)
 - Track: Closed Testing (Testers Community)
 - Release notes: First beta testing release
-- Status: Live with 12+ testers opted-in and actively testing (as of Jan 6)
+- Status: Live with 12 continuous testers (10+ days as of Jan 16)
+- **Privacy Status**: Developer home address publicly visible on Play Store listing (required by Google Play verification, cannot be avoided due to MEW employment constraint preventing business registration)
 
 **App Store Metadata Updates**:
 
@@ -5906,10 +5945,13 @@ This section documents planned features for future DawaTime releases. Features a
 - **Evaluate**: Do you have 3,000+ users?
   - ✅ **YES (3,000+)**: Proceed to freemium development (Q1-Q2 2027 launch)
     - Start building: Caregiver Mode, Medication Log, subscription system
+    - **Note**: Business registration still blocked by MEW employment
   - ⏸️ **MAYBE (1,500-3,000)**: Delay freemium 6 months, focus on growth
     - Continue free features, optimize conversion funnel
   - ❌ **NO (<1,500)**: Stay free through 2027, reassess growth strategy
     - Analyze retention, consider pivot, evaluate market demand
+
+**MEW Employment Impact on Freemium**: Kuwait government employees cannot register commercial businesses. Freemium model can still launch via personal developer accounts, but B2B partnerships (Phase 3) would require business registration and thus leaving MEW employment.
 
 **Q1-Q2 2027** (Conditional): **Freemium Development** (if 3,000+ users)
 
@@ -5937,6 +5979,8 @@ This section documents planned features for future DawaTime releases. Features a
 - Outreach: Kuwait health insurers, healthcare providers
 - Goal: First enterprise partnership
 - Prerequisite: Proven consumer model with stable revenue
+- **CRITICAL BLOCKER**: Requires business registration → **Must leave MEW employment first** (Kuwait government employees cannot register commercial businesses)
+- Timeline dependent on career transition from government to private sector
 
 ### Key Success Metrics
 
