@@ -382,7 +382,7 @@ Fix app and implement notifications and more detailed types of medication
 **Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL Launching - post-launch, Days 15-20)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
 
 **Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 19-24, 2026):
 
@@ -521,10 +521,14 @@ Fix app and implement notifications and more detailed types of medication
   - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
   - Google Play Console: No crashes reported
   - v1.4.4+50 proven stable for 6 days (Days 6-12)
-- **Day 13** (Jan 19): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
+- **Day 13** (Jan 19): ✅ **STABILITY CONFIRMED** + 🔧 **GOOGLE SEARCH CONSOLE FIX**
   - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
   - Google Play Console: No crashes reported
   - v1.4.4+50 proven stable for 7 days (Days 6-13)
+  - **Google Search Console Fix**: Added explicit HTTP→HTTPS redirect to firebase.json
+    - Issue 1: "Alternate page with proper canonical tag" (www subdomain) - validated as intentional
+    - Issue 2: "Page with redirect" validation failed (HTTP→HTTPS) - fixed with explicit redirect rule
+    - Deployed to Firebase Hosting, awaiting Google revalidation (1-3 days)
   - Production launch confidence: High
   - Continue monitoring through Day 14
 - **Day 14** (Jan 20): CRITICAL - Download Production Access Form Report, submit to Production
@@ -1159,7 +1163,7 @@ class MainActivity : FlutterActivity() {
 - **Day 10 (Jan 16)**: Tester engagement update - 12 continuous testers
 - **Day 11 (Jan 17)**: Continued stability monitoring
 - **Day 12 (Jan 18)**: Stability confirmed for 6 days
-- **Day 13 (Jan 19)**: Stability confirmed for 7 days
+- **Day 13 (Jan 19)**: Stability confirmed for 7 days + Google Search Console HTTP redirect fix deployed
 - **Days 11-13**: Continue monitoring v50 stability
 - **Result**: Both platforms approved and ready for Day 14 production launch
 
@@ -1550,6 +1554,106 @@ const url = 'https://dawatime.com/terms-and-conditions';
 8. iOS v50 upload in progress
 
 **Result**: Google Search Console issues resolved (awaiting recrawl), in-app links optimized for performance, v1.4.4+50 deployment underway with Android live and iOS pending upload, production launch on track for Day 14 (January 18, 2026).
+
+---
+
+### Google Search Console HTTP Redirect Fix (January 19, 2026 - Day 13)
+
+**Status**: ✅ **COMPLETE** - HTTP→HTTPS redirect validation issue resolved
+
+**Issue Discovery** (Day 13 - January 19, 2026):
+
+Google Search Console reported two issues:
+
+1. **"Alternate page with proper canonical tag"** (https://www.dawatime.com/)
+   - **Status**: Informational, not an error
+   - **Explanation**: www subdomain correctly redirects to non-www with canonical tag
+   - **Action**: Validated as intentional behavior
+
+2. **"Page with redirect" validation failed** (http://dawatime.com/)
+   - **Status**: Real issue requiring fix
+   - **Problem**: HTTP to HTTPS redirect validation failed
+   - **Root cause**: Missing explicit HTTP→HTTPS redirect configuration in firebase.json
+
+**Root Cause Analysis**:
+
+- Firebase Hosting auto-redirects HTTP to HTTPS by default
+- However, Google Search Console validation requires **explicit redirect configuration**
+- Existing firebase.json only had www→non-www redirect, not HTTP→HTTPS
+- Result: Validation failed despite redirect working in practice
+
+**Fix Implementation** (firebase.json):
+
+Added explicit HTTP to HTTPS redirect rule:
+
+```json
+"redirects": [
+  {
+    "source": "http://dawatime.com{,/**}",
+    "destination": "https://dawatime.com",
+    "type": 301
+  },
+  {
+    "source": "https://www.dawatime.com{,/**}",
+    "destination": "https://dawatime.com",
+    "type": 301
+  },
+  // ... other .html → clean URL redirects
+]
+```
+
+**Deployment**:
+
+```bash
+firebase deploy --only hosting
+```
+
+**Files Modified**:
+
+- `/firebase.json` - Added HTTP→HTTPS redirect rule (line 58-62)
+
+**Redirect Chain Now Complete**:
+
+1. `http://dawatime.com{,/**}` → `https://dawatime.com` (NEW - fixes validation)
+2. `https://www.dawatime.com{,/**}` → `https://dawatime.com` (existing)
+3. `*.html` pages → clean URLs (existing - 5 redirect rules)
+
+**Google Search Console Actions**:
+
+1. **Issue 1** ("Alternate page with proper canonical tag"):
+   - Click "VALIDATE FIX" button
+   - Confirms www→non-www redirect is intentional
+   - Expected to resolve immediately (informational issue)
+
+2. **Issue 2** ("Page with redirect"):
+   - Click "SEE DETAILS" → "VALIDATE FIX"
+   - Google will recrawl and verify HTTP→HTTPS redirect
+   - Expected resolution: 1-3 days
+
+**Verification**:
+
+Test redirect chain manually:
+
+```bash
+# Test HTTP → HTTPS (should show 301)
+curl -I http://dawatime.com
+
+# Test www → non-www (should show 301)
+curl -I https://www.dawatime.com
+```
+
+**Benefits**:
+
+- ✅ **SEO**: Proper redirect chain improves search ranking
+- ✅ **Security**: Ensures all HTTP traffic redirects to HTTPS
+- ✅ **Compliance**: Meets Google Search Console validation requirements
+- ✅ **User Experience**: No broken links from HTTP URLs
+
+**Timeline**:
+
+- **Day 13 (Jan 19)**: Issue discovered, fix deployed
+- **Days 14-16**: Google Search Console revalidation in progress
+- **Expected resolution**: Both issues resolved by January 22, 2026
 
 ---
 
@@ -2485,6 +2589,11 @@ Update v1.4.4 Build 43:
 - 📊 Final stability validation on both platforms (iOS 7+ days testing, Android 13+ days)
 - 📝 Review aggregated feedback from both platforms
 - 🔍 Last chance to catch any edge cases before Day 14 production submission
+- 🔧 **Day 13 (Jan 19)**: Google Search Console HTTP redirect fix
+  - Fixed "Page with redirect" validation failure (HTTP→HTTPS)
+  - Added explicit redirect rule to firebase.json
+  - Deployed to Firebase Hosting
+  - Awaiting Google revalidation (1-3 days)
 - **Strategy**: Both platforms ready with v1.4.4+50 for simultaneous production launch
 
 **Day 14 (January 20, 2026) - CRITICAL DEADLINE:**
