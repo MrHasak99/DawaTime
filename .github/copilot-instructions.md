@@ -185,12 +185,12 @@ Fix app and implement notifications and more detailed types of medication
 
 **Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."_
 
-**Current Status** (January 2026 - Day 12):
+**Current Status** (January 2026 - Day 13):
 
 - **Users**: ~100 active users in Kuwait
 - **Versions**: iOS v1.3.4 (App Store), Android v1.4.4+50 (Google Play Beta)
-- **Beta Testing**: 12 continuous testers for 10+ days (Day 12 - January 16)
-- **Production Launch**: Day 14 (January 18) - both iOS and Android
+- **Beta Testing**: 12 continuous testers for 10+ days (Day 12 - January 18)
+- **Production Launch**: Day 14 (January 20) - both iOS and Android
 - **Revenue**: $0 (strategic choice - growth phase)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
 - **Next Milestone**: 500-1,000 users by March 2026 (Q1 target)
@@ -394,7 +394,7 @@ Fix app and implement notifications and more detailed types of medication
 - **Testing**: Multiple device types, rooted devices, VPN scenarios, iOS link testing before deployment
 - **See**: Future Feature Roadmap → Minor Features → #7 (Play Integrity) & #8 (Safe URL)
 
-**Deployment Status (January 13, 2026 - Day 9)**:
+**Deployment Status (January 15, 2026 - Day 9)**:
 
 - ✅ **v1.4.4+50 DEPLOYMENT**: Website SEO improvements + legal document link optimization
 - ✅ **Android**: v1.4.4+50 LIVE in Closed Testing (54.2MB AAB) - 25 active testers
@@ -406,81 +406,81 @@ Fix app and implement notifications and more detailed types of medication
 
 **iOS Upload Timeline**:
 
-- **Day 5 (Jan 9)**: iOS v1.4.4+45 uploaded to TestFlight - Status "Waiting for Review"
-- **Day 6 (Jan 10)**: 🚨 Migration data loss bug discovered in v45 → Emergency v46 deployment
-- **Day 6 (Jan 10)**: iOS v1.4.4+46 uploaded to TestFlight - Status "Waiting for Review" (superseded v45)
-- **Day 7 (Jan 11 Morning)**: iOS v1.4.4+47 uploaded to TestFlight - Status "Waiting for Review" (setState fix)
-- **Day 7 (Jan 11 Evening)**: iOS v1.4.4+49 uploaded to TestFlight - Status "Waiting for Review" (canceled v47, skipped v48, migration fix)
-- **Day 8 (Jan 12)**: iOS v1.4.4+50 uploaded to TestFlight - Status "Waiting for Review" (SEO & legal link optimization)
-- **Day 9 (Jan 13)**: ✅ **iOS v1.4.4+50 APPROVED** - Status changed to "Pending Developer Release"
-- **Day 9 (Jan 13)**: 🚨 **CRISIS #6** - iOS SafariViewController crash discovered in production v1.1.1
-- **Day 9 (Jan 13)**: **Decision**: Defer SafariViewController fix to v1.4.5 post-launch hotfix (Days 15-20)
-- **Version Parity**: Both platforms approved and ready for Day 14 (January 18) simultaneous production launch
+- **Day 5 (Jan 11)**: iOS v1.4.4+45 uploaded to TestFlight - Status "Waiting for Review"
+- **Day 6 (Jan 12)**: 🚨 Migration data loss bug discovered in v45 → Emergency v46 deployment
+- **Day 6 (Jan 12)**: iOS v1.4.4+46 uploaded to TestFlight - Status "Waiting for Review" (superseded v45)
+- **Day 7 (Jan 13 Morning)**: iOS v1.4.4+47 uploaded to TestFlight - Status "Waiting for Review" (setState fix)
+- **Day 7 (Jan 13 Evening)**: iOS v1.4.4+49 uploaded to TestFlight - Status "Waiting for Review" (canceled v47, skipped v48, migration fix)
+- **Day 8 (Jan 14)**: iOS v1.4.4+50 uploaded to TestFlight - Status "Waiting for Review" (SEO & legal link optimization)
+- **Day 9 (Jan 15)**: ✅ **iOS v1.4.4+50 APPROVED** - Status changed to "Pending Developer Release"
+- **Day 9 (Jan 15)**: 🚨 **CRISIS #6** - iOS SafariViewController crash discovered in production v1.1.1
+- **Day 9 (Jan 15)**: **Decision**: Defer SafariViewController fix to v1.4.5 post-launch hotfix (Days 15-20)
+- **Version Parity**: Both platforms approved and ready for Day 14 (January 20) simultaneous production launch
 
-**Beta Testing Timeline (January 5-21, 2026)** - REVISED:
+**Beta Testing Timeline (January 7-21, 2026)** - REVISED:
 
-- **Days 1-2** (Jan 5-6): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
-- **Day 3** (Jan 7): 🚨 **CRISIS #1** - 24 unprocessed crashes discovered, 5 crashes fixed within hours
-- **Day 3** (Jan 7): **Emergency v1.4.4+44 deployment** - All crashes fixed (skips v43 entirely)
-- **Day 4** (Jan 8): 🚨 **CRISIS #2** - SignInHubActivity crash discovered in v44
-- **Day 4** (Jan 8): **Emergency v1.4.4+45 deployment** - SHA certificate fix + Android 15 support
-- **Day 5** (Jan 9): iOS v1.4.4+45 uploaded to TestFlight, status "Waiting for Review"
-- **Day 6** (Jan 10): 🚨 **CRISIS #3** - Migration data loss bug discovered in v45 smart bridge
-- **Day 6** (Jan 10): **Emergency v1.4.4+46 deployment** - Two-phase copy-then-delete migration fix
-- **Day 6** (Jan 10): ✅ Both v46 builds uploaded: Android "In review", iOS "Waiting for Review"
-- **Day 6** (Jan 10): ✅ Android v46 released to Closed Testing - LIVE with 25 testers
-- **Day 6** (Jan 10): ✅ Testers Community generated Production and Feedback reports (available 8 days early)
-- **Day 7** (Jan 11 Morning): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (\_checkMedicationLimit)
-- **Day 7** (Jan 11 Morning): **Emergency v1.4.4+47 deployment** - Added mounted checks before setState calls
-- **Day 7** (Jan 11 Morning): ✅ Both v47 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
-- **Day 7** (Jan 11 Morning): 🚨 **WEBSITE EMERGENCY** - Discovered bad APK deployed Dec 16, 2025 (26 days prior) to dawatime.com
-- **Day 7** (Jan 11 Morning): **Emergency website cleanup** - Removed bad APK, replaced with teaser, deployed to Firebase Hosting
-- **Day 7** (Jan 11 Morning): **Git investigation** - Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month
+- **Days 1-2** (Jan 7-8): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
+- **Day 3** (Jan 9): 🚨 **CRISIS #1** - 24 unprocessed crashes discovered, 5 crashes fixed within hours
+- **Day 3** (Jan 9): **Emergency v1.4.4+44 deployment** - All crashes fixed (skips v43 entirely)
+- **Day 4** (Jan 10): 🚨 **CRISIS #2** - SignInHubActivity crash discovered in v44
+- **Day 4** (Jan 10): **Emergency v1.4.4+45 deployment** - SHA certificate fix + Android 15 support
+- **Day 3** (Jan 9): iOS v1.4.4+45 uploaded to TestFlight, status "Waiting for Review"
+- **Day 4** (Jan 10): 🚨 **CRISIS #3** - Migration data loss bug discovered in v45 smart bridge
+- **Day 4** (Jan 10): **Emergency v1.4.4+46 deployment** - Two-phase copy-then-delete migration fix
+- **Day 4** (Jan 10): ✅ Both v46 builds uploaded: Android "In review", iOS "Waiting for Review"
+- **Day 4** (Jan 10): ✅ Android v46 released to Closed Testing - LIVE with 25 testers
+- **Day 4** (Jan 10): ✅ Testers Community generated Production and Feedback reports (available 10 days early)
+- **Day 5** (Jan 11 Morning): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (\_checkMedicationLimit)
+- **Day 5** (Jan 11 Morning): **Emergency v1.4.4+47 deployment** - Added mounted checks before setState calls
+- **Day 5** (Jan 11 Morning): ✅ Both v47 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
+- **Day 5** (Jan 11 Morning): 🚨 **WEBSITE EMERGENCY** - Discovered bad APK deployed Dec 16, 2025 (26 days prior) to dawatime.com
+- **Day 5** (Jan 11 Morning): **Emergency website cleanup** - Removed bad APK, replaced with teaser, deployed to Firebase Hosting
+- **Day 5** (Jan 11 Morning): **Git investigation** - Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month
 - **Day 7** (Jan 11 Evening): 🚨 **CRISIS #5** - Migration merge conflict discovered: old + new data combining instead of replacing
-- **Day 7** (Jan 11 Evening): **Root cause**: User added med in new build → added med in old app → updated to new build → both meds present (merge not replacement)
-- **Day 7** (Jan 11 Evening): **Emergency v1.4.4+49 deployment** - Three-phase complete replacement: delete new first, copy old, delete old
-- **Day 7** (Jan 11 Evening): ✅ Canceled v47 iOS review, uploaded v49 to both platforms - Skipped v48 entirely
-- **Day 7** (Jan 11 Evening): ✅ Both v49 builds deployed: Android LIVE in Closed Testing, iOS "Waiting for Review"
-- **Day 8** (Jan 12): 🌐 **WEBSITE SEO OPTIMIZATION** - Google Search Console issues resolved
-- **Day 8** (Jan 12 Morning): **Google Search Console Crisis** - Discovered duplicate page indexing issues (support.html vs /support, privacy-policy.html vs /privacy-policy)
-- **Day 8** (Jan 12 Morning): **SEO Fix Implementation**:
+- **Day 7** (Jan 13 Evening): **Root cause**: User added med in new build → added med in old app → updated to new build → both meds present (merge not replacement)
+- **Day 7** (Jan 13 Evening): **Emergency v1.4.4+49 deployment** - Three-phase complete replacement: delete new first, copy old, delete old
+- **Day 7** (Jan 13 Evening): ✅ Canceled v47 iOS review, uploaded v49 to both platforms - Skipped v48 entirely
+- **Day 7** (Jan 13 Evening): ✅ Both v49 builds deployed: Android LIVE in Closed Testing, iOS "Waiting for Review"
+- **Day 6** (Jan 12): 🌐 **WEBSITE SEO OPTIMIZATION** - Google Search Console issues resolved
+- **Day 6** (Jan 12 Morning): **Google Search Console Crisis** - Discovered duplicate page indexing issues (support.html vs /support, privacy-policy.html vs /privacy-policy)
+- **Day 6** (Jan 12 Morning): **SEO Fix Implementation**:
   - Added `<link rel="canonical">` tags to all 6 HTML pages pointing to clean URLs
   - Created sitemap.xml with proper structure (6 URLs, priorities, change frequencies)
   - Created robots.txt with sitemap reference and /user-management exclusion
   - Deployed to Firebase Hosting via `firebase deploy --only hosting`
-- **Day 8** (Jan 12 Afternoon): **In-App Link Audit** - Discovered all 14 legal document links using .html extensions causing unnecessary redirects
-- **Day 8** (Jan 12 Afternoon): **Legal Link Cleanup**:
+- **Day 6** (Jan 12 Afternoon): **In-App Link Audit** - Discovered all 14 legal document links using .html extensions causing unnecessary redirects
+- **Day 6** (Jan 12 Afternoon): **Legal Link Cleanup**:
   - Updated main.dart: 6 links (force update dialog, legal dialogs, intro guide)
   - Updated settings.dart: 2 links (account deletion confirmation)
   - Updated signup_page.dart: 2 links (Terms/Privacy checkbox)
   - Updated login_page.dart: 4 links (legal update dialog, intro guide)
   - Changed from https://dawatime.com/privacy-policy.html → https://dawatime.com/privacy-policy
   - Changed from https://dawatime.com/terms-and-conditions.html → https://dawatime.com/terms-and-conditions
-- **Day 8** (Jan 12 Afternoon): **Emergency v1.4.4+50 deployment** - Legal link optimization
-- **Day 8** (Jan 12 Afternoon): ✅ Both v50 builds uploaded: Android LIVE in Closed Testing (54.2MB), iOS "Waiting for Review" (48.2MB)
-- **Day 8** (Jan 12 Evening): **Play Store Access Gained** - Added developer email to internal testing, verified Play Store listing appearance
+- **Day 6** (Jan 12 Afternoon): **Emergency v1.4.4+50 deployment** - Legal link optimization
+- **Day 6** (Jan 12 Afternoon): ✅ Both v50 builds uploaded: Android LIVE in Closed Testing (54.2MB), iOS "Waiting for Review" (48.2MB)
+- **Day 6** (Jan 12 Evening): **Play Store Access Gained** - Added developer email to internal testing, verified Play Store listing appearance
   - Confirmed store graphics, app description, permissions, and data safety sections display correctly
   - **Release Notes Strategy**:
     - **Android**: Blank release notes (first production release on Google Play - v1.0 moment)
     - **iOS**: Full release notes as usual (update from v1.3.4 → v1.4.4)
   - Rationale: Android never had Play Store release before (website APK only); iOS already at v1.3.4
-- **Day 9** (Jan 13): iOS approval received, strategic decisions finalized
-  - ✅ **Day 9 (Jan 13)**: iOS v1.4.4+50 APPROVED by Apple - Status "Pending Developer Release"
-  - 🚨 **Day 9 (Jan 13)**: STRATEGIC DECISION - Play Integrity API + Safe URL fix deferred to v1.4.5 post-launch hotfix
+- **Day 7** (Jan 13): iOS approval received, strategic decisions finalized
+  - ✅ **Day 7 (Jan 13)**: iOS v1.4.4+50 APPROVED by Apple - Status "Pending Developer Release"
+  - 🚨 **Day 7 (Jan 13)**: STRATEGIC DECISION - Play Integrity API + Safe URL fix deferred to v1.4.5 post-launch hotfix
   - Rationale: Preserve 100% crash-free rate on v50, avoid integration risk 5 days before Day 14 production deadline
   - **Both platforms approved and ready** for simultaneous Day 14 production launch
-- **Day 10** (Jan 14): ✅ **STABILITY CONFIRMED** - No new errors reported
+- **Day 8** (Jan 14): ✅ **STABILITY CONFIRMED** - No new errors reported
   - ✅ **Google Play Console**: Zero new errors, v50 stable
   - ✅ **Firebase Crashlytics**: Zero new crashes, 100% crash-free rate maintained
   - ✅ **Tester Feedback**: No critical issues reported via Testers Community
   - 📊 Continued monitoring across both platforms
   - 🔍 Google Search Console indexing improvements in progress
-- **Day 11** (Jan 15): ✅ **MARKETING POST PUBLISHED** - Refill reminder value proposition
-  - 📱 **Instagram Feed + Story**: Refill reminder poll posted with prescription bottle graphic
+- **Day 9** (Jan 15): ✅ **MARKETING POST PUBLISHED** - Refill reminder value proposition
+  - 📱 **Instagram Feed + Story**: Refill reminder graphic posted with prescription bottle image
   - **Caption**: Bilingual question "How often do you forget to refill your prescriptions?" + "DawaTime has you covered 💚 #comingsoon"
-  - **Poll Options**: A lot / Sometimes / Rarely / Never (Arabic translations included)
+  - **Original Plan**: Poll included but removed (wasn't visible/engaging to viewers)
   - **Strategy**: Show pain point + tease v1.4.4 refill reminders feature without revealing Google Play
-  - **Engagement**: Poll format drives Instagram algorithm, maintains mystery campaign
+  - **Engagement**: Caption question format maintains mystery campaign
   - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
     - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
     - Google Play Console: No crashes reported
@@ -490,8 +490,8 @@ Fix app and implement notifications and more detailed types of medication
     - Web app positioned as convenience tool (CRUD without notifications), not acquisition channel
     - Search traffic should go to dawatime.com (marketing site) → mobile app downloads
     - Deployed to Netlify: https://webapp.dawatime.com/robots.txt
-- **Day 12** (Jan 16): ✅ **TESTER ENGAGEMENT UPDATE** - 12 continuous testers for 10 days
-  - **Google Play Console Status**: "12 testers have currently been opted in for 10 days continuously"
+- **Day 10** (Jan 16): ✅ **TESTER ENGAGEMENT UPDATE** - 12 continuous testers for 8 days
+  - **Google Play Console Status**: "12 testers have currently been opted in for 8 days continuously"
   - Drop from 25 → 12 testers is normal (50% retention = high quality engagement)
   - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
     - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
@@ -499,23 +499,39 @@ Fix app and implement notifications and more detailed types of medication
     - v1.4.4+50 proven stable for 4 days (Days 9-12)
   - 🚨 **GOOGLE PLAY PRIVACY CRISIS**: Developer address verification required
     - Google Play requires legal name + home address matching Civil ID
-    - Address will be publicly visible on Play Store listing (Shuhada Bt S101 H55, Kuwait City 47781)
+    - Address will be publicly visible on Play Store listing
     - Attempted multiple address variations → all rejected (must match Civil ID exactly)
+    - **Resolution (Jan 16)**: Updated to 1/101/55, Kuwait City 15300, Kuwait
     - **MEW Employment Constraint**: Cannot register business as Kuwait government employee
     - **Decision**: Proceed with home address exposure for Day 14 launch (temporary, can change after leaving MEW)
     - Alternative considered: iOS-only production launch → Rejected, proceeding with dual platform launch as planned
   - 📊 Production readiness metrics validated: 12 testers × 10 days = sufficient for production submission
-- **Day 13** (Jan 17): Continue v50 stability monitoring + light marketing engagement
+- **Day 11** (Jan 17): Continue v50 stability monitoring + light marketing engagement
   - Monitor crash-free rate and tester feedback
   - Verify Google Search Console indexing improvements
   - Reply to poll comments with cryptic teases
   - Result: Both platforms ready with v50 for Day 14 production launch
 
-- **Day 14** (Jan 18): CRITICAL - Download Production Access Form Report, submit to Production
-  - **Production Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
-  - **Feedback Report Available** (generated Day 6): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
+- **Day 11** (Jan 17): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
+  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
+  - Google Play Console: No crashes reported
+  - v1.4.4+50 proven stable for 5 days (Days 6-11)
+  - Production launch confidence: High
+- **Day 12** (Jan 18): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
+  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
+  - Google Play Console: No crashes reported
+  - v1.4.4+50 proven stable for 6 days (Days 6-12)
+- **Day 13** (Jan 19): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
+  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
+  - Google Play Console: No crashes reported
+  - v1.4.4+50 proven stable for 7 days (Days 6-13)
+  - Production launch confidence: High
+  - Continue monitoring through Day 14
+- **Day 14** (Jan 20): CRITICAL - Download Production Access Form Report, submit to Production
+  - **Production Report Available** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
+  - **Feedback Report Available** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
   - Note: Reports available early - use these for Google Play production access form
-- **Days 15-16** (Jan 19-20): Final testing while production review in progress
+- **Days 15-16** (Jan 21-22): Final testing while production review in progress
 
 ---
 
@@ -527,7 +543,7 @@ Fix app and implement notifications and more detailed types of medication
 
 - **Production Report**: 253KB PDF, 5 pages, contains 10-question pre-filled questionnaire for Google Play production access form
 - **Feedback Report**: 249KB PDF, 6 pages, contains exceptional performance validation with "no critical issues" finding
-- **Generated**: Day 6 (January 10, 2026) - 8 days earlier than typical Day 14+ availability
+- **Generated**: Day 4 (January 10, 2026) - 10 days earlier than typical Day 14+ availability
 - **Location**: Project root directory (production_report.pdf, feedback_report.pdf)
 - **URLs**:
   - https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
@@ -739,11 +755,11 @@ Feedback Report confirms "no critical issues" and "exceptional performance" acro
 
 **Status**: ✅ **COMPLETE** - All crash fixes implemented, v1.4.4+44 deployed and stable
 
-### Emergency Deployment #2 - Day 6 Data Safety Fix (January 10, 2026)
+### Emergency Deployment #2 - Day 6 Data Safety Fix (January 12, 2026)
 
 **Status**: ⏳ **DEPLOYED** - Critical migration bug fix v1.4.4+46 in review on both platforms
 
-**Crisis Discovery** (Day 6 - January 10, 2026):
+**Crisis Discovery** (Day 6 - January 12, 2026):
 
 - User questioned migration script necessity: "Should I run the migrate to subcollection script again?"
 - Agent investigated smart bridge logic in home_page.dart lines 152-160
@@ -751,7 +767,7 @@ Feedback Report confirms "no critical issues" and "exceptional performance" acro
 - **Impact**: Users who added medications Jan 1-10 on old app versions would lose data on v45 upgrade
 - **Root cause**: Migration detection logic assumed all data already migrated, didn't copy before deleting
 
-**Emergency Fix Implementation** (Day 6 - January 10, 2026):
+**Emergency Fix Implementation** (Day 6 - January 12, 2026):
 
 - Implemented two-phase copy-then-delete migration in home_page.dart:
   - Phase 1: Copy all old medications to new structure with SetOptions(merge: true)
@@ -795,18 +811,18 @@ if (hasNewData && hasOldData) {
 
 ---
 
-### Emergency Deployment #3 - Day 7 Migration Replacement (January 11, 2026)
+### Emergency Deployment #3 - Day 7 Migration Replacement (January 13, 2026)
 
 **Status**: ✅ **DEPLOYED** - Complete migration replacement logic v1.4.4+49 deployed to both platforms
 
-**Crisis Discovery** (Day 7 Evening - January 11, 2026):
+**Crisis Discovery** (Day 7 Evening - January 13, 2026):
 
 - User tested edge case: Added medication in new build (v47) → switched to old app version → added medication in old structure → updated to new build (v47) → both medications present
 - **Expected behavior**: Only old structure medications should appear (old = source of truth)
 - **Actual behavior**: Both old AND new structure medications appeared (merge behavior, not replacement)
 - **Root cause**: Two-phase migration copied old to new but didn't delete existing new data first, causing medications from both structures to combine
 
-**Emergency Fix Implementation** (Day 7 Evening - January 11, 2026):
+**Emergency Fix Implementation** (Day 7 Evening - January 13, 2026):
 
 - Implemented three-phase complete replacement migration in home_page.dart:
   - **Phase 1**: Delete ALL existing data in new structure (prevents zombie/duplicate medications)
@@ -881,7 +897,7 @@ if (hasOldData) {
 
 **Status**: ✅ **COMPLETE** - All crash fixes implemented, v1.4.4+44 deployed and stable
 
-**Crisis Discovery** (Day 3 - January 7, 2026):
+**Crisis Discovery** (Day 3 - January 9, 2026):
 
 - Firebase Crashlytics showed **24 unprocessed iOS crashes** (missing dSYM files from builds 22, 25, 26, 31, 36)
 - **5 fatal exceptions** affecting Android and Flutter code paths
@@ -1132,14 +1148,18 @@ class MainActivity : FlutterActivity() {
 
 **What Actually Happened**:
 
-- **Days 1-2 (Jan 5-6)**: v1.4.4+42 initial release, 25 testers joined
-- **Day 3 (Jan 7)**: Emergency v1.4.4+44 (5 crash fixes, skipped v43)
-- **Day 4 (Jan 8)**: Emergency v1.4.4+45 (SHA certificate + Android 15 fix)
-- **Day 6 (Jan 10)**: Emergency v1.4.4+46 (migration data safety fix)
-- **Day 7 (Jan 11)**: Emergency v1.4.4+47 and v1.4.4+49 (setState fix, migration replacement, skipped v48)
-- **Day 8 (Jan 12)**: v1.4.4+50 (website SEO, legal link optimization)
-- **Day 9 (Jan 13)**: iOS approval received, both platforms ready
-- **Day 10 (Jan 14)**: ✅ Stability confirmed - zero errors on both platforms
+- **Days 1-2 (Jan 7-8)**: v1.4.4+42 initial release, 25 testers joined
+- **Day 3 (Jan 9)**: Emergency v1.4.4+44 (5 crash fixes, skipped v43)
+- **Day 4 (Jan 10)**: Emergency v1.4.4+45 (SHA certificate + Android 15 fix)
+- **Day 5 (Jan 11)**: Emergency v1.4.4+47 and v1.4.4+49 (setState fix, migration replacement, skipped v48)
+- **Day 6 (Jan 12)**: v1.4.4+50 (website SEO, legal link optimization), Emergency v1.4.4+46 (migration data safety fix)
+- **Day 7 (Jan 13)**: iOS approval received, both platforms ready
+- **Day 8 (Jan 14)**: ✅ Stability confirmed - zero errors on both platforms
+- **Day 9 (Jan 15)**: Marketing post published, web app SEO blocked
+- **Day 10 (Jan 16)**: Tester engagement update - 12 continuous testers
+- **Day 11 (Jan 17)**: Continued stability monitoring
+- **Day 12 (Jan 18)**: Stability confirmed for 6 days
+- **Day 13 (Jan 19)**: Stability confirmed for 7 days
 - **Days 11-13**: Continue monitoring v50 stability
 - **Result**: Both platforms approved and ready for Day 14 production launch
 
@@ -1233,11 +1253,11 @@ Update v1.4.4 Build 43:
 
 ---
 
-### Website Emergency - Bad APK Deployment (December 16, 2025 - January 11, 2026)
+### Website Emergency - Bad APK Deployment (December 16, 2025 - January 13, 2026)
 
 **Status**: ✅ **RESOLVED** - Bad APK removed, website cleaned, teaser deployed to Firebase Hosting
 
-**Deployment Timeline** (Git History Analysis - January 11, 2026):
+**Deployment Timeline** (Git History Analysis - January 13, 2026):
 
 - **Original deployment**: December 16, 2025 at 2:15 PM Kuwait time (commit 96758f0)
 - **Exposure duration**: 26 days (Dec 16, 2025 → Jan 11, 2026)
@@ -1249,7 +1269,7 @@ Update v1.4.4 Build 43:
 - **Holiday exposure**: Available through December holidays (Christmas/New Year) and into January 2026
 - **Download count**: Unknown, but 26-day window significantly increases potential affected user base
 
-**Crisis Discovery** (Day 7 - January 11, 2026):
+**Crisis Discovery** (Day 7 - January 13, 2026):
 
 - User revealed accidental deployment of old/unfinished v1.4.4 build to dawatime.com
 - Bad APK was publicly accessible at `https://dawatime.com/dawatime-v1.4.4.apk` for 26 days
@@ -1257,7 +1277,7 @@ Update v1.4.4 Build 43:
 - **Critical revelation**: "The reason why I'm suggesting this is because I've accidentally deployed an old unfinished build of v1.4.4 onto the website"
 - **Git investigation**: Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month before discovery
 
-**Emergency Response Timeline** (Day 7 - January 11, 2026):
+**Emergency Response Timeline** (Day 7 - January 13, 2026):
 
 1. **Immediate File Analysis**: Read index.html to locate APK download section
    - Found APK download button at lines 161-198
@@ -1364,11 +1384,11 @@ Update v1.4.4 Build 43:
 
 ---
 
-### Website SEO Optimization & Legal Link Cleanup (January 12, 2026 - Day 8)
+### Website SEO Optimization & Legal Link Cleanup (January 14, 2026 - Day 8)
 
 **Status**: ✅ **COMPLETE** - Google Search Console issues resolved, in-app links optimized
 
-**Crisis Discovery** (Day 8 Morning - January 12, 2026):
+**Crisis Discovery** (Day 8 Morning - January 14, 2026):
 
 - Google Search Console showed 2 critical indexing issues:
   - "Duplicate without user-selected canonical" for support.html vs /support
@@ -1376,7 +1396,7 @@ Update v1.4.4 Build 43:
 - Root cause: Firebase Hosting serving both .html and clean URLs, confusing Google's indexing
 - Impact: Search results showing wrong URLs, diluted page authority, suboptimal SEO
 
-**SEO Fix Implementation** (Day 8 Morning):
+**SEO Fix Implementation** (Day 8 Morning - January 14, 2026):
 
 1. **Canonical Tags Added** - All 6 HTML pages updated:
 
@@ -1436,13 +1456,13 @@ Update v1.4.4 Build 43:
    - Result: All SEO files live on production
    - URL redirects already configured (301 from .html to clean URLs)
 
-**In-App Link Audit** (Day 8 Afternoon):
+**In-App Link Audit** (Day 8 Afternoon - January 14, 2026):
 
 - Discovered all 14 legal document links using .html extensions
 - Issue: Links worked but caused unnecessary 301 redirect step
 - Impact: Slower page load, extra HTTP request, suboptimal user experience
 
-**Legal Link Cleanup Implementation** (Day 8 Afternoon):
+**Legal Link Cleanup Implementation** (Day 8 Afternoon - January 14, 2026):
 
 **Files Modified** (4 files, 14 link occurrences):
 
@@ -1480,7 +1500,7 @@ const url = 'https://dawatime.com/privacy-policy';
 const url = 'https://dawatime.com/terms-and-conditions';
 ```
 
-**Emergency v1.4.4+50 Deployment** (Day 8 Afternoon):
+**Emergency v1.4.4+50 Deployment** (Day 8 Afternoon - January 14, 2026):
 
 - Version incremented: 1.4.4+49 → 1.4.4+50
 - Build artifacts:
@@ -1518,7 +1538,7 @@ const url = 'https://dawatime.com/terms-and-conditions';
 - `/pubspec.yaml` - Version 1.4.4+49 → 1.4.4+50
 - `/android/app/build.gradle.kts` - versionCode 49 → 50
 
-**Development Sequence** (Day 8 - January 12, 2026):
+**Development Sequence** (Day 8 - January 14, 2026):
 
 1. Google Search Console duplicate page issues discovered
 2. Canonical tags implemented, sitemap/robots.txt created
@@ -1921,13 +1941,16 @@ The shared system supports three different translation patterns across pages:
 **Issue**: Developer home address will be publicly visible on Play Store listing.
 
 **Attempted Solutions** (All Failed):
+
 - Attempted vague/partial address → Rejected (must match Civil ID exactly)
 - Cannot register business → Kuwait government employees (MEW) prohibited from commercial business registration
 - Cannot update Civil ID address → Would require family member's address or virtual office rental + Civil ID update (2-4 week delay)
 - iOS-only production launch → Rejected by developer, proceeding with dual platform strategy
 
 **Decision Made (Day 12)**: Proceed with home address exposure for Day 14 production launch
-- **Address Visible**: Shuhada Bt S101 H55, Kuwait City 47781, Kuwait
+
+- **Address Visible**: 1/101/55, Kuwait City 15300, Kuwait (updated Jan 16, 2026)
+- **Previous Address**: Shuhada Bt S101 H55, Kuwait City 47781, Kuwait (rejected, did not match Civil ID)
 - **Rationale**: Temporary solution until potential career change from MEW allows business registration
 - **Alternative Path**: When developer leaves MEW employment, can register business and update Google Play address
 
@@ -2019,34 +2042,34 @@ Report issues via Settings → Contact Me
 
 **Action Plan** (REVISED - Post-Report Analysis):
 
-- **Days 1-4** (Jan 5-8): ✅ Initial release + 2 emergency updates deployed (update requirement COMPLETE)
-- **Days 5-6** (Jan 9-10): ✅ iOS v46 upload + report analysis complete
+- **Days 1-4** (Jan 7-10): ✅ Initial release + 2 emergency updates deployed (update requirement COMPLETE)
+- **Days 5-6** (Jan 11-12): ✅ iOS v47, v49, v50 uploads + report analysis complete
   - ✅ iOS v1.4.4+46 uploaded to TestFlight ("Waiting for Review")
   - ✅ Production Report analyzed (5 pages, pre-filled questionnaire answers)
   - ✅ Feedback Report analyzed (6 pages, exceptional performance, no critical issues)
   - ✅ Customized answers prepared for Questions 4 and 8
   - ✅ Production readiness confirmed - app is ready for Day 14 submission
-- **Day 7** (Jan 11): ✅ Emergency migration fix + website cleanup
+- **Day 5** (Jan 11): ✅ Emergency migration fix + website cleanup
   - ✅ v1.4.4+49 deployed with three-phase complete replacement
   - ✅ Bad APK removed from website (exposed 26 days)
   - ✅ Migration duplicate prevention verified
-- **Day 8** (Jan 12): ✅ Website SEO + legal link optimization
+- **Day 6** (Jan 12): ✅ Website SEO + legal link optimization
   - ✅ Google Search Console issues resolved (canonical tags added)
   - ✅ sitemap.xml and robots.txt created and deployed
   - ✅ All 14 in-app legal links updated (4 files modified)
   - ✅ v1.4.4+50 deployed to both platforms
   - ✅ Android v50 LIVE in Closed Testing (25 testers)
   - ✅ iOS v50 uploaded to TestFlight ("Waiting for Review")
-- **Days 9-13** (Jan 13-17): Monitor v1.4.4+50 stability, await iOS v50 approval
+- **Days 7-13** (Jan 13-19): Monitor v1.4.4+50 stability, await iOS v50 approval
   - Android v50 LIVE - monitor Crashlytics and tester feedback
-  - iOS v50 expected approval Jan 13-15 (TestFlight Beta Review 1-3 days)
+  - iOS v50 approved Jan 13 (Day 7) (TestFlight Beta Review 1-3 days)
   - Google Search Console recrawl in progress (1-2 weeks)
-  - Instagram marketing post planned for Wed/Thu Jan 14-15
-- **Day 14** (Jan 19): Submit to Production track using report data
+  - Instagram marketing post published Day 9 (Jan 15)
+- **Day 14** (Jan 20): Submit to Production track using report data
   - Use Production Report pre-filled answers (customize Q4 and Q8)
   - Reference Feedback Report showing "exceptional performance, no critical issues"
   - Current Play Store descriptions are production-ready (ASO optimization optional post-launch)
-- **Days 15-16** (Jan 20-21): Final testing continues while production review in progress
+- **Days 15-16** (Jan 21-22): Final testing continues while production review in progress
 
 **Next Steps**:
 
@@ -2148,7 +2171,8 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Track: Closed Testing (Testers Community)
 - Release notes: First beta testing release
 - Status: Live with 12 continuous testers (10+ days as of Jan 16)
-- **Privacy Status**: Developer home address publicly visible on Play Store listing (required by Google Play verification, cannot be avoided due to MEW employment constraint preventing business registration)
+- **Privacy Status**: Developer home address publicly visible on Play Store listing (1/101/55, Kuwait City 15300, Kuwait - updated Jan 16, 2026)
+  - Required by Google Play verification, cannot be avoided due to MEW employment constraint preventing business registration
 
 **App Store Metadata Updates**:
 
@@ -2270,7 +2294,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 ### Social Media Launch Strategy - Google Play Announcement (January 2026)
 
-**Status**: ✅ **PHASE 1 & 2 COMPLETE** - Mystery teaser (Day 7) + Value prop poll (Day 11) posted, Phase 3 pending
+**Status**: ✅ **PHASE 1 & 2 COMPLETE** - Mystery teaser (Day 5) + Refill reminder post (Day 9) posted, Phase 3 pending
 
 **Context**:
 
@@ -2300,15 +2324,14 @@ This is NOT a new app launch - it's an **upgrade story**:
 - **Timing Executed**: Sunday 11 AM = first work day after Kuwait weekend, mid-morning break when people are bored at desks and scrolling
 - **Coordination**: Posted same morning as website emergency cleanup (website teaser button designed to match Instagram Story)
 
-**Phase 2: Speculation Building (Days 8-13) - IN PROGRESS**
+**Phase 2: Speculation Building (Days 6-13) - IN PROGRESS**
 
-**Day 11: Value Proposition Post ✅ COMPLETED (Wednesday, January 15, 2026)**
+**Day 9: Value Proposition Post ✅ COMPLETED (Thursday, January 15, 2026)**
 
 - **Platform**: Instagram Feed + Story
-- **Content Posted**: Refill reminder poll/graphic
+- **Content Posted**: Refill reminder graphic
   - Prescription bottle graphic with bilingual caption
-  - Poll question: "How often do you forget to refill your prescriptions?"
-  - Poll options: A lot / Sometimes / Rarely / Never (Arabic translations included)
+  - Originally planned poll but removed (wasn't visible/engaging)
 - **Caption Used**:
   ```
   How often do you forget to refill your prescriptions?
@@ -2318,13 +2341,13 @@ This is NOT a new app launch - it's an **upgrade story**:
   دواء تايم يساعدكم 💚 #قريباً
   ```
 - **Strategy**: Show real pain point (forgetting refills) + tease solution (refill reminders feature new in v1.4.4)
-- **Engagement**: Poll format drives Instagram algorithm, maintains mystery without revealing Google Play
+- **Engagement**: Caption question format maintains mystery without revealing Google Play
 - **Amplification**: Shared to Story for dual visibility (Feed + Story viewers)
 
-**Days 12-13: Light Engagement**
+**Days 10-13: Light Engagement**
 
-- **Monday-Tuesday**: Cryptic replies to comments ("Stay tuned 👀", "Maybe... 🤫")
-- **Repost poll results**: Share interesting engagement to Story
+- **Friday-Monday**: Cryptic replies to comments ("Stay tuned 👀", "Maybe... 🤫")
+- **Repost engagement**: Share comments/reactions to Story
 - **Optional countdown**: "2 days until... 👀" (if building more hype)
 - **Save to Highlights**: Create "🤖 Coming Soon" or "📱 Announcement" highlight
 
@@ -2369,8 +2392,8 @@ This is NOT a new app launch - it's an **upgrade story**:
 - Intentionally subtle: Google colors in gradient not obvious to casual viewer
 - Design quality: Professional, production-ready
 
-**Execution Confirmed (January 11, 2026 - Day 7)**:
-Mystery teaser posted **Sunday, January 11 at 11:00 AM Kuwait time** when audience returns to work and is browsing during coffee break. Perfect timing for maximum engagement from work boredom scrolling. Mystery maintained successfully - website teaser button matches Instagram Story design exactly. Phase 2 begins Days 8-13 with cryptic engagement responses.
+**Execution Confirmed (January 11, 2026 - Day 5)**:
+Mystery teaser posted **Sunday, January 11 at 11:00 AM Kuwait time** when audience returns to work and is browsing during coffee break. Perfect timing for maximum engagement from work boredom scrolling. Mystery maintained successfully - website teaser button matches Instagram Story design exactly. Phase 2 begins Days 6-13 with cryptic engagement responses.
 
 ---
 
@@ -2438,32 +2461,33 @@ Update v1.4.4 Build 43:
   - Testing completion rate
 - **No updates** - give testers 4-6 days to test initial version
 
-**Days 5-7 (January 9-11) - iOS Upload & Stability Monitoring:**
+**Days 5-7 (January 11-13) - iOS Upload & Stability Monitoring:**
 
-- 📤 **Day 5 (January 9)**: iOS v1.4.4+45 uploaded to TestFlight, submitted for Beta Review
-- 📊 Monitor v1.4.4+45 crash reports via Firebase Crashlytics (Android + iOS after approval)
+- 📤 **Day 5 (January 11)**: iOS v1.4.4+47, v1.4.4+49 uploaded to TestFlight, submitted for Beta Review
+- 📊 Monitor v1.4.4+50 crash reports via Firebase Crashlytics (Android + iOS after approval)
 - 📥 Track tester feedback via Testers Community dashboard
 - 📈 Review Play Console analytics: install count, crash-free rate, engagement metrics
-- ⏳ Await iOS TestFlight approval (expected January 10-12)
-- **No further updates planned** - update requirement already satisfied (v44, v45 deployed Days 3-4)
+- ⏳ **Day 7 (January 13)**: iOS TestFlight approved
+- **No further updates planned** - update requirement already satisfied (v44, v45, v47, v49 deployed Days 3-5)
 
-**Days 8-9 (January 12-13) - Production Prep:**
+**Days 8-9 (January 14-15) - Production Prep:**
 
-- ✅ iOS TestFlight approved and live (expected by this period)
-- 📊 Monitor v1.4.4+45 stability on both Android and iOS
+- ✅ **Day 6 (January 12)**: iOS v1.4.4+50 uploaded to TestFlight
+- ✅ **Day 7 (January 13)**: iOS v1.4.4+50 approved and live
+- 📊 Monitor v1.4.4+50 stability on both Android and iOS
 - 📝 Collect user feedback for post-production roadmap
 - 🔍 Final validation: no critical issues remaining on either platform
 - **No updates unless critical crash discovered**
 
-**Days 10-13 (January 14-17) - Pre-Production Testing:**
+**Days 10-13 (January 16-19) - Pre-Production Testing:**
 
-- ✅ **iOS already uploaded Day 5** - TestFlight approved and live by this period
-- 📊 Final stability validation on both platforms (iOS 6+ days testing, Android 11+ days)
+- ✅ **iOS already uploaded Day 6** - TestFlight approved Day 7 and live
+- 📊 Final stability validation on both platforms (iOS 7+ days testing, Android 13+ days)
 - 📝 Review aggregated feedback from both platforms
 - 🔍 Last chance to catch any edge cases before Day 14 production submission
 - **Strategy**: Both platforms ready with v1.4.4+50 for simultaneous production launch
 
-**Day 14 (January 18, 2026) - CRITICAL DEADLINE:**
+**Day 14 (January 20, 2026) - CRITICAL DEADLINE:**
 
 - 📥 **Download Production Access Form Report** from Testers Community
 - 🚀 **Submit to Production track** in Play Console
@@ -2471,7 +2495,7 @@ Update v1.4.4 Build 43:
 - ✅ Use pre-filled answers from report for Google's production access form
 - **Note**: Testing continues through Day 16 while production review in progress
 
-**Days 15-16 (January 19-20, 2026) - Final Testing:**
+\*\*Days 15-16 (January 21-22, 2026) - Final Testing:
 
 - 📊 Continue monitoring (testers begin uninstalling after Day 14)
 - 🔍 Watch production track review status
