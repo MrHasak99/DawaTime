@@ -185,12 +185,13 @@ Fix app and implement notifications and more detailed types of medication
 
 **Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."_
 
-**Current Status** (January 2026 - Day 13):
+**Current Status** (January 2026 - Day 14):
 
 - **Users**: ~100 active users in Kuwait
 - **Versions**: iOS v1.3.4 (App Store), Android v1.4.4+50 (Google Play Beta)
 - **Beta Testing**: 12 continuous testers for 10+ days (Day 12 - January 18)
-- **Production Launch**: Day 14 (January 20) - both iOS and Android
+- **Production Status**: ⏳ **UNDER REVIEW** - Submitted January 20, 2026 at 8:20 AM
+- **Review Timeline**: Usually 7 days or less (expected approval: Days 15-21)
 - **Revenue**: $0 (strategic choice - growth phase)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
 - **Next Milestone**: 500-1,000 users by March 2026 (Q1 target)
@@ -384,7 +385,7 @@ Fix app and implement notifications and more detailed types of medication
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
 
-**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 19-24, 2026):
+**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 21-26, 2026):
 
 - **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
 - **Safe URL Launching**: Fix iOS SafariViewController crashes with canLaunchUrl validation (14 locations)
@@ -394,15 +395,16 @@ Fix app and implement notifications and more detailed types of medication
 - **Testing**: Multiple device types, rooted devices, VPN scenarios, iOS link testing before deployment
 - **See**: Future Feature Roadmap → Minor Features → #7 (Play Integrity) & #8 (Safe URL)
 
-**Deployment Status (January 15, 2026 - Day 9)**:
+**Deployment Status (January 20, 2026 - Day 14)**:
 
-- ✅ **v1.4.4+50 DEPLOYMENT**: Website SEO improvements + legal document link optimization
-- ✅ **Android**: v1.4.4+50 LIVE in Closed Testing (54.2MB AAB) - 25 active testers
-- ✅ **iOS**: v1.4.4+50 **APPROVED** - Status "Pending Developer Release" (Apple approved Day 9)
+- ✅ **PRODUCTION ACCESS SUBMITTED**: Google Play Console application submitted 8:20 AM
+- ⏳ **Android**: Production access **UNDER REVIEW** - Usually 7 days or less
+- ✅ **iOS**: v1.4.4+50 **APPROVED** - Status "Pending Developer Release" (ready to launch)
+- 📋 **Application Details**: All 9 questions completed (Production & Feedback reports used)
 - 🌐 **Website SEO Fixed**: Added canonical tags to all 6 pages, created sitemap.xml, robots.txt deployed
 - 🔗 **Legal Links Updated**: All 14 in-app links changed from .html to clean URLs (4 files modified)
-- 📊 **Google Search Console**: Duplicate page issues resolved, indexing optimization in progress
-- 🚀 **Production Path**: Both platforms approved and ready for Day 14 (January 18) simultaneous launch
+- 📊 **Google Search Console**: Duplicate page issues resolved, HTTP→HTTPS redirect validated
+- 🚀 **Next Steps**: Wait for Google approval (Days 15-21), monitor email for notification
 
 **iOS Upload Timeline**:
 
@@ -531,11 +533,31 @@ Fix app and implement notifications and more detailed types of medication
     - Deployed to Firebase Hosting, awaiting Google revalidation (1-3 days)
   - Production launch confidence: High
   - Continue monitoring through Day 14
-- **Day 14** (Jan 20): CRITICAL - Download Production Access Form Report, submit to Production
-  - **Production Report Available** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
-  - **Feedback Report Available** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
-  - Note: Reports available early - use these for Google Play production access form
-- **Days 15-16** (Jan 21-22): Final testing while production review in progress
+- **Day 14** (Jan 20): ✅ **PRODUCTION ACCESS APPLICATION SUBMITTED** - Under review
+  - **8:20 AM**: Submitted production access application to Google Play Console
+  - **Status**: "We have your application for production access" - Review in progress
+  - **Review Timeline**: Usually 7 days or less, may occasionally take longer
+  - **Email Notification**: Account owner will receive update when review complete
+  - **Application Details**:
+    - Used Production Report pre-filled answers for Questions 1-3, 5-7, 9
+    - Used customized answers for Questions 4 (feedback summary) and 8 (changes made)
+    - All 9 questions completed and submitted successfully
+  - **Production Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
+  - **Feedback Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
+  - **Next Steps**: Wait for Google review (Days 15-21), monitor email for approval notification
+  - 🔒 **SMTP SECURITY HARDENING COMPLETE** - Migrated to Firebase Secret Manager
+    - **Problem**: SMTP password hardcoded in functions/index.js, attempted dotenv approach failed (.env files not uploaded to Cloud Functions)
+    - **Solution**: Migrated to Firebase Secret Manager with defineSecret() API from firebase-functions/params
+    - **Implementation**:
+      - Created EMAIL_USER and EMAIL_PASSWORD secrets in Google Cloud Secret Manager
+      - Fixed trailing newline issue (echo vs echo -n) - recreated secrets v1 → v2
+      - Updated emailAdminsOnContactMessage and requestAccountDeletion with secrets: [emailUser, emailPassword]
+      - Service account automatically granted roles/secretmanager.secretAccessor
+    - **Verification**: In-app contact form tested successfully at 08:29:47, logs show "Email sent successfully" with status 'ok'
+    - **Status**: ✅ Production-ready, both contact forms (website + in-app) functional, no app rebuild required
+    - **Files Modified**: functions/index.js (defineSecret imports, getTransporter() using emailUser.value()/emailPassword.value(), runWith configs with secrets array)
+    - **Deprecated**: dotenv package and functions/.env file (kept for local emulator only)
+- **Days 15-21** (Jan 21-27): Production review in progress, await Google Play approval
 
 ---
 
@@ -559,7 +581,7 @@ Fix app and implement notifications and more detailed types of medication
 
 ---
 
-## All 10 Questions (Quick Reference):
+## All 9 Questions (Quick Reference):
 
 **Question 1**: How did you recruit users?
 
@@ -575,7 +597,7 @@ Fix app and implement notifications and more detailed types of medication
 
 **Question 4**: Feedback summary and collection methods
 
-- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (42 words - matches format)
+- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (290 characters - under 300 char limit)
 
 **Question 5**: Who is the intended audience?
 
@@ -591,15 +613,11 @@ Fix app and implement notifications and more detailed types of medication
 
 **Question 8**: Changes made during testing
 
-- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (38 words - matches format)
+- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (37 words - matches format)
 
 **Question 9**: How did you decide app is ready for production?
 
 - ✅ **USE AS-IS**: "Rigorous testing phases, addressed critical feedback..."
-
-**Question 10**: What did you do differently this time?
-
-- ✅ **USE AS-IS**: "User-centered experience, feedback mechanisms, ASO optimization..."
 
 ---
 
@@ -627,7 +645,7 @@ Answer: **Easy**
 
 ### Question 4: Provide a summary of the feedback that you received from testers. Include how you collected the feedback.
 
-"Testers reported iOS notification reliability issues and app crashes. Feedback was collected through Firebase Crashlytics, in-app contact form, and Testers Community platform. We fixed iOS notification scheduling, migration data safety, 5 crash patterns, Android 15 compatibility, and widget lifecycle issues through rapid emergency updates."
+"Testers reported crashes and migration issues. Feedback collected via Firebase Crashlytics, in-app contact form, and Testers Community. We fixed 5 crash patterns, migration data safety, Android 15 support, and widget lifecycle issues through rapid emergency updates."
 
 ---
 
@@ -653,19 +671,13 @@ Answer: **10k - 100k**
 
 ### Question 8: What changes did you make to your app based on what you learned during your closed test?
 
-"In response to tester feedback, we deployed 5 emergency updates fixing iOS notifications, migration data safety, 5 fatal crashes, Android 15 edge-to-edge display, and widget lifecycle issues. All fixes deployed within hours, demonstrating rapid response and commitment to quality."
+"In response to tester feedback, we deployed 5 emergency updates fixing migration data safety, 5 fatal crashes, Android 15 edge-to-edge display, and widget lifecycle issues. All fixes deployed within hours, demonstrating rapid response and commitment to quality."
 
 ---
 
 ### Question 9: How did you decide that your app is ready for production?
 
 "We assessed the app's stability and user satisfaction through rigorous testing phases, addressing all critical feedback and enhancements. After implementing necessary changes, we believe DawaTime is well-prepared for a successful launch on Google Play."
-
----
-
-### Question 10: What did you do differently this time?
-
-"This time, we focused on creating a more user-centered experience by incorporating detailed feedback mechanisms, enhancing onboarding processes, and optimizing app descriptions for search visibility. These efforts significantly boosted app readiness for production accessibility."
 
 ---
 
@@ -3603,19 +3615,109 @@ for (int i = 0; i <= 4; i++) {
 - **Automatic token cleanup**: Removes invalid/unregistered tokens from Firestore
 - Returns success/failure counts and logs cleanup operations
 
-**`emailAdminsOnContactMessage` (line 147-172)**:
+**Secret Manager Integration** (Added January 20, 2026):
+
+**Environment Variables Approach - DEPRECATED**:
+- ❌ **dotenv + process.env**: .env files NOT uploaded to Cloud Functions (local emulator only)
+- ❌ **defineString() + .env**: defineString() expects Firebase config, not .env files
+- ❌ **firebase functions:config:set**: Deprecated API, shutdown March 2026
+
+**Current Production Implementation - Secret Manager**:
+```javascript
+// functions/index.js - Lines 1-11
+const {defineSecret} = require("firebase-functions/params");
+
+const emailUser = defineSecret("EMAIL_USER");        // "admin@dawatime.com"
+const emailPassword = defineSecret("EMAIL_PASSWORD"); // Zoho SMTP password
+
+// Lines 282-298: getTransporter() - Lazy initialization
+function getTransporter() {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: "smtppro.zoho.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: emailUser.value(),  // ✅ Reads from Secret Manager
+        pass: emailPassword.value(),  // ✅ Reads from Secret Manager
+      },
+    });
+  }
+  return transporter;
+}
+```
+
+**Secret Creation Commands**:
+```bash
+# CRITICAL: Use echo -n to prevent trailing newline
+echo -n "admin@dawatime.com" | firebase functions:secrets:set EMAIL_USER
+echo -n "P6&Ee$kr#p29" | firebase functions:secrets:set EMAIL_PASSWORD
+
+# Deploy functions to use secrets
+firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAccountDeletion
+```
+
+**Secret Versions**:
+- **v1** (Deprecated): Created with `echo` (had trailing "\n" causing "501 Could not decode" SMTP error)
+- **v2** (Current): Created with `echo -n` (clean values, working)
+
+**Service Account Permissions**:
+- Account: medication-cd9b8@appspot.gserviceaccount.com
+- Role: roles/secretmanager.secretAccessor
+- Status: Automatically granted by `firebase deploy` on both secrets
+
+**Important Notes**:
+1. **functions/.env file**: Exists locally but NOT used in production (Firebase emulator only)
+2. **Secret updates**: Require redeployment of functions to use new versions
+3. **Error progression**: 535 (auth failed) → 501 (can't decode) → 200 (success) showed debugging path
+4. **defineSecret() vs defineString()**: defineSecret reads Secret Manager, defineString reads environment variables
+
+**Zoho Mail Configuration** (dawatime.com domain):
+
+**Primary Mailbox**:
+- **admin@dawatime.com** (DawaTime Admin) - Main account, used for SMTP sending
+
+**Email Aliases** (all route to admin@dawatime.com mailbox):
+- **design@dawatime.com** (DawaTime Designer) - Design/branding inquiries
+- **hamad@dawatime.com** (Hamad AlKhalaf) - Personal developer email
+- **help@dawatime.com** (DawaTime Support) - User support (Cloud Functions send here)
+- **legal@dawatime.com** (DawaTime Legal) - Legal/privacy inquiries
+- **testapple@dawatime.com** (Apple Testing) - iOS testing account
+- **testgoogle@dawatime.com** (Google Testing) - Android testing account
+
+**SMTP Configuration**:
+- Host: smtppro.zoho.com
+- Port: 465 (SSL/TLS)
+- Authentication: admin@dawatime.com + password (stored in Secret Manager)
+- Usage: Cloud Functions (emailAdminsOnContactMessage, requestAccountDeletion)
+
+**Email Flow**:
+- **User submits contact form** → Firestore ContactMessages collection → Cloud Function triggered
+- **Cloud Function sends email**: FROM admin@dawatime.com → TO help@dawatime.com
+- **Both addresses route to same mailbox** (admin@dawatime.com inbox)
+- **ReplyTo field**: Set to user's email address for easy response
+
+**`emailAdminsOnContactMessage` (line 306-334)**:
 
 - Trigger: Firestore document `ContactMessages/{messageId}` onCreate
 - Sends email via Nodemailer (Zoho SMTP: `smtppro.zoho.com:465`)
 - From: `admin@dawatime.com`, To: `help@dawatime.com`
+- **SMTP Credentials**: Stored in Google Cloud Secret Manager (EMAIL_USER, EMAIL_PASSWORD)
+- **Secret Access**: Configured via `runWith({secrets: [emailUser, emailPassword]})` in function definition
+- **Authentication**: Uses `emailUser.value()` and `emailPassword.value()` from defineSecret() API
+- **Service Account**: medication-cd9b8@appspot.gserviceaccount.com has roles/secretmanager.secretAccessor
+- **Status**: ✅ Production-ready, verified working January 20, 2026
 
-**`requestAccountDeletion` (line 174-274)**:
+**`requestAccountDeletion` (line 334-446)**:
 
 - HTTPS callable function (POST only)
 - Authenticates user with email/password
 - Deletes Firestore user data recursively
 - Deletes Firebase Auth account
+- Sends confirmation email via Nodemailer (uses same Secret Manager credentials as emailAdminsOnContactMessage)
+- **Secret Access**: Configured via `runWith({secrets: [emailUser, emailPassword]})` in function definition
 - Returns success/failure JSON response
+- **Status**: ✅ Production-ready with Secret Manager integration
 
 **`migrateLegalAcceptanceFields` (HTTPS Callable)**:
 

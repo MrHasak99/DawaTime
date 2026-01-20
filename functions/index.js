@@ -3,8 +3,13 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const fetch = require("node-fetch");
 const geoip = require("geoip-lite");
+const {defineSecret} = require("firebase-functions/params");
 
 admin.initializeApp();
+
+// Define secrets from Firebase Secret Manager
+const emailUser = defineSecret("EMAIL_USER");
+const emailPassword = defineSecret("EMAIL_PASSWORD");
 
 const {migrateMedicationsToSubcollections} =
   require("./migrate-to-subcollections");
@@ -275,20 +280,35 @@ exports.notifyOnVersionUpdate = functions
       }
     });
 
-const transporter = nodemailer.createTransport({
-  host: "smtppro.zoho.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "admin@dawatime.com",
-    pass: "P6&Ee$kr#p29",
-  },
-});
+// Lazy initialization of email transporter
+let transporter = null;
+/**
+ * Gets or creates the email transporter instance
+ * @return {object} Nodemailer transporter configured with Zoho SMTP
+ */
+function getTransporter() {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: "smtppro.zoho.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: emailUser.value(),
+        pass: emailPassword.value(),
+      },
+    });
+  }
+  return transporter;
+}
 
 const blockedCountries = ["IL"];
 
 exports.emailAdminsOnContactMessage = functions
-    .runWith({memory: "512MB", timeoutSeconds: 60})
+    .runWith({
+      memory: "512MB",
+      timeoutSeconds: 60,
+      secrets: [emailUser, emailPassword],
+    })
     .firestore
     .document("ContactMessages/{messageId}")
     .onCreate(async (snap, context) => {
@@ -301,7 +321,7 @@ exports.emailAdminsOnContactMessage = functions
         text: `Message: ${data.message}`,
       };
       try {
-        await transporter.sendMail(mailOptions);
+        await getTransporter().sendMail(mailOptions);
         console.log(
             `Email sent successfully for message from ${data.userEmail}`,
         );
@@ -312,7 +332,11 @@ exports.emailAdminsOnContactMessage = functions
     });
 
 exports.requestAccountDeletion = functions
-    .runWith({memory: "512MB", timeoutSeconds: 120})
+    .runWith({
+      memory: "512MB",
+      timeoutSeconds: 120,
+      secrets: [emailUser, emailPassword],
+    })
     .https.onRequest(async (req, res) => {
       res.set("Access-Control-Allow-Origin", "*");
       if (req.method === "OPTIONS") {
@@ -395,18 +419,21 @@ exports.requestAccountDeletion = functions
               from: "admin@dawatime.com",
               to: "help@dawatime.com",
               subject: "Account Deletion - User Feedback",
-              text: `User ${email} deleted their account.\n\nReason for deletion:\n${reason}\n\nDeleted at: ${new Date().toISOString()}`,
+              text: `User ${email} deleted their account.\n\n` +
+                `Reason for deletion:\n${reason}\n\n` +
+                `Deleted at: ${new Date().toISOString()}`,
               html: `
-                <h2>Account Deletion - User Feedback</h2>
-                <p><strong>User:</strong> ${email}</p>
-                <p><strong>Deleted at:</strong> ${new Date().toLocaleString()}</p>
-                <p><strong>Reason for deletion:</strong></p>
-                <blockquote style="border-left: 4px solid #8ac249; padding-left: 16px; margin: 16px 0; color: #333;">
-                  ${reason.replace(/\n/g, "<br>")}
-                </blockquote>
-              `,
+  <h2>Account Deletion - User Feedback</h2>
+  <p><strong>User:</strong> ${email}</p>
+  <p><strong>Deleted at:</strong> ${new Date().toLocaleString()}</p>
+  <p><strong>Reason for deletion:</strong></p>
+  <blockquote style="border-left: 4px solid #8ac249;
+    padding-left: 16px; margin: 16px 0; color: #333;">
+    ${reason.replace(/\n/g, "<br>")}
+  </blockquote>
+`,
             };
-            await transporter.sendMail(mailOptions);
+            await getTransporter().sendMail(mailOptions);
             console.log(`Sent deletion feedback email for ${email}`);
           } catch (emailError) {
             console.error("Error sending deletion feedback email:", emailError);
