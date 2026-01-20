@@ -188,14 +188,21 @@ Fix app and implement notifications and more detailed types of medication
 **Current Status** (January 2026 - Day 14):
 
 - **Users**: ~100 active users in Kuwait
-- **Versions**: iOS v1.3.4 (App Store), Android v1.4.4+50 (Google Play Beta)
+- **Versions**: iOS v1.4.4+50 (Approved, Pending Release), Android v1.4.4+50 (Approved, Ready to Publish)
 - **Beta Testing**: 12 continuous testers for 10+ days (Day 12 - January 18)
-- **Production Status**: ⏳ **UNDER REVIEW** - Submitted January 20, 2026 at 8:20 AM
-- **Review Timeline**: Usually 7 days or less (expected approval: Days 15-21)
+- **Production Status**: ✅ **BOTH PLATFORMS APPROVED** - Ready for coordinated launch
+- **Planned Launch**: Day 15 (January 21, 2026) at 10:00 AM - 12:00 PM Kuwait time
+- **Release Strategy**: Simultaneous dual-platform launch (iOS + Android published together)
 - **Revenue**: $0 (strategic choice - growth phase)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
-- **Next Milestone**: 500-1,000 users by March 2026 (Q1 target)
+- **Next Milestone**: Public production launch, targeting 500-1,000 users by March 2026 (Q1 target)
 - **Vision**: Public health tool first, commercial product second
+
+**App Store Links**:
+
+- **iOS App Store**: https://apps.apple.com/app/dawatime/id6748280994
+- **Google Play Store**: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
+- **Google Play Testing**: https://play.google.com/apps/testing/com.mrhasak99.dawatime
 
 ---
 
@@ -351,7 +358,7 @@ Fix app and implement notifications and more detailed types of medication
 **Major Features Added**:
 
 - CarPlay integration attempted (later removed Dec 8, 2025)
-- Country blocking for restricted regions
+- Country blocking for restricted regions (Israel geo-blocked for GCC compliance)
 - Notification rescheduling improvements
 - iOS notification interruption levels for time-sensitive alerts
 - Firebase Cloud Functions for version notifications
@@ -397,14 +404,16 @@ Fix app and implement notifications and more detailed types of medication
 
 **Deployment Status (January 20, 2026 - Day 14)**:
 
-- ✅ **PRODUCTION ACCESS SUBMITTED**: Google Play Console application submitted 8:20 AM
-- ⏳ **Android**: Production access **UNDER REVIEW** - Usually 7 days or less
+- ✅ **PRODUCTION ACCESS GRANTED**: Google Play Console production access **APPROVED** (same day!)
+- ✅ **Android**: v1.4.4+50 **APPROVED** - Status "Ready to Publish" (release review complete)
 - ✅ **iOS**: v1.4.4+50 **APPROVED** - Status "Pending Developer Release" (ready to launch)
 - 📋 **Application Details**: All 9 questions completed (Production & Feedback reports used)
 - 🌐 **Website SEO Fixed**: Added canonical tags to all 6 pages, created sitemap.xml, robots.txt deployed
 - 🔗 **Legal Links Updated**: All 14 in-app links changed from .html to clean URLs (4 files modified)
 - 📊 **Google Search Console**: Duplicate page issues resolved, HTTP→HTTPS redirect validated
-- 🚀 **Next Steps**: Wait for Google approval (Days 15-21), monitor email for notification
+- 🎉 **MILESTONE**: Both platforms approved and ready for coordinated production launch
+- ⏳ **Release Review**: Complete - Both platforms passed review on Day 14
+- 🚀 **Next Steps**: Ready for simultaneous iOS + Android production launch
 
 **iOS Upload Timeline**:
 
@@ -545,7 +554,23 @@ Fix app and implement notifications and more detailed types of medication
   - **Production Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
   - **Feedback Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
   - **Next Steps**: Wait for Google review (Days 15-21), monitor email for approval notification
-  - 🔒 **SMTP SECURITY HARDENING COMPLETE** - Migrated to Firebase Secret Manager
+  - ✅ **PRODUCTION ACCESS APPROVED** (Same Day - Day 14, Late Afternoon)
+    - **Approval Speed**: Same-day approval (<12 hours) - significantly faster than typical 7-day timeline
+    - **Status**: Production access granted, ready to publish to production track
+    - **Significance**: 12 continuous testers for 10+ days, 100% crash-free rate, rapid emergency updates validated Google's confidence
+    - Both platforms now production-ready for simultaneous launch
+  - 🚀 **APP PUBLISHED TO PRODUCTION TRACK** (Day 14, Late Afternoon)
+    - **Status**: v1.4.4+50 submitted to Google Play production track for release review
+    - **Review Type**: Initial production release review (app going live to public for first time)
+    - **Expected Timeline**: Few hours to 2 days for Google's release approval
+    - **What's Being Reviewed**: App content, metadata, store listing compliance
+    - **iOS Status**: Holding iOS release until Android goes live (coordinated launch strategy)
+  - ✅ **ANDROID PRODUCTION RELEASE APPROVED** (Day 14, Evening)
+    - **Status**: v1.4.4+50 release review **COMPLETE** - Status changed to "Ready to Publish"
+    - **Review Speed**: Same-day approval - release review completed within hours
+    - **Significance**: Both platforms now approved and ready for coordinated production launch
+    - **Next Action**: Ready to publish to production on both iOS and Android simultaneously
+  - ✅🔒 **SMTP SECURITY HARDENING COMPLETE** - Migrated to Firebase Secret Manager
     - **Problem**: SMTP password hardcoded in functions/index.js, attempted dotenv approach failed (.env files not uploaded to Cloud Functions)
     - **Solution**: Migrated to Firebase Secret Manager with defineSecret() API from firebase-functions/params
     - **Implementation**:
@@ -557,7 +582,20 @@ Fix app and implement notifications and more detailed types of medication
     - **Status**: ✅ Production-ready, both contact forms (website + in-app) functional, no app rebuild required
     - **Files Modified**: functions/index.js (defineSecret imports, getTransporter() using emailUser.value()/emailPassword.value(), runWith configs with secrets array)
     - **Deprecated**: dotenv package and functions/.env file (kept for local emulator only)
-- **Days 15-21** (Jan 21-27): Production review in progress, await Google Play approval
+- **Days 15+** (Jan 21+): Production launch and post-launch monitoring
+  - **Day 14 (Evening)**: ✅ Android v1.4.4+50 approved - Status "Ready to Publish"
+  - **Ready to Launch**: Both iOS and Android approved and ready for simultaneous production release
+  - **Planned Deployment**: Day 15 (January 21, 2026) at 10:00 AM - 12:00 PM Kuwait time
+  - **Launch Strategy**: Coordinated dual-platform launch (publish both at same time)
+  - **Launch Process**:
+    1. Publish Android v1.4.4+50 to production on Google Play Store
+    2. Release iOS v1.4.4+50 from "Pending Developer Release" on App Store
+    3. Verify both apps are live and downloadable
+    4. Post Instagram announcement with both store links
+  - **Post-Launch**: Monitor production metrics (crash-free rate, reviews, user feedback)
+  - **v1.4.5 Hotfix**: Deploy Play Integrity API + Safe URL fix within 1-2 days after launch
+  - **Marketing**: Instagram announcement with both App Store and Google Play Store links
+  - **Milestone**: First public production release on Google Play Store + iOS v1.4.4 launch
 
 ---
 
@@ -3171,7 +3209,11 @@ DawaTime is a Flutter medication reminder app with Firebase backend, designed fo
 
 **Regional Considerations**:
 
-- **Country blocking**: Some GCC countries have content restrictions
+- **Country blocking**: Israel geo-blocked for GCC regional compliance and political context
+  - Implementation: Location permissions check user's country via geolocator
+  - Rationale: Compliance with GCC regional policies and market norms
+  - Google Play Compliance: NOT a violation of EU geo-blocking regulation (Israel ≠ EU, justified restriction)
+  - Other countries: No restrictions (all EU member states accessible)
 - **Location permissions**: Used for regional compliance and country-based restriction checks
 - **Language priority**: Arabic is equal to English, not a translation afterthought
 - **Time formats**: Support for both 12-hour (common in GCC) and 24-hour formats
@@ -5095,7 +5137,7 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
               // Open Play Store or App Store
               final url = Platform.isAndroid
                   ? 'https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime'
-                  : 'https://apps.apple.com/app/dawatime/id...';
+                  : 'https://apps.apple.com/app/dawatime/id6748280994';
               await launchUrl(Uri.parse(url));
             },
             child: Text('Update Now'),
@@ -5271,9 +5313,16 @@ await flutterLocalNotificationsPlugin.zonedSchedule(..., scheduledTZ, ...);
 
 **Usage**:
 
-- Country detection for regional compliance (some GCC countries have content restrictions)
-- Future: Kuwait pharmacy locator, clinic finder
+- **Country detection for geo-blocking**: Israel blocked for GCC regional compliance and political context
+- **Future features**: Kuwait pharmacy locator, clinic finder
 - **Not used for**: Timezone detection (handled by `flutter_timezone` instead)
+
+**Geo-Blocking Implementation**:
+
+- **Blocked Country**: Israel (compliance with GCC regional policies)
+- **Method**: Geolocator checks user's country on app launch
+- **Google Play Compliance**: NOT a violation of EU geo-blocking regulation (Israel ≠ EU, justified restriction)
+- **All other countries**: Accessible, including all 27 EU member states
 
 **Considerations**: Location permissions required, privacy-sensitive data
 
