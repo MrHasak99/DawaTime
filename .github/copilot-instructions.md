@@ -466,16 +466,21 @@ Fix app and implement notifications and more detailed types of medication
 
 **Instagram Paid Advertising Campaign**:
 - **Post**: https://www.instagram.com/p/DTw9AasDEUD/ (bilingual carousel: English + Arabic)
+- **Status**: ✅ **ACTIVE** - Ad approved and live, running 7-day campaign
 - **Creative**: #8AC249 green background, DawaTime logo, "Never miss a dose" tagline, dual store badges
 - **Caption Strategy**: Bilingual (English → Arabic), minimal text, "Link in bio" CTA, 5 hashtags optimized
 - **Hashtags**: #DawaTime #kuwait #الكويت #madeinkuwait #صحة (5-tag Instagram ad limit)
 - **Strategic Decision**: #MadeInKuwait (local pride) over #MedicationReminder (conversion) for launch day emotional appeal
-- **Budget**: 50-75 KWD/month (~$165-$250 USD), Week 1-2: 15-20 KWD/week conservative testing
-- **Target**: Kuwait (all governorates), Age 25-54, Interests: Health & Wellness, Healthcare, Pharmacy
+- **Ad Configuration** (Actual):
+  - **Goal**: Learn More (website clicks)
+  - **Destination**: http://dawatime.com/
+  - **Budget**: $70.00 USD over 7 days ($10/day)
+  - **Target Audience**: Kuwait, Age 18+, Interest: Health & wellness
+  - **Duration**: 7 days (Week 1 test campaign)
 - **Performance Targets**: CPI <2 KWD (~$6.50), CTR >1.5%, Day 1 retention >20%
-- **Placement**: Instagram Feed (primary) + Stories (secondary), 8-10 PM Kuwait optimal timing
+- **Placement**: Instagram Feed (primary) + Stories (secondary)
 - **Week 2-4 Optimization**: Switch to #medicationreminder (conversion focus) after launch awareness wave
-- **Month 2-3 Expansion**: Add Bahrain, Qatar if Kuwait CPI <2 KWD
+- **Month 2-3 Expansion**: Add Bahrain, Qatar if Kuwait CPI <2 KWD performs well
 
 **LinkedIn Professional Positioning**:
 - **Post**: https://www.linkedin.com/feed/update/urn:li:activity:7419657007840022528/
@@ -493,7 +498,7 @@ Fix app and implement notifications and more detailed types of medication
 - **Milestone**: January 21, 2026 - Coordinated multi-platform marketing launch (Instagram paid + LinkedIn organic + Portfolio integration)
 
 **Post-Launch Actions** (Days 15-22):
-- **Instagram**: Boost to ad after 2-3 hours organic traction, monitor reach/impressions/CPI, add store links as first comment
+- **Instagram**: ✅ **Ad Campaign LIVE** - 7-day boosted campaign running ($10/day, $70 total). Monitor reach/impressions/CPI daily. Evaluate performance Day 22 for Week 2 strategy.
 - **LinkedIn**: First 2 hours critical for algorithm, reply to comments within 15 minutes, share to Stories within 24 hours
 - **Week 1 Goals**: Track CPI, CTR, install conversion rate via Firebase Analytics + App Store Connect + Play Console, target 100→150 users (50% growth)
 - **Week 2-4**: Hashtag optimization (#medicationreminder conversion focus), A/B test creative variations, refine targeting based on data
