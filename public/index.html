@@ -6,9 +6,9 @@
     <meta name="description" content="DawaTime helps you manage medication schedules with smart reminders and refill alerts. Available on iOS and Android. Never miss a dose again!" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="canonical" href="https://dawatime.com/" />
-    <link rel="icon" type="image/png" sizes="32x32" href="DawaTime.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="DawaTime.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="DawaTime.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="DawaTime-favicon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="DawaTime-favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="DawaTime-favicon.png" />
     <style>
       @font-face {
         font-family: "Inter";
@@ -61,10 +61,11 @@
         transition: background-color 0.3s ease, color 0.3s ease;
       }
       .logo {
-        width: 200px;
-        height: 192px;
+        width: 280px;
+        height: 270px;
         margin: 0 auto 0.75rem auto;
         display: block;
+        border-radius: 24px;
       }
       h1 {
         font-family: "Nunito", Arial, sans-serif;
@@ -123,7 +124,7 @@
       style="text-align: center; margin-bottom: 0.5rem"
       data-translate="description"
     >
-      Download from the App Store or use our web app
+      Download from the App Store or Google Play, or use our web app
     </p>
     <div
       style="
@@ -153,29 +154,29 @@
           style="height: 48px; border-radius: 8px"
         />
       </a>
-      <div
-        style="text-decoration: none; cursor: default"
+      <a
+        href="https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime"
+        target="_blank"
+        style="
+          text-decoration: none;
+          display: inline-block;
+          transition: all 0.3s ease;
+        "
+        onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='drop-shadow(0 4px 12px rgba(0,0,0,0.15))';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.filter='none';"
       >
-        <button
-          style="
-            background: linear-gradient(135deg, rgba(66, 133, 244, 0.75), rgba(15, 157, 88, 0.75), rgba(219, 68, 55, 0.75), rgba(244, 180, 0, 0.75));
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-family: 'Nunito', Arial, sans-serif;
-            cursor: default;
-          "
-          disabled
-        >
-          <span data-translate="play-store-coming" style="font-family: 'League Spartan', 'Nunito', Arial, sans-serif;"
-            >Coming Soon</span
-          >
-        </button>
-      </div>
-      <div
-        style="text-decoration: none; cursor: default"
+        <img
+          id="play-store-badge"
+          src="GetItOnGooglePlay_Badge_Web_color_English.svg"
+          alt="Get it on Google Play"
+          data-translate-alt="play-store-alt"
+          style="height: 48px; border-radius: 8px"
+        />
+      </a>
+      <a
+        href="https://webapp.dawatime.com"
+        target="_blank"
+        style="text-decoration: none"
       >
         <button
           style="
@@ -186,14 +187,15 @@
             padding: 0.75rem 1.5rem;
             font-size: 1rem;
             font-family: 'Nunito', Arial, sans-serif;
-            cursor: default;
-            opacity: 0.5;
+            cursor: pointer;
+            transition: all 0.3s ease;
           "
-          disabled
+          onmouseover="this.style.background='var(--primary-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(138, 194, 73, 0.3)';"
+          onmouseout="this.style.background='var(--primary-color)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';"
         >
           <span data-translate="web-app">Continue to Web App</span>
         </button>
-      </div>
+      </a>
     </div>
     <div style="text-align: center; margin: 1.5rem 0">
       <a
@@ -223,35 +225,43 @@
           "app-title": "DawaTime",
           subtitle: "Available Now on iOS & Android",
           description:
-            "Download from the App Store or use our web app",
+            "Download from the App Store or Google Play, or use our web app",
           "app-store-alt": "Download on the App Store",
-          "play-store-coming": "Coming Soon",
+          "play-store-alt": "Get it on Google Play",
           "web-app": "Continue to Web App",
-          "support-link": "Need Help? Visit Support Center",
+          "support-link": "Need Help? Please visit Support Center",
         },
         ar: {
           "app-title": "دواء تايم",
-          subtitle: "متاح الآن على iOS و Android",
+          subtitle: "متوفر الآن على iOS و Android",
           description:
-            "حمّل من آب ستور أو استخدم تطبيق الويب",
+            "حمّل من آب ستور أو جوجل بلاي، أو استخدم تطبيق الويب",
           "app-store-alt": "حمّل من آب ستور",
-          "play-store-coming": "قريباً",
+          "play-store-alt": "حمّله من جوجل بلاي",
           "web-app": "استمر لتطبيق الويب",
-          "support-link": "تحتاج مساعدة؟ زر مركز الدعم",
+          "support-link": "تحتاج مساعدة؟ تفضل بزيارة مركز الدعم",
         },
       };
 
-      function updateAppStoreBadge() {
-        const badge = document.getElementById('app-store-badge');
+      function updateStoreBadges() {
+        const appStoreBadge = document.getElementById('app-store-badge');
+        const playStoreBadge = document.getElementById('play-store-badge');
         const currentLang = document.documentElement.getAttribute('lang');
-        if (badge) {
-          badge.src = currentLang === 'ar' ? 'arblack.svg' : 'enblack.svg';
+        
+        if (appStoreBadge) {
+          appStoreBadge.src = currentLang === 'ar' ? 'arblack.svg' : 'enblack.svg';
+        }
+        
+        if (playStoreBadge) {
+          playStoreBadge.src = currentLang === 'ar' 
+            ? 'GetItOnGooglePlay_Badge_Web_color_Arabic-Saudi-Arabia.svg' 
+            : 'GetItOnGooglePlay_Badge_Web_color_English.svg';
         }
       }
 
-      updateAppStoreBadge();
+      updateStoreBadges();
 
-      const observer = new MutationObserver(updateAppStoreBadge);
+      const observer = new MutationObserver(updateStoreBadges);
       observer.observe(document.documentElement, { 
         attributes: true, 
         attributeFilter: ['lang'] 
