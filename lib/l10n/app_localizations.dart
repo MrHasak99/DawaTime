@@ -755,6 +755,12 @@ abstract class AppLocalizations {
   /// **'Hamad AlKhalaf'**
   String get developer;
 
+  /// No description provided for @visitPortfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit Portfolio'**
+  String get visitPortfolio;
+
   /// No description provided for @appInfo.
   ///
   /// In en, this message translates to:

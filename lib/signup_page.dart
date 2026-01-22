@@ -288,15 +288,42 @@ class _SignUpPageState extends State<SignUpPage> {
                                 recognizer:
                                     TapGestureRecognizer()
                                       ..onTap = () async {
-                                        final url = Uri.parse(
-                                          'https://dawatime.com/terms-and-conditions',
-                                        );
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(
-                                            url,
-                                            mode:
-                                                LaunchMode.externalApplication,
+                                        try {
+                                          final url = Uri.parse(
+                                            'https://dawatime.com/terms-and-conditions',
                                           );
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(
+                                              url,
+                                              mode: LaunchMode.platformDefault,
+                                            );
+                                          } else {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Could not open Terms. Please visit dawatime.com',
+                                                  ),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Error opening link. Please try again.',
+                                                ),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
                                         }
                                       },
                               ),
@@ -343,15 +370,42 @@ class _SignUpPageState extends State<SignUpPage> {
                                 recognizer:
                                     TapGestureRecognizer()
                                       ..onTap = () async {
-                                        final url = Uri.parse(
-                                          'https://dawatime.com/privacy-policy',
-                                        );
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(
-                                            url,
-                                            mode:
-                                                LaunchMode.externalApplication,
+                                        try {
+                                          final url = Uri.parse(
+                                            'https://dawatime.com/privacy-policy',
                                           );
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(
+                                              url,
+                                              mode: LaunchMode.platformDefault,
+                                            );
+                                          } else {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Could not open Privacy Policy. Please visit dawatime.com',
+                                                  ),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Error opening link. Please try again.',
+                                                ),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
                                         }
                                       },
                               ),

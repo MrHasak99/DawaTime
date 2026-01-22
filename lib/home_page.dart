@@ -175,12 +175,18 @@ class _HomePageState extends State<HomePage> {
           }
         }
       } else if (hasNewData) {
-        setState(() => _useNewStructure = true);
+        if (mounted) {
+          setState(() => _useNewStructure = true);
+        }
       } else {
-        setState(() => _useNewStructure = true);
+        if (mounted) {
+          setState(() => _useNewStructure = true);
+        }
       }
     } catch (e) {
-      setState(() => _useNewStructure = true);
+      if (mounted) {
+        setState(() => _useNewStructure = true);
+      }
 
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {

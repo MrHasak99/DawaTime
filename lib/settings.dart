@@ -229,15 +229,69 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.developed}: ${AppLocalizations.of(context)!.developer}',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${AppLocalizations.of(context)!.developed}: ${AppLocalizations.of(context)!.developer}',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          InkWell(
+                                            onTap: () async {
+                                              Navigator.pop(context);
+                                              try {
+                                                final url = Uri.parse(
+                                                  'https://hamadalkhalaf.com',
+                                                );
+                                                if (await canLaunchUrl(url)) {
+                                                  await launchUrl(
+                                                    url,
+                                                    mode:
+                                                        LaunchMode
+                                                            .externalApplication,
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                // Silent fail
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.language,
+                                                  color: Colors.white70,
+                                                  size: 14,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.visitPortfolio,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: Colors.white70,
+                                                        fontSize: 13,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationColor:
+                                                            Colors.white70,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -278,15 +332,23 @@ class _SettingsPageState extends State<SettingsPage> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.pop(context);
-                                          launchUrl(
-                                            Uri.parse(
+                                          try {
+                                            final url = Uri.parse(
                                               'https://www.instagram.com/dawatimeapp/',
-                                            ),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
+                                            );
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(
+                                                url,
+                                                mode:
+                                                    LaunchMode
+                                                        .externalApplication,
+                                              );
+                                            }
+                                          } catch (e) {
+                                            // Silent fail
+                                          }
                                         },
                                         style: TextButton.styleFrom(
                                           foregroundColor: Colors.white,
@@ -319,15 +381,23 @@ class _SettingsPageState extends State<SettingsPage> {
                                   children: [
                                     Expanded(
                                       child: TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.pop(context);
-                                          launchUrl(
-                                            Uri.parse(
+                                          try {
+                                            final url = Uri.parse(
                                               'https://dawatime.com/privacy-policy',
-                                            ),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
+                                            );
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(
+                                                url,
+                                                mode:
+                                                    LaunchMode
+                                                        .externalApplication,
+                                              );
+                                            }
+                                          } catch (e) {
+                                            // Silent fail
+                                          }
                                         },
                                         child: Text(
                                           AppLocalizations.of(
@@ -347,15 +417,23 @@ class _SettingsPageState extends State<SettingsPage> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.pop(context);
-                                          launchUrl(
-                                            Uri.parse(
+                                          try {
+                                            final url = Uri.parse(
                                               'https://dawatime.com/terms-and-conditions',
-                                            ),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
+                                            );
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(
+                                                url,
+                                                mode:
+                                                    LaunchMode
+                                                        .externalApplication,
+                                              );
+                                            }
+                                          } catch (e) {
+                                            // Silent fail
+                                          }
                                         },
                                         child: Text(
                                           AppLocalizations.of(

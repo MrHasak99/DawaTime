@@ -217,12 +217,19 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               ElevatedButton(
                                 onPressed: () async {
-                                  await launchUrl(
-                                    Uri.parse(
+                                  try {
+                                    final url = Uri.parse(
                                       'https://dawatime.com/terms-and-conditions',
-                                    ),
-                                    mode: LaunchMode.externalApplication,
-                                  );
+                                    );
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    }
+                                  } catch (e) {
+                                    // Silent fail
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
@@ -241,12 +248,19 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 10),
                               ElevatedButton(
                                 onPressed: () async {
-                                  await launchUrl(
-                                    Uri.parse(
+                                  try {
+                                    final url = Uri.parse(
                                       'https://dawatime.com/privacy-policy',
-                                    ),
-                                    mode: LaunchMode.externalApplication,
-                                  );
+                                    );
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    }
+                                  } catch (e) {
+                                    // Silent fail
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
@@ -864,11 +878,20 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton(
-                        onPressed: () {
-                          launchUrl(
-                            Uri.parse('https://dawatime.com/privacy-policy'),
-                            mode: LaunchMode.externalApplication,
-                          );
+                        onPressed: () async {
+                          try {
+                            final url = Uri.parse(
+                              'https://dawatime.com/privacy-policy',
+                            );
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(
+                                url,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          } catch (e) {
+                            // Silent fail
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)!.privacyPolicy,
@@ -880,13 +903,20 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(width: 16),
                       TextButton(
-                        onPressed: () {
-                          launchUrl(
-                            Uri.parse(
+                        onPressed: () async {
+                          try {
+                            final url = Uri.parse(
                               'https://dawatime.com/terms-and-conditions',
-                            ),
-                            mode: LaunchMode.externalApplication,
-                          );
+                            );
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(
+                                url,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          } catch (e) {
+                            // Silent fail
+                          }
                         },
                         child: Text(
                           AppLocalizations.of(context)!.termsAndConditions,

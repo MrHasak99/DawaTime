@@ -389,10 +389,10 @@ Fix app and implement notifications and more detailed types of medication
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.4+50 (PRODUCTION - Day 15, January 21, 2026)
-**Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store
-**Previous Versions**: v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
-**Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL Launching + Update Checker + Signup Buttons Android - Days 16-20, January 22-26, 2026)
+**Current Version**: v1.4.5+51 (HOTFIX IN PROGRESS - Day 16, January 22, 2026)
+**Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store (v1.4.4+50)
+**Hotfix Status**: 🔧 **IN DEVELOPMENT** - v1.4.5+51 addressing critical production crashes and stability improvements
+**Previous Versions**: v1.4.4+50 (Production) | v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
 **Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
@@ -438,18 +438,38 @@ Fix app and implement notifications and more detailed types of medication
   - public/DawaTime-favicon.png (NEW: optimized favicon with larger icon, rounded corners, green background)
 - **Deployment**: Firebase Hosting (20 files deployed, live at https://dawatime.com)
 
-**Post-Launch Hotfix Planned** (v1.4.5 - Days 15-20, January 21-26, 2026):
+**v1.4.5+51 Hotfix In Progress** (Day 16 - January 22, 2026):
 
-- **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
-- **Safe URL Launching**: Fix iOS SafariViewController crashes with canLaunchUrl validation (14 locations)
-- **Update Checker Bug Fix**: Fix false "up to date" message when reinstalling older version (v1.3.4 → v1.4.4 scenario)
-- **Signup Buttons Android Fix**: Fix Terms & Privacy links not working on Android/Samsung devices (LaunchMode.externalApplication compatibility issue)
-- **Migration setState Crash Fix**: Fix regression in home_page.dart:183 - missing mounted checks before setState in _checkMigrationStatus (discovered Day 16 via Crashlytics)
-- **Portfolio Domain**: Update contact/documentation to reference hamadalkhalaf.com (portfolio website launched January 20, 2026)
-- **Decision**: Deferred from Day 14 production launch to avoid risking v50 stability (100% crash-free rate)
-- **Rationale**: Combined security and stability hotfix, 6 days to launch too risky for new integrations
-- **Implementation**: 1-2 days post-launch as "security & stability improvements" hotfix
-- **Testing**: Multiple device types, rooted devices, VPN scenarios, iOS link testing, Android Samsung device testing before deployment
+**Completed Fixes** ✅:
+- ✅ **Migration setState Crash Fix**: Added mounted checks before setState in home_page.dart lines 178, 180, 183 in _checkMigrationStatus
+  - Issue: Null check operator crash when users navigate away during migration status check
+  - Fix: Wrap all three setState calls with `if (mounted)` guards
+  - Impact: Prevents production crashes discovered via Crashlytics
+  
+- ✅ **Safe URL Launching**: Fixed iOS SafariViewController crashes with canLaunchUrl validation (16 locations)
+  - Files: signup_page.dart (2), main.dart (8), settings.dart (3), login_page.dart (4)
+  - Fix: Added `try { if (await canLaunchUrl(url)) { await launchUrl(...) } else { SnackBar error } } catch (e) { SnackBar error }`
+  - Impact: Prevents iOS production crashes when opening Terms/Privacy/Update links
+  
+- ✅ **Signup Buttons Android Fix**: Fixed Terms & Privacy links not working on Android/Samsung devices
+  - Files: signup_page.dart lines 294-330 (Terms), lines 349-375 (Privacy)
+  - Fix: Changed `LaunchMode.externalApplication` → `LaunchMode.platformDefault` + added error handling
+  - Impact: Unblocks new user signups on Android/Samsung devices
+
+- ✅ **Portfolio Domain**: Added portfolio website link to About dialog in Settings
+  - Files: app_en.arb, app_ar.arb (added "visitPortfolio" key), settings.dart (lines 225-285)
+  - Fix: Made developer name section clickable with portfolio link (https://hamadalkhalaf.com)
+  - Implementation: Added Column with developer name + "Visit Portfolio" link (language icon + underlined text)
+  - Impact: Users can access developer's portfolio website from app settings
+
+**Remaining Fixes** ⏳:
+- ⏳ **Play Integrity API**: Security feature to verify app authenticity and prevent tampering/clones
+- ⏳ **Update Checker Bug Fix**: Fix false "up to date" message when reinstalling older version (v1.3.4 → v1.4.4 scenario)
+
+**Deployment Plan**:
+- **Timeline**: Days 16-20 (January 22-26, 2026)
+- **Testing Required**: Multiple device types, rooted devices, VPN scenarios, iOS link testing, Android Samsung device testing
+- **Release Notes**: "Security & stability improvements: Migration crash fix, app authenticity verification, link opening improvements"
 - **See**: Future Feature Roadmap → Minor Features → #7 (Play Integrity) & #8 (Safe URL) & #10 (Signup Buttons)
 
 **Deployment Status (January 21, 2026 - Day 15)** - PRODUCTION LAUNCH COMPLETE:

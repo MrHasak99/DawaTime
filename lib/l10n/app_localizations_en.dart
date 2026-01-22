@@ -359,6 +359,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get developer => 'Hamad AlKhalaf';
 
   @override
+  String get visitPortfolio => 'Visit Portfolio';
+
+  @override
   String get appInfo => 'App Info';
 
   @override

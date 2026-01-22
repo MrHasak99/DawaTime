@@ -110,6 +110,7 @@
   "version": "Version",
   "developed": "Developed By",
   "developer": "Hamad AlKhalaf",
+  "visitPortfolio": "Visit Portfolio",
   "appInfo": "App Info",
   "failedToLoadUserData": "Failed to load user data",
   "save": "Save",

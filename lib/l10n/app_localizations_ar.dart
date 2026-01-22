@@ -359,6 +359,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get developer => 'حمد الخلف';
 
   @override
+  String get visitPortfolio => 'زيارة الموقع';
+
+  @override
   String get appInfo => 'معلومات التطبيق';
 
   @override
