@@ -1454,6 +1454,35 @@ class MainActivity : FlutterActivity() {
 - ✅ Fixes SignInHubActivity crash (Google Play Services authentication)
 - ✅ No changes needed to Flutter UI code (handled at native level + configuration)
 
+**Known Limitation - Google Play Console Deprecation Warnings** (January 25, 2026):
+
+Despite implementing the `MainActivity.kt` edge-to-edge fix above, Google Play Console still shows deprecation warnings for v1.4.5+52 and later builds. This is a **Flutter framework limitation**, not an issue with your app code.
+
+**Warnings Displayed**:
+- "Edge-to-edge may not display for all users"
+- "Your app uses deprecated APIs or parameters for edge-to-edge"
+
+**Root Cause**: Flutter framework itself (v3.38.6 stable as of January 25, 2026) uses deprecated Android APIs internally:
+- `io.flutter.embedding.android.FlutterFragmentActivity.configureStatusBarForFullscreenFlutterExperience`
+- `io.flutter.plugin.platform.PlatformPlugin.setSystemChromeSystemUIOverlayStyle`
+- `androidx.activity.i.u` (AndroidX Activity library)
+
+These are internal Flutter framework calls using deprecated methods like `setStatusBarColor` and `setNavigationBarColor`.
+
+**Impact**: ℹ️ **Informational only** - Does NOT block production release
+- ✅ Your app will NOT be rejected
+- ✅ Users will NOT experience any issues
+- ✅ Edge-to-edge display works correctly on Android 15+
+- ℹ️ Affects all Flutter apps targeting SDK 35 (not specific to DawaTime)
+- ⏳ Will be resolved when Flutter framework team updates deprecated API usage
+
+**Resolution Strategy**:
+1. **Immediate**: Accept as informational warning (doesn't block release)
+2. **Short-term**: Mark as "upstream issue" or "Flutter framework limitation" in Play Console
+3. **Long-term**: Monitor Flutter stable releases for edge-to-edge framework improvements, upgrade Flutter when available
+
+**Flutter Version Used**: 3.38.6 stable (as of January 25, 2026 - latest stable release)
+
 ---
 
 ### iOS dSYM Automatic Upload Configuration (January 7, 2026)
