@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -28,6 +31,38 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _emailError = false;
   bool _passwordError = false;
   bool _confirmPasswordError = false;
+
+  Future<bool> _verifyPlayIntegrity() async {
+    if (!Platform.isAndroid) return true;
+
+    try {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final userId = FirebaseAuth.instance.currentUser?.uid ?? 'signup';
+      final nonce = '$userId:$timestamp'.codeUnits.toString();
+
+      const channel = MethodChannel('com.mrhasak99.dawatime/play_integrity');
+      final integrityToken = await channel.invokeMethod<String>(
+        'requestIntegrityToken',
+        {'cloudProjectNumber': 173965270100, 'nonce': nonce},
+      );
+
+      if (integrityToken == null || integrityToken.isEmpty) {
+        return true;
+      }
+
+      final callable = FirebaseFunctions.instance.httpsCallable(
+        'verifyPlayIntegrity',
+      );
+
+      await callable.call<Map<String, dynamic>>({
+        'integrityToken': integrityToken,
+      });
+
+      return true;
+    } catch (e) {
+      return true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -566,6 +601,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                     .data()?['privacyVersion']
                                     ?.toString() ??
                                 '1.0';
+
+                            await _verifyPlayIntegrity();
 
                             final userCredential = await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(

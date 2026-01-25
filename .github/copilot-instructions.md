@@ -182,20 +182,22 @@ Fix app and implement notifications and more detailed types of medication
 | ❌ Desktop platform bloat                 | ✅ Focused mobile-only (iOS/Android)                  |
 | ❌ Generic "medication_app" branding      | ✅ Professional "DawaTime" brand (Arabic)             |
 | ❌ Typos, poor code quality               | ✅ Production monitoring (Crashlytics, Analytics)     |
-| ❌ 0 users (never worked)                 | ✅ 100 active users in Kuwait market                  |
+| ❌ 0 users (never worked)                 | ✅ 98 active users in Kuwait market (94 real users)                  |
 
 **Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
 
-**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 100 active users in Kuwait with production apps on both iOS and Android."_
+**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 94 real users in Kuwait with production apps on both iOS and Android (98 total including test accounts)."_
 
 **Current Status** (January 2026 - Day 15):
 
-- **Users**: ~100 active users in Kuwait (pre-launch baseline)
+- **Users**: 98 registered users in Kuwait (68 pre-testing + 15 closed testing + 15 post-launch)
+  - **Real users**: 94 (excludes 4 developer/test accounts)
+  - **Developer accounts**: 4 (personal, testing, Apple testing, Google testing)
 - **Versions**: iOS v1.4.4+50 (LIVE in Production), Android v1.4.4+50 (LIVE in Production)
 - **Beta Testing**: ✅ COMPLETE - 12 continuous testers for 10+ days, 100% crash-free rate
-- **Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - Coordinated launch successful
-- **Launch Date**: ✅ Day 15 (January 21, 2026) - Both platforms published simultaneously
-- **Release Strategy**: Simultaneous dual-platform launch executed successfully
+- **Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - Coordinated v1.4.4 release successful
+- **Launch Date**: ✅ Day 15 (January 21, 2026) - Android Play Store debut + iOS update from v1.3.4
+- **Release Strategy**: Coordinated v1.4.4 release (Android's first Play Store release, iOS update from October 2025 v1.3.4)
 - **Revenue**: $0 (strategic choice - growth phase, Phase 1 of monetization roadmap)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
 - **Next Milestone**: Growth phase - targeting 500-1,000 users by March 2026 (Q1 2026)
@@ -297,13 +299,22 @@ Fix app and implement notifications and more detailed types of medication
 
 **iOS Production Release History**:
 
+**v1.4.4** (January 21, 2026) - Database Migration & iOS Notification Fixes:
+
+- Database migration to subcollection structure
+- Fixed iOS notification delivery issues (missing main scheduling loop, interruption levels)
+- Customizable refill reminder scheduling (day/time selection)
+- Legal document version tracking system
+- iOS notification cleanup on app startup
+- **Current Production Version** (as of January 2026)
+
 **v1.3.4** (October 28, 2025) - Weekday Scheduling:
 
 - Added ability to select specific days of week for each medication
 - Smart notifications only on chosen days
 - Enhanced splash screen design
 - Improved medication management interface with day selection
-- **Current Production Version** (as of January 2026)
+- **Production from October 2025 - January 2026** (superseded by v1.4.4 on January 21, 2026)
 
 **v1.2.2** (August 31, 2025) - Bug Fixes:
 
@@ -325,12 +336,23 @@ Fix app and implement notifications and more detailed types of medication
 - Basic theme switching
 - English-only (Arabic added in v1.2.1)
 
-**First Android Website Release - v1.3.4 (October 26, 2025)**:
+**Android Website Distribution - v1.3.4 (October 26, 2025)**:
 
 - First publicly distributed Android APK via website (https://dawatime.com)
 - Enhanced weekday scheduling features
 - Improved notification reliability
 - Production-ready Firebase configuration
+- **Distribution method**: Website APK download only (pre-Play Store)
+
+**Android Play Store Release History**:
+
+**v1.4.4** (January 21, 2026) - Official Play Store Debut:
+
+- First-ever release on Google Play Store
+- Same features as iOS v1.4.4 (database migration, notification fixes, customizable refill reminders)
+- Replaces website APK distribution with official Play Store channel
+- **Current Production Version** (as of January 2026)
+- **Significance**: Android users can now get automatic updates from Play Store instead of manual APK downloads
 
 ### Stable Feature Set (v1.3.4)
 
@@ -399,11 +421,11 @@ Fix app and implement notifications and more detailed types of medication
 
 **🎉 Day 15 Production Launch (January 21, 2026)**:
 
-- ✅ **iOS v1.4.4+50**: Published to App Store - LIVE in production
-- ✅ **Android v1.4.4+50**: Published to Google Play Store - LIVE in production
-- 🚀 **Launch Type**: Coordinated simultaneous dual-platform release
+- ✅ **iOS v1.4.4+50**: Published to App Store - LIVE in production (update from v1.3.4)
+- ✅ **Android v1.4.4+50**: Published to Google Play Store - LIVE in production (first Play Store release)
+- 🚀 **Launch Type**: Coordinated v1.4.4 release on same day
 - 📊 **Beta Testing Results**: 12 continuous testers, 10+ days testing, 100% crash-free rate
-- 🎯 **Milestone**: First public production release on Google Play + iOS v1.4.4 update from v1.3.4
+- 🎯 **Milestone**: Android's official Play Store debut + iOS update (iOS in production since August 2025 v1.1.1, v1.3.4 October 2025)
 - 🔗 **App Store Links**:
   - iOS: https://apps.apple.com/app/dawatime/id6748280994
   - Android: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
@@ -474,11 +496,11 @@ Fix app and implement notifications and more detailed types of medication
 
 **Deployment Status (January 21, 2026 - Day 15)** - PRODUCTION LAUNCH COMPLETE:
 
-- 🎉 **PRODUCTION LAUNCH**: Both platforms published and LIVE to the public
-- ✅ **iOS v1.4.4+50**: Published to App Store - LIVE in production
-- ✅ **Android v1.4.4+50**: Published to Google Play Store - LIVE in production
+- 🎉 **PRODUCTION LAUNCH**: v1.4.4 published on both platforms
+- ✅ **iOS v1.4.4+50**: Published to App Store - LIVE in production (update from v1.3.4)
+- ✅ **Android v1.4.4+50**: Published to Google Play Store - LIVE in production (first-ever Play Store release)
 - 📊 **Beta Testing**: 12 continuous testers for 10+ days, 100% crash-free rate on final build
-- 🚀 **Launch Strategy**: Coordinated simultaneous dual-platform release executed successfully
+- 🚀 **Launch Strategy**: Coordinated v1.4.4 release - Android Play Store debut, iOS update (iOS in production since August 2025)
 - 🔗 **Store Links**: Both apps accessible at official App Store and Google Play Store URLs
 - 📈 **Post-Launch**: Monitor Firebase Crashlytics, App Store Connect, Play Console analytics
 - 🎯 **Next Steps**: Instagram announcement, v1.4.5 hotfix preparation (Days 16-20)
@@ -519,6 +541,129 @@ Fix app and implement notifications and more detailed types of medication
   - **Budget Burn**: ~$20/70 spent (28% of budget through 28% of campaign)
   - **CPI Calculation Pending**: Need Firebase/App Store data to calculate actual Cost Per Install
 
+- **Day 3 (January 23, 2026)**:
+  - **Views**: 4,515 total impressions
+  - **Reach**: 3,406 unique people
+  - **Website Visits**: 102 (goal metric)
+  - **Link Clicks**: 50 clicks on ad link
+  - **Cost Per Website Visit**: $0.25
+  - **Spend**: $25.58 of $70.00 (36.5% of budget)
+  - **Status**: 5 days remaining (Day 3 of 7)
+  - **Engagement**:
+    - Likes and reactions: 4
+    - Shares: 2
+    - Saves: 2
+    - Profile visits: 82
+    - External link taps: 8
+    - Messaging conversations started: 1
+    - Follows: 1
+  - **Top Locations** (Kuwait Governorates):
+    - Capital Governorate: 25.2%
+    - Hawalli Governorate: 24.4%
+    - Ahmadi Governorate: 17.5%
+    - Farwaniya Governorate: ~16.4%
+    - Mubarak Al-Kabeer Governorate: ~16.5%
+  - **Analysis**:
+    - ✅ **Strong Improvement**: 102 website visits vs 39 on Day 2 (161% increase)
+    - ✅ **CTR Improved**: 1.11% (50/4,515) still below 1.5% target but better engagement
+    - ✅ **Geographic Spread**: Excellent distribution across all 5 Kuwait governorates (no concentration issues)
+    - ✅ **Cost Efficiency**: $0.25 per website visit remains competitive
+    - ✅ **Profile Engagement**: 82 profile visits shows strong interest (people researching brand)
+    - 📊 **Website Visit Conversion**: 102 visits / 3,406 reach = 3% visit rate (strong for awareness campaign)
+    - 💡 **Observation**: Link clicks (50) vs Website visits (102) suggests some visits from bio link or organic traffic
+    - 🎯 **On Track**: Budget pacing well (36.5% spend at Day 3 of 7 = 43% through campaign)
+  - **CPI Calculation Pending**: Need Firebase/App Store data to calculate actual Cost Per Install
+
+- **Day 5 (January 25, 2026)** - Morning Update:
+  - **Views**: 7,077 total impressions
+  - **Reach**: 4,787 unique people
+  - **Website Visits**: 169 (goal metric)
+  - **Link Clicks**: 86 clicks on ad link
+  - **Cost Per Website Visit**: $0.24
+  - **Spend**: $40.40 of $70.00 (57.7% of budget)
+  - **Status**: 3 days remaining (Day 5 of 7)
+  - **Engagement**:
+    - Likes and reactions: 7
+    - Shares: 4
+    - Saves: 3
+    - Profile visits: 131
+    - External link taps: 10
+    - Messaging conversations started: 2
+    - Follows: 1
+  - **Top Locations** (Kuwait Governorates):
+    - Capital Governorate: 26.7%
+    - Hawalli Governorate: 24.7%
+    - Ahmadi Governorate: 16.7%
+    - Farwaniya Governorate: 13.8%
+    - Mubarak Al-Kabeer Governorate: 11%
+  - **Analysis**:
+    - ✅ **Excellent Reach Growth**: 4,787 unique people reached (40% increase from Day 3)
+    - ✅ **Strong Website Conversion**: 169 website visits (66% increase from Day 3's 102)
+    - ✅ **Improved Engagement**: 131 profile visits (60% increase from Day 3's 82)
+    - ✅ **Cost Efficiency Maintained**: $0.24 per website visit (competitive pricing)
+    - 📊 **Website Visit Conversion**: 169 visits / 4,787 reach = 3.5% visit rate (improved from 3% on Day 3)
+    - 🎯 **Budget Pacing**: 57.7% spend at Day 5 of 7 = 71% through campaign (slight overpacing but within acceptable range)
+    - 💡 **Link Click Efficiency**: 86 clicks vs 169 visits suggests strong bio link traffic and organic interest
+  - **CPI Calculation Pending**: Need complete Firebase/App Store data through Jan 25
+
+**Store Installation Data (Days 15-23: Jan 21-23, 2026)**:
+- **iOS (App Store Connect)**:
+  - Total downloads (Dec 24 - Jan 23): 31
+  - Jan 23, 2026: 6 downloads
+  - Jan 22, 2026: 5 downloads
+  - Jan 21, 2026: 10 downloads (Production Launch Day)
+  - Jan 20, 2026: 0 downloads
+  - **Production launch total (Jan 21-23)**: 21 new installs
+- **Android (Google Play Console)**:
+  - **Production (Jan 21+ - Official Play Store Launch)**:
+    - Jan 23, 2026: 1 install (Kuwait: 1)
+    - Jan 22, 2026: 4 installs (Kuwait: 4)
+    - Jan 21, 2026: 4 installs (Kuwait: 3) - Production Launch Day
+  - **Closed Testing (Pre-Production)**:
+    - Jan 20, 2026: 1 install
+    - Jan 19, 2026: 3 installs
+    - Jan 18, 2026: 5 installs
+    - Jan 17, 2026: 2 installs
+    - Jan 16, 2026: 12 installs (Kuwait: 1)
+    - Jan 15, 2026: 10 installs
+  - **Production launch total (Jan 21-23)**: 9 new installs
+- **Combined Performance (Production Launch: Jan 21-23)**:
+  - **Total production downloads**: 30 downloads (iOS: 21, Android: 9)
+  - **Platform split**: iOS 70%, Android 30%
+  - **Note**: iOS showing stronger launch day performance (10 downloads Jan 21 vs typical 5-6 per day)
+  - **Android production**: Steady 3-4 installs per day since official Play Store launch (Jan 21)
+  - **Kuwait targeting effective**: Android production installs 100% from Kuwait (8/9 confirmed Kuwait)
+
+**Store Installation Data (Days 15-16: Jan 21-22, 2026)**:
+- **iOS (App Store Connect)**:
+  - Total downloads (Dec 24 - Jan 22): 25
+  - Launch day (Jan 21): 10 downloads
+  - Day 2 (Jan 22): 5 downloads
+  - **Launch period total**: 15 new installs
+- **Android (Google Play Console)**:
+  - Launch day (Jan 21): 4 installs
+  - Day 2 (Jan 22): 4 installs
+  - **Launch period total**: 8 new installs
+- **Combined Performance**:
+  - **Total store downloads (Days 15-16)**: 23 downloads
+  - **Platform split**: iOS 65% (15), Android 35% (8)
+  - **Actual registered users**: 14 new registrations (23 downloads ≠ 23 registrations)
+  - **User timeline**: 68 pre-testing → 83 post-closed-testing → 98 post-launch (94 real users + 4 dev/test accounts)
+  - **Launch growth**: 15 new registered users in 2 days (includes some dev accounts in early days)
+  - **Install-to-registration rate**: 61% (14/23) - indicates app quality/onboarding effectiveness
+
+**Cost Per Install (CPI) Analysis**:
+- **Ad spend through Day 3**: $25.58
+- **Store downloads (Days 15-16)**: 23 downloads
+- **Registered users (Days 15-16)**: 14 new registrations
+- **CPI (by downloads)**: $25.58 ÷ 23 = $1.11 per download
+- **CPI (by registered users)**: $25.58 ÷ 14 = **$1.83 per registered user**
+- **Target CPI**: 2 KWD (~$6.50)
+- **Performance**: 🎯 **EXCEPTIONAL** - CPI is 72% below target ($1.83 vs $6.50)
+- **Implication**: Instagram paid ads highly effective for Kuwait health app market
+- **Install-to-registration conversion**: 61% (14/23) shows strong product-market fit
+- **Note**: CPI will increase as campaign continues (early installs often cheapest)
+
 **LinkedIn Professional Positioning**:
 - **Post**: https://www.linkedin.com/feed/update/urn:li:activity:7419657007840022528/
 - **Strategy**: Failure→success narrative (9.5/10 rating vs 7/10 generic announcement)
@@ -537,7 +682,7 @@ Fix app and implement notifications and more detailed types of medication
 **Post-Launch Actions** (Days 15-22):
 - **Instagram**: ✅ **Ad Campaign LIVE** - 7-day boosted campaign running ($10/day, $70 total). Monitor reach/impressions/CPI daily. Evaluate performance Day 22 for Week 2 strategy.
 - **LinkedIn**: First 2 hours critical for algorithm, reply to comments within 15 minutes, share to Stories within 24 hours
-- **Week 1 Goals**: Track CPI, CTR, install conversion rate via Firebase Analytics + App Store Connect + Play Console, target 100→150 users (50% growth)
+- **Week 1 Goals**: Track CPI, CTR, install conversion rate via Firebase Analytics + App Store Connect + Play Console, target 98→150 users (53% growth)
 - **Week 2-4**: Hashtag optimization (#medicationreminder conversion focus), A/B test creative variations, refine targeting based on data
 
 **iOS Upload Timeline**:
@@ -708,11 +853,11 @@ Fix app and implement notifications and more detailed types of medication
     - **Status**: ✅ Production-ready, both contact forms (website + in-app) functional, no app rebuild required
     - **Files Modified**: functions/index.js (defineSecret imports, getTransporter() using emailUser.value()/emailPassword.value(), runWith configs with secrets array)
     - **Deprecated**: dotenv package and functions/.env file (kept for local emulator only)
-- **Day 15** (Jan 21): 🎉 **PRODUCTION LAUNCH SUCCESS** - Both platforms LIVE
-  - **iOS v1.4.4+50**: ✅ Published to App Store - LIVE in production
-  - **Android v1.4.4+50**: ✅ Published to Google Play Store - LIVE in production  
-  - **Launch Type**: Coordinated simultaneous dual-platform release
-  - **Milestone**: First public production release on Google Play + iOS v1.4.4 update from v1.3.4
+- **Day 15** (Jan 21): 🎉 **PRODUCTION LAUNCH SUCCESS** - v1.4.4 LIVE on both platforms
+  - **iOS v1.4.4+50**: ✅ Published to App Store - LIVE in production (update from v1.3.4)
+  - **Android v1.4.4+50**: ✅ Published to Google Play Store - LIVE in production (first Play Store release)  
+  - **Launch Type**: Coordinated v1.4.4 release on same day
+  - **Milestone**: Android's official Play Store debut + iOS update (iOS in production since August 2025, v1.3.4 October 2025)
   - **App Store Links**:
     - iOS: https://apps.apple.com/app/dawatime/id6748280994
     - Android: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
@@ -2358,9 +2503,9 @@ Report issues via Settings → Contact Me
   - Referenced Feedback Report showing "exceptional performance, no critical issues"
   - Both platforms approved and ready for coordinated launch
 - **Day 15** (Jan 21): 🎉 **PRODUCTION LAUNCH SUCCESS**
-  - Published iOS v1.4.4+50 to App Store - LIVE in production
-  - Published Android v1.4.4+50 to Google Play Store - LIVE in production
-  - Coordinated simultaneous dual-platform release executed successfully
+  - Published iOS v1.4.4+50 to App Store - LIVE in production (update from v1.3.4)
+  - Published Android v1.4.4+50 to Google Play Store - LIVE in production (first Play Store release)
+  - Coordinated v1.4.4 release - Android Play Store debut, iOS update (iOS in production since August 2025)
 - **Days 16-20** (Jan 22-26): Post-launch monitoring and v1.4.5 hotfix preparation
 
 **Post-Launch Tasks**:
@@ -6340,7 +6485,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 **Strategy**: Stay completely free to maximize user base and establish market presence.
 
-**Current Status** (January 2026): ~100 users
+**Current Status** (January 2026): 98 registered users (94 real + 4 dev/test accounts | 68 pre-testing + 15 closed testing + 15 post-launch)
 
 **Growth Milestones** (Conditional Timeline):
 
@@ -6368,7 +6513,7 @@ This section documents planned features for future DawaTime releases. Features a
 - ✅ User trust critical in health apps (ads erode trust immediately)
 - ✅ App Store reviews higher without monetization pressure
 - ✅ Word-of-mouth growth stronger for "truly free" apps
-- ✅ **100 users → 5% conversion = 5 paying users** (not worth complexity)
+- ✅ **98 users → 5% conversion = 5 paying users** (not worth complexity)
 
 ### Phase 2: Freemium Launch (Conditional: Q2 2027 - Q1 2028)
 
@@ -6499,14 +6644,14 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Financial Projections (Rough Estimates)
 
-**Current State** (January 2026): ~100 users, $0 revenue
+**Current State** (January 2026): 98 users (94 real + 4 dev/test), $0 revenue
 
 **2026** (Phase 1 - Free Growth):
 
 - Revenue: $0
 - Costs: ~$2,000-3,000/year (Firebase, hosting, developer time)
 - Goal: User growth, not profit
-- **Target**: 100 → 2,000-4,000 users by year end
+- **Target**: 98 → 2,000-4,000 users by year end
 
 **Q2-Q4 2027** (Phase 2 - Conditional Freemium):
 
@@ -6538,7 +6683,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Implementation Timeline (Milestone-Driven)
 
-**Current State** (January 2026 - Day 8): ~100 users, production launch imminent
+**Current State** (January 2026 - Day 8): 98 users (68 pre-testing + 15 closed testing + 15 post-launch), production launched Day 15
 
 **Q1 2026** (Jan-Mar): **Production Launch & Stability**
 

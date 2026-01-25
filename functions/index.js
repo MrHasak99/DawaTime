@@ -11,15 +11,15 @@ admin.initializeApp();
 const emailUser = defineSecret("EMAIL_USER");
 const emailPassword = defineSecret("EMAIL_PASSWORD");
 
-const {migrateMedicationsToSubcollections} =
-  require("./migrate-to-subcollections");
+const {
+  migrateMedicationsToSubcollections,
+} = require("./migrate-to-subcollections");
 
 exports.migrateMedicationsToSubcollections = migrateMedicationsToSubcollections;
 
 exports.notifyOnVersionUpdate = functions
     .runWith({memory: "512MB", timeoutSeconds: 300})
-    .firestore
-    .document("AppConfig/Version")
+    .firestore.document("AppConfig/Version")
     .onUpdate(async (change, context) => {
       const before = change.before.data();
       const after = change.after.data();
@@ -35,10 +35,7 @@ exports.notifyOnVersionUpdate = functions
         let hasMore = true;
 
         while (hasMore) {
-          let query = admin
-              .firestore()
-              .collection("Users")
-              .limit(pageSize);
+          let query = admin.firestore().collection("Users").limit(pageSize);
 
           if (lastDoc) {
             query = query.startAfter(lastDoc);
@@ -76,10 +73,7 @@ exports.notifyOnVersionUpdate = functions
         const uniqueTokens = new Set();
         const deduplicatedUsers = users.filter((user) => {
           if (uniqueTokens.has(user.token)) {
-            console.log(
-                `Skipping duplicate token: ` +
-                `${user.token.substring(0, 20)}...`,
-            );
+            console.log(`Skip duplicate: ${user.token.substring(0, 20)}...`);
             return false;
           }
           uniqueTokens.add(user.token);
@@ -87,8 +81,8 @@ exports.notifyOnVersionUpdate = functions
         });
 
         console.log(
-            `Found ${users.length} FCM tokens ` +
-            `(${deduplicatedUsers.length} unique)`,
+            `Found ${users.length} tokens ` +
+          `(${deduplicatedUsers.length} unique)`,
         );
 
         const arabicUsers = deduplicatedUsers.filter(
@@ -154,16 +148,14 @@ exports.notifyOnVersionUpdate = functions
             notification: {
               title: "New Update Available!",
               body:
-                "A new version of DawaTime is available. " +
-                "Tap to update now.",
+              "A new version of DawaTime is available. " + "Tap to update now.",
             },
             data: {
               type: "update_available",
               version: after.version || "",
               title: "New Update Available!",
               body:
-                "A new version of DawaTime is available. " +
-                "Tap to update now.",
+              "A new version of DawaTime is available. " + "Tap to update now.",
             },
             apns: {
               headers: {
@@ -175,8 +167,8 @@ exports.notifyOnVersionUpdate = functions
                   "alert": {
                     title: "New Update Available!",
                     body:
-                      "A new version of DawaTime is available. " +
-                      "Tap to update now.",
+                    "A new version of DawaTime is available. " +
+                    "Tap to update now.",
                   },
                   "sound": "default",
                   "badge": 1,
@@ -202,9 +194,7 @@ exports.notifyOnVersionUpdate = functions
           });
         }
 
-        const results = await Promise.all(
-            promises.map((p) => p.promise),
-        );
+        const results = await Promise.all(promises.map((p) => p.promise));
         let successCount = 0;
         let failureCount = 0;
         const tokensToDelete = [];
@@ -227,10 +217,9 @@ exports.notifyOnVersionUpdate = functions
                 );
 
                 if (
-                  error && (
-                    error.code === "messaging/invalid-registration-token" ||
-                    error.code === "messaging/registration-token-not-registered"
-                  )
+                  error &&
+                (error.code === "messaging/invalid-registration-token" ||
+                  error.code === "messaging/registration-token-not-registered")
                 ) {
                   tokensToDelete.push(token);
                 }
@@ -241,9 +230,8 @@ exports.notifyOnVersionUpdate = functions
 
         console.log(
             "Update notification sent: " +
-            `${successCount} success, ${failureCount} failures`,
+          `${successCount} success, ${failureCount} failures`,
         );
-
 
         if (tokensToDelete.length > 0) {
           console.log(`Cleaning up ${tokensToDelete.length} invalid tokens`);
@@ -309,8 +297,7 @@ exports.emailAdminsOnContactMessage = functions
       timeoutSeconds: 60,
       secrets: [emailUser, emailPassword],
     })
-    .firestore
-    .document("ContactMessages/{messageId}")
+    .firestore.document("ContactMessages/{messageId}")
     .onCreate(async (snap, context) => {
       const data = snap.data();
       const mailOptions = {
@@ -322,9 +309,7 @@ exports.emailAdminsOnContactMessage = functions
       };
       try {
         await getTransporter().sendMail(mailOptions);
-        console.log(
-            `Email sent successfully for message from ${data.userEmail}`,
-        );
+        console.log(`Email sent for message from ${data.userEmail}`);
       } catch (error) {
         console.error("Error sending email:", error);
         throw error;
@@ -356,7 +341,7 @@ exports.requestAccountDeletion = functions
       try {
         const apiKey = "AIzaSyAqewZt32r_IYN59KCrrP90qYitKDz1wZE";
         const signInResp = await fetch(
-            // eslint-disable-next-line max-len
+        // eslint-disable-next-line max-len
             `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
             {
               method: "POST",
@@ -419,9 +404,10 @@ exports.requestAccountDeletion = functions
               from: "admin@dawatime.com",
               to: "help@dawatime.com",
               subject: "Account Deletion - User Feedback",
-              text: `User ${email} deleted their account.\n\n` +
-                `Reason for deletion:\n${reason}\n\n` +
-                `Deleted at: ${new Date().toISOString()}`,
+              text:
+              `User ${email} deleted their account.\n\n` +
+              `Reason for deletion:\n${reason}\n\n` +
+              `Deleted at: ${new Date().toISOString()}`,
               html: `
   <h2>Account Deletion - User Feedback</h2>
   <p><strong>User:</strong> ${email}</p>
@@ -451,8 +437,7 @@ exports.requestAccountDeletion = functions
 exports.blockAccessFromCertainCountries = functions
     .runWith({memory: "512MB", timeoutSeconds: 30})
     .https.onRequest((req, res) => {
-      const ip =
-        req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       const geo = geoip.lookup(ip);
       if (geo && blockedCountries.includes(geo.country)) {
         console.log(`Blocked access from ${geo.country} (IP: ${ip})`);
@@ -502,8 +487,8 @@ exports.migrateLegalAcceptanceFields = functions
 
           if (
             userData.acceptedTermsVersion &&
-            userData.acceptedPrivacyVersion &&
-            userData.legalAcceptanceDate
+          userData.acceptedPrivacyVersion &&
+          userData.legalAcceptanceDate
           ) {
             results.alreadyMigrated++;
             continue;
@@ -551,14 +536,12 @@ exports.migrateLegalAcceptanceFields = functions
       }
     });
 
-
 exports.migrateLegalAcceptanceFieldsHTTP = functions
     .runWith({memory: "512MB", timeoutSeconds: 540})
     .https.onRequest(async (req, res) => {
-      const providedSecret = req.query.secret ||
-        (req.body && req.body.secret);
-      const expectedSecret = process.env.MIGRATION_SECRET ||
-        "dawatime-migration-2025";
+      const providedSecret = req.query.secret || (req.body && req.body.secret);
+      const expectedSecret =
+      process.env.MIGRATION_SECRET || "dawatime-migration-2025";
 
       if (providedSecret !== expectedSecret) {
         return res.status(403).json({
@@ -597,8 +580,8 @@ exports.migrateLegalAcceptanceFieldsHTTP = functions
 
           if (
             userData.acceptedTermsVersion &&
-            userData.acceptedPrivacyVersion &&
-            userData.legalAcceptanceDate
+          userData.acceptedPrivacyVersion &&
+          userData.legalAcceptanceDate
           ) {
             results.alreadyMigrated++;
             continue;
@@ -683,11 +666,7 @@ exports.checkVersionAdoption = functions.https.onRequest(async (req, res) => {
       }
 
       // Check which structure they're using
-      const oldMeds = await admin
-          .firestore()
-          .collection(doc.id)
-          .limit(1)
-          .get();
+      const oldMeds = await admin.firestore().collection(doc.id).limit(1).get();
       const newMeds = await admin
           .firestore()
           .collection("Users")
@@ -702,10 +681,8 @@ exports.checkVersionAdoption = functions.https.onRequest(async (req, res) => {
 
     // Sort versions
     const sortedVersions = Object.entries(versionCounts).sort((a, b) => {
-      const [majorA = 0, minorA = 0, patchA = 0] =
-        a[0].split(".").map(Number);
-      const [majorB = 0, minorB = 0, patchB = 0] =
-        b[0].split(".").map(Number);
+      const [majorA = 0, minorA = 0, patchA = 0] = a[0].split(".").map(Number);
+      const [majorB = 0, minorB = 0, patchB = 0] = b[0].split(".").map(Number);
       if (majorB !== majorA) return majorB - majorA;
       if (minorB !== minorA) return minorB - minorA;
       return patchB - patchA;
@@ -716,8 +693,10 @@ exports.checkVersionAdoption = functions.https.onRequest(async (req, res) => {
       summary: {
         totalUsers,
         usersWithVersion,
-        usersWithVersionPercent:
-          ((usersWithVersion / totalUsers) * 100).toFixed(1),
+        usersWithVersionPercent: (
+          (usersWithVersion / totalUsers) *
+          100
+        ).toFixed(1),
         usersWithoutVersion: nullVersionUsers.length,
       },
       versions: sortedVersions.map(([version, count]) => ({
@@ -745,5 +724,113 @@ exports.checkVersionAdoption = functions.https.onRequest(async (req, res) => {
       error: error.message,
       stack: error.stack,
     });
+  }
+});
+
+/**
+ * Cloud Function to verify Play Integrity API tokens
+ * Callable function - invoked from Flutter via httpsCallable
+ * Accepts {integrityToken: string} in data parameter
+ * Returns decrypted token payload with integrity verdicts
+ */
+exports.verifyPlayIntegrity = functions.https.onCall(async (data, context) => {
+  try {
+    // Flutter sends 'token' not 'integrityToken'
+    const {token} = data;
+
+    if (!token) {
+      console.error("Missing token in request");
+      throw new functions.https.HttpsError(
+          "invalid-argument",
+          "Missing token parameter",
+      );
+    }
+
+    // Rename for consistency with Google API call
+    const integrityToken = token;
+
+    console.log("Verifying Play Integrity token...");
+    console.log("Token length:", integrityToken.length);
+
+    // Get OAuth2 access token from Firebase Admin SDK
+    const accessToken = await admin.credential
+        .applicationDefault()
+        .getAccessToken();
+
+    console.log("OAuth2 token obtained");
+
+    // Call Google Play Integrity API
+    const packageName = "com.mrhasak99.dawatime";
+    const verifyUrl =
+      `https://playintegrity.googleapis.com/v1/${packageName}:decryptIntegrityToken`;
+
+    console.log("Calling Google Play Integrity API...");
+
+    const response = await fetch(verifyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken.access_token}`,
+      },
+      body: JSON.stringify({integrityToken}),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Google API error:", response.status, errorText);
+      throw new functions.https.HttpsError(
+          "internal",
+          `Google API error: ${response.status}`,
+          errorText,
+      );
+    }
+
+    const verificationResult = await response.json();
+    console.log("Play Integrity verification successful");
+
+    // Extract key verdicts for logging
+    const payload = verificationResult.tokenPayloadExternal;
+    if (payload) {
+      if (payload.appIntegrity) {
+        console.log(
+            "App Integrity:",
+            payload.appIntegrity.appRecognitionVerdict,
+        );
+      }
+      if (payload.deviceIntegrity) {
+        console.log(
+            "Device Integrity:",
+            JSON.stringify(
+                payload.deviceIntegrity.deviceRecognitionVerdict,
+            ),
+        );
+      }
+      if (payload.accountDetails) {
+        console.log(
+            "Account Details:",
+            payload.accountDetails.appLicensingVerdict,
+        );
+      }
+    }
+
+    // Return payload directly for Callable functions
+    return {
+      success: true,
+      payload: verificationResult.tokenPayloadExternal,
+    };
+  } catch (error) {
+    console.error("Error verifying Play Integrity:", error);
+    console.error("Error stack:", error.stack);
+
+    // Re-throw HttpsError as-is, wrap other errors
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    throw new functions.https.HttpsError(
+        "internal",
+        error.message || "Unknown error during verification",
+        error.stack,
+    );
   }
 });

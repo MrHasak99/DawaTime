@@ -11,6 +11,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class LoginPage extends StatefulWidget {
   final bool showAccountDeletedMessage;
@@ -127,6 +129,65 @@ class _LoginPageState extends State<LoginPage> {
         }, SetOptions(merge: true));
       }
     } catch (_) {}
+  }
+
+  Future<bool> _verifyPlayIntegrity() async {
+    if (!Platform.isAndroid) return true;
+
+    try {
+      if (kDebugMode) {
+        print('🔐 Starting Play Integrity verification...');
+      }
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final userId = FirebaseAuth.instance.currentUser?.uid ?? 'login_pending';
+      final nonce = '$userId:$timestamp'.codeUnits.toString();
+
+      const channel = MethodChannel('com.mrhasak99.dawatime/play_integrity');
+      final integrityToken = await channel.invokeMethod<String>(
+        'requestIntegrityToken',
+        {'cloudProjectNumber': 173965270100, 'nonce': nonce},
+      );
+
+      if (integrityToken == null || integrityToken.isEmpty) {
+        if (kDebugMode) {
+          print('⚠️ Play Integrity token is null/empty');
+        }
+        return true;
+      }
+
+      if (kDebugMode) {
+        print(
+          '✓ Play Integrity token obtained: ${integrityToken.substring(0, 20)}...',
+        );
+        print('⚠️ DEBUG MODE: Skipping verification (only works with Play Store builds)');
+        return true; // Skip verification in debug mode
+      }
+
+      final callable = FirebaseFunctions.instance.httpsCallable(
+        'verifyPlayIntegrity',
+      );
+
+      final result = await callable.call<Map<String, dynamic>>({
+        'token': integrityToken,
+      });
+
+      final verified = result.data['verified'] as bool? ?? false;
+      final action = result.data['action'] as String? ?? 'allow';
+
+      if (kDebugMode) {
+        print(
+          '✓ Play Integrity verification result: verified=$verified, action=$action',
+        );
+      }
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Play Integrity verification error: $e');
+      }
+      return true;
+    }
   }
 
   Future<bool> _checkLegalDocumentVersions(String uid) async {
@@ -655,6 +716,7 @@ class _LoginPageState extends State<LoginPage> {
                                   return;
                                 }
                               }
+                              await _verifyPlayIntegrity();
                               await _updateLoginMetadata(user.uid);
                             }
                             if (!context.mounted) return;

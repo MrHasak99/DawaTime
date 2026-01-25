@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:dawatime/utils/medication_helpers.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -24,7 +25,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -479,9 +480,6 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  String? _lastCheckedUserId;
-  bool _showingLegalDialog = false;
-
   Future<void> _saveFCMToken(String uid) async {
     if (kIsWeb) return;
 
@@ -516,284 +514,6 @@ class _AuthGateState extends State<AuthGate> {
     } catch (_) {}
   }
 
-  Future<bool> _checkLegalDocumentVersions(String uid) async {
-    try {
-      final configDoc =
-          await FirebaseFirestore.instance
-              .collection('AppConfig')
-              .doc('LegalDocuments')
-              .get();
-
-      if (!configDoc.exists) {
-        return false;
-      }
-
-      final currentTermsVersion = configDoc.data()?['termsVersion'] ?? '1.0';
-      final currentPrivacyVersion =
-          configDoc.data()?['privacyVersion'] ?? '1.0';
-
-      final userDoc =
-          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
-
-      if (!userDoc.exists) {
-        return false;
-      }
-
-      final acceptedTermsVersion =
-          userDoc.data()?['acceptedTermsVersion'] ?? '0.0';
-      final acceptedPrivacyVersion =
-          userDoc.data()?['acceptedPrivacyVersion'] ?? '0.0';
-
-      return acceptedTermsVersion != currentTermsVersion ||
-          acceptedPrivacyVersion != currentPrivacyVersion;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<void> _showLegalUpdateDialog(String uid) async {
-    bool accepted = false;
-    final loc = AppLocalizations.of(context)!;
-
-    setState(() {
-      _showingLegalDialog = true;
-    });
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => StatefulBuilder(
-            builder: (context, setDialogState) {
-              return PopScope(
-                canPop: false,
-                onPopInvokedWithResult: (didPop, result) {},
-                child: AlertDialog(
-                  backgroundColor: const Color(0xFF8AC249),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  title: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          loc.legalUpdateRequired,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            fontFamily: 'Nunito',
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          loc.legalUpdateMessage,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Center(
-                          child: Column(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  try {
-                                    final url = Uri.parse(
-                                      'https://dawatime.com/terms-and-conditions',
-                                    );
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(
-                                        url,
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    }
-                                  } catch (e) {
-                                    // Silent fail
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: const Color(0xFF8AC249),
-                                  minimumSize: const Size(220, 45),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  loc.viewTerms,
-                                  style: const TextStyle(fontFamily: 'Inter'),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  try {
-                                    final url = Uri.parse(
-                                      'https://dawatime.com/privacy-policy',
-                                    );
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(
-                                        url,
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    }
-                                  } catch (e) {
-                                    // Silent fail
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: const Color(0xFF8AC249),
-                                  minimumSize: const Size(220, 45),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  loc.viewPrivacy,
-                                  style: const TextStyle(fontFamily: 'Inter'),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          child: CheckboxListTile(
-                            value: accepted,
-                            onChanged: (value) {
-                              setDialogState(() {
-                                accepted = value ?? false;
-                              });
-                            },
-                            title: Text(
-                              loc.acceptUpdatedLegal,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                            activeColor: Colors.white,
-                            checkColor: const Color(0xFF8AC249),
-                            controlAffinity: ListTileControlAffinity.leading,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-                        await FirebaseAuth.instance.signOut();
-                        if (!context.mounted) return;
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        loc.declineAndLogout,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed:
-                          accepted
-                              ? () async {
-                                try {
-                                  final configDoc =
-                                      await FirebaseFirestore.instance
-                                          .collection('AppConfig')
-                                          .doc('LegalDocuments')
-                                          .get();
-
-                                  final currentTermsVersion =
-                                      configDoc.data()?['termsVersion'] ??
-                                      '1.0';
-                                  final currentPrivacyVersion =
-                                      configDoc.data()?['privacyVersion'] ??
-                                      '1.0';
-
-                                  await FirebaseFirestore.instance
-                                      .collection('Users')
-                                      .doc(uid)
-                                      .update({
-                                        'acceptedTermsVersion':
-                                            currentTermsVersion,
-                                        'acceptedPrivacyVersion':
-                                            currentPrivacyVersion,
-                                        'legalAcceptanceDate':
-                                            DateTime.now().toIso8601String(),
-                                      });
-
-                                  if (!context.mounted) return;
-                                  Navigator.of(context).pop();
-
-                                  if (mounted) {
-                                    setState(() {
-                                      _lastCheckedUserId = uid;
-                                      _showingLegalDialog = false;
-                                    });
-                                  }
-                                } catch (e) {
-                                  if (!context.mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Error updating acceptance. Please try again.',
-                                      ),
-                                      backgroundColor: Colors.red,
-                                      persist: false,
-                                    ),
-                                  );
-                                }
-                              }
-                              : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF8AC249),
-                        disabledBackgroundColor: Colors.white.withValues(
-                          alpha: 0.5,
-                        ),
-                        disabledForegroundColor: const Color(
-                          0xFF8AC249,
-                        ).withValues(alpha: 0.5),
-                      ),
-                      child: Text(
-                        loc.acceptButton,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -808,59 +528,14 @@ class _AuthGateState extends State<AuthGate> {
         }
 
         if (!snapshot.hasData) {
-          if (_lastCheckedUserId != null || _showingLegalDialog) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                setState(() {
-                  _lastCheckedUserId = null;
-                  _showingLegalDialog = false;
-                });
-              }
-            });
-          }
           return const LoginPage();
         }
 
         if (snapshot.hasData && snapshot.data != null) {
           final user = snapshot.data!;
 
-          return FutureBuilder<bool>(
-            key: ValueKey(user.uid + (_lastCheckedUserId ?? '')),
-            future: _checkLegalDocumentVersions(user.uid),
-            builder: (context, legalSnapshot) {
-              if (legalSnapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(color: Color(0xFF8AC249)),
-                  ),
-                );
-              }
-
-              if ((legalSnapshot.data == true &&
-                      _lastCheckedUserId != user.uid) ||
-                  _showingLegalDialog) {
-                if (!_showingLegalDialog) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    if (mounted) {
-                      await _showLegalUpdateDialog(user.uid);
-                    }
-                  });
-                }
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(color: Color(0xFF8AC249)),
-                  ),
-                );
-              }
-
-              if (_lastCheckedUserId != user.uid) {
-                _lastCheckedUserId = user.uid;
-              }
-
-              _saveFCMToken(user.uid);
-              return HomePage(uid: user.uid);
-            },
-          );
+          _saveFCMToken(user.uid);
+          return HomePage(uid: user.uid);
         }
         return const LoginPage();
       },
@@ -1046,6 +721,69 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isShowingGuide = false;
+
+  Future<bool> _verifyPlayIntegrity(String userId) async {
+    if (kIsWeb || !Platform.isAndroid) return true;
+
+    try {
+      if (kDebugMode) {
+        print('🔐 Starting Play Integrity verification on splash...');
+      }
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final nonce = '$userId:$timestamp'.codeUnits.toString();
+
+      const channel = MethodChannel('com.mrhasak99.dawatime/play_integrity');
+      final integrityToken = await channel.invokeMethod<String>(
+        'requestIntegrityToken',
+        {'cloudProjectNumber': 173965270100, 'nonce': nonce},
+      );
+
+      if (integrityToken == null || integrityToken.isEmpty) {
+        if (kDebugMode) {
+          print('⚠️ Play Integrity token is null/empty');
+        }
+        return true;
+      }
+
+      if (kDebugMode) {
+        print(
+          '✓ Play Integrity token obtained: ${integrityToken.substring(0, 20)}...',
+        );
+        print(
+          '⚠️ DEBUG MODE: Skipping verification (only works with Play Store builds)',
+        );
+        return true;
+      }
+
+      final callable = FirebaseFunctions.instance.httpsCallable(
+        'verifyPlayIntegrity',
+      );
+
+      final result = await callable.call<Map<String, dynamic>>({
+        'token': integrityToken,
+      });
+
+      if (kDebugMode) {
+        print('✓ Play Integrity verification successful');
+        print('  Verdict: ${result.data}');
+      }
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Play Integrity verification error: $e');
+      }
+
+      if (e.toString().contains('PLAY_RECOGNIZED') ||
+          e.toString().contains('MEETS_DEVICE_INTEGRITY')) {
+        return true;
+      }
+
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1111,7 +849,47 @@ class _SplashScreenState extends State<SplashScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final legalUpdateNeeded = await _checkLegalDocumentVersions(user.uid);
+        final results = await Future.wait([
+          _checkLegalDocumentVersions(user.uid),
+          _verifyPlayIntegrity(user.uid),
+        ]);
+
+        final legalUpdateNeeded = results[0];
+        final integrityPassed = results[1];
+
+        if (!integrityPassed) {
+          await FirebaseAuth.instance.signOut();
+          if (!mounted) return;
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder:
+                (context) => AlertDialog(
+                  backgroundColor: Colors.red,
+                  title: Text(
+                    'Security Verification Failed',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  content: Text(
+                    'App integrity could not be verified. Please reinstall from official store.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                      child: Text(
+                        'Exit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+          );
+          return;
+        }
+
         if (legalUpdateNeeded) {
           await _showLegalUpdateDialog(user.uid);
           if (!mounted) return;
