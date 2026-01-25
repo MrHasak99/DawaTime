@@ -156,14 +156,6 @@ class _LoginPageState extends State<LoginPage> {
         return true;
       }
 
-      if (kDebugMode) {
-        print(
-          '✓ Play Integrity token obtained: ${integrityToken.substring(0, 20)}...',
-        );
-        print('⚠️ DEBUG MODE: Skipping verification (only works with Play Store builds)');
-        return true; // Skip verification in debug mode
-      }
-
       final callable = FirebaseFunctions.instance.httpsCallable(
         'verifyPlayIntegrity',
       );
@@ -939,52 +931,62 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () async {
-                          try {
-                            final url = Uri.parse(
-                              'https://dawatime.com/privacy-policy',
-                            );
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(
-                                url,
-                                mode: LaunchMode.externalApplication,
+                      Flexible(
+                        flex: 1,
+                        child: TextButton(
+                          onPressed: () async {
+                            try {
+                              final url = Uri.parse(
+                                'https://dawatime.com/privacy-policy',
                               );
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            } catch (e) {
+                              // Silent fail
                             }
-                          } catch (e) {
-                            // Silent fail
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.privacyPolicy,
-                          style: TextStyle(
-                            color: Color(0xFF8AC249),
-                            fontWeight: FontWeight.bold,
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.privacyPolicy,
+                            style: TextStyle(
+                              color: Color(0xFF8AC249),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
-                      TextButton(
-                        onPressed: () async {
-                          try {
-                            final url = Uri.parse(
-                              'https://dawatime.com/terms-and-conditions',
-                            );
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(
-                                url,
-                                mode: LaunchMode.externalApplication,
+                      Flexible(
+                        flex: 1,
+                        child: TextButton(
+                          onPressed: () async {
+                            try {
+                              final url = Uri.parse(
+                                'https://dawatime.com/terms-and-conditions',
                               );
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            } catch (e) {
+                              // Silent fail
                             }
-                          } catch (e) {
-                            // Silent fail
-                          }
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.termsAndConditions,
-                          style: TextStyle(
-                            color: Color(0xFF8AC249),
-                            fontWeight: FontWeight.bold,
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.termsAndConditions,
+                            style: TextStyle(
+                              color: Color(0xFF8AC249),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ),

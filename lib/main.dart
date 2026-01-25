@@ -583,6 +583,22 @@ Future<void> checkFirstInstallAndSignOut() async {
 Future<bool> _shouldCheckForUpdates() async {
   try {
     final prefs = await SharedPreferences.getInstance();
+    final info = await PackageInfo.fromPlatform();
+    final currentVersion = info.version;
+
+    final storedVersion = prefs.getString('last_known_version');
+    if (storedVersion != null && storedVersion != currentVersion) {
+      await prefs.remove('last_update_check');
+      await prefs.setString('last_known_version', currentVersion);
+      if (kDebugMode) {
+        print('🔄 App version changed: $storedVersion → $currentVersion');
+        print('   Forcing update check...');
+      }
+      return true;
+    }
+
+    await prefs.setString('last_known_version', currentVersion);
+
     final lastCheckTime = prefs.getInt('last_update_check') ?? 0;
     final currentTime = DateTime.now().millisecondsSinceEpoch;
 
@@ -743,16 +759,6 @@ class _SplashScreenState extends State<SplashScreen> {
         if (kDebugMode) {
           print('⚠️ Play Integrity token is null/empty');
         }
-        return true;
-      }
-
-      if (kDebugMode) {
-        print(
-          '✓ Play Integrity token obtained: ${integrityToken.substring(0, 20)}...',
-        );
-        print(
-          '⚠️ DEBUG MODE: Skipping verification (only works with Play Store builds)',
-        );
         return true;
       }
 
@@ -1094,18 +1100,10 @@ class _SplashScreenState extends State<SplashScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        loc.viewTerms,
-                                        style: const TextStyle(
-                                          fontFamily: 'Inter',
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  loc.viewTerms,
+                                  style: const TextStyle(fontFamily: 'Inter'),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -1133,18 +1131,10 @@ class _SplashScreenState extends State<SplashScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        loc.viewPrivacy,
-                                        style: const TextStyle(
-                                          fontFamily: 'Inter',
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  loc.viewPrivacy,
+                                  style: const TextStyle(fontFamily: 'Inter'),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
