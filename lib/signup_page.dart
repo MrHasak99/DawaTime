@@ -330,7 +330,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
                                               url,
-                                              mode: LaunchMode.platformDefault,
+                                            mode: LaunchMode.externalApplication,
                                             );
                                           } else {
                                             if (context.mounted) {
@@ -412,7 +412,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
                                               url,
-                                              mode: LaunchMode.platformDefault,
+                                            mode: LaunchMode.externalApplication,
                                             );
                                           } else {
                                             if (context.mounted) {
