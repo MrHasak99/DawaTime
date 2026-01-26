@@ -167,25 +167,45 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (mounted) {
-            setState(() => _useNewStructure = true);
+            setState(() {
+              if (mounted) {
+                _useNewStructure = true;
+              }
+            });
           }
         } catch (e) {
           if (mounted) {
-            setState(() => _useNewStructure = false);
+            setState(() {
+              if (mounted) {
+                _useNewStructure = false;
+              }
+            });
           }
         }
       } else if (hasNewData) {
         if (mounted) {
-          setState(() => _useNewStructure = true);
+          setState(() {
+            if (mounted) {
+              _useNewStructure = true;
+            }
+          });
         }
       } else {
         if (mounted) {
-          setState(() => _useNewStructure = true);
+          setState(() {
+            if (mounted) {
+              _useNewStructure = true;
+            }
+          });
         }
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _useNewStructure = true);
+        setState(() {
+          if (mounted) {
+            _useNewStructure = true;
+          }
+        });
       }
 
       Future.delayed(const Duration(seconds: 2), () {

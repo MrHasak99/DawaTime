@@ -977,10 +977,11 @@ class _AddMedicationsState extends State<AddMedications> {
                                               }
 
                                               if (hasErrors) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
                                                     backgroundColor: Colors.red,
                                                     content: Text(
                                                       AppLocalizations.of(
@@ -1062,16 +1063,18 @@ class _AddMedicationsState extends State<AddMedications> {
                                                             fontFamily: 'Inter',
                                                           ),
                                                     ),
-                                                    persist: false,
-                                                  ),
-                                                );
+                                                      persist: false,
+                                                    ),
+                                                  );
+                                                }
                                                 return;
                                               }
                                               if (_selectedStartDate == null) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
                                                     backgroundColor: Colors.red,
                                                     content: Text(
                                                       AppLocalizations.of(
@@ -1084,9 +1087,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         fontFamily: 'Inter',
                                                       ),
                                                     ),
-                                                    persist: false,
-                                                  ),
-                                                );
+                                                      persist: false,
+                                                    ),
+                                                  );
+                                                }
                                                 return;
                                               }
 
@@ -1262,10 +1266,11 @@ class _AddMedicationsState extends State<AddMedications> {
                                                   );
                                                 }
                                               } catch (e) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
                                                     backgroundColor: Colors.red,
                                                     content: Text(
                                                       AppLocalizations.of(
@@ -1278,9 +1283,10 @@ class _AddMedicationsState extends State<AddMedications> {
                                                         fontFamily: 'Inter',
                                                       ),
                                                     ),
-                                                    persist: false,
-                                                  ),
-                                                );
+                                                      persist: false,
+                                                    ),
+                                                  );
+                                                }
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
