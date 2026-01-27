@@ -3075,15 +3075,21 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Priority Tier** ($200-250 budget) - All have Arabic capability ✅:
 
-1. **Rahma M. #16** (TOP CONTENDER - ARABIC NATIVE) - 1,347h, 83 jobs, $60K+ earned, 100% JSS, NEW badge, $250, Egypt
+1. **Rahma M. #16** ✅ **CONTRACT ACTIVE** (TOP CONTENDER - ARABIC NATIVE) - 1,347h, 83 jobs, $60K+ earned, 100% JSS, NEW badge, $250, Egypt
    - **Portfolio Links**: 4 App Store projects (Spedia, Quran Words Treasure, Qatar Moms - all with Apple App Store links)
-   - **Status**: ⏳ Awaiting portfolio verification (App Store screenshot validation)
-   - **Strengths**: HIGHEST verification hours (1,347h - 90% more than Muhammad), HIGHEST job count (83), HIGHEST earnings ($60K+), proven App Store expertise
-   - **Languages**: English (Conversational) + Arabic (Native or Bilingual) ✅
-   - **Arabic RTL**: Explicitly confirmed - "Yes I have experience designing apps and screenshots in Arabic"
-   - **Price**: $250 (25% premium over budget)
-   - **Timeline**: 1 week
-   - **Position**: Premium tier due to pricing, but strongest metrics of ALL candidates
+   - **Status**: ✅ **ACCEPTED** (January 27, 2026 at 1:08 PM GMT+2) - Contract active, Milestone 1 funded
+   - **Portfolio Evidence**:
+     - **Qatar Moms App** (iOS): Professional shopping app, 129.7 MB, polished App Store screenshots, clean product layouts
+     - **Quran Bee** (Android): 500K+ downloads, 4.6★ rating, excellent Arabic RTL design, Islamic/educational app
+     - **Spedia** (iOS): 298.4 MB educational app, Arabic-first design, professional screenshot quality
+     - **Validation**: All 3 apps show native-level Arabic typography, proper RTL layout, App Store formatting expertise
+   - **Contract Details**:
+     - **Total Project**: $250 fixed-price
+     - **Milestone 1**: $125 (50% upfront) - "First draft of 14-16 screenshots (7-8 English + 7-8 Arabic) with device frames" - Pending acceptance
+     - **Milestone 2**: $125 (50% on completion) - "Final high-resolution PNGs + editable Figma/PSD source files" - Pending
+     - **Upwork Fees**: $6.25 marketplace fee + $7.99 contract initiation fee = $139.24 total (charged upon acceptance)
+   - **Timeline**: 3-4 weeks delivery (start date: TBD after acceptance)
+   - **Deliverables**: 14-16 screenshots (iOS 6.7" + Android), high-res PNGs, editable Figma/PSD files
 
 2. **Muhammad A. #5** (CONDITIONAL - ARABIC VERIFICATION REQUIRED ⚠️) - 711h, 6 jobs, $3K+ earned, 100% JSS, Rising Talent, $200, Kuwait/healthcare-specific cover letter
    - **Portfolio Links**: Claims iOS screenshots, Arabic RTL, healthcare branding
@@ -3165,17 +3171,88 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Premium Tier Value**: $250-333 tier offers proven quality with exceptional metrics (Rahma: 1,347h, 83 jobs, $60K+)
 - **Ultra-Premium Tier Warning**: Youssif M. #19 at $500 (2.5x budget) - exceptional portfolio but likely prohibitive pricing
 
-**Critical Next Steps** (Before Hire Decision) - Arabic Capability Prioritized:
+**Hire Status** - COMPLETE ✅:
 
-1. **TOP PRIORITY**: Verify Rahma M. #16 App Store projects (4 portfolio links - Arabic native + highest metrics gates premium tier decision)
-2. **HIGH PRIORITY**: Verify Ouisal S. #20 healthcare portfolio (Behance + PDF - Arabic native + healthcare specialist + perfect budget)
-3. **HIGH PRIORITY**: Verify Mohammed A. #12 Figma + Behance (Arabic fluent + Top Rated + 23 jobs backup)
-4. **CONDITIONAL PRIORITY**: Verify Muhammad A. #5 screenshots - MUST show Arabic work samples or archive immediately (claims Arabic RTL but no profile listing)
-5. **Consider Archiving**: Eongyo J. #21 - Specialist but lacks Arabic capability for 50% of deliverables (strongly recommend archive)
-6. **LOW PRIORITY**: Verify Akram A. #13 Google Drive (Arabic native but only 14h - survival determination)
-7. **Final ranking** after Arabic-capable portfolio verifications complete
-9. **Draft hiring message** for selected Arabic-capable designer
-10. **Execute hire** within 24-48 hours after verification complete
+1. ✅ **HIRED**: Rahma M. #16 (January 27, 2026 at 1:08 PM GMT+2) - Contract active, Milestone 1 funded
+2. ✅ **PORTFOLIO VALIDATED**: Qatar Moms, Quran Bee, Spedia confirmed live with native Arabic RTL
+3. ✅ **CONTRACT TERMS**: $250 total (2 milestones: $125 upfront, $125 on delivery)
+4. ✅ **TIMELINE CONFIRMED**: 3-4 weeks delivery, completion by February 17-24, 2026
+
+**Immediate Next Steps** (URGENT - 24h deadline):
+
+1. **Send acknowledgment message** to Rahma confirming contract active
+2. **Prepare Brand Guidelines**: Logo, color #8AC249, fonts (Inter, NotoKufiArabic, Nunito)
+3. **Create Screenshot Text Copy Sheet**: 7-8 screens × 2 languages (English + Arabic)
+4. **Document Feature Priority List**: Which features to emphasize in screenshots
+5. **Provide App Access**: iOS App Store + Google Play Store links (or testing credentials)
+6. **Send Materials Package**: Within 24 hours so Rahma can start January 28
+7. ✅ **COMPLETE**: Rejection messages sent to 4 shortlisted candidates (Alfatiha, Ouisal, Mohammed, Akram)
+
+**Backup Candidates** (Archived - January 27, 2026):
+- ✅ Alfatiha M. #2 ($300) - Rejected and archived
+- ✅ Ouisal S. #20 ($200) - Rejected and archived
+- ✅ Mohammed A. #12 ($200) - Rejected and archived
+- ✅ Akram A. #13 ($200) - Rejected and archived
+
+---
+
+### Hiring Message for Rahma M. #16 (Ready to Send)
+
+**Subject**: DawaTime App Store Screenshot Project - Your Portfolio Impressed Me!
+
+**Message Body**:
+
+Hi Rahma,
+
+I reviewed your portfolio and I'm very impressed with your work! I looked at Qatar Moms, Quran Bee, and Spedia - all three show excellent App Store screenshot quality and strong Arabic RTL design, which is exactly what I need for my project.
+
+**About DawaTime:**
+DawaTime is a medication reminder app for the Kuwait/GCC market, currently live on both iOS App Store and Google Play Store. We need a complete redesign of our App Store screenshots to better showcase our features to Arabic-speaking users.
+
+**What I Need:**
+- 14-16 total screenshots (7-8 English + 7-8 Arabic)
+- **Arabic set is critical** - must feature proper RTL layout (not just mirrored English)
+- Professional device frames for both iOS (6.7") and Android
+- Modern, clean design using our brand green color (#8AC249)
+- High-resolution PNGs ready for App Store Connect and Google Play Console
+- Editable source files (Figma/PSD/Sketch)
+
+**Key Features to Showcase:**
+1. Hero/Splash: "Never Miss a Dose"
+2. Home Page: Medication cards showing stock levels
+3. **New Feature Highlight**: Refill Reminder Customization (Date/Time picker)
+4. Add Medication Form
+5. Smart Notification System (5 follow-ups every 30 minutes)
+6. Weekday Scheduling
+7. Theme Switcher (Light/Dark mode)
+
+**What I'll Provide:**
+- Full app access (iOS TestFlight + Google Play) for high-res UI screenshots
+- Brand guidelines (colors, logos, fonts)
+- Exact text copy for both English and Arabic
+- RTL layout guidance if needed
+- Arabic UI screenshots/context
+
+**Timeline & Budget:**
+- Timeline: 3-4 weeks (as you mentioned in your proposal)
+- Budget: $250 (your proposed rate)
+- Milestone payment structure preferred (50% upfront, 50% on delivery)
+
+**Why I'm Choosing You:**
+Your portfolio shows exactly what I need - native Arabic design expertise (not just translation), proven App Store screenshot experience, and professional quality across multiple live apps. The fact that you've worked on apps with 500K+ downloads (Quran Bee) gives me confidence you understand what works on the stores.
+
+Are you available to start this week? If yes, please confirm:
+1. Timeline works (3-4 weeks delivery)
+2. Budget confirmed ($250 fixed-price)
+3. You'll provide editable source files (Figma/PSD)
+
+Looking forward to working with you!
+
+Best regards,
+Hamad AlKhalaf
+DawaTime Developer
+
+---
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
@@ -3198,12 +3275,21 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Current graphics for reference
 - RTL layout guidance for Arabic screenshots
 
-**Deployment Coordination** (January 27, 2026 Strategy):
+**Deployment Coordination** (January 27, 2026 - UPDATED):
 
+- **Designer Status**: ✅ Contract active - Rahma M. #16 accepted January 27, 2026 at 1:08 PM
+- **Expected Delivery**: February 17-24, 2026 (3-4 weeks from start date)
 - **Holding v1.4.5 hotfix release** until screenshots delivered
-- **Reason**: Combine code improvements + marketing assets in single App Store update
-- **Timeline**: Designer delivery (3-4 weeks) → Dual deployment to both stores
+- **Reason**: Combine code improvements (v1.4.5+53) + marketing assets (new screenshots) in single App Store update
+- **Timeline**: Designer delivery → Dual deployment to both stores (iOS + Android)
 - **Benefit**: One review process instead of two, professional screenshots coincide with stability improvements
+- **Process**:
+  1. Wait for Rahma to deliver final assets (14-16 screenshots: English + Arabic)
+  2. Create v1.4.5 in App Store Connect
+  3. Select v1.4.5+53 build (already validated in Internal Testing)
+  4. Upload new screenshots (English set + Arabic set)
+  5. Optional: Refine keywords/description (unlock opportunity)
+  6. Submit for review (24-48h turnaround)
 
 ---
 
