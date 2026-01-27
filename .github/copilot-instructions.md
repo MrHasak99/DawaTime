@@ -2962,15 +2962,191 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Graphic Design, Mobile App Design, Photo Editing
 - Bonus: Experience with RTL (Arabic) layouts
 
-**Next Steps**:
+**Proposal Analysis Status** (Updated January 27, 2026):
 
-- Wait for proposals from qualified designers
-- When hired, prepare handoff materials:
-  - Designer brief with brand guidelines
-  - App access instructions (TestFlight/Play Store)
-  - Screenshot text copy sheet (English/Arabic)
-  - Feature showcase priorities
-  - Current graphics for reference
+- **Total Proposals Received**: 21 (100% analyzed)
+- **Archived Candidates**: 14 (66.7% elimination rate)
+- **Viable Candidates**: 7 (33.3% retention rate)
+- **Framework Validation**: 100% of 0h verification candidates archived (10 of 10 absolute consistency) + 2 archived for lack of Arabic capability
+- **Current Status**: Portfolio verifications in progress before final hire decision
+- **Language Requirement**: Arabic capability now PRIMARY filter - 7 of 9 viable candidates (78%) have native/fluent Arabic
+
+**Archived Candidates** (10 total - all shared 0h Upwork verification):
+
+1. **Muhammad S. #1** - Bangladesh, 0h, 0 jobs, $0 earned, no rating, $100, generic cover letter
+2. **Pham Q. N. #3** - Vietnam, 0h, 0 jobs, $0 earned, no rating, $200, generic cover letter (4th in sequence)
+3. **Aml A. A. #4** - Egypt, 0h, 7 jobs, $350 earned, no visible rating, $150, suspicious metrics (jobs/earnings/rating mismatch)
+4. **Mohamed M. #9** - Morocco, 0h, 0 jobs, $0 earned, no rating, $210, professional cover letter but 0h disqualifies
+5. **Waleed H. #10** - Pakistan, 0h, 0 jobs, $0 earned, no rating, $205, strong cover letter but 0h disqualifies
+6. **Hasnain A. #11** - Pakistan, 0h, 0 jobs, $0 earned, no rating, $90, copy-paste template letter
+7. **Attaullah S. #14** - Pakistan, 0h, 1 job, $10 earned, no rating, $200, typo in name ("Attaulah"), generic cover letter
+8. **Fatima Z. #15** - Pakistan, 0h, 2 jobs, $50 earned, no rating, NEW+Boosted, $200, professional cover letter with 3 portfolio links (2 live apps + Arabic RTL Figma)
+9. **Ahmad R. #17** - Egypt, 0h, 0 jobs, $0 earned, no rating, NEW, $200, strong cover letter with healthcare focus
+   - **Portfolio Links**: 2 Google Play Store apps (Enaya Telemedicine, Enaya Home Healthcare)
+   - **Experience Claims**: "5+ years, 60+ completed projects across healthcare, e-commerce"
+   - **Healthcare Projects**: "United Doctors Hospital, Enaya (Telemedicine), Enaya (Home Healthcare)" in Saudi Arabia
+   - **Arabic RTL**: "I have strong experience designing Arabic (RTL) interfaces"
+   - **Archive Reason**: 0h verification hours despite strong claims and portfolio links
+
+10. **Ahmed G. #18** - Algeria, 0h, 0 jobs, $0 earned, no rating, NEW badge, Best match, $200
+   - **Portfolio Link**: Framer.app website (https://new-fabric-966090.framer.app/case-studies/new-brand-look-and-website)
+   - **Attachment**: Screenshot showing iPhone 13 Pro mockup with Arabic food/restaurant app
+   - **Arabic Native Speaker**: "Yes, the arabic it's my main language"
+   - **Cover Letter Highlights**: Saudi client project creating bilingual (Arabic & English) visual content for American rice brand through traditional Arabic dishes, 14-16 screenshots redesign offer, under 2 weeks timeline, unlimited edits
+   - **Skills**: UI/UX Prototyping, User Interface Design, User Experience Design, Web Design, Landing Page Design
+   - **Archive Reason**: 0h verification hours despite native Arabic speaker status, portfolio link, and Best match designation
+
+11. **Saqib A. #8** - Pakistan, 120h, 30 jobs, $900 earned, 95% JSS, Top Rated, $200
+   - **Strengths**: High job count (30), proven delivery, Top Rated badge, strong verification hours (120h)
+   - **Portfolio**: No portfolio links provided
+   - **Languages**: No Arabic listed in Upwork profile
+   - **Archive Reason**: Lack of Arabic capability - job requires 7-8 Arabic screenshots (50% of deliverables), cannot meet bilingual requirement
+
+12. **Vasyl K. #6** - Ukraine, 48h, 9 jobs, $675 earned, no rating, $320
+   - **Portfolio Links**: 6 Behance projects (screenshots, branding, UI/UX)
+   - **Strengths**: Most portfolio links (6), proven screenshot work
+   - **Languages**: No Arabic listed in Upwork profile
+   - **Price**: $320 (60% premium over budget)
+   - **Archive Reason**: Lack of Arabic capability + premium pricing without justification for bilingual requirement gap
+
+13. **Youssef B. #7** - 72h, 20 jobs, $2K+ earned, 100% JSS, $333
+   - **Portfolio Link**: https://youssef.benlarbidelai.com/
+   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
+   - **Price**: $333 (66% premium over budget)
+   - **Archive Reason**: Significantly above budget compared to rest ($333 vs $200-250 priority tier) - premium pricing not justified when multiple Arabic-native candidates available at $200-250
+
+14. **Youssif M. #19** - Egypt, 409h, 23 jobs, $8K+ earned, 4.4/5.0 rating, $500
+   - **Portfolio Links**: 2 Google Play apps (Deemples, Wichey) + Framer website
+   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
+   - **Price**: $500 (150% above budget, 2.5x budget)
+   - **Archive Reason**: Way above budget compared to rest ($500 vs $200-250 priority tier) - exceptional metrics but price prohibitive when multiple Arabic-native candidates available at $200-300
+
+**Viable Candidates** (7 total - ranked by verification hours):
+
+**Priority Tier** ($200-250 budget) - All have Arabic capability ✅:
+
+1. **Rahma M. #16** (TOP CONTENDER - ARABIC NATIVE) - 1,347h, 83 jobs, $60K+ earned, 100% JSS, NEW badge, $250, Egypt
+   - **Portfolio Links**: 4 App Store projects (Spedia, Quran Words Treasure, Qatar Moms - all with Apple App Store links)
+   - **Status**: ⏳ Awaiting portfolio verification (App Store screenshot validation)
+   - **Strengths**: HIGHEST verification hours (1,347h - 90% more than Muhammad), HIGHEST job count (83), HIGHEST earnings ($60K+), proven App Store expertise
+   - **Languages**: English (Conversational) + Arabic (Native or Bilingual) ✅
+   - **Arabic RTL**: Explicitly confirmed - "Yes I have experience designing apps and screenshots in Arabic"
+   - **Price**: $250 (25% premium over budget)
+   - **Timeline**: 1 week
+   - **Position**: Premium tier due to pricing, but strongest metrics of ALL candidates
+
+2. **Muhammad A. #5** (CONDITIONAL - ARABIC VERIFICATION REQUIRED ⚠️) - 711h, 6 jobs, $3K+ earned, 100% JSS, Rising Talent, $200, Kuwait/healthcare-specific cover letter
+   - **Portfolio Links**: Claims iOS screenshots, Arabic RTL, healthcare branding
+   - **Status**: ⏳ CRITICAL verification required (gates hire decision)
+   - **Strengths**: High verification hours (711h), proven track record, perfect budget match, Kuwait market understanding
+   - **Languages**: No Arabic listed in Upwork profile ⚠️ BUT claims "Arabic RTL" in cover letter
+   - **CRITICAL RISK**: Portfolio MUST show actual Arabic screenshots - archive immediately if no Arabic work samples found
+
+3. **Mohammed A. #12** (STRONG CONTENDER - ARABIC FLUENT) - 163h, 23 jobs, $1.2K+ earned, 100% JSS, Top Rated, $200, detailed cover letter
+   - **Portfolio Links**: Figma + Behance (https://www.behance.net/menazaalani5fb)
+   - **Status**: ⏳ Awaiting Figma/Behance verification (confirms backup viability)
+   - **Strengths**: High job count (23), proven versatility, Top Rated badge
+   - **Languages**: Arabic (Fluent) + English (Fluent) ✅
+   - **Position**: Strong backup if top 2 fail verification
+
+4. **Ouisal S. #20** (HEALTHCARE SPECIALIST - ARABIC NATIVE) - 113h, 9 jobs, $2K+ earned, 100% JSS, Rising Talent, $200, Boosted, Algeria
+   - **Portfolio Link**: https://www.behance.net/gallery/232693913/Exploring-Human-Emotions-Through-Virtual-Reality
+   - **Attachment**: work%20presentation.pdf (4.8 MB portfolio)
+   - **Status**: ⏳ Awaiting portfolio verification (Behance + PDF)
+   - **Strengths**: Healthcare app focus ("trustworthy for a healthcare app"), bilingual English/Arabic, RTL experience, Kuwait/GCC market understanding
+   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
+   - **Cover Letter Highlights**: "DawaTime is a strong product", mentions hierarchy/readability/consistency, 3-4 week timeline commitment
+   - **Rating**: 5.0/5.0 (4 reviews) - perfect score
+   - **Position**: Healthcare-focused alternative to Muhammad A. (budget tier)
+
+5. **Akram A. #13** (CONDITIONAL - ARABIC NATIVE) - 14h, 3 jobs, $115 earned, no rating, $200, professional cover letter with Google Drive link
+   - **Portfolio Link**: https://drive.google.com/drive/folders/13OLtTBfrBpBVMHisXSQ68DRrGWDv_TIh
+   - **Status**: ⏳ Awaiting Google Drive verification (survival determination)
+   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
+   - **Risk**: Lowest verification hours (14h) barely above 0h threshold
+   - **Position**: Conditional - survival depends on Google Drive portfolio quality
+
+**Premium Tier** ($250-300 budget):
+
+6. **Alfatiha M. #2** (VERIFIED PREMIUM) - 36h, 25 jobs, $3.2K+ earned, 100% JSS, Rising Talent, $300, DawaTime-specific cover letter + portfolio link
+   - **Portfolio Link**: https://www.behance.net/gallery/215664569/Medication-Reminder-App-UIUX-Design
+   - **Strengths**: Medication reminder app in portfolio (perfect fit), highest earnings ($3.2K)
+   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
+   - **Price**: $300 (50% premium over budget)
+   - **Position**: Verified quality, premium tier option
+
+7. **Eongyo J. #21** (CONDITIONAL - NO ARABIC ⚠️) - 113h, 0 completed jobs, $0 earned, no rating, $200, South Korea
+   - **Studio**: AppShot Labs (appshotlabs.xyz) - specialized design studio for App Store/Play Store screenshots
+   - **Portfolio Website**: appshotlabs.xyz (shows conversion-focused App Store screenshot design)
+   - **Portfolio Samples**: 
+     - ChatGPT app redesign (before/after comparison)
+     - TripAdvisor redesign concept
+     - Travel app screenshots (high-quality device frames)
+     - Fintech app screenshots (professional clean design)
+     - Web3/crypto app screenshots (modern trendy design)
+   - **Cover Letter Highlights**: "Specializing in App Store and Play Store screenshot design", "Conversion-focused approach", "Understand your need for bilingual English/Arabic screenshots"
+   - **Languages**: No Arabic listed in Upwork profile ⚠️
+   - **RTL Awareness**: Mentioned understanding of bilingual requirements but no direct Arabic project samples shown
+   - **Source Files**: Offers Figma/PSD source files with editable layers
+   - **Strengths**: 
+     - **Perfect specialization**: App Store screenshot design is core expertise (not general UI/UX)
+     - **Professional studio**: AppShot Labs appears to be established studio brand
+     - **Strong portfolio evidence**: Multiple app screenshot samples showing device frames, clean layouts
+     - **Conversion focus**: Explicitly mentions conversion optimization for store listings
+     - **113h verification**: Above 0h threshold, suggests verified Upwork status
+   - **CRITICAL Risk Factors**:
+     - **NO ARABIC CAPABILITY**: Job requires 7-8 Arabic screenshots (50% of deliverables) - cannot deliver without Arabic designer
+     - **0 completed Upwork jobs**: No proven delivery track record on platform (major red flag)
+     - **No Arabic portfolio samples**: Claims RTL understanding but zero evidence of actual Arabic work
+     - **Unproven pricing**: $200 rate but unclear if timeline/quality matches price
+     - **Studio legitimacy unclear**: appshotlabs.xyz domain exists but unclear if real agency or solo freelancer
+   - **Price**: $200 (perfect budget match)
+   - **Status**: ⏳ Portfolio verification required BUT Arabic gap may disqualify regardless
+   - **Position**: HIGH-RISK - Perfect specialization BUT lacks Arabic capability for 50% of deliverables. Would need to outsource Arabic work or decline project. Archive strongly recommended unless portfolio shows hidden Arabic capability.
+
+**Framework Validation Results**:
+
+- **0h Verification Pattern**: 100% consistent (10 of 10 candidates with 0h archived, zero exceptions)
+- **Archive Rate**: 50% (10 of 20) - balanced elimination (neither too strict >70% nor too lenient <30%)
+- **Job Count Irrelevant**: 0h candidates with 0-7 jobs ALL archived (job count doesn't overcome 0h)
+- **Portfolio Links Don't Overcome 0h**: Ahmad R. #17 had 2 Google Play Store apps, Ahmed G. #18 had Framer portfolio + native Arabic - both archived
+- **Native Language Irrelevant for 0h**: Ahmed G. #18 native Arabic speaker, still archived (verification hours > language skills)
+- **Budget Tier Strength**: $200-250 tier has 5 strong candidates (Rahma 1,347h, Muhammad 711h, Mohammed 163h, Saqib 120h, Akram 14h)
+- **Premium Tier Value**: $250-333 tier offers proven quality with exceptional metrics (Rahma: 1,347h, 83 jobs, $60K+)
+- **Ultra-Premium Tier Warning**: Youssif M. #19 at $500 (2.5x budget) - exceptional portfolio but likely prohibitive pricing
+
+**Critical Next Steps** (Before Hire Decision) - Arabic Capability Prioritized:
+
+1. **TOP PRIORITY**: Verify Rahma M. #16 App Store projects (4 portfolio links - Arabic native + highest metrics gates premium tier decision)
+2. **HIGH PRIORITY**: Verify Ouisal S. #20 healthcare portfolio (Behance + PDF - Arabic native + healthcare specialist + perfect budget)
+3. **HIGH PRIORITY**: Verify Mohammed A. #12 Figma + Behance (Arabic fluent + Top Rated + 23 jobs backup)
+4. **CONDITIONAL PRIORITY**: Verify Muhammad A. #5 screenshots - MUST show Arabic work samples or archive immediately (claims Arabic RTL but no profile listing)
+5. **Consider Archiving**: Eongyo J. #21 - Specialist but lacks Arabic capability for 50% of deliverables (strongly recommend archive)
+6. **LOW PRIORITY**: Verify Akram A. #13 Google Drive (Arabic native but only 14h - survival determination)
+7. **Final ranking** after Arabic-capable portfolio verifications complete
+9. **Draft hiring message** for selected Arabic-capable designer
+10. **Execute hire** within 24-48 hours after verification complete
+
+**Decision Framework** (UPDATED - Arabic Capability Primary Filter):
+
+- **Scenario A** (TOP CHOICE - ARABIC NATIVE): Rahma M. portfolio validates → Hire Rahma M. at $250 (BEST OVERALL: 1,347h, 83 jobs, $60K+, App Store proven, Arabic native)
+- **Scenario B** (BUDGET WINNER - ARABIC NATIVE): Ouisal S. portfolio validates → Hire Ouisal S. at $200 (healthcare specialist, Arabic native, 113h, perfect budget)
+- **Scenario C** (STRONG BACKUP - ARABIC FLUENT): Mohammed A. portfolio validates → Hire Mohammed A. at $200 (Top Rated, Arabic fluent, 23 jobs, 163h)
+- **Scenario D** (CONDITIONAL): Muhammad A. portfolio validates WITH Arabic work → Hire Muhammad A. at $200 (Kuwait focus, 711h) | Archive if no Arabic samples
+- **Scenario E** (PREMIUM JUSTIFIED - ARABIC NATIVE): Alfatiha M. medication app portfolio justifies $300 → Hire Alfatiha M. (medication app perfect fit, Arabic native)
+- **Scenario F** (LOW PRIORITY): Akram A. portfolio exceptional despite 14h → Consider at $200 (Arabic native but minimal verification)
+- **Scenario G** (ARCHIVE RECOMMENDED): Eongyo J. - Specialist BUT lacks Arabic for 50% of deliverables → Archive unless hidden Arabic capability discovered
+
+**CRITICAL RULE**: Arabic capability (Native/Fluent) is now PRIMARY hiring factor - 7-8 Arabic screenshots (50% of deliverables) require native/fluent Arabic designer. Budget discipline maintained - candidates above $300 archived regardless of metrics when multiple qualified candidates available at $200-250.
+
+**When Hired - Handoff Materials**:
+
+- Designer brief with brand guidelines (colors, logos, fonts)
+- App access instructions (TestFlight/Play Store credentials)
+- Screenshot text copy sheet (English/Arabic bilingual)
+- Feature showcase priorities
+- Current graphics for reference
+- RTL layout guidance for Arabic screenshots
 
 ---
 
