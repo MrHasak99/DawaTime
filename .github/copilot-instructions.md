@@ -603,7 +603,10 @@ Never miss a dose! 💚
 - **Day 17 (Jan 25)**: Documentation updated
 - **Day 17 (Jan 25)**: ✅ **Deployed to Google Play Console Internal Testing**
 - **Days 18-19 (Jan 26-27)**: ~~24-48h Crashlytics monitoring~~ → **SKIPPED** (user decision)
-- **Days 20-22 (Jan 28-30)**: Staged rollout to production (10% → 50% → 100%)
+- **Days 20-22 (Jan 28-30)**: ~~Staged rollout to production (10% → 50% → 100%)~~ → **ON HOLD**
+- **Days 27-48 (Jan 27-Feb 17, 2026)**: ⏳ **WAITING FOR UPWORK DESIGNER** (3-4 week delivery)
+- **Day 48+ (Feb 17+)**: **DUAL DEPLOYMENT** - iOS v1.4.5+53 with new screenshots (App Store Connect)
+- **Day 48+ (Feb 17+)**: Android v1.4.5+53 staged rollout begins (Play Console)
 
 **Next Steps**:
 - ✅ ~~Upload to Google Play Console Internal Testing~~ → **DEPLOYED** (Day 17)
@@ -2915,15 +2918,21 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Post-Launch Update Strategy**:
 
-- **Timeline**: Late January/early February 2026 (after production goes live)
-- **Effort**: 2-3 hours to capture new screenshots
+- **Timeline**: ⏳ **WAITING FOR UPWORK DESIGNER** (3-4 weeks from January 26, 2026)
+- **Deployment Strategy**: **DUAL RELEASE** - Coordinate v1.4.5 hotfix + new screenshots in single App Store update
+- **Rationale**: 
+  - Combine code improvements (v1.4.5+53) with marketing assets (screenshots)
+  - Single App Store review process (24-48h) instead of two separate reviews
+  - Professional designer quality (Upwork) vs DIY screenshots
+  - Creates clean version milestone: v1.4.5 = "Screenshot Refresh + Stability"
 - **Process**:
-  1. Enable Arabic language in app (Settings → Language → العربية)
-  2. Take screenshots of home page, medication cards, add medication form (RTL layout)
-  3. Enable English, navigate to Settings → Refill Reminders
-  4. Capture Settings page showing day/time customization
-  5. Upload to both stores (5 minutes, no re-review required)
-- **Rationale**: Don't delay Day 14 production deadline for graphics enhancements
+  1. Wait for Upwork designer to deliver final assets (14-16 screenshots: English + Arabic)
+  2. Create v1.4.5 in App Store Connect
+  3. Select v1.4.5+53 build (already validated in Internal Testing)
+  4. Upload new screenshots (English set + Arabic set)
+  5. Optional: Refine keywords/description (unlock opportunity)
+  6. Submit for review (24-48h turnaround)
+- **Previous Rationale (Superseded)**: Don't delay Day 14 production deadline for graphics enhancements
 
 **App Store Localization Opportunity**:
 
@@ -3188,6 +3197,13 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Feature showcase priorities
 - Current graphics for reference
 - RTL layout guidance for Arabic screenshots
+
+**Deployment Coordination** (January 27, 2026 Strategy):
+
+- **Holding v1.4.5 hotfix release** until screenshots delivered
+- **Reason**: Combine code improvements + marketing assets in single App Store update
+- **Timeline**: Designer delivery (3-4 weeks) → Dual deployment to both stores
+- **Benefit**: One review process instead of two, professional screenshots coincide with stability improvements
 
 ---
 
