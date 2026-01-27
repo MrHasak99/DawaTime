@@ -186,12 +186,12 @@ Fix app and implement notifications and more detailed types of medication
 
 **Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
 
-**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 94 real users in Kuwait with production apps on both iOS and Android (98 total including test accounts)."_
+**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 101 real users in Kuwait with production apps on both iOS and Android (105 total including test accounts)."_
 
-**Current Status** (January 2026 - Day 15):
+**Current Status** (January 2026 - Day 27):
 
-- **Users**: 98 registered users in Kuwait (68 pre-testing + 15 closed testing + 15 post-launch)
-  - **Real users**: 94 (excludes 4 developer/test accounts)
+- **Users**: 105 registered users in Kuwait (68 pre-testing + 15 closed testing + 22 post-launch)
+  - **Real users**: 101 (excludes 4 developer/test accounts)
   - **Developer accounts**: 4 (personal, testing, Apple testing, Google testing)
 - **Versions**: iOS v1.4.4+50 (LIVE in Production), Android v1.4.4+50 (LIVE in Production)
 - **Beta Testing**: ✅ COMPLETE - 12 continuous testers for 10+ days, 100% crash-free rate
@@ -766,33 +766,74 @@ Never miss a dose! 💚
     - 💡 **Link Click Efficiency**: 86 clicks vs 169 visits suggests strong bio link traffic and organic interest
   - **CPI Calculation Pending**: Need complete Firebase/App Store data through Jan 25
 
-**Store Installation Data (Days 15-23: Jan 21-23, 2026)**:
+- **Day 7 (January 27, 2026)** - Final Campaign Day:
+  - **Views**: 10,018 total impressions
+  - **Reach**: 6,494 unique people
+  - **Website Visits**: 246 (goal metric)
+  - **Link Clicks**: 120 clicks on ad link
+  - **Cost Per Website Visit**: $0.25
+  - **Spend**: $60.43 of $70.00 (86.3% of budget)
+  - **Status**: 1 day remaining (Day 7 of 7)
+  - **Engagement**:
+    - Likes and reactions: 9
+    - Shares: 8
+    - Saves: 6
+    - Profile visits: 205
+    - External link taps: 19
+    - Messaging conversations started: 2
+    - Follows: 2
+  - **Top Locations** (Kuwait Governorates):
+    - Capital Governorate: 26.9%
+    - Hawalli Governorate: 26.2%
+    - Ahmadi Governorate: 16%
+    - Farwaniya Governorate: 13.3%
+    - Mubarak Al-Kabeer Governorate: 10.8%
+  - **Analysis**:
+    - ✅ **Strong Campaign Finale**: 6,494 unique people reached (36% increase from Day 5's 4,787)
+    - ✅ **Excellent Website Performance**: 246 website visits (46% increase from Day 5's 169)
+    - ✅ **High Profile Engagement**: 205 profile visits (56% increase from Day 5's 131)
+    - ✅ **Cost Efficiency Maintained**: $0.25 per website visit (consistent throughout campaign)
+    - 📊 **Website Visit Conversion**: 246 visits / 6,494 reach = 3.8% visit rate (best performance yet, up from 3.5% Day 5)
+    - 🎯 **Budget Utilization**: 86.3% spend with 1 day remaining (excellent pacing)
+    - 💡 **Link Click Efficiency**: 120 clicks vs 246 visits (2.05x ratio) shows strong bio link + organic traffic
+    - 🎯 **Geographic Distribution**: Balanced across all 5 governorates (Capital + Hawalli = 53.1% combined)
+  - **CPI Calculation Pending**: Need complete Firebase/App Store data through Jan 27
+
+**Store Installation Data (Days 15-27: Jan 21-27, 2026)**:
 - **iOS (App Store Connect)**:
-  - Total downloads (Dec 24 - Jan 23): 31
+  - Total downloads (Dec 27, 2025 - Jan 25, 2026): 44
+  - Jan 25, 2026: 7 downloads
+  - Jan 24, 2026: 6 downloads
   - Jan 23, 2026: 6 downloads
   - Jan 22, 2026: 5 downloads
   - Jan 21, 2026: 10 downloads (Production Launch Day)
-  - Jan 20, 2026: 0 downloads
-  - **Production launch total (Jan 21-23)**: 21 new installs
+  - Jan 17, 2026: 1 download
+  - **Production launch total (Jan 21-25)**: 34 new installs
 - **Android (Google Play Console)**:
-  - **Production (Jan 21+ - Official Play Store Launch)**:
-    - Jan 23, 2026: 1 install (Kuwait: 1)
-    - Jan 22, 2026: 4 installs (Kuwait: 4)
-    - Jan 21, 2026: 4 installs (Kuwait: 3) - Production Launch Day
+  - **Production (Jan 21-26 - Official Play Store Launch)**:
+    - Jan 26, 2026: 1 install
+    - Jan 25, 2026: 1 install
+    - Jan 23, 2026: 1 install
+    - Jan 22, 2026: 4 installs
+    - Jan 21, 2026: 4 installs (Production Launch Day)
   - **Closed Testing (Pre-Production)**:
     - Jan 20, 2026: 1 install
     - Jan 19, 2026: 3 installs
     - Jan 18, 2026: 5 installs
     - Jan 17, 2026: 2 installs
-    - Jan 16, 2026: 12 installs (Kuwait: 1)
-    - Jan 15, 2026: 10 installs
-  - **Production launch total (Jan 21-23)**: 9 new installs
-- **Combined Performance (Production Launch: Jan 21-23)**:
-  - **Total production downloads**: 30 downloads (iOS: 21, Android: 9)
-  - **Platform split**: iOS 70%, Android 30%
-  - **Note**: iOS showing stronger launch day performance (10 downloads Jan 21 vs typical 5-6 per day)
-  - **Android production**: Steady 3-4 installs per day since official Play Store launch (Jan 21)
-  - **Kuwait targeting effective**: Android production installs 100% from Kuwait (8/9 confirmed Kuwait)
+    - Jan 16, 2026: 12 installs
+  - **Production launch total (Jan 21-26)**: 11 new installs
+- **Combined Performance (Production Launch: Jan 21-26)**:
+  - **Total production downloads**: 45 downloads (iOS: 34, Android: 11)
+  - **Platform split**: iOS 76%, Android 24%
+  - **Note**: iOS showing stronger performance (10 downloads launch day, sustained 5-7/day afterward)
+  - **Android production**: Steady 1-4 installs per day since official Play Store launch (Jan 21)
+- **Firebase Authentication Total (Day 27 - January 27, 2026)**:
+  - **Total registered users**: 105 users
+  - **Breakdown**: 68 pre-testing + 15 closed testing + 22 post-launch = 105 total
+  - **Real users**: 101 (excludes 4 dev/test accounts)
+  - **Growth since launch (Day 15)**: 105 - 98 = 7 new registered users in 6 days
+  - **Install-to-registration rate**: 45 downloads → 7 new registrations = 16% conversion (lower than initial 61%, indicates some downloads were reinstalls/updates from existing users)
 
 **Store Installation Data (Days 15-16: Jan 21-22, 2026)**:
 - **iOS (App Store Connect)**:
@@ -3147,6 +3188,92 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Feature showcase priorities
 - Current graphics for reference
 - RTL layout guidance for Arabic screenshots
+
+---
+
+### LinkedIn Direct Outreach (January 27, 2026)
+
+**Status**: ❌ **DISQUALIFIED** - 2 external contacts rejected for bypassing official application process
+
+**Context**: Two designers contacted developer directly via LinkedIn/email after discovering the Upwork job posting. These are NOT Upwork proposals - they are external outreach attempts.
+
+**Disqualification Reason**: Both candidates bypassed the official Upwork job application process. All other candidates (21 total) followed the proper application workflow through the Upwork platform. Engaging with external contacts:
+- Violates fair evaluation process (other candidates applied properly)
+- May violate Upwork Terms of Service (circumventing platform)
+- Eliminates platform protections (escrow, dispute resolution, reviews)
+- Complicates comparison and evaluation consistency
+
+**Decision**: Archive both candidates. Focus exclusively on the 7 viable Upwork candidates who followed the official application process.
+
+**External Candidate #1: Drashti Soni (CMARIX Agency)**
+
+- **Company**: CMARIX - Sr. Business Development Executive
+- **Email**: drashti.soni@cmarix.com (sent to eng@hamadalkhalaf.com from LinkedIn)
+- **Website**: www.cmarix.com
+- **Date Received**: January 27, 2026 at 1:19 PM
+- **Subject**: "Hi Hamad → Complete App Store Screenshot Redesign | CMARIX"
+- **Proposal Type**: Agency outreach (not individual freelancer)
+- **Key Offering**:
+  - Full redesign of App Store and Google Play screenshots
+  - Conversion-focused visual refresh for Kuwait/GCC market
+  - 14-16 high-conversion screenshots optimized for iOS and Android
+  - Fully mirrored Arabic set with accurate RTL behavior, layout flow, and bilingual positioning
+  - Production-ready assets with strong attention to alignment, typography, and store-specific best practices
+- **Scheduling**: Calendly link provided - https://calendly.com/drashti-cmarix
+- **Phone**: +91-800-005-0808, +1-415-704-4242
+- **Position**: **AGENCY OUTREACH** - Likely significantly above $200 budget (agencies typically charge $500-2000+ for this scope)
+- **Disqualification Reasons**:
+  - Did not apply through official Upwork job posting
+  - Generic agency pitch (not personalized to DawaTime)
+  - No portfolio links in email (just calendly + contact info)
+  - Sales-focused approach (BDE reaching out, not designer directly)
+  - Unsolicited outreach after finding job on LinkedIn
+- **Status**: ❌ **DISQUALIFIED** - Bypassed official application process
+
+**External Candidate #2: Eman Ikhlaq (Individual Designer)**
+
+- **Contact**: help@dawatime.com, eng@hamadalkhalaf.com (sent to both emails)
+- **Date Received**: January 27, 2026 at 10:39 AM (earlier than CMARIX by 2h 40min)
+- **Subject**: "App Store Screenshot Redesign (English & Arabic) for DawaTime"
+- **Cc**: Amna Ikhlaq (appears to be collaborator/partner)
+- **Portfolio Website**: www.woofwee.com
+- **Portfolio Links** (3 Figma projects):
+  1. GPS Mobile App: https://www.figma.com/design/pockXQBXSoDRoyXUoyZENi3/GPS-Mobile-App-and-Front/Facing-Website?node-id=203-24s-i6t=CAyzVPTDPsSjRVSL-0
+  2. Project 2: https://www.figma.com/design/X2GK9QwXmQ4&KWEwsDy004rQKOK?node-id=0-1&p=f
+  3. Project 3: https://www.figma.com/design/pockUf9saY/RuDXe83uCT0f1MwUnlHfter?node-id=0-T&p=f
+- **Key Experience Claims**:
+  - High-conversion app store screenshots for mobile apps
+  - Strong focus on clear messaging, clean layouts, trust-building visuals
+  - Improves downloads by clearly communicating value at a glance
+  - Experience creating complete set of screenshots in both English and Arabic
+  - Adapts layouts properly for RTL rather than just mirroring
+  - Pays close attention to alignment, readability, device framing, and visual hierarchy
+  - Familiar with designing for both iOS and Android store requirements at high resolution
+- **Collaboration Approach**: Can work from provided copy, brand guidelines, and app access to capture high-quality UI screens
+- **Meeting Request**: Happy to collaborate closely, discuss timeline, scope, and budget in short meeting
+- **Portfolio Website**: www.woofwee.com (mentioned twice)
+- **Position**: **INDIVIDUAL DESIGNER** - Could potentially fit within budget, shows genuine interest in project
+- **Strengths Noted**:
+  - First to respond (2h 40min earlier than CMARIX)
+  - Personalized approach (specific to DawaTime project)
+  - Portfolio evidence (3 Figma links provided upfront)
+  - Arabic RTL experience claimed
+  - Individual designer (likely more budget-friendly than agency)
+- **Disqualification Reason**:
+  - Did not apply through official Upwork job posting
+  - All other candidates (21 total) followed proper application process
+  - Engaging with external contacts violates fair evaluation process
+- **Status**: ❌ **DISQUALIFIED** - Bypassed official application process
+
+**Final Decision**:
+
+Both candidates disqualified for bypassing the official Upwork application process. This decision maintains:
+- ✅ Fair evaluation process (all other 21 candidates applied properly)
+- ✅ Upwork platform protections (escrow, dispute resolution, reviews)
+- ✅ Consistent evaluation criteria (verification hours, portfolios, pricing)
+- ✅ Compliance with Upwork Terms of Service
+
+**Focus**: Continue with the 7 viable Upwork candidates (Rahma, Ouisal, Mohammed, Muhammad, Akram, Alfatiha, Eongyo) who followed the proper application workflow.
 
 ---
 
@@ -6952,7 +7079,7 @@ This section documents planned features for future DawaTime releases. Features a
 - ✅ User trust critical in health apps (ads erode trust immediately)
 - ✅ App Store reviews higher without monetization pressure
 - ✅ Word-of-mouth growth stronger for "truly free" apps
-- ✅ **98 users → 5% conversion = 5 paying users** (not worth complexity)
+- ✅ **105 users → 5% conversion = 5 paying users** (not worth complexity)
 
 ### Phase 2: Freemium Launch (Conditional: Q2 2027 - Q1 2028)
 
@@ -7083,7 +7210,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Financial Projections (Rough Estimates)
 
-**Current State** (January 2026): 98 users (94 real + 4 dev/test), $0 revenue
+**Current State** (January 2026 - Day 27): 105 users (101 real + 4 dev/test), $0 revenue
 
 **2026** (Phase 1 - Free Growth):
 
@@ -7122,7 +7249,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Implementation Timeline (Milestone-Driven)
 
-**Current State** (January 2026 - Day 8): 98 users (68 pre-testing + 15 closed testing + 15 post-launch), production launched Day 15
+**Current State** (January 2026 - Day 27): 105 users (68 pre-testing + 15 closed testing + 22 post-launch), production launched Day 15
 
 **Q1 2026** (Jan-Mar): **Production Launch & Stability**
 
@@ -7130,6 +7257,7 @@ This section documents planned features for future DawaTime releases. Features a
 - Marketing: Instagram, Kuwait forums, word-of-mouth
 - Monetization: None
 - **Milestone Target**: 500-1,000 users
+- **Current Progress (Day 27)**: 105 users (101 real + 4 dev/test), growing slowly post-launch
 - **Decision Point**: If <500 users by March, analyze user acquisition strategy
 
 **Q2 2026** (Apr-Jun): **MOH Partnership & Quick Wins**
