@@ -74,99 +74,23 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 **Root Causes of Original Project Failure** (Technical Analysis):
 
-**Critical Bug #1: Broken Save Functionality** 🔴 (Why Project Was Considered Failed Despite Passing)
+**Critical Bugs**:
 
-- **File**: `lib/pages/register_medicine.dart`
-- **Issue**: Variables declared but never initialized
-
-  ```dart
-  void registerMedicine() async {
-    var nameController;  // ❌ Declared but NEVER initialized
-    var quanityController;  // ❌ Declared but NEVER initialized
-    var consumptionController;  // ❌ Declared but NEVER initialized
-    var pref;  // ❌ Declared but NEVER initialized
-
-    final Medication medication = Medication(
-        name: nameController.text,  // ❌ NULL REFERENCE ERROR
-        quanity: quanityController.text,  // ❌ NULL REFERENCE ERROR
-        consumption: consumptionController.text  // ❌ NULL REFERENCE ERROR
-    );
-
-    pref.setString("medicineData", jsonString);  // ❌ NULL REFERENCE ERROR
-  }
-  ```
-
-- **Impact**: Save functionality completely broken - app crashes every time user tries to add medication
-- **DawaTime Fix**: Proper TextEditingController initialization in StatefulWidget with dispose cleanup
-
-**Critical Bug #2: Null Safety Crash on First Launch**
-
-- **File**: `lib/pages/home_page.dart`
-- **Issue**: Force unwrap (`!`) on nullable SharedPreferences data
-  ```dart
-  medication = Medication.fromJson(
-    jsonDecode(pref.getString("medicineData")!)  // ❌ Crashes if null
-  );
-  ```
-- **Impact**: App crashes immediately on first launch before any data saved
-- **DawaTime Fix**: Proper null checks, StreamBuilder with Firestore snapshots, graceful empty state handling
-
-**Architecture Flaw #1: Single Medication Storage**
-
-- **Issue**: Only saves ONE medication object (`Medication medication = Medication(...)`)
-- **Storage**: Single key `"medicineData"` in SharedPreferences
-- **Impact**: Completely unusable for real medication management - users need multiple medications
-- **DawaTime Fix**: Firestore subcollections `/Users/{userId}/medications/{medicationId}` supporting unlimited medications
-
-**Architecture Flaw #2: Local-Only Storage**
-
-- **Technology**: SharedPreferences only (no Firebase, no cloud backend)
-- **Issues**:
-  - Data lost if app deleted or device changed
-  - No multi-device sync
-  - No cloud backup
-  - No scalability
-- **DawaTime Fix**: Firebase Firestore with real-time sync, automatic backups, cross-device access
+1. **Broken Save**: Uninitialized variables (`nameController`, `pref`) caused null reference crashes on every save attempt
+2. **Null Safety Crash**: Force unwrap on SharedPreferences crashed app on first launch
+3. **Single Medication Storage**: Only saved ONE medication in SharedPreferences - unusable for real users
+4. **Local-Only Data**: No Firebase, no cloud backup - data lost on app deletion
 
 **Missing Core Features**:
 
-1. **No Notification System**: Despite being "medication reminder app", no `flutter_local_notifications` or any reminder implementation
-   - DawaTime: 5 follow-up reminders every 30 minutes, weekly refill alerts, iOS 15+ interruption levels
+1. **No Notifications**: Despite being "medication reminder app", zero notification implementation
 2. **No Authentication**: No user accounts, no Firebase Auth
-   - DawaTime: Firebase Authentication (email/password), email verification, secure user isolation
-3. **Broken Delete Button**: `onPressed: (() {})` empty handler in `medication_item.dart`
-   - DawaTime: Swipe gestures (Dismissible) with confirmation dialogs, undo functionality
-4. **No Validation**: Text fields have no input validation or error handling
-   - DawaTime: Comprehensive validation with error states, visual feedback, Arabic numeral conversion
+3. **Broken Delete**: Empty `onPressed: (() {})` handler - button did nothing
+4. **No Validation**: Text fields had zero input validation or error handling
 
-**Code Quality Issues**:
+**Code Quality Issues**: Model typo ("quanity"), UI typo ("regaring"), generic branding ("medication_app"), desktop platform bloat (Windows/Linux/macOS boilerplate unused), default Flutter test file never updated
 
-1. **Model Typo**: "quanity" instead of "quantity" throughout entire codebase (model, UI, storage keys)
-2. **UI Typo**: "regaring" instead of "regarding" in `add_medication.dart` user-facing text
-3. **Generic Branding**: "medication_app" package name, no distinctive identity
-   - DawaTime: Professional "DawaTime" branding (Arabic دواء = medicine), custom app icon, brand green #8AC249
-4. **Test File**: Still contains default Flutter counter app test (never updated for actual features)
-5. **No Error Handling**: No try-catch blocks, no null checks, no graceful failures
-
-**Scope Creep**:
-
-- Included Windows/Linux/macOS platform boilerplate (CMakeLists.txt, runner.cpp, my_application.cc) but only mobile needed
-- Added complexity with zero benefit - desktop platforms never tested or functional
-- DawaTime: Focused mobile-only scope (iOS/Android), no unnecessary platform code
-
-**README Acknowledgement** (Student recognized failure but couldn't fix):
-
-```markdown
-# Idea
-
-Problem and solutions if found
-
-Had issues setting up and saving user data
-
-# Future Work
-
-Fix app and implement notifications and more detailed types of medication
-```
+**README Acknowledgement**: _"Had issues setting up and saving user data... Fix app and implement notifications"_ - Student recognized failure but couldn't fix
 
 **DawaTime vs Original Failed Project Comparison**:
 
@@ -182,17 +106,22 @@ Fix app and implement notifications and more detailed types of medication
 | ❌ Desktop platform bloat                 | ✅ Focused mobile-only (iOS/Android)                  |
 | ❌ Generic "medication_app" branding      | ✅ Professional "DawaTime" brand (Arabic)             |
 | ❌ Typos, poor code quality               | ✅ Production monitoring (Crashlytics, Analytics)     |
-| ❌ 0 users (never worked)                 | ✅ 98 active users in Kuwait market (94 real users)                  |
+| ❌ 0 users (never worked)                 | ✅ 108 active users in Kuwait market (103 real users) |
 
 **Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
 
-**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 101 real users in Kuwait with production apps on both iOS and Android (105 total including test accounts)."_
+**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 103 real users in Kuwait with production apps on both iOS and Android (108 total including test accounts)."_
 
-**Current Status** (January 2026 - Day 27):
+**Current Status** (January 2026 - Day 23):
 
-- **Users**: 105 registered users in Kuwait (68 pre-testing + 15 closed testing + 22 post-launch)
-  - **Real users**: 101 (excludes 4 developer/test accounts)
-  - **Developer accounts**: 4 (personal, testing, Apple testing, Google testing)
+- **Users**: 108 registered users in Kuwait (68 pre-testing + 15 closed testing + 25 post-launch)
+  - **Real users**: 103 (excludes 5 accounts below)
+  - **Developer/Personal/Test accounts**: 5 total
+    1. Personal account: hamad_alkhalaf_99@hotmail.com (genuine active use)
+    2. Personal testing: hamad@dawatime.com
+    3. Apple testing: testapple@dawatime.com
+    4. Google testing: testgoogle@dawatime.com
+    5. Designer account: design@dawatime.com
 - **Versions**: iOS v1.4.4+50 (LIVE in Production), Android v1.4.4+50 (LIVE in Production)
 - **Beta Testing**: ✅ COMPLETE - 12 continuous testers for 10+ days, 100% crash-free rate
 - **Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - Coordinated v1.4.4 release successful
@@ -200,6 +129,7 @@ Fix app and implement notifications and more detailed types of medication
 - **Release Strategy**: Coordinated v1.4.4 release (Android's first Play Store release, iOS update from October 2025 v1.3.4)
 - **Revenue**: $0 (strategic choice - growth phase, Phase 1 of monetization roadmap)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
+- **7-Day Ad Campaign**: ✅ COMPLETE - $69.84 spent, 7,198 reach, 289 website visits, 11,525 impressions
 - **Next Milestone**: Growth phase - targeting 500-1,000 users by March 2026 (Q1 2026)
 - **Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL fix + Update Checker + Signup Buttons Android) - deploy Days 16-20
 - **Vision**: Public health tool first, commercial product second
@@ -216,143 +146,50 @@ Fix app and implement notifications and more detailed types of medication
 
 ### Early Development (May - July 2025)
 
-**Initial Concept**: DawaTime began as a medication reminder app built with Flutter, focusing on helping users manage medication schedules with local notifications.
-
-**Core Features Established (May-June 2025)**:
-
-- Basic medication CRUD operations (add, edit, delete)
-- Firebase Authentication (email/password)
-- Firestore database for medication storage
-- Local notifications using `flutter_local_notifications`
-- Swipe gestures (Dismissible widgets for edit/delete)
-- Android scheduled notification implementation
+**Initial Concept**: Medication reminder app built with Flutter, focusing on local notifications and Firebase backend.
 
 **Key Milestones**:
 
-- **May 22, 2025** (d91754b): Initial project upload - basic medication management
-- **May 24-27, 2025**: Notification system foundation - specialized scheduler file created
-- **May 28, 2025**: Custom app logo added
-- **June 2025**: Database architecture established - medications collection per user
-- **June 10, 2025**: Password reset and email change features added
-- **June 16, 2025**: Undo delete functionality implemented
-- **June 18, 2025** (428696e): Pre-production version - Android notification issues resolved
+- **May 22, 2025**: Initial project upload with basic CRUD operations
 - **June 23, 2025**: App renamed to "DawaTime" (Arabic: دواء = medicine)
 - **June 25, 2025**: Domain dawatime.com purchased from Porkbun
-- **June 26, 2025**: Firebase configuration finalized with production credentials
-- **June 27, 2025**: Background task for medication rescheduling implemented
-- **July 2, 2025**: App icons, fonts, and color scheme updated (#8AC249 brand green)
-- **July 3, 2025**: Package structure renamed to reflect DawaTime branding
-- **July 5-6, 2025**: Settings page enhancements, splash screen, force update mechanism
-- **July 8, 2025**: Started using Cloudflare DNS for dawatime.com domain
+- **July 2, 2025**: Brand green color (#8AC249) and app icons finalized
+- **July 8, 2025**: Cloudflare DNS configuration for dawatime.com
 - **July 9, 2025**: Firebase Crashlytics, Analytics, and Performance monitoring integrated
-- **July 10, 2025**: Privacy policy and terms links added, start date selection for medications
+- **July 14, 2025**: App uploaded to App Store Connect
 
-**Architecture Decisions (June-July 2025)**:
+**Core Architecture Established**:
 
-- **Database Structure (v1)**: Flat collection structure `/{userId}/{medicationId}` (later migrated to subcollections in Dec 2025)
-- **Notification Strategy**: Local notifications with follow-up reminders every 30 minutes (up to 5 total)
-- **Authentication Flow**: Email/password with verification emails
-- **Theme System**: Light/dark mode with brand green (#8AC249)
-
-**Feature Evolution (July 2025)**:
-
-- App icon and branding finalized (DawaTime.png, brand green #8AC249)
-- Settings page redesigned with user profile editing
-- Password reset functionality with confirmation dialogs
-- Splash screen with version checking
-- Force update mechanism via Firestore
-- Account deletion flow with Firebase Cloud Function
-- User management web pages for support
-- Start date selection for medications (July 10)
-- Intro guide for first-time users (July 12-13)
-- App uploaded to App Store Connect (July 14)
-- iOS deployment target set to 15.6 (July 5)
+- Firebase Authentication (email/password), Firestore database, local notifications (5 follow-ups every 30 minutes)
+- Flat database structure `/{userId}/{medicationId}` (migrated to subcollections Dec 2025)
+- Light/dark theme system, swipe gestures, force update mechanism
 
 ### Pre-v1.3.4 Refinements (August - October 2025)
 
-**Development Focus**: Localization system, weekday scheduling, and production readiness.
+**Major Features Added**:
 
-**Key Improvements (August 2025)**:
-
-- Adaptive launcher icons for Android (August 5)
-- App guide integrated into login and splash screens (August 10)
-- Version 1.1.1 released to App Store (August 12)
-- **Arabic localization added (August 17, 2025)**: Complete Arabic/English bilingual support with ARB files, RTL layout
-- RTL text directionality implementation (August 23-25)
-- Localization strings expanded across all UI elements (August 25)
-- Launch screens updated for iOS and Android (August 26)
-- **Days of week scheduling** feature added (August 29)
-- Splash and background images added (August 29)
-
-**Production Polish (September-October 2025)**:
-
-- Weekday notification scheduling refinements (September 2)
-- Enhanced medication management with days-of-week support (October 23-24)
-- Website pages created (https://dawatime.com with App Store links) (October 22)
-- Security fixes (nodemailer 7.0.7, form-data 2.5.4) (October 24)
-- Android build artifacts optimization (October 24)
-- App initialization error handling (October 24)
-- Force update dialog improvements
-- Version 1.3.4 finalized and released (October 26)
+- **August 12, 2025**: v1.1.1 released to App Store (first production release)
+- **August 17, 2025**: Arabic localization added - complete bilingual support with RTL layout
+- **August 29, 2025**: Days of week scheduling feature (specific weekdays vs every X days)
+- **October 22, 2025**: Website created at https://dawatime.com with App Store links
+- **October 26, 2025**: v1.3.4 finalized and released (weekday scheduling + production polish)
 
 ### Initial Deployments
 
-**iOS Production Release History**:
+**Current Production (v1.4.4 - January 21, 2026)**:
 
-**v1.4.4** (January 21, 2026) - Database Migration & iOS Notification Fixes:
-
-- Database migration to subcollection structure
-- Fixed iOS notification delivery issues (missing main scheduling loop, interruption levels)
+- Database migration to subcollection structure `/Users/{userId}/medications/{medicationId}`
+- iOS notification fixes (main scheduling loop, interruption levels, startup cleanup)
 - Customizable refill reminder scheduling (day/time selection)
 - Legal document version tracking system
-- iOS notification cleanup on app startup
-- **Current Production Version** (as of January 2026)
+- **Deployed simultaneously**: iOS App Store + Google Play Store (coordinated launch)
 
-**v1.3.4** (October 28, 2025) - Weekday Scheduling:
+**Version History**:
 
-- Added ability to select specific days of week for each medication
-- Smart notifications only on chosen days
-- Enhanced splash screen design
-- Improved medication management interface with day selection
-- **Production from October 2025 - January 2026** (superseded by v1.4.4 on January 21, 2026)
-
-**v1.2.2** (August 31, 2025) - Bug Fixes:
-
-- Fixed launch screen image display bug
-- Added version update check
-- Corrected medication name display issue when confirming dose
-
-**v1.2.1** (August 28, 2025) - Arabic Localization:
-
-- Major feature: Full Arabic language support announced
-- Bilingual release notes (Arabic + English)
-- Complete RTL layout implementation
-
-**v1.1.1** (August 14, 2025) - Initial Release:
-
-- First public release on Apple App Store
-- Core medication reminder functionality
-- Local notifications with follow-ups
-- Basic theme switching
-- English-only (Arabic added in v1.2.1)
-
-**Android Website Distribution - v1.3.4 (October 26, 2025)**:
-
-- First publicly distributed Android APK via website (https://dawatime.com)
-- Enhanced weekday scheduling features
-- Improved notification reliability
-- Production-ready Firebase configuration
-- **Distribution method**: Website APK download only (pre-Play Store)
-
-**Android Play Store Release History**:
-
-**v1.4.4** (January 21, 2026) - Official Play Store Debut:
-
-- First-ever release on Google Play Store
-- Same features as iOS v1.4.4 (database migration, notification fixes, customizable refill reminders)
-- Replaces website APK distribution with official Play Store channel
-- **Current Production Version** (as of January 2026)
-- **Significance**: Android users can now get automatic updates from Play Store instead of manual APK downloads
+- **v1.1.1** (August 14, 2025): First iOS App Store release
+- **v1.2.1** (August 28, 2025): Arabic localization added
+- **v1.3.4** (October 26, 2025): Weekday scheduling + website APK distribution
+- **v1.4.4** (January 21, 2026): Database migration + iOS fixes + Play Store debut
 
 ### Stable Feature Set (v1.3.4)
 
@@ -411,13 +248,13 @@ Fix app and implement notifications and more detailed types of medication
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.5+53 (VALIDATED AND PRODUCTION-READY - Day 17, January 25, 2026)
+**Current Version**: v1.4.5+53 (VALIDATED AND PRODUCTION-READY - Day 19, January 25, 2026)
 **Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store (v1.4.4+50)
 **Hotfix Status**: ✅ **VALIDATED** - v1.4.5+53 ready for staged rollout after 24-48h Crashlytics monitoring
-**Previous Versions**: v1.4.4+50 (Production) | v1.4.5+52 (Day 16 - Play Integrity) | v1.4.5+51 (Day 16 - RenderFlex) | v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
+**Previous Versions**: v1.4.4+50 (Production) | v1.4.5+52 (Day 19 - Play Integrity) | v1.4.5+51 (Day 16 - RenderFlex) | v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **Play Integrity API production security**, **Safe URL launching (16 locations)**, **Android signup buttons functional**, **Portfolio domain integration**, **Update checker version detection**, **RenderFlex overflow fixes**, **7 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
+**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **Play Integrity API production security**, **Safe URL launching (16 locations)**, **Android signup buttons functional**, **Portfolio domain integration**, **Update checker version detection**, **RenderFlex overflow fixes**, **6 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
 
 **🎉 Day 15 Production Launch (January 21, 2026)**:
 
@@ -460,19 +297,21 @@ Fix app and implement notifications and more detailed types of medication
   - public/DawaTime-favicon.png (NEW: optimized favicon with larger icon, rounded corners, green background)
 - **Deployment**: Firebase Hosting (20 files deployed, live at https://dawatime.com)
 
-**v1.4.5+53 Hotfix Release** (Day 17 - January 25, 2026):
+**v1.4.5+53 Hotfix Release** (Day 19 - January 25, 2026):
 
 **Release Status**: ✅ **DEPLOYED TO INTERNAL TESTING**
+
 - **Build**: 54.3MB app-release.aab
 - **Testing**: 5 of 6 features validated on physical Android device (83%)
 - **Release Notes**: Approved (English + Arabic, production-ready)
-- **Deployment**: ✅ Uploaded to Google Play Console Internal Testing (Day 17)
+- **Deployment**: ✅ Uploaded to Google Play Console Internal Testing (Day 19)
 - **Monitoring Phase**: ⏭️ **SKIPPED** - User decision (issues validated and fixed on physical device)
 - **Next Phase**: Staged rollout to production (10% → 50% → 100%)
 
 **All Features Implemented** ✅ (7 total):
 
 **1. Play Integrity API Production Integration** ✅ VALIDATED:
+
 - **Purpose**: App authenticity verification to prevent tampering, clones, and abuse
 - **Implementation**:
   - Removed debug bypasses from main.dart lines 772-776 (splash screen verification)
@@ -484,13 +323,15 @@ Fix app and implement notifications and more detailed types of medication
 - **Build**: v1.4.5+52 (54.3MB)
 
 **2. Migration setState Crash Fix** ✅ VALIDATED:
+
 - **Issue**: Null check operator crash when users navigate away during migration status check
 - **Implementation**: Added mounted checks before setState in home_page.dart lines 178, 180, 183
 - **Fix Pattern**: Wrapped all three setState calls with `if (mounted)` guards
 - **Impact**: Prevents production crashes discovered via Crashlytics
 - **Testing**: ✅ Validated in previous session (no crashes observed)
 
-**3. Signup Buttons Android Fix** ✅ VALIDATED (Day 17):
+**3. Signup Buttons Android Fix** ✅ VALIDATED (Day 19):
+
 - **Issue**: Terms & Privacy links not working on Android/Samsung devices (silent failure)
 - **Root Cause**: LaunchMode.platformDefault incompatible with Android 11+ package visibility restrictions
 - **Implementation** (3-part fix):
@@ -508,7 +349,8 @@ Fix app and implement notifications and more detailed types of medication
 - **Build**: v1.4.5+53 (54.3MB)
 - **Discovery**: Day 15 production user complaint, iOS works fine, Android silent failure
 
-**4. RenderFlex Overflow Crash Fix** ✅ VALIDATED (Day 17):
+**4. RenderFlex Overflow Crash Fix** ✅ VALIDATED (Day 19):
+
 - **Issue**: "A RenderFlex overflowed by 25 pixels on the right" crash on physical Android device (Galaxy A15 5G)
 - **Root Cause**: Legal update dialog buttons had unnecessary Row + Center wrappers inside button child
 - **Implementation**: Removed Row and Center wrappers in main.dart lines 1097, 1130
@@ -518,7 +360,8 @@ Fix app and implement notifications and more detailed types of medication
 - **Discovery**: Firebase Crashlytics during physical device testing (v1.4.5 build 51)
 - **Testing**: ✅ **User confirmed: "Renderflex issue now disappeared"**
 
-**5. Portfolio Domain Integration** ✅ VALIDATED (Day 17):
+**5. Portfolio Domain Integration** ✅ VALIDATED (Day 19):
+
 - **Purpose**: Added developer portfolio link to Settings → About dialog
 - **Implementation**:
   - Added "visitPortfolio" localization keys in app_en.arb, app_ar.arb
@@ -529,9 +372,10 @@ Fix app and implement notifications and more detailed types of medication
 - **Testing**: ✅ **User confirmed: "portfolio is now shown and it works"**
 
 **6. Update Checker Bug Fix** ⏹️ SKIPPED (Code-Reviewed):
+
 - **Issue**: False "up to date" message when reinstalling older version
 - **Root Cause**: SharedPreferences persists across reinstalls, 24-hour cache blocks update checks for downgraded versions
-- **Implementation**: Added version change detection in lib/main.dart lines 583-608 (_shouldCheckForUpdates function)
+- **Implementation**: Added version change detection in lib/main.dart lines 583-608 (\_shouldCheckForUpdates function)
   - Compares stored version vs. current version
   - If versions don't match → clears cache → forces update check
 - **Impact**: Users on older versions now correctly see "Update Required" dialog
@@ -539,6 +383,7 @@ Fix app and implement notifications and more detailed types of medication
 - **Testing**: ⏹️ **User chose to skip** (complex test scenario, edge case, low-risk)
 
 **7. Safe URL Launching (iOS SafariViewController Fix)** N/A (Android Testing Only):
+
 - **Purpose**: Fix iOS SafariViewController crashes with canLaunchUrl validation
 - **Implementation**: Added validation to 16 launchUrl locations:
   - signup_page.dart (2 locations)
@@ -550,13 +395,15 @@ Fix app and implement notifications and more detailed types of medication
 - **Testing**: N/A (tested on Android device only, iOS testing pending)
 
 **Build Details**:
+
 - **Bundle Size**: 54.3MB (app-release.aab)
 - **Build Number**: 53
 - **Version**: 1.4.5
 - **flutter analyze**: ✅ Passed (no issues)
 - **Platforms**: Android + iOS (coordinated release)
 
-**Testing Validation Results** (Day 17 - January 25, 2026):
+**Testing Validation Results** (Day 19 - January 25, 2026):
+
 - **Test Device**: Physical Android device (Galaxy A15 5G)
 - **Features Validated**: 5 of 6 testable features (83%)
   1. ✅ Play Integrity: Working correctly
@@ -570,6 +417,7 @@ Fix app and implement notifications and more detailed types of medication
 **Approved Release Notes** (Production-Ready):
 
 **English Version**:
+
 ```
 We've improved DawaTime for you:
 
@@ -582,6 +430,7 @@ Never miss a dose! 💚
 ```
 
 **Arabic Version**:
+
 ```
 قمنا بتحديث تطبيق دواء تايم لخدمتكم بشكل أفضل:
 
@@ -594,14 +443,15 @@ Never miss a dose! 💚
 ```
 
 **Deployment Timeline**:
+
 - **Day 16 (Jan 22)**: v1.4.5+51 development started (RenderFlex fix)
-- **Day 16 (Jan 25)**: v1.4.5+52 built (Play Integrity production integration)
-- **Day 17 (Jan 25)**: Signup Buttons Android issue discovered
-- **Day 17 (Jan 25)**: v1.4.5+53 built with Android 11+ queries fix (54.3MB)
-- **Day 17 (Jan 25)**: Comprehensive physical device testing (5 of 6 features validated)
-- **Day 17 (Jan 25)**: Release notes generated and approved
-- **Day 17 (Jan 25)**: Documentation updated
-- **Day 17 (Jan 25)**: ✅ **Deployed to Google Play Console Internal Testing**
+- **Day 19 (Jan 25)**: v1.4.5+52 built (Play Integrity production integration)
+- **Day 19 (Jan 25)**: Signup Buttons Android issue discovered
+- **Day 19 (Jan 25)**: v1.4.5+53 built with Android 11+ queries fix (54.3MB)
+- **Day 19 (Jan 25)**: Comprehensive physical device testing (5 of 6 features validated)
+- **Day 19 (Jan 25)**: Release notes generated and approved
+- **Day 19 (Jan 25)**: Documentation updated
+- **Day 19 (Jan 25)**: ✅ **Deployed to Google Play Console Internal Testing**
 - **Days 18-19 (Jan 26-27)**: ~~24-48h Crashlytics monitoring~~ → **SKIPPED** (user decision)
 - **Days 20-22 (Jan 28-30)**: ~~Staged rollout to production (10% → 50% → 100%)~~ → **ON HOLD**
 - **Day 28 (Jan 28, 2026)**: ✅ **HANDOFF COMPLETE** - All materials delivered to Rahma (test account, documentation, brand assets)
@@ -610,7 +460,8 @@ Never miss a dose! 💚
 - **Day 48+ (Feb 17+)**: Android v1.4.5+53 staged rollout begins (Play Console)
 
 **Next Steps**:
-- ✅ ~~Upload to Google Play Console Internal Testing~~ → **DEPLOYED** (Day 17)
+
+- ✅ ~~Upload to Google Play Console Internal Testing~~ → **DEPLOYED** (Day 19)
 - ⏭️ ~~Monitor Firebase Crashlytics for 24-48 hours~~ → **SKIPPED** (user decision - issues validated on physical device)
 - ⏳ Begin staged rollout to production (10% → 50% → 100%)
 - ⏳ Monitor App Store Connect & Play Console metrics during rollout
@@ -620,16 +471,19 @@ Never miss a dose! 💚
 **Signup Buttons Fix Journey** (Discovery to Validation):
 
 **Discovery Phase** (Day 15 - January 21, 2026):
+
 - Production user complaint: "Terms & Privacy links not working on Android/Samsung device"
 - Testing confirmed: iOS works perfectly, Android fails silently with no feedback
 - Impact: CRITICAL - blocks new user signups on Android (legal compliance issue)
 
-**Diagnosis Phase** (Day 17 - January 25, 2026):
+**Diagnosis Phase** (Day 19 - January 25, 2026):
+
 - Root cause identified: LaunchMode.platformDefault incompatible with Android 11+ package visibility
 - Android 11+ requires explicit package queries in AndroidManifest.xml for https:// intents
 - Missing queries → launchUrl silently fails → no browser opens → no user feedback
 
-**Implementation Phase** (Day 17 - January 25, 2026):
+**Implementation Phase** (Day 19 - January 25, 2026):
+
 - **3-part fix**:
   1. Added Android 11+ `<queries>` block with VIEW action + https scheme
   2. Changed LaunchMode.platformDefault → LaunchMode.externalApplication (external browser)
@@ -639,7 +493,8 @@ Never miss a dose! 💚
   - lib/signup_page.dart (2 locations: Terms lines 294-330, Privacy lines 349-375)
 - **Build**: v1.4.5+53 (54.3MB, 155.6s build time)
 
-**Validation Phase** (Day 17 - January 25, 2026):
+**Validation Phase** (Day 19 - January 25, 2026):
+
 - Physical device testing on Galaxy A15 5G (Android)
 - User confirmation: **"signup text buttons now work in android"**
 - Both Terms & Privacy links confirmed opening in external browser
@@ -647,6 +502,7 @@ Never miss a dose! 💚
 - Result: ✅ NEW USER SIGNUPS UNBLOCKED
 
 **Files Modified (v1.4.5+53 Complete Changeset)**:
+
 - `/lib/home_page.dart` - Migration setState mounted checks (lines 178, 180, 183)
 - `/lib/main.dart` - Safe URL launching (8 locations), Update Checker (lines 583-608), Play Integrity debug removal (lines 772-776), RenderFlex fix (lines 1097, 1130)
 - `/lib/signup_page.dart` - Safe URL launching (2 locations), Signup Buttons Android fix (lines 294-330, 349-375)
@@ -672,6 +528,7 @@ Never miss a dose! 💚
 **Marketing Campaign Launch (Day 15 - January 21, 2026)**:
 
 **Instagram Paid Advertising Campaign**:
+
 - **Post**: https://www.instagram.com/p/DTw9AasDEUD/ (bilingual carousel: English + Arabic)
 - **Status**: ✅ **ACTIVE** - Ad approved and live, running 7-day campaign
 - **Creative**: #8AC249 green background, DawaTime logo, "Never miss a dose" tagline, dual store badges
@@ -690,186 +547,97 @@ Never miss a dose! 💚
 - **Month 2-3 Expansion**: Add Bahrain, Qatar if Kuwait CPI <2 KWD performs well
 
 **Campaign Performance Tracking**:
-- **Day 2 (January 22, 2026)**:
-  - **Reach**: 1,956 people saw the ad
-  - **Link Clicks**: 23 clicks on the ad link
-  - **Website Visits**: 39 visitors to dawatime.com (may include non-ad sources)
-  - **CTR (Click-Through Rate)**: 1.18% (23/1,956)
-  - **Cost Per Website Visit**: $0.22
-  - **Analysis**:
-    - ⚠️ **CTR Below Target**: 1.18% vs 1.5% target (0.32% gap)
-    - ✅ **Solid Reach**: ~280 impressions/day ($3.57 per 1,000 impressions)
-    - ✅ **Excellent Cost Per Visit**: $0.22 is highly competitive for health app campaigns in Kuwait
-    - 🔍 **Next Steps**: Monitor Day 3-4 data, CTR typically improves as Instagram optimizes delivery
-    - 💡 **Consideration**: Week 1 is awareness/brand-building; conversion optimization comes Week 2-4
-  - **Budget Burn**: ~$20/70 spent (28% of budget through 28% of campaign)
-  - **CPI Calculation Pending**: Need Firebase/App Store data to calculate actual Cost Per Install
 
-- **Day 3 (January 23, 2026)**:
-  - **Views**: 4,515 total impressions
-  - **Reach**: 3,406 unique people
-  - **Website Visits**: 102 (goal metric)
-  - **Link Clicks**: 50 clicks on ad link
-  - **Cost Per Website Visit**: $0.25
-  - **Spend**: $25.58 of $70.00 (36.5% of budget)
-  - **Status**: 5 days remaining (Day 3 of 7)
-  - **Engagement**:
-    - Likes and reactions: 4
-    - Shares: 2
-    - Saves: 2
-    - Profile visits: 82
-    - External link taps: 8
-    - Messaging conversations started: 1
-    - Follows: 1
-  - **Top Locations** (Kuwait Governorates):
-    - Capital Governorate: 25.2%
-    - Hawalli Governorate: 24.4%
-    - Ahmadi Governorate: 17.5%
-    - Farwaniya Governorate: ~16.4%
-    - Mubarak Al-Kabeer Governorate: ~16.5%
-  - **Analysis**:
-    - ✅ **Strong Improvement**: 102 website visits vs 39 on Day 2 (161% increase)
-    - ✅ **CTR Improved**: 1.11% (50/4,515) still below 1.5% target but better engagement
-    - ✅ **Geographic Spread**: Excellent distribution across all 5 Kuwait governorates (no concentration issues)
-    - ✅ **Cost Efficiency**: $0.25 per website visit remains competitive
-    - ✅ **Profile Engagement**: 82 profile visits shows strong interest (people researching brand)
-    - 📊 **Website Visit Conversion**: 102 visits / 3,406 reach = 3% visit rate (strong for awareness campaign)
-    - 💡 **Observation**: Link clicks (50) vs Website visits (102) suggests some visits from bio link or organic traffic
-    - 🎯 **On Track**: Budget pacing well (36.5% spend at Day 3 of 7 = 43% through campaign)
-  - **CPI Calculation Pending**: Need Firebase/App Store data to calculate actual Cost Per Install
-
-- **Day 5 (January 25, 2026)** - Morning Update:
-  - **Views**: 7,077 total impressions
-  - **Reach**: 4,787 unique people
-  - **Website Visits**: 169 (goal metric)
-  - **Link Clicks**: 86 clicks on ad link
-  - **Cost Per Website Visit**: $0.24
-  - **Spend**: $40.40 of $70.00 (57.7% of budget)
-  - **Status**: 3 days remaining (Day 5 of 7)
-  - **Engagement**:
-    - Likes and reactions: 7
-    - Shares: 4
-    - Saves: 3
-    - Profile visits: 131
-    - External link taps: 10
-    - Messaging conversations started: 2
-    - Follows: 1
-  - **Top Locations** (Kuwait Governorates):
-    - Capital Governorate: 26.7%
-    - Hawalli Governorate: 24.7%
-    - Ahmadi Governorate: 16.7%
-    - Farwaniya Governorate: 13.8%
-    - Mubarak Al-Kabeer Governorate: 11%
-  - **Analysis**:
-    - ✅ **Excellent Reach Growth**: 4,787 unique people reached (40% increase from Day 3)
-    - ✅ **Strong Website Conversion**: 169 website visits (66% increase from Day 3's 102)
-    - ✅ **Improved Engagement**: 131 profile visits (60% increase from Day 3's 82)
-    - ✅ **Cost Efficiency Maintained**: $0.24 per website visit (competitive pricing)
-    - 📊 **Website Visit Conversion**: 169 visits / 4,787 reach = 3.5% visit rate (improved from 3% on Day 3)
-    - 🎯 **Budget Pacing**: 57.7% spend at Day 5 of 7 = 71% through campaign (slight overpacing but within acceptable range)
-    - 💡 **Link Click Efficiency**: 86 clicks vs 169 visits suggests strong bio link traffic and organic interest
-  - **CPI Calculation Pending**: Need complete Firebase/App Store data through Jan 25
-
-- **Day 7 (January 27, 2026)** - Final Campaign Day:
-  - **Views**: 10,018 total impressions
-  - **Reach**: 6,494 unique people
-  - **Website Visits**: 246 (goal metric)
-  - **Link Clicks**: 120 clicks on ad link
-  - **Cost Per Website Visit**: $0.25
-  - **Spend**: $60.43 of $70.00 (86.3% of budget)
-  - **Status**: 1 day remaining (Day 7 of 7)
-  - **Engagement**:
-    - Likes and reactions: 9
+- **FINAL RESULTS (January 29, 2026)** - 7-Day Campaign Complete:
+  - **Views**: 11,525 total impressions
+  - **Reach**: 7,198 unique people
+  - **Website Visits**: 289 (goal metric - final)
+  - **Link Clicks**: 143 clicks on ad link
+  - **Cost Per Website Visit**: $0.24 (final average)
+  - **Spend**: $69.84 of $70.00 (99.8% budget utilization)
+  - **Status**: ✅ **COMPLETED**
+  - **Duration**: Full 7 days (Jan 21-27, 2026)
+  - **Engagement (Total)**:
+    - Likes and reactions: 30
     - Shares: 8
-    - Saves: 6
-    - Profile visits: 205
-    - External link taps: 19
+    - Saves: 9
+    - Comments: 2
+    - Profile visits: 237
+    - External link taps: 21
     - Messaging conversations started: 2
-    - Follows: 2
+    - Follows: 3
   - **Top Locations** (Kuwait Governorates):
-    - Capital Governorate: 26.9%
-    - Hawalli Governorate: 26.2%
-    - Ahmadi Governorate: 16%
-    - Farwaniya Governorate: 13.3%
-    - Mubarak Al-Kabeer Governorate: 10.8%
-  - **Analysis**:
-    - ✅ **Strong Campaign Finale**: 6,494 unique people reached (36% increase from Day 5's 4,787)
-    - ✅ **Excellent Website Performance**: 246 website visits (46% increase from Day 5's 169)
-    - ✅ **High Profile Engagement**: 205 profile visits (56% increase from Day 5's 131)
-    - ✅ **Cost Efficiency Maintained**: $0.25 per website visit (consistent throughout campaign)
-    - 📊 **Website Visit Conversion**: 246 visits / 6,494 reach = 3.8% visit rate (best performance yet, up from 3.5% Day 5)
-    - 🎯 **Budget Utilization**: 86.3% spend with 1 day remaining (excellent pacing)
-    - 💡 **Link Click Efficiency**: 120 clicks vs 246 visits (2.05x ratio) shows strong bio link + organic traffic
-    - 🎯 **Geographic Distribution**: Balanced across all 5 governorates (Capital + Hawalli = 53.1% combined)
-  - **CPI Calculation Pending**: Need complete Firebase/App Store data through Jan 27
+    - Hawalli Governorate: 26.5%
+    - Capital Governorate: 26.2%
+    - Ahmadi Governorate: 16.2%
+    - Farwaniya Governorate: 13.5%
+    - Mubarak Al-Kabeer Governorate: 10.9%
+  - **Demographics**:
+    - **Gender**: Male 77.9%, Female 21.8%, Unknown 0.3%
+    - **Age Range**: 25-34 (36.3%), 35-44 (25.3%), 45-54 (14.3%), 18-24 (12.8%), 55-64 (6.6%), 65+ (5.7%)
+  - **Performance Analysis**:
+    - ✅ **Strong Total Reach**: 7,198 unique accounts reached across Kuwait
+    - ✅ **Efficient Cost**: $0.24 per website visit (below target of $0.25-0.30)
+    - ✅ **Excellent Budget Execution**: 99.8% spend (optimal pacing, no waste)
+    - ✅ **Geographic Coverage**: Balanced distribution across all 5 Kuwait governorates
+    - 📊 **Website Visit Conversion**: 289 visits / 7,198 reach = 4.0% conversion rate (strong for awareness campaign)
+    - 📊 **Link Click Efficiency**: 143 link clicks vs 289 website visits (2.02x ratio) indicates strong bio link traffic + organic interest
+    - 💡 **Profile Engagement**: 237 profile visits (3.3% of reach) shows users researching brand before downloading
+    - 🎯 **Audience Fit**: 36.3% in 25-34 age range aligns with target chronic medication users
+    - 🎯 **Male Skew**: 77.9% male audience may indicate health app adoption patterns in Kuwait
+  - **Key Takeaways**:
+    - ✅ Cost-effective awareness campaign ($70 reached 7,198 people = $0.01 CPM)
+    - ✅ Strong website engagement (289 visits = actionable interest)
+    - ⚠️ CTR 1.24% (143 clicks / 11,525 views) slightly below 1.5% target but acceptable for awareness
+    - 💡 Profile visits (237) suggest users researching app credibility before download
+    - 📈 Geographic distribution validates Kuwait-wide appeal (no concentration in single governorate)
+  - **Next Steps**:
+    - Monitor Firebase/App Store conversion data (website visits → app installs)
+    - Calculate true CPI (Cost Per Install) with download data
+    - Evaluate Week 2-4 campaign strategy based on install conversion rate
+    - Consider A/B testing creative variations for CTR improvement
 
-**Store Installation Data (Days 15-27: Jan 21-27, 2026)**:
-- **iOS (App Store Connect)**:
-  - Total downloads (Dec 27, 2025 - Jan 25, 2026): 44
-  - Jan 25, 2026: 7 downloads
-  - Jan 24, 2026: 6 downloads
-  - Jan 23, 2026: 6 downloads
-  - Jan 22, 2026: 5 downloads
-  - Jan 21, 2026: 10 downloads (Production Launch Day)
-  - Jan 17, 2026: 1 download
-  - **Production launch total (Jan 21-25)**: 34 new installs
-- **Android (Google Play Console)**:
-  - **Production (Jan 21-26 - Official Play Store Launch)**:
-    - Jan 26, 2026: 1 install
-    - Jan 25, 2026: 1 install
-    - Jan 23, 2026: 1 install
-    - Jan 22, 2026: 4 installs
-    - Jan 21, 2026: 4 installs (Production Launch Day)
-  - **Closed Testing (Pre-Production)**:
-    - Jan 20, 2026: 1 install
-    - Jan 19, 2026: 3 installs
-    - Jan 18, 2026: 5 installs
-    - Jan 17, 2026: 2 installs
-    - Jan 16, 2026: 12 installs
-  - **Production launch total (Jan 21-26)**: 11 new installs
-- **Combined Performance (Production Launch: Jan 21-26)**:
-  - **Total production downloads**: 45 downloads (iOS: 34, Android: 11)
-  - **Platform split**: iOS 76%, Android 24%
-  - **Note**: iOS showing stronger performance (10 downloads launch day, sustained 5-7/day afterward)
-  - **Android production**: Steady 1-4 installs per day since official Play Store launch (Jan 21)
-- **Firebase Authentication Total (Day 27 - January 27, 2026)**:
-  - **Total registered users**: 105 users
-  - **Breakdown**: 68 pre-testing + 15 closed testing + 22 post-launch = 105 total
-  - **Real users**: 101 (excludes 4 dev/test accounts)
-  - **Growth since launch (Day 15)**: 105 - 98 = 7 new registered users in 6 days
-  - **Install-to-registration rate**: 45 downloads → 7 new registrations = 16% conversion (lower than initial 61%, indicates some downloads were reinstalls/updates from existing users)
+**Campaign Conversion Analysis**:
 
-**Store Installation Data (Days 15-16: Jan 21-22, 2026)**:
-- **iOS (App Store Connect)**:
-  - Total downloads (Dec 24 - Jan 22): 25
-  - Launch day (Jan 21): 10 downloads
-  - Day 2 (Jan 22): 5 downloads
-  - **Launch period total**: 15 new installs
-- **Android (Google Play Console)**:
-  - Launch day (Jan 21): 4 installs
-  - Day 2 (Jan 22): 4 installs
-  - **Launch period total**: 8 new installs
-- **Combined Performance**:
-  - **Total store downloads (Days 15-16)**: 23 downloads
-  - **Platform split**: iOS 65% (15), Android 35% (8)
-  - **Actual registered users**: 14 new registrations (23 downloads ≠ 23 registrations)
-  - **User timeline**: 68 pre-testing → 83 post-closed-testing → 98 post-launch (94 real users + 4 dev/test accounts)
-  - **Launch growth**: 15 new registered users in 2 days (includes some dev accounts in early days)
-  - **Install-to-registration rate**: 61% (14/23) - indicates app quality/onboarding effectiveness
+- **Ad Spend**: $69.84 (7 days)
+- **Website Visits**: 289 (from Instagram ad + bio link traffic)
+- **Store Downloads During Campaign**: 61 total (iOS: 47, Android: 14)
+  - Campaign period: Jan 21-28, 2026
+  - iOS: 10 + 5 + 6 + 6 + 7 + 6 + 7 = 47 downloads
+  - Android: 4 + 4 + 1 + 1 + 1 + 2 + 1 = 14 downloads
+- **New Registered Users**: 10 (108 total - 98 pre-campaign = 10 new signups)
+- **Conversion Funnel**:
+  - Website Visit → Store Download: 61/289 = 21% (strong - users click through to stores)
+  - Store Download → Registration: 10/61 = 16% (indicates many downloads are reinstalls/updates from existing 98 users)
+- **Cost Per Metrics**:
+  - **Cost Per Website Visit**: $0.24 (excellent - below target)
+  - **Cost Per Download**: $69.84 / 61 = **$1.14 per download**
+  - **Cost Per Registered User**: $69.84 / 10 = **$6.98 per new user**
+- **Performance Assessment**:
+  - ✅ **CPI**: $1.14 is EXCEPTIONAL (82% below target of 2 KWD = ~$6.50)
+  - ✅ **Download Conversion**: 21% (website → store) is strong for health apps
+  - ⚠️ **Registration Rate**: 16% (download → signup) lower than expected because many downloads came from existing 98 users reinstalling/updating
+  - 💡 **Reality Check**: Campaign drove awareness among existing user base (profile research, reinstalls) + attracted 10 genuinely new users
+  - 📊 **True New User CPI**: $6.98 is slightly above target ($6.50) but acceptable for Week 1 awareness campaign
+- **Key Insights**:
+  - Campaign successfully reached Kuwait market (7,198 unique people)
+  - Strong website engagement (289 visits = high interest)
+  - Download rate validates product appeal (61 downloads)
+  - Low registration rate reflects mature existing user base (98 pre-campaign users reinstalling)
+  - **For Week 2-4**: Target cold audiences (exclude existing followers/users) to increase new user registration rate
 
-**Cost Per Install (CPI) Analysis**:
-- **Ad spend through Day 3**: $25.58
-- **Store downloads (Days 15-16)**: 23 downloads
-- **Registered users (Days 15-16)**: 14 new registrations
-- **CPI (by downloads)**: $25.58 ÷ 23 = $1.11 per download
-- **CPI (by registered users)**: $25.58 ÷ 14 = **$1.83 per registered user**
-- **Target CPI**: 2 KWD (~$6.50)
-- **Performance**: 🎯 **EXCEPTIONAL** - CPI is 72% below target ($1.83 vs $6.50)
-- **Implication**: Instagram paid ads highly effective for Kuwait health app market
-- **Install-to-registration conversion**: 61% (14/23) shows strong product-market fit
-- **Note**: CPI will increase as campaign continues (early installs often cheapest)
+**Store Installation Data (Days 15-29: Jan 21-29, 2026)**:
+
+- **iOS**: 57 total downloads (47 during 7-day campaign Jan 21-27, launch day peak: 10 installs)
+- **Android**: 14 production installs (Jan 21-28) + 33 closed testing (Jan 15-20)
+- **Combined Production Performance**: 61 downloads (iOS: 47, Android: 14) - Platform split: iOS 77%, Android 23%
+- **Campaign Correlation**: 61 downloads aligned with 7-day Instagram ad campaign (Jan 21-27, $69.84 spend, 289 website visits, 7,198 reach)
+- **Firebase Authentication Total (Day 23)**: 108 users (103 real + 5 dev/test accounts: hamad_alkhalaf_99, hamad@dawatime, testapple@dawatime, testgoogle@dawatime, design@dawatime)
+- **User Growth**: 98 pre-campaign → 108 post-campaign = 10 new registered users in 8 days
+- **Install-to-Registration Rate**: 61 downloads → 10 new registrations = 16% conversion (indicates many downloads are reinstalls/updates from existing 98 users)
 
 **LinkedIn Professional Positioning**:
+
 - **Post**: https://www.linkedin.com/feed/update/urn:li:activity:7419657007840022528/
 - **Strategy**: Failure→success narrative (9.5/10 rating vs 7/10 generic announcement)
 - **Hook**: "Three years ago, I submitted a broken final project for my Flutter course at CODED"
@@ -879,12 +647,14 @@ Never miss a dose! 💚
 - **Positioning**: Builder credibility + technical execution + growth mindset (professional network engagement)
 
 **Multi-Channel Brand Positioning**:
+
 - **Instagram** (Consumer): Local pride (#MadeInKuwait), health benefit ("Never miss a dose"), bilingual GCC targeting, paid ads for acquisition
 - **LinkedIn** (Professional): Builder credibility, failure→success narrative, technical showcase, growth mindset
 - **Portfolio** (Evergreen): https://hamadalkhalaf.com - Capability-focused, dual-platform availability, no limiting metrics
 - **Milestone**: January 21, 2026 - Coordinated multi-platform marketing launch (Instagram paid + LinkedIn organic + Portfolio integration)
 
 **Post-Launch Actions** (Days 15-22):
+
 - **Instagram**: ✅ **Ad Campaign LIVE** - 7-day boosted campaign running ($10/day, $70 total). Monitor reach/impressions/CPI daily. Evaluate performance Day 22 for Week 2 strategy.
 - **LinkedIn**: First 2 hours critical for algorithm, reply to comments within 15 minutes, share to Stories within 24 hours
 - **Week 1 Goals**: Track CPI, CTR, install conversion rate via Firebase Analytics + App Store Connect + Play Console, target 98→150 users (53% growth)
@@ -904,681 +674,95 @@ Never miss a dose! 💚
 - **Day 15 (Jan 21)**: 🎉 **iOS v1.4.4+50 PUBLISHED** - Released to production on App Store
 - **Version Parity**: Both platforms launched simultaneously on Day 15 (January 21, 2026) with v1.4.4+50
 
-**Beta Testing Timeline (January 7-21, 2026)** - REVISED:
+**Beta Testing Timeline (January 7-21, 2026)**:
 
-- **Days 1-2** (Jan 7-8): Initial release v1.4.4+42 - 25 testers joined (100% engagement)
-- **Day 3** (Jan 9): 🚨 **CRISIS #1** - 24 unprocessed crashes discovered, 5 crashes fixed within hours
-- **Day 3** (Jan 9): **Emergency v1.4.4+44 deployment** - All crashes fixed (skips v43 entirely)
-- **Day 4** (Jan 10): 🚨 **CRISIS #2** - SignInHubActivity crash discovered in v44
-- **Day 4** (Jan 10): **Emergency v1.4.4+45 deployment** - SHA certificate fix + Android 15 support
-- **Day 3** (Jan 9): iOS v1.4.4+45 uploaded to TestFlight, status "Waiting for Review"
-- **Day 4** (Jan 10): 🚨 **CRISIS #3** - Migration data loss bug discovered in v45 smart bridge
-- **Day 4** (Jan 10): **Emergency v1.4.4+46 deployment** - Two-phase copy-then-delete migration fix
-- **Day 4** (Jan 10): ✅ Both v46 builds uploaded: Android "In review", iOS "Waiting for Review"
-- **Day 4** (Jan 10): ✅ Android v46 released to Closed Testing - LIVE with 25 testers
-- **Day 4** (Jan 10): ✅ Testers Community generated Production and Feedback reports (available 10 days early)
-- **Day 5** (Jan 11 Morning): 🚨 **CRISIS #4** - setState crash discovered in v46 add_medications.dart (\_checkMedicationLimit)
-- **Day 5** (Jan 11 Morning): **Emergency v1.4.4+47 deployment** - Added mounted checks before setState calls
-- **Day 5** (Jan 11 Morning): ✅ Both v47 builds uploaded: Android LIVE in Closed Testing, iOS "Waiting for Review"
-- **Day 5** (Jan 11 Morning): 🚨 **WEBSITE EMERGENCY** - Discovered bad APK deployed Dec 16, 2025 (26 days prior) to dawatime.com
-- **Day 5** (Jan 11 Morning): **Emergency website cleanup** - Removed bad APK, replaced with teaser, deployed to Firebase Hosting
-- **Day 5** (Jan 11 Morning): **Git investigation** - Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month
-- **Day 7** (Jan 11 Evening): 🚨 **CRISIS #5** - Migration merge conflict discovered: old + new data combining instead of replacing
-- **Day 7** (Jan 13 Evening): **Root cause**: User added med in new build → added med in old app → updated to new build → both meds present (merge not replacement)
-- **Day 7** (Jan 13 Evening): **Emergency v1.4.4+49 deployment** - Three-phase complete replacement: delete new first, copy old, delete old
-- **Day 7** (Jan 13 Evening): ✅ Canceled v47 iOS review, uploaded v49 to both platforms - Skipped v48 entirely
-- **Day 7** (Jan 13 Evening): ✅ Both v49 builds deployed: Android LIVE in Closed Testing, iOS "Waiting for Review"
-- **Day 6** (Jan 12): 🌐 **WEBSITE SEO OPTIMIZATION** - Google Search Console issues resolved
-- **Day 6** (Jan 12 Morning): **Google Search Console Crisis** - Discovered duplicate page indexing issues (support.html vs /support, privacy-policy.html vs /privacy-policy)
-- **Day 6** (Jan 12 Morning): **SEO Fix Implementation**:
-  - Added `<link rel="canonical">` tags to all 6 HTML pages pointing to clean URLs
-  - Created sitemap.xml with proper structure (6 URLs, priorities, change frequencies)
-  - Created robots.txt with sitemap reference and /user-management exclusion
-  - Deployed to Firebase Hosting via `firebase deploy --only hosting`
-- **Day 6** (Jan 12 Afternoon): **In-App Link Audit** - Discovered all 14 legal document links using .html extensions causing unnecessary redirects
-- **Day 6** (Jan 12 Afternoon): **Legal Link Cleanup**:
-  - Updated main.dart: 6 links (force update dialog, legal dialogs, intro guide)
-  - Updated settings.dart: 2 links (account deletion confirmation)
-  - Updated signup_page.dart: 2 links (Terms/Privacy checkbox)
-  - Updated login_page.dart: 4 links (legal update dialog, intro guide)
-  - Changed from https://dawatime.com/privacy-policy.html → https://dawatime.com/privacy-policy
-  - Changed from https://dawatime.com/terms-and-conditions.html → https://dawatime.com/terms-and-conditions
-- **Day 6** (Jan 12 Afternoon): **Emergency v1.4.4+50 deployment** - Legal link optimization
-- **Day 6** (Jan 12 Afternoon): ✅ Both v50 builds uploaded: Android LIVE in Closed Testing (54.2MB), iOS "Waiting for Review" (48.2MB)
-- **Day 6** (Jan 12 Evening): **Play Store Access Gained** - Added developer email to internal testing, verified Play Store listing appearance
-  - Confirmed store graphics, app description, permissions, and data safety sections display correctly
-  - **Release Notes Strategy**:
-    - **Android**: Blank release notes (first production release on Google Play - v1.0 moment)
-    - **iOS**: Full release notes as usual (update from v1.3.4 → v1.4.4)
-  - Rationale: Android never had Play Store release before (website APK only); iOS already at v1.3.4
-- **Day 7** (Jan 13): iOS approval received, strategic decisions finalized
-  - ✅ **Day 7 (Jan 13)**: iOS v1.4.4+50 APPROVED by Apple - Status "Pending Developer Release"
-  - 🚨 **Day 7 (Jan 13)**: STRATEGIC DECISION - Play Integrity API + Safe URL fix deferred to v1.4.5 post-launch hotfix
-  - Rationale: Preserve 100% crash-free rate on v50, avoid integration risk 5 days before Day 14 production deadline
-  - **Both platforms approved and ready** for simultaneous Day 14 production launch
-- **Day 8** (Jan 14): ✅ **STABILITY CONFIRMED** - No new errors reported
-  - ✅ **Google Play Console**: Zero new errors, v50 stable
-  - ✅ **Firebase Crashlytics**: Zero new crashes, 100% crash-free rate maintained
-  - ✅ **Tester Feedback**: No critical issues reported via Testers Community
-  - 📊 Continued monitoring across both platforms
-  - 🔍 Google Search Console indexing improvements in progress
-- **Day 9** (Jan 15): ✅ **MARKETING POST PUBLISHED** - Refill reminder value proposition
-  - 📱 **Instagram Feed + Story**: Refill reminder graphic posted with prescription bottle image
-  - **Caption**: Bilingual question "How often do you forget to refill your prescriptions?" + "DawaTime has you covered 💚 #comingsoon"
-  - **Original Plan**: Poll included but removed (wasn't visible/engaging to viewers)
-  - **Strategy**: Show pain point + tease v1.4.4 refill reminders feature without revealing Google Play
-  - **Engagement**: Caption question format maintains mystery campaign
-  - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
-    - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
-    - Google Play Console: No crashes reported
-    - v1.4.4+50 proven stable for 3 days (Days 9-11)
-  - 🌐 **WEB APP SEO BLOCKED**: Added robots.txt to webapp.dawatime.com
-    - Created `/web/robots.txt` with `Disallow: /` directive
-    - Web app positioned as convenience tool (CRUD without notifications), not acquisition channel
-    - Search traffic should go to dawatime.com (marketing site) → mobile app downloads
-    - Deployed to Netlify: https://webapp.dawatime.com/robots.txt
-- **Day 10** (Jan 16): ✅ **TESTER ENGAGEMENT UPDATE** - 12 continuous testers for 8 days
-  - **Google Play Console Status**: "12 testers have currently been opted in for 8 days continuously"
-  - Drop from 25 → 12 testers is normal (50% retention = high quality engagement)
-  - ✅ **STABILITY CONFIRMED**: Zero new errors on both platforms
-    - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
-    - Google Play Console: No crashes reported
-    - v1.4.4+50 proven stable for 4 days (Days 9-12)
-  - 🚨 **GOOGLE PLAY PRIVACY CRISIS**: Developer address verification required
-    - Google Play requires legal name + home address matching Civil ID
-    - Address will be publicly visible on Play Store listing
-    - Attempted multiple address variations → all rejected (must match Civil ID exactly)
-    - **Resolution (Jan 16)**: Updated to 1/101/55, Kuwait City 15300, Kuwait
-    - **MEW Employment Constraint**: Cannot register business as Kuwait government employee
-    - **Decision**: Proceed with home address exposure for Day 14 launch (temporary, can change after leaving MEW)
-    - Alternative considered: iOS-only production launch → Rejected, proceeding with dual platform launch as planned
-  - 📊 Production readiness metrics validated: 12 testers × 10 days = sufficient for production submission
-- **Day 11** (Jan 17): Continue v50 stability monitoring + light marketing engagement
-  - Monitor crash-free rate and tester feedback
-  - Verify Google Search Console indexing improvements
-  - Reply to poll comments with cryptic teases
-  - Result: Both platforms ready with v50 for Day 14 production launch
+**Testing Period**: 15 days (Days 1-15) with 25 initial testers → 12 continuous testers for 10+ days
 
-- **Day 11** (Jan 17): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
-  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
-  - Google Play Console: No crashes reported
-  - v1.4.4+50 proven stable for 5 days (Days 6-11)
-  - Production launch confidence: High
-- **Day 12** (Jan 18): ✅ **STABILITY CONFIRMED** - Zero new errors on both platforms
-  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
-  - Google Play Console: No crashes reported
-  - v1.4.4+50 proven stable for 6 days (Days 6-12)
-- **Day 13** (Jan 19): ✅ **STABILITY CONFIRMED** + 🔧 **GOOGLE SEARCH CONSOLE FIX**
-  - Firebase Crashlytics: 100% crash-free rate maintained (Android + iOS)
-  - Google Play Console: No crashes reported
-  - v1.4.4+50 proven stable for 7 days (Days 6-13)
-  - **Google Search Console Fix**: Added explicit HTTP→HTTPS redirect to firebase.json
-    - Issue 1: "Alternate page with proper canonical tag" (www subdomain) - validated as intentional
-    - Issue 2: "Page with redirect" validation failed (HTTP→HTTPS) - fixed with explicit redirect rule
-    - Deployed to Firebase Hosting, awaiting Google revalidation (1-3 days)
-  - Production launch confidence: High
-  - Continue monitoring through Day 14
-- **Day 14** (Jan 20): ✅ **PRODUCTION ACCESS APPLICATION SUBMITTED** - Under review
-  - **8:20 AM**: Submitted production access application to Google Play Console
-  - **Status**: "We have your application for production access" - Review in progress
-  - **Review Timeline**: Usually 7 days or less, may occasionally take longer
-  - **Email Notification**: Account owner will receive update when review complete
-  - **Application Details**:
-    - Used Production Report pre-filled answers for Questions 1-3, 5-7, 9
-    - Used customized answers for Questions 4 (feedback summary) and 8 (changes made)
-    - All 9 questions completed and submitted successfully
-  - **Production Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
-  - **Feedback Report Used** (generated Day 4): https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
-  - **Next Steps**: Wait for Google review (Days 15-21), monitor email for approval notification
-  - ✅ **PRODUCTION ACCESS APPROVED** (Same Day - Day 14, Late Afternoon)
-    - **Approval Speed**: Same-day approval (<12 hours) - significantly faster than typical 7-day timeline
-    - **Status**: Production access granted, ready to publish to production track
-    - **Significance**: 12 continuous testers for 10+ days, 100% crash-free rate, rapid emergency updates validated Google's confidence
-    - Both platforms now production-ready for simultaneous launch
-  - 🚀 **APP PUBLISHED TO PRODUCTION TRACK** (Day 14, Late Afternoon)
-    - **Status**: v1.4.4+50 submitted to Google Play production track for release review
-    - **Review Type**: Initial production release review (app going live to public for first time)
-    - **Expected Timeline**: Few hours to 2 days for Google's release approval
-    - **What's Being Reviewed**: App content, metadata, store listing compliance
-    - **iOS Status**: Holding iOS release until Android goes live (coordinated launch strategy)
-  - ✅ **ANDROID PRODUCTION RELEASE APPROVED** (Day 14, Evening)
-    - **Status**: v1.4.4+50 release review **COMPLETE** - Status changed to "Ready to Publish"
-    - **Review Speed**: Same-day approval - release review completed within hours
-    - **Significance**: Both platforms now approved and ready for coordinated production launch
-    - **Next Action**: Ready to publish to production on both iOS and Android simultaneously
-  - ✅🔒 **SMTP SECURITY HARDENING COMPLETE** - Migrated to Firebase Secret Manager
-    - **Problem**: SMTP password hardcoded in functions/index.js, attempted dotenv approach failed (.env files not uploaded to Cloud Functions)
-    - **Solution**: Migrated to Firebase Secret Manager with defineSecret() API from firebase-functions/params
-    - **Implementation**:
-      - Created EMAIL_USER and EMAIL_PASSWORD secrets in Google Cloud Secret Manager
-      - Fixed trailing newline issue (echo vs echo -n) - recreated secrets v1 → v2
-      - Updated emailAdminsOnContactMessage and requestAccountDeletion with secrets: [emailUser, emailPassword]
-      - Service account automatically granted roles/secretmanager.secretAccessor
-    - **Verification**: In-app contact form tested successfully at 08:29:47, logs show "Email sent successfully" with status 'ok'
-    - **Status**: ✅ Production-ready, both contact forms (website + in-app) functional, no app rebuild required
-    - **Files Modified**: functions/index.js (defineSecret imports, getTransporter() using emailUser.value()/emailPassword.value(), runWith configs with secrets array)
-    - **Deprecated**: dotenv package and functions/.env file (kept for local emulator only)
-- **Day 15** (Jan 21): 🎉 **PRODUCTION LAUNCH SUCCESS** - v1.4.4 LIVE on both platforms
-  - **iOS v1.4.4+50**: ✅ Published to App Store - LIVE in production (update from v1.3.4)
-  - **Android v1.4.4+50**: ✅ Published to Google Play Store - LIVE in production (first Play Store release)  
-  - **Launch Type**: Coordinated v1.4.4 release on same day
-  - **Milestone**: Android's official Play Store debut + iOS update (iOS in production since August 2025, v1.3.4 October 2025)
-  - **App Store Links**:
-    - iOS: https://apps.apple.com/app/dawatime/id6748280994
-    - Android: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
-  - **Post-Launch Tasks**:
-    - Monitor Firebase Crashlytics (crash-free rate, production stability)
-    - Track App Store Connect & Play Console (downloads, ratings, reviews)
-    - Check Firebase Analytics (DAU, engagement, feature usage)
-    - Post Instagram Phase 3 announcement ("WE'RE NOW OFFICIAL ON GOOGLE PLAY!")
-- **Days 16-20** (Jan 22-26): Post-launch monitoring + v1.4.5 hotfix preparation
-  - Continue monitoring production metrics across both platforms
-  - Prepare v1.4.5 hotfix: Play Integrity API + Safe URL Launching fix (14 locations) + Update Checker bug fix + Signup Buttons Android fix
-  - Deploy hotfix 2-3 days after launch once v1.4.4+50 stability confirmed
-  - Instagram marketing: Celebrate launch, engage with users, showcase features
-- **Days 21+** (Jan 27+): Growth phase begins
-  - Target: 500-1,000 users by March 2026 (Q1 growth milestone)
-  - Marketing: Kuwait forums, word-of-mouth, Instagram content
-  - Feature planning: MOH partnership request (Q2 2026)
+**Emergency Updates Deployed**: 6 versions (v42→v44→v45→v46→v47→v49→v50, skipped v43 and v48)
+
+- Days 1-2: v42 initial release (25 testers, 100% engagement)
+- Day 3: v44 emergency (5 crashes fixed: widget lifecycle, context safety, UI constraints, ProGuard, Firebase Auth, iOS symbolication)
+- Day 4: v45 emergency (SHA certificate + Android 15 edge-to-edge)
+- Day 4: v46 emergency (migration data safety: two-phase copy-then-delete)
+- Day 5: v47 emergency (setState mounted checks)
+- Day 5: Website emergency (bad APK Dec 16 deployment discovered and removed)
+- Day 6: Website SEO optimization (canonical tags, sitemap, robots.txt, legal link cleanup)
+- Day 6: v50 deployment (legal link optimization - SEO fixes integrated)
+- Day 7: v49 emergency (migration complete replacement: delete new, copy old, delete old)
+- Day 7: iOS v50 APPROVED by Apple
+- Day 7: Strategic decision - deferred Play Integrity API + Safe URL fix to v1.4.5 post-launch
+
+**Key Milestones**:
+
+- Day 4: Testers Community generated Production and Feedback reports (10 days early)
+- Days 8-13: v50 stability confirmed - 100% crash-free rate, zero errors on both platforms
+- Day 10: Tester engagement stabilized at 12 continuous testers (50% retention = high quality)
+- Day 10: Google Play privacy crisis resolved (home address verified per Civil ID)
+- Day 13: Google Search Console HTTP→HTTPS redirect fixed
+- Day 14: Production access application submitted and approved same day (<12 hours)
+- Day 14: Android production release approved - both platforms ready
+- Day 14: SMTP security hardening (migrated to Firebase Secret Manager)
+- Day 15: 🎉 **PRODUCTION LAUNCH** - v1.4.4+50 LIVE on both App Store and Google Play
+
+**Final Metrics**: 12 continuous testers × 10+ days, 100% crash-free rate on v50, 6 emergency updates demonstrating rapid iteration, coordinated dual-platform launch. Android's first Play Store release, iOS update from v1.3.4.
 
 ---
 
 ### Testers Community Report Analysis (January 10, 2026 - Day 6)
 
-**Status**: ✅ **COMPLETE** - Both reports downloaded and analyzed, production readiness validated
+**Status**: ✅ **COMPLETE** - Reports used successfully for Day 14 production submission (January 20, 2026)
 
-**Report Details**:
+**Key Outcomes**:
 
-- **Production Report**: 253KB PDF, 5 pages, contains 10-question pre-filled questionnaire for Google Play production access form
-- **Feedback Report**: 249KB PDF, 6 pages, contains exceptional performance validation with "no critical issues" finding
-- **Generated**: Day 4 (January 10, 2026) - 10 days earlier than typical Day 14+ availability
-- **Location**: Project root directory (production_report.pdf, feedback_report.pdf)
-- **URLs**:
-  - https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_production.pdf
-  - https://storage.googleapis.com/testing-community-ec6g1l.appspot.com/reports/com.mrhasak99.dawatime_feedback.pdf
+- **Production Report**: 10-question pre-filled questionnaire used for Google Play production access form
+- **Feedback Report**: Validation showed "no critical issues" and "exceptional performance across all devices"
+- **Results**: Production access approved same day (<12 hours), coordinated launch Day 15
+- **Tester Metrics**: 12 continuous testers for 10+ days, 100% crash-free rate on final build (v1.4.4+50)
 
-**Production Access Questionnaire - Complete Answers**:
+**Enhancement Recommendations (all addressed)**:
 
-**IMPORTANT**: Questions 4 and 8 have been customized with accurate project-specific details. Questions 1-3, 5-7, 9-10 can be used as-is from Testers Community pre-filled answers.
-
----
-
-## All 9 Questions (Quick Reference):
-
-**Question 1**: How did you recruit users?
-
-- ✅ **USE AS-IS**: "Targeted outreach through social media and online forums..."
-
-**Question 2**: How easy was it to recruit testers?
-
-- ✅ **USE AS-IS**: Answer "Easy" (12 continuous testers for 10+ days, high quality engagement)
-
-**Question 3**: Describe tester engagement
-
-- ✅ **USE AS-IS**: "Testers actively explored the app, shared valuable feedback..."
-
-**Question 4**: Feedback summary and collection methods
-
-- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (290 characters - under 300 char limit)
-
-**Question 5**: Who is the intended audience?
-
-- ✅ **USE AS-IS**: "Patients, caregivers, and healthcare providers..."
-
-**Question 6**: How does your app provide value?
-
-- ✅ **USE AS-IS**: "Timely reminders, medication tracking, personalized settings..."
-
-**Question 7**: Expected installs in first year?
-
-- ✅ **USE AS-IS**: Answer "10k - 100k"
-
-**Question 8**: Changes made during testing
-
-- ⚠️ **USE CUSTOMIZED ANSWER**: See detailed answer below (37 words - matches format)
-
-**Question 9**: How did you decide app is ready for production?
-
-- ✅ **USE AS-IS**: "Rigorous testing phases, addressed critical feedback..."
+1. ASO optimization - Deferred to post-launch with real user data
+2. User onboarding - Already implemented (6-step intro guide)
+3. Social login - On roadmap as Minor Feature #2 (v1.5.0+)
 
 ---
-
-## Detailed Answers (Copy-Paste Ready):
-
-### Question 1: How did you recruit users for your closed test?
-
-"I used targeted outreach through social media channels and relevant online forums to attract engaged, tech-savvy users interested in health and medication management. This diverse group provided essential insights into app functionality and usability."
-
----
-
-### Question 2: How easy was it to recruit testers for your app?
-
-Answer: **Easy**
-
-(Note: Testers Community recruited 25 active testers with 100% engagement rate)
-
----
-
-### Question 3: Describe the engagement you received from testers during your closed test
-
-"Testers actively explored the app, sharing valuable feedback on user onboarding, notification features, and overall design. Their insights guided us in enhancing user experience and bolstering engagement through clear navigation, reminders, and improved accessibility."
-
----
-
-### Question 4: Provide a summary of the feedback that you received from testers. Include how you collected the feedback.
-
-"Testers reported crashes and migration issues. Feedback collected via Firebase Crashlytics, in-app contact form, and Testers Community. We fixed 5 crash patterns, migration data safety, Android 15 support, and widget lifecycle issues through rapid emergency updates."
-
----
-
-### Question 5: Who is the intended audience for your app?
-
-"DawaTime is designed for individuals managing medications, including patients, caregivers, and healthcare providers. The app aids in tracking medication schedules, setting reminders, and improving adherence, ultimately aiming to enhance health outcomes for users."
-
----
-
-### Question 6: Describe how your app provides value to the users.
-
-"DawaTime offers users a streamlined solution for medication management by providing timely reminders, medication tracking, and personalized settings tailored to individual needs, fostering adherence and improving user confidence in managing their health effectively."
-
----
-
-### Question 7: How many installs do you expect your app to have in your first year?
-
-Answer: **10k - 100k**
-
-(Note: Conservative estimate reflecting Kuwait market size and planned GCC expansion)
-
----
-
-### Question 8: What changes did you make to your app based on what you learned during your closed test?
-
-"In response to tester feedback, we deployed 5 emergency updates fixing migration data safety, 5 fatal crashes, Android 15 edge-to-edge display, and widget lifecycle issues. All fixes deployed within hours, demonstrating rapid response and commitment to quality."
-
----
-
-### Question 9: How did you decide that your app is ready for production?
-
-"We assessed the app's stability and user satisfaction through rigorous testing phases, addressing all critical feedback and enhancements. After implementing necessary changes, we believe DawaTime is well-prepared for a successful launch on Google Play."
-
----
-
-**Feedback Report Findings** (6 pages, exceptional performance validation):
-
-**Key Findings**:
-
-- ✅ **"No critical issues encountered"** - All functionality works as intended
-- ✅ **"Exceptional performance across all devices and OS versions"**
-- ✅ Multiple testers, various devices (Android 13-15, iOS 15+), real-world testing scenarios
-- ✅ Professional testing methodology: feature testing, edge case exploration, crash reporting, usability assessment
-
-**Three Enhancement Recommendations from Report**:
-
-1. **App Store Optimization (ASO)** - "App description could be enhanced with more targeted keywords"
-   - Status: **OPTIONAL** - Current descriptions are production-ready for Day 14 submission
-   - Current short description: "Never miss a dose. Smart medication reminders with refill tracking." (73 chars)
-   - Current full description: ~1500 chars with bilingual header, organized feature sections, clear structure
-   - Rationale: ASO is marketing optimization (discoverability), not production access requirement
-   - Plan: Enhance post-launch with real user search terms and behavior data (late January/February 2026)
-   - Google Play Console tracks search terms users actually use - optimize based on data, not speculation
-   - Benefit: Iterative approach with measurable impact beats premature keyword stuffing
-
-2. **User Onboarding** - "Consider adding tutorial or guided tour for first-time users"
-   - Status: **ALREADY IMPLEMENTED** - 6-step interactive intro guide in home_page.dart
-   - Implementation: `_checkIntroGuide()` shows modal dialog on first app launch when SharedPreferences key `seenIntroGuide` is false
-   - Steps: Welcome → Add Medications → Edit/Delete → Notifications → Stock/Refill Alerts → Profile/Settings
-   - Accessibility: "App Guide" button on login page and splash screen for returning users
-   - Additional: Quick guide button on splash screen with single-dialog bullet-point overview
-   - Result: Comprehensive onboarding already in place, addresses recommendation completely
-
-3. **Login Options** - "Adding social login (Google/Apple) could improve user acquisition"
-   - Status: **FUTURE FEATURE** - On roadmap as Minor Feature #2 in copilot-instructions.md
-   - Current: Email/password authentication only
-   - Planned: Google Sign-In and Apple Sign-In integration (requirement for App Store if offering third-party login)
-   - Timeline: v1.5.0 planning (February 2026+), implementation Q2 2026
-   - Benefits: Faster onboarding, higher conversion rate, no email verification wait
-   - Regional fit: Both Google and Apple widely used in Kuwait/GCC market (high iPhone penetration)
-   - Complexity: Low-Medium, 2-3 days estimated effort
-   - Note: Enhancement for user acquisition, not production requirement
-
-**Additional Recommendations Already Implemented**:
-
-- ✅ Push notifications for medication reminders (5 follow-ups every 30 minutes)
-- ✅ In-app feedback channels (Settings → Contact Me form)
-- ✅ Multi-language support (full bilingual English/Arabic with RTL)
-- ✅ Regular updates demonstrating active development (3 updates in 6 days)
-
-**Production Readiness Assessment**:
-
-**Strengths**:
-
-1. ✅ No critical issues - All crashes fixed, app stable post-v46
-2. ✅ Exceptional performance - Validated across multiple devices and OS versions
-3. ✅ Professional testing - 25 active testers, 100% engagement, comprehensive coverage
-4. ✅ Rapid iteration - 3 emergency updates showing responsiveness and commitment
-5. ✅ Robust feedback collection - Multiple channels (Crashlytics, in-app, Testers Community)
-6. ✅ Comprehensive onboarding - 6-step tutorial already implemented
-7. ✅ Production-ready descriptions - Clear value prop, organized sections, bilingual support
-
-**Action Items Before Day 14**: None - App is production-ready
-
-**Bottom Line**:
-Both reports validate production readiness. All 10 questionnaire answers are documented above with clear organization:
-
-**Quick Reference Section**: Shows all 10 questions with ✅ (use as-is) or ⚠️ (use customized) indicators
-
-**Detailed Answers Section**:
-
-- **Questions 1-3, 5-7, 9-10**: Copy pre-filled answers directly (35-45 words each)
-- **Question 4** (Feedback Summary): Copy customized 42-word answer (matches pre-filled format)
-- **Question 8** (Changes Made): Copy customized 38-word answer (matches pre-filled format)
-
-Feedback Report confirms "no critical issues" and "exceptional performance" across all testing scenarios. Current Play Store descriptions are adequate for production submission - ASO enhancement is optional marketing task better done post-launch with real user data. Ready for Day 14 production submission.
-
-**Day 14 Submission Checklist**:
-
-1. ✅ Download Production Report PDF from Testers Community (already available since Day 6)
-2. ✅ Open Google Play production access form
-3. ✅ Copy answers from "Detailed Answers" section above:
-   - Q1-Q3: Pre-filled answers (35-45 words each)
-   - Q4: Customized answer (42 words)
-   - Q5-Q7: Pre-filled answers (35-45 words each)
-   - Q8: Customized answer (38 words)
-   - Q9-Q10: Pre-filled answers (35-45 words each)
-4. ✅ Submit form and wait for production approval
-
----
-
-### Emergency Deployment #1 - Day 3 Crisis Response (January 7, 2026)
-
-**Status**: ✅ **COMPLETE** - All crash fixes implemented, v1.4.4+44 deployed and stable
 
 ### Emergency Deployment #2 - Day 6 Data Safety Fix (January 12, 2026)
 
-**Status**: ⏳ **DEPLOYED** - Critical migration bug fix v1.4.4+46 in review on both platforms
+**Status**: ✅ **COMPLETE** - Migration data safety fix deployed in v1.4.4+46
 
-**Crisis Discovery** (Day 6 - January 12, 2026):
+**Critical Bug**: Smart bridge deleted old Firestore structure before copying data, risking user data loss.
 
-- User questioned migration script necessity: "Should I run the migrate to subcollection script again?"
-- Agent investigated smart bridge logic in home_page.dart lines 152-160
-- **Critical bug identified**: Smart bridge deleted old Firestore structure without copying data first
-- **Impact**: Users who added medications Jan 1-10 on old app versions would lose data on v45 upgrade
-- **Root cause**: Migration detection logic assumed all data already migrated, didn't copy before deleting
+**Two-Phase Fix Pattern**:
 
-**Emergency Fix Implementation** (Day 6 - January 12, 2026):
+1. **Phase 1**: Copy all old medications to new structure with `SetOptions(merge: true)`
+2. **Phase 2**: Delete old structure only after safe copy complete
 
-- Implemented two-phase copy-then-delete migration in home_page.dart:
-  - Phase 1: Copy all old medications to new structure with SetOptions(merge: true)
-  - Phase 2: Delete old structure only after safe copy complete
-- Version incremented: v1.4.4+45 → v1.4.4+46
-- Built both platforms: Android AAB (54.2MB, 114.9s), iOS IPA (48.2MB, 305.2s)
-- Uploaded to both stores within hours of discovery:
-  - Android: Uploaded to Closed Testing, status "In review"
-  - iOS: Uploaded to TestFlight, status "Waiting for Review"
-
-**Code Changes** (v1.4.4+46):
-
-```dart
-// home_page.dart lines 151-167 - BEFORE (v45, DANGEROUS):
-if (hasNewData && hasOldData) {
-  final allOldDocs = await oldLocation.get();
-  for (var doc in allOldDocs.docs) {
-    await doc.reference.delete(); // ❌ Immediate deletion!
-  }
-  setState(() => _useNewStructure = true);
-}
-
-// AFTER (v46, SAFE):
-if (hasNewData && hasOldData) {
-  final allOldDocs = await oldLocation.get();
-
-  // Phase 1: Copy all old medications to new structure
-  for (var doc in allOldDocs.docs) {
-    final data = doc.data() as Map<String, dynamic>;
-    await newLocation.doc(doc.id).set(data, SetOptions(merge: true));
-  }
-
-  // Phase 2: Now safe to delete old structure
-  for (var doc in allOldDocs.docs) {
-    await doc.reference.delete();
-  }
-
-  setState(() => _useNewStructure = true);
-}
-```
-
----
-
-### Emergency Deployment #3 - Day 7 Migration Replacement (January 13, 2026)
-
-**Status**: ✅ **DEPLOYED** - Complete migration replacement logic v1.4.4+49 deployed to both platforms
-
-**Crisis Discovery** (Day 7 Evening - January 13, 2026):
-
-- User tested edge case: Added medication in new build (v47) → switched to old app version → added medication in old structure → updated to new build (v47) → both medications present
-- **Expected behavior**: Only old structure medications should appear (old = source of truth)
-- **Actual behavior**: Both old AND new structure medications appeared (merge behavior, not replacement)
-- **Root cause**: Two-phase migration copied old to new but didn't delete existing new data first, causing medications from both structures to combine
-
-**Emergency Fix Implementation** (Day 7 Evening - January 13, 2026):
-
-- Implemented three-phase complete replacement migration in home_page.dart:
-  - **Phase 1**: Delete ALL existing data in new structure (prevents zombie/duplicate medications)
-  - **Phase 2**: Copy from old structure to new structure (fresh authoritative copy)
-  - **Phase 3**: Delete old structure after successful copy (cleanup)
-- Version incremented: v1.4.4+47 → v1.4.4+49 (skipped v48 entirely on both platforms)
-- Built both platforms: Android AAB, iOS IPA
-- Canceled iOS v47 review in App Store Connect, uploaded v49
-- Uploaded to both stores within 2 hours of discovery:
-  - Android: v49 LIVE in Closed Testing (superseded v47)
-  - iOS: v49 uploaded to TestFlight, status "Waiting for Review" (canceled v47)
-
-**Code Changes** (v1.4.4+49):
-
-```dart
-// home_page.dart lines 151-174 - BEFORE (v47, MERGE BEHAVIOR):
-if (hasOldData) {
-  try {
-    final allOldDocs = await oldLocation.get();
-
-    // Copy old to new (but existing new data remains)
-    for (var doc in allOldDocs.docs) {
-      final data = doc.data();
-      await newLocation.doc(doc.id).set(data);  // Only overwrites matching IDs
-    }
-
-    // Delete old structure
-    for (var doc in allOldDocs.docs) {
-      await doc.reference.delete();
-    }
-  }
-}
-
-// AFTER (v49, COMPLETE REPLACEMENT):
-if (hasOldData) {
-  try {
-    final allOldDocs = await oldLocation.get();
-
-    // Phase 1: Delete ALL existing data in new structure first
-    final existingNewDocs = await newLocation.get();
-    for (var doc in existingNewDocs.docs) {
-      await doc.reference.delete();
-    }
-
-    // Phase 2: Copy from old structure to new structure
-    for (var doc in allOldDocs.docs) {
-      final data = doc.data();
-      await newLocation.doc(doc.id).set(data);
-    }
-
-    // Phase 3: Delete old structure after successful copy
-    for (var doc in allOldDocs.docs) {
-      await doc.reference.delete();
-    }
-
-    if (mounted) {
-      setState(() => _useNewStructure = true);
-    }
-  } catch (e) {
-    if (mounted) {
-      setState(() => _useNewStructure = false);
-    }
-  }
-}
-```
-
-**Result**: New structure becomes exact copy of old structure - no zombie medications, no duplicates, no merge conflicts. Old structure is true source of truth.
+**Key Lesson**: Always copy-then-delete in migrations, never delete-then-copy. Prevents data loss when users are on mixed app versions.
 
 ---
 
 ### Emergency Deployment #1 - Day 3 Crisis Response (January 7, 2026)
 
-**Status**: ✅ **COMPLETE** - All crash fixes implemented, v1.4.4+44 deployed and stable
+**Status**: ✅ **COMPLETE** - 6 critical crash fixes deployed in v1.4.4+44/+45 within 4 hours
 
-**Crisis Discovery** (Day 3 - January 9, 2026):
+**Crash Patterns Fixed**:
 
-- Firebase Crashlytics showed **24 unprocessed iOS crashes** (missing dSYM files from builds 22, 25, 26, 31, 36)
-- **5 fatal exceptions** affecting Android and Flutter code paths
-- **25 active testers** (100% engagement) experiencing crashes
+1. **Widget Lifecycle**: setState after disposal → Add `if (mounted)` checks before all setState calls
+2. **Context Safety**: ScaffoldMessenger after navigation → Add `if (context.mounted)` checks before InheritedWidget access
+3. **UI Constraints**: RenderFlex overflow with Arabic labels → Wrap dynamic text in `Flexible` with `TextOverflow.ellipsis`
+4. **ProGuard**: R8 stripping notification icons → Add explicit keep rules for drawables referenced by string
+5. **Firebase Auth**: SignInHubActivity crash → Configure SHA-1/SHA-256 certificates in Firebase Console
+6. **iOS Symbolication**: 24 unprocessed crashes → Upload dSYM files + configure automatic upload in Xcode
 
-**Rapid Response Timeline**:
+**Key Lessons**:
 
-- **Hour 1**: Identified all 5 crash locations via stack traces
-- **Hour 2**: Implemented fixes (setState guards, context checks, UI constraints, ProGuard rules)
-- **Hour 3**: Built v1.4.4+44, uploaded 43 iOS dSYM files, configured automatic dSYM upload
-- **Hour 4**: Uploaded v1.4.4+44 AAB to Google Play Console Closed Testing "Initial Release" track
-- **Result**: All crashes fixed, iOS symbolication automated, emergency deployment LIVE
+- Always check widget/context validity before state changes (mounted checks critical for async callbacks)
+- ProGuard requires explicit keep rules for resources referenced dynamically (keep.xml insufficient alone)
+- Firebase Auth triggers Google Play Services checks even without explicit Google Sign-In implementation
+- Emergency response demonstrates engineering maturity: 25 active testers, 6 crashes fixed in 4 hours
 
-**Strategic Decision**: Skip v1.4.4+43 entirely, deploy v44 as emergency stability update on Day 3 instead of waiting until Days 11-13.
-
-**Rationale**:
-
-- ✅ 25 testers actively experiencing crashes (critical user impact)
-- ✅ 10+ days of testing remaining before Production (Day 14)
-- ✅ Demonstrates rapid response and engineering maturity
-- ✅ Both iOS and Android get same stable v44 version
-
----
-
-### Critical Production Crash Fixes - v1.4.4+44 (January 7, 2026)
-
-**Status**: ✅ **COMPLETE** - All 5 fatal exceptions fixed and validated
-
-**1. Login Page setState Crash** (/lib/login_page.dart) line 616
-
-- **Error**: `Null check operator used on a null value at State.setState`
-- **Root Cause**: setState called after user navigated away during email verification check
-- **Fix**: Added `if (mounted)` check before setState
-- **Code**:
-  ```dart
-  if (mounted) {
-    setState(() => isLoading = false);
-  }
-  ```
-- **Impact**: Prevents crash when users back out during login flow
-
-**2. Home Page Migration Status Crash** (/lib/home_page.dart) line 168
-
-- **Error**: `Null check operator used on a null value at _HomePageState._checkMigrationStatus`
-- **Root Cause**: setState called after widget disposed during database migration retry
-- **Fix**: Added `if (mounted)` check in catch block
-- **Code**:
-  ```dart
-  } catch (e) {
-    if (mounted) {
-      setState(() => _useNewStructure = true);
-    }
-  }
-  ```
-- **Impact**: Prevents crash during auto-migration from old to new database structure
-
-**3. ScaffoldMessenger Context Crash** (/lib/home_page.dart) line 2842
-
-- **Error**: `Null check operator used on a null value at ScaffoldMessenger.of`
-- **Root Cause**: Context becomes invalid in nested exception handler during medication operations
-- **Fix**: Added `if (context.mounted)` check before ScaffoldMessenger access
-- **Code**:
-  ```dart
-  if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(...);
-  }
-  ```
-- **Impact**: Prevents crash when displaying error messages after async operations
-
-**4. RenderFlex Overflow** (/lib/home_page.dart) line 3857
-
-- **Error**: `A RenderFlex overflowed by 25 pixels on the right`
-- **Root Cause**: Label text in `_DetailRow` widget not constrained, long Arabic/English labels exceed width
-- **Fix**: Wrapped label in `Flexible(flex: 0)` with `overflow: TextOverflow.ellipsis` and `maxLines: 1`
-- **Code**:
-  ```dart
-  Flexible(
-    flex: 0,
-    child: Text(
-      label,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-    ),
-  ),
-  ```
-- **Impact**: Prevents UI overflow in medication detail dialogs, especially with long Arabic labels
-
-**5. Android Notification Icon Crash** (Native Android)
-
-- **Error**: `Invalid notification (no valid small icon): Notification(...)`
-- **Root Cause**: R8 resource shrinker stripping notification icon drawable despite keep.xml
-- **Fix**: Added explicit ProGuard rules in android/app/proguard-rules.pro
-- **Code**:
-  ```proguard
-  -keep class **.R$drawable { *; }
-  -keepclassmembers class **.R { public static <fields>; }
-  -keepclassmembers class **.R$* { public static <fields>; }
-  -keep class com.mrhasak99.dawatime.R$drawable { *; }
-  ```
-- **Impact**: Ensures notification icons survive R8 optimization in release builds
-
-**6. Google Sign-In Activity Crash** (Native Android - v1.4.4+44) - ✅ FIXED in v1.4.4+45
-
-- **Error**: `RuntimeException: Unable to start activity SignInHubActivity: NullPointerException`
-- **Root Cause**: Firebase Auth includes Google Play Services Auth as transitive dependency, but SHA-1/SHA-256 certificates not configured in Firebase Console for Android app
-- **Why it happens**: Firebase Auth can trigger Google Play Services checks even without explicit Google Sign-In implementation
-- **Fix Applied**: Configured Android app SHA certificates in Firebase Console and updated google-services.json
-  1. Get debug certificate: `keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore`
-  2. Get release certificate: `keytool -list -v -alias <your-alias> -keystore android/app/<your-keystore>.jks`
-  3. Copy SHA-1 and SHA-256 fingerprints
-  4. Go to [Firebase Console](https://console.firebase.google.com/) → Project Settings → Your Apps → Android app
-  5. Add both certificates under "SHA certificate fingerprints"
-  6. Download updated `google-services.json` and replace in `android/app/`
-  7. Rebuild: `flutter clean && flutter build apk --release`
-- **Alternative Fix**: If certificates are already configured, ensure `google-services.json` is up-to-date from Firebase Console
-- **Impact**: Prevents crash when Firebase Auth interacts with Google Play Services during background auth state checks
-
-**Files Modified**:
-
-- lib/login_page.dart - Added mounted check before setState (line 616)
-- lib/home_page.dart - Added mounted checks (lines 168, 2842) + fixed \_DetailRow overflow (line 3857)
-- android/app/proguard-rules.pro - Added drawable keep rules (lines 151-154)
-- android/app/google-services.json - **REQUIRED UPDATE**: Download latest from Firebase Console after adding SHA certificates
-- pubspec.yaml - Version: 1.4.4+43 → 1.4.4+44 → 1.4.4+45
-- android/app/build.gradle.kts - versionCode: 43 → 44 → 45
-
-**Testing Verification (v1.4.4+44)**:
-
-- ✅ `flutter analyze` - 0 errors, 0 warnings
-- ✅ AAB built successfully (54.1MB)
-- ✅ iOS dSYM files uploaded (43 files)
-- ✅ Automatic dSYM upload configured in Xcode
-- ✅ Deployed to Closed Testing "Initial Release" track
-- ⚠️ **CRASH #6 DISCOVERED** - Google Sign-In Activity crash (SHA certificate issue)
-
-**Testing Verification (v1.4.4+45)**:
-
-- ✅ `flutter analyze` - 0 errors, 0 warnings
-- ✅ AAB built successfully (52MB) - Build time: 112.2s
-- ✅ SHA certificates configured in Firebase Console
-- ✅ google-services.json updated with proper configuration
-- ✅ Android 15 edge-to-edge support implemented
-- ✅ Ready for Closed Testing deployment
+**Strategic Decision**: Skipped v43 entirely, deployed v44 emergency update Day 3 (10+ days before production deadline)
 
 ---
 
@@ -1633,10 +817,12 @@ class MainActivity : FlutterActivity() {
 Despite implementing the `MainActivity.kt` edge-to-edge fix above, Google Play Console still shows deprecation warnings for v1.4.5+52 and later builds. This is a **Flutter framework limitation**, not an issue with your app code.
 
 **Warnings Displayed**:
+
 - "Edge-to-edge may not display for all users"
 - "Your app uses deprecated APIs or parameters for edge-to-edge"
 
 **Root Cause**: Flutter framework itself (v3.38.6 stable as of January 25, 2026) uses deprecated Android APIs internally:
+
 - `io.flutter.embedding.android.FlutterFragmentActivity.configureStatusBarForFullscreenFlutterExperience`
 - `io.flutter.plugin.platform.PlatformPlugin.setSystemChromeSystemUIOverlayStyle`
 - `androidx.activity.i.u` (AndroidX Activity library)
@@ -1644,6 +830,7 @@ Despite implementing the `MainActivity.kt` edge-to-edge fix above, Google Play C
 These are internal Flutter framework calls using deprecated methods like `setStatusBarColor` and `setNavigationBarColor`.
 
 **Impact**: ℹ️ **Informational only** - Does NOT block production release
+
 - ✅ Your app will NOT be rejected
 - ✅ Users will NOT experience any issues
 - ✅ Edge-to-edge display works correctly on Android 15+
@@ -1651,6 +838,7 @@ These are internal Flutter framework calls using deprecated methods like `setSta
 - ⏳ Will be resolved when Flutter framework team updates deprecated API usage
 
 **Resolution Strategy**:
+
 1. **Immediate**: Accept as informational warning (doesn't block release)
 2. **Short-term**: Mark as "upstream issue" or "Flutter framework limitation" in Play Console
 3. **Long-term**: Monitor Flutter stable releases for edge-to-edge framework improvements, upgrade Flutter when available
@@ -1661,293 +849,44 @@ These are internal Flutter framework calls using deprecated methods like `setSta
 
 ### iOS dSYM Automatic Upload Configuration (January 7, 2026)
 
-**Status**: ✅ **COMPLETE** - Automatic symbolication configured for all future builds
+**Status**: ✅ **COMPLETE** - Automatic symbolication configured
 
-**Problem**: 24 iOS crashes remained unsymbolicated (showing memory addresses instead of function names) due to missing dSYM files from older builds (v22, 25, 26, 31, 36).
+**Implementation**: Added Xcode build phase `[Firebase Crashlytics] Upload dSYM Files` that runs after each archive build, uploading dSYM files automatically to Firebase Crashlytics. Uploaded 43 dSYM files from v1.4.4+44 manually. All future releases will have automatic debug symbol uploads for readable crash stack traces.
 
-**Solution**: Added build phase to Xcode project for automatic dSYM upload to Firebase Crashlytics.
-
-**Implementation** in ios/Runner.xcodeproj/project.pbxproj:
-
-- **Build Phase ID**: FB8A3C5D2A1E4F8B00C7D9E1
-- **Name**: `[Firebase Crashlytics] Upload dSYM Files`
-- **Script**: `"${PODS_ROOT}/FirebaseCrashlytics/upload-symbols" -gsp "${PROJECT_DIR}/Runner/GoogleService-Info.plist" -p ios "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}"`
-- **Position**: Last build phase after "[CP] Copy Pods Resources"
-- **Runs**: After each archive build automatically
-
-**Manual Upload** (v1.4.4+44):
-
-- Uploaded **43 dSYM files** from current build: Runner.app.dSYM + all framework symbols
-- Command: `ios/Pods/FirebaseCrashlytics/upload-symbols -gsp ios/Runner/GoogleService-Info.plist -p ios build/ios/archive/Runner.xcarchive/dSYMs`
-- Result: All future crashes will be properly symbolicated with readable stack traces
-
-**Benefits**:
-
-- ✅ No manual uploads needed for future releases
-- ✅ Works for both TestFlight and App Store releases
-- ✅ Every production build will have debug symbols
-- ✅ All crashes will be readable with proper function names and line numbers
-
-**Old Crashes**: The 24 unsymbolicated crashes from older builds (v22-36) cannot be processed as those build archives no longer exist. This is acceptable as they're from superseded versions.
-
----
-
-### iOS Release Hold for Version Parity (January 6, 2026) - SUPERSEDED - SUPERSEDED
-
-**Status**: ⚠️ **SUPERSEDED** by Day 3 emergency deployment - See "Emergency Deployment" section above
-**Original Decision**: Canceled iOS v1.4.4+42 release to maintain version alignment
-
-**Background**:
-
-- iOS v1.4.4+42 reached "Pending Developer Release" status (Apple approved, ready to publish)
-- Google Play Closed Testing v1.4.4+42 launched with 25 testers opted-in (100% engagement)
-- Emergency crashes discovered on Days 3-4 requiring immediate hotfixes
-
-**Decision**: Cancel iOS v1.4.4+42 release and wait to upload v1.4.4+45 (final version) instead
-
-**Rationale**:
-
-- **Version Parity**: Both platforms should ship with same build number when going live
-- **Efficient Strategy**: Upload iOS once (v50) instead of uploading v42-v49 individually
-- **Final Build**: v1.4.4+50 will be the production version for both platforms
-- **Professional Approach**: Coordinated multi-platform launch shows polish
-- **Better User Experience**: Users on both platforms get identical app simultaneously
-
-**What Actually Happened**:
-
-- **Days 1-2 (Jan 7-8)**: v1.4.4+42 initial release, 25 testers joined
-- **Day 3 (Jan 9)**: Emergency v1.4.4+44 (5 crash fixes, skipped v43)
-- **Day 4 (Jan 10)**: Emergency v1.4.4+45 (SHA certificate + Android 15 fix)
-- **Day 5 (Jan 11)**: Emergency v1.4.4+47 and v1.4.4+49 (setState fix, migration replacement, skipped v48)
-- **Day 6 (Jan 12)**: v1.4.4+50 (website SEO, legal link optimization), Emergency v1.4.4+46 (migration data safety fix)
-- **Day 7 (Jan 13)**: iOS approval received, both platforms ready
-- **Day 8 (Jan 14)**: ✅ Stability confirmed - zero errors on both platforms
-- **Day 9 (Jan 15)**: Marketing post published, web app SEO blocked
-- **Day 10 (Jan 16)**: Tester engagement update - 12 continuous testers
-- **Day 11 (Jan 17)**: Continued stability monitoring
-- **Day 12 (Jan 18)**: Stability confirmed for 6 days
-- **Day 13 (Jan 19)**: Stability confirmed for 7 days + Google Search Console HTTP redirect fix deployed
-- **Days 11-13**: Continue monitoring v50 stability
-- **Result**: Both platforms approved and ready for Day 14 production launch
-
-**Google Play Testing Status (Day 10 - January 14, 2026)**:
-
-- ✅ 25 testers actively testing (100% engagement)
-- ✅ v1.4.4+50 LIVE in Closed Testing (Android)
-- ✅ v1.4.4+50 APPROVED "Pending Developer Release" (iOS)
-- ✅ 6 emergency updates deployed (v42→v44→v45→v46→v47→v49→v50)
-- ✅ Update requirement COMPLETE, demonstrates rapid iteration and crisis response
-- ✅ **100% crash-free rate on v50 maintained (Day 10 confirmation)**
-- ✅ **Zero new errors on Google Play Console (Day 10)**
-- ✅ **Zero new crashes on Firebase Crashlytics (Day 10)**
-
-**Next Steps**:
-
-1. Monitor v1.4.4+50 stability via Firebase Crashlytics (Days 9-13)
-2. Download Production Access Form Report (Day 14)
-3. Submit both platforms to production simultaneously (Day 14)
-
----
-
-### Play Store Update Link Integration - v1.4.4+43 (January 5, 2026) - SUPERSEDED
-
-**Status**: ⚠️ **SUPERSEDED** - v1.4.4+43 skipped entirely due to Day 3 emergency deployment of v44
-**Original Status**: 🔧 **PREPARED** - Built and ready, awaiting proper release timing (Days 5-7)
-
-**Problem**: Force update dialog was redirecting Android users to website APK downloads instead of Google Play Store, creating inconsistent update experience for beta testers.
-
-**Solution**: Updated `showForceUpdateDialog()` in main.dart to redirect Android users to Play Store listing.
-
-**Changes Made**:
-
-- **File Modified**: lib/main.dart (line 1006-1008, showForceUpdateDialog() function)
-- **Before**: https://dawatime.com (website APK download)
-- **After**: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime (Play Store listing)
-- **iOS Unchanged**: Still directs to App Store (no change needed)
-
-**Version Updates**:
-
-- pubspec.yaml: 1.4.4+42 → 1.4.4+43
-- android/app/build.gradle.kts (versionCode): 42 → 43
-
-**Build Results**:
-
-- **Build Command**: `flutter build appbundle --release`
-- **Output**: `build/app/outputs/bundle/release/app-release.aab` (54.1MB)
-- **Build Time**: 93.9s
-- **Status**: Ready for upload
-
-**Release Strategy**:
-
-- **DO NOT release immediately** - Wait for Days 5-7 (January 9-11)
-- **Rationale**: Give testers 4-6 days to test v1.4.4+42 first
-- **Professional cadence**: Spacing updates shows sustained engagement, not rushed development
-- **Feedback-driven**: Update comes after initial testing period
-
-**Planned Release Notes**:
-
-```
-Update v1.4.4 Build 43:
-• Integrated Google Play Store for seamless updates
-• Android users now directed to Play Store instead of website downloads
-• Improved update experience
-```
-
-**Benefits of This Update**:
-
-- ✅ Platform-appropriate update flow (Play Store → Play Store)
-- ✅ Demonstrates active development to Testers Community
-- ✅ Satisfies Week 1 update requirement
-- ✅ No functional divergence from iOS (just update URL change)
-- ✅ Easy for testers to verify functionality
-
-**Key Learning**: Beta testing updates should be strategically spaced (4-7 days apart) to:
-
-1. Allow proper testing cycles
-2. Demonstrate sustained engagement
-3. Show responsiveness to feedback
-4. Maintain professional release cadence
-5. Give Testers Community adequate time to evaluate builds
-
-**Next Week 2 Update Ideas (v1.4.4+44)**:
-
-- Minor UI polish (button spacing, text alignment)
-- Enhanced error messages with more context
-- Additional analytics events for better tracking
-- Internal logging improvements
-- Keep all changes iOS-identical to maintain version parity
-- **Note**: This was superseded by multiple emergency hotfixes (v44→v50) - both platforms will launch with v50
+**Configuration**: ios/Runner.xcodeproj/project.pbxproj build phase (ID: FB8A3C5D2A1E4F8B00C7D9E1) executes FirebaseCrashlytics upload-symbols script after "[CP] Copy Pods Resources".
 
 ---
 
 ### Website Emergency - Bad APK Deployment (December 16, 2025 - January 13, 2026)
 
-**Status**: ✅ **RESOLVED** - Bad APK removed, website cleaned, teaser deployed to Firebase Hosting
+**Status**: ✅ **RESOLVED** - Bad APK removed within hours of discovery
 
-**Deployment Timeline** (Git History Analysis - January 13, 2026):
+**Crisis**: Unfinished v1.4.4 build accidentally deployed to dawatime.com for 26 days (Dec 16 - Jan 11, 2026), exposed through holidays. Build contained bugs later fixed in v42→v50 emergency updates (6 critical crash fixes). Unknown download count during exposure period.
 
-- **Original deployment**: December 16, 2025 at 2:15 PM Kuwait time (commit 96758f0)
-- **Exposure duration**: 26 days (Dec 16, 2025 → Jan 11, 2026)
-- **Git commit**: "feat: Update version to 1.4.4, enhance notification handling, and improve Firebase hosting configuration"
-- **Website changes**: Changed all references from `dawatime-v1.3.4.apk` to `dawatime-v1.4.4.apk` in index.html (lines 313-491)
-- **APK upload**: Likely same day to Firebase Hosting, though exact timestamp unconfirmed (APK files excluded from git via `.gitignore`)
-- **Build nature**: Early beta/development build of v1.4.4, not production-ready version
-- **Issues present**: Build likely contained bugs later fixed in emergency updates v42→v44→v45→v46→v47 (6 critical crash fixes)
-- **Holiday exposure**: Available through December holidays (Christmas/New Year) and into January 2026
-- **Download count**: Unknown, but 26-day window significantly increases potential affected user base
+**Discovery**: Day 7 (Jan 13) - User disclosed accidental deployment when requesting APK removal for marketing. Git investigation (`git log -p -S"v1.4.4" -- public/index.html`) confirmed Dec 16 deployment.
 
-**Crisis Discovery** (Day 7 - January 13, 2026):
+**Emergency Response** (7 steps, same day):
 
-- User revealed accidental deployment of old/unfinished v1.4.4 build to dawatime.com
-- Bad APK was publicly accessible at `https://dawatime.com/dawatime-v1.4.4.apk` for 26 days
-- **Discovery context**: User asked about removing website APK for marketing (Play Store launch coming)
-- **Critical revelation**: "The reason why I'm suggesting this is because I've accidentally deployed an old unfinished build of v1.4.4 onto the website"
-- **Git investigation**: Confirmed website updated Dec 16, 2025 - bad APK exposed for nearly a month before discovery
+1. Located APK download section in index.html
+2. Replaced clickable download with disabled "Coming Soon" teaser (Google colors gradient)
+3. Removed all APK-related content (safety card, translation strings, CSS)
+4. Added dynamic App Store badge switching (English/Arabic)
+5. Temporarily disabled Web App button
+6. Deleted bad APK file and .DS_Store
+7. Deployed cleaned website via Firebase Hosting
 
-**Emergency Response Timeline** (Day 7 - January 13, 2026):
+**Files Modified**: /public/index.html (button replacement, content cleanup, localization)
+**Files Deleted**: dawatime-v1.4.4.apk (bad build), .DS_Store
 
-1. **Immediate File Analysis**: Read index.html to locate APK download section
-   - Found APK download button at lines 161-198
-   - Green Android button with download icon linking to bad APK
-   - Located translation strings referencing APK in JavaScript section
+**Key Lessons Learned**:
 
-2. **APK Download Replacement**: Replaced download button with "Coming Soon to Play Store" teaser
-   - Changed from clickable `<a>` download link to disabled `<button>`
-   - Updated background: Solid green → Google colors gradient (135° at 75% opacity: #4285f4, #0f9d58, #db4437, #f4b400)
-   - Changed font: Nunito → League Spartan for "Coming Soon" text
-   - Removed checkmark icon, kept text-only design
-   - Matches Instagram Story teaser posted same morning
-
-3. **Content Cleanup**: Removed all APK-related content from website
-   - Removed hardcoded "get the APK directly" text from description
-   - Removed "APK Information & Safety" card section (package name, signature, installation instructions)
-   - Removed all APK translation strings from both English and Arabic
-   - Removed `.apk-info` CSS class
-   - Result: Website now shows only App Store badge + "Coming Soon" teaser + Web App button
-
-4. **Localization Enhancement**: Added dynamic App Store badge switching
-   - English users see: `enblack.svg` (English App Store badge)
-   - Arabic users see: `arblack.svg` (Arabic App Store badge)
-   - Implemented MutationObserver to detect language changes
-   - Badge updates automatically when language toggle used
-
-5. **Web App Disable**: Temporarily disabled Web App button
-   - Changed from clickable link to disabled button
-   - Added 50% opacity to indicate unavailable state
-   - Keeps button visible but non-functional
-
-6. **File Deletion**: Removed bad APK and unnecessary files
-   - Deleted: `dawatime-v1.4.4.apk` (CRITICAL - bad build)
-   - Deleted: `.DS_Store` (macOS system file)
-   - Kept: `GetItOnGooglePlay_Badge_Web_color_*.svg` (for Day 17+ Play Store launch announcement)
-   - Kept: `PrivacyPolicy.pdf` and `Terms&Conditions.pdf` (used in support.html)
-
-7. **Firebase Deployment**: Deployed cleaned website immediately
-   - Command: `firebase deploy --only hosting`
-   - Result: Bad APK no longer accessible, teaser button live
-   - Website: https://dawatime.com
-
-**Files Modified**:
-
-- `/public/index.html`:
-  - Lines 161-198: Replaced APK download button with teaser button
-  - Background: `linear-gradient(135deg, rgba(66, 133, 244, 0.75), rgba(15, 157, 88, 0.75), rgba(219, 68, 55, 0.75), rgba(244, 180, 0, 0.75))`
-  - Font: `font-family: 'League Spartan', 'Nunito', Arial, sans-serif;`
-  - Removed: Lines 224-282 (APK Information & Safety card)
-  - Removed: APK translation strings from both English and Arabic
-  - Removed: `.apk-info` CSS class definition
-  - Added: Dynamic App Store badge switching with MutationObserver
-  - Disabled: Web App button (temporary)
-
-**Files Deleted**:
-
-- `/public/dawatime-v1.4.4.apk` - Bad/unfinished build (CRITICAL removal)
-- `/public/.DS_Store` - macOS system file
-
-**Impact Assessment**:
-
-- **User Safety Risk**: Unknown number of users may have downloaded bad build during 26-day exposure
-- **Exposure Timeline**: December 16, 2025 - January 11, 2026 (26 days)
-- **High-Risk Period**: December holidays and New Year 2026 (potentially higher download volume)
-- **Likely Issues in Bad Build**:
-  - setState after widget disposal crashes (fixed in v44)
-  - Migration data safety issues (fixed in v46)
-  - Google Sign-In authentication crashes (fixed in v45)
-  - RenderFlex overflow with long labels (fixed in v44)
-  - Android notification icon crashes (fixed in v44)
-  - iOS notification delivery issues (fixed in v45)
-- **Mitigation**: Bad APK removed within hours of discovery on Day 7
-- **Monitoring Required**: Watch Firebase Crashlytics for v1.4.4 crashes not from v47 build (Days 7-14)
-- **Contact Form**: Check in-app support form for "app not working" reports
-- **Website Status**: Clean teaser design, no broken links, mystery maintained
-
-**Prevention Measures**:
-
-- Always verify correct build file before deploying to Firebase Hosting
-- Maintain Firebase Hosting deployment history for rollback capability
-- Consider staging environment for website changes before production
-- Document which APK version is "good" for production vs beta vs deprecated
-
-**Marketing Strategy Maintained**:
-
-- Website now shows mysterious "Coming Soon" teaser matching Instagram Story
-- Gradient button uses Google brand colors (hints at Play Store without being explicit)
-- Description avoids mentioning "Android" or "Play Store" to keep mystery
-- Will replace teaser with actual Play Store badge on Day 17+ when production launches
-
-**Lessons Learned**:
-
-- **Emergency disclosures critical**: User revealing true reason changed entire approach from "marketing cleanup" to "user safety emergency"
-- **Git history investigation essential**: Used `git log -p -S"v1.4.4" -- public/index.html` to determine 26-day exposure (Dec 16 - Jan 11)
-- **Build deployment verification**: Should verify correct build file before uploading to Firebase Hosting
-- **Staging environment needed**: Consider separate staging website to test deployments before production
-- **Firebase rollback preparation**: Maintain deployment history knowledge for quick rollback capability
-- **Dual concerns possible**: Can have successful app deployment (v47) AND website emergency simultaneously
-- **Rapid website cleanup faster**: Removing APK download from website much faster than removing deployed app
-- **User safety first**: Website emergency took priority over celebrating v47 deployment success
-- **.gitignore limitations**: APK files excluded from git prevented tracking actual file upload date, only HTML references tracked
-
-**Result**: Bad APK removed from public access, website cleaned and redesigned with teaser button, mystery campaign maintained, users protected from downloading broken build.
+- **Build deployment verification critical**: Always verify correct build file before Firebase Hosting uploads
+- **Git history investigation essential**: `git log -p -S` pattern identified 26-day exposure timeline when APK files excluded from git
+- **Emergency disclosure importance**: User revealing true reason changed approach from "marketing cleanup" to "user safety emergency"
+- **Rapid website cleanup advantage**: Website APK removal much faster than app store removal
+- **Staging environment needed**: Consider separate staging site for testing deployments
+- **User safety priority**: Emergency took precedence over celebrating v47 success
+- **.gitignore limitation**: APK exclusion prevented tracking actual upload date, only HTML reference changes tracked
 
 ---
 
@@ -2924,7 +1863,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
   - Designer can start immediately
   - Expected delivery: February 11-18, 2026 (1-2 weeks buffer before Feb 17-24 deadline)
 - **Deployment Strategy**: **DUAL RELEASE** - Coordinate v1.4.5 hotfix + new screenshots in single App Store update
-- **Rationale**: 
+- **Rationale**:
   - Combine code improvements (v1.4.5+53) with marketing assets (screenshots)
   - Single App Store review process (24-48h) instead of two separate reviews
   - Professional designer quality (Upwork) vs DIY screenshots
@@ -3026,55 +1965,15 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Current Status**: Portfolio verifications in progress before final hire decision
 - **Language Requirement**: Arabic capability now PRIMARY filter - 7 of 9 viable candidates (78%) have native/fluent Arabic
 
-**Archived Candidates** (10 total - all shared 0h Upwork verification):
+**Archived Candidates Summary** (14 candidates total):
 
-1. **Muhammad S. #1** - Bangladesh, 0h, 0 jobs, $0 earned, no rating, $100, generic cover letter
-2. **Pham Q. N. #3** - Vietnam, 0h, 0 jobs, $0 earned, no rating, $200, generic cover letter (4th in sequence)
-3. **Aml A. A. #4** - Egypt, 0h, 7 jobs, $350 earned, no visible rating, $150, suspicious metrics (jobs/earnings/rating mismatch)
-4. **Mohamed M. #9** - Morocco, 0h, 0 jobs, $0 earned, no rating, $210, professional cover letter but 0h disqualifies
-5. **Waleed H. #10** - Pakistan, 0h, 0 jobs, $0 earned, no rating, $205, strong cover letter but 0h disqualifies
-6. **Hasnain A. #11** - Pakistan, 0h, 0 jobs, $0 earned, no rating, $90, copy-paste template letter
-7. **Attaullah S. #14** - Pakistan, 0h, 1 job, $10 earned, no rating, $200, typo in name ("Attaulah"), generic cover letter
-8. **Fatima Z. #15** - Pakistan, 0h, 2 jobs, $50 earned, no rating, NEW+Boosted, $200, professional cover letter with 3 portfolio links (2 live apps + Arabic RTL Figma)
-9. **Ahmad R. #17** - Egypt, 0h, 0 jobs, $0 earned, no rating, NEW, $200, strong cover letter with healthcare focus
-   - **Portfolio Links**: 2 Google Play Store apps (Enaya Telemedicine, Enaya Home Healthcare)
-   - **Experience Claims**: "5+ years, 60+ completed projects across healthcare, e-commerce"
-   - **Healthcare Projects**: "United Doctors Hospital, Enaya (Telemedicine), Enaya (Home Healthcare)" in Saudi Arabia
-   - **Arabic RTL**: "I have strong experience designing Arabic (RTL) interfaces"
-   - **Archive Reason**: 0h verification hours despite strong claims and portfolio links
+**Key Lessons Learned**:
 
-10. **Ahmed G. #18** - Algeria, 0h, 0 jobs, $0 earned, no rating, NEW badge, Best match, $200
-   - **Portfolio Link**: Framer.app website (https://new-fabric-966090.framer.app/case-studies/new-brand-look-and-website)
-   - **Attachment**: Screenshot showing iPhone 13 Pro mockup with Arabic food/restaurant app
-   - **Arabic Native Speaker**: "Yes, the arabic it's my main language"
-   - **Cover Letter Highlights**: Saudi client project creating bilingual (Arabic & English) visual content for American rice brand through traditional Arabic dishes, 14-16 screenshots redesign offer, under 2 weeks timeline, unlimited edits
-   - **Skills**: UI/UX Prototyping, User Interface Design, User Experience Design, Web Design, Landing Page Design
-   - **Archive Reason**: 0h verification hours despite native Arabic speaker status, portfolio link, and Best match designation
+- **0h Verification = Auto-Disqualify**: 10 candidates archived due to 0h Upwork verification hours (100% consistency, zero exceptions). Cover letter quality, portfolios, and claimed experience irrelevant without verification.
+- **Arabic Capability = PRIMARY Requirement**: 4 candidates with strong verification hours (48h-409h) archived due to lack of Arabic capability. Job requires 7-8 Arabic screenshots (50% of deliverables) - native/fluent Arabic non-negotiable.
+- **Budget Discipline**: 2 qualified Arabic-native candidates archived for pricing >$300 when multiple $200-250 alternatives available.
 
-11. **Saqib A. #8** - Pakistan, 120h, 30 jobs, $900 earned, 95% JSS, Top Rated, $200
-   - **Strengths**: High job count (30), proven delivery, Top Rated badge, strong verification hours (120h)
-   - **Portfolio**: No portfolio links provided
-   - **Languages**: No Arabic listed in Upwork profile
-   - **Archive Reason**: Lack of Arabic capability - job requires 7-8 Arabic screenshots (50% of deliverables), cannot meet bilingual requirement
-
-12. **Vasyl K. #6** - Ukraine, 48h, 9 jobs, $675 earned, no rating, $320
-   - **Portfolio Links**: 6 Behance projects (screenshots, branding, UI/UX)
-   - **Strengths**: Most portfolio links (6), proven screenshot work
-   - **Languages**: No Arabic listed in Upwork profile
-   - **Price**: $320 (60% premium over budget)
-   - **Archive Reason**: Lack of Arabic capability + premium pricing without justification for bilingual requirement gap
-
-13. **Youssef B. #7** - 72h, 20 jobs, $2K+ earned, 100% JSS, $333
-   - **Portfolio Link**: https://youssef.benlarbidelai.com/
-   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
-   - **Price**: $333 (66% premium over budget)
-   - **Archive Reason**: Significantly above budget compared to rest ($333 vs $200-250 priority tier) - premium pricing not justified when multiple Arabic-native candidates available at $200-250
-
-14. **Youssif M. #19** - Egypt, 409h, 23 jobs, $8K+ earned, 4.4/5.0 rating, $500
-   - **Portfolio Links**: 2 Google Play apps (Deemples, Wichey) + Framer website
-   - **Languages**: English (Fluent) + Arabic (Native or Bilingual) ✅
-   - **Price**: $500 (150% above budget, 2.5x budget)
-   - **Archive Reason**: Way above budget compared to rest ($500 vs $200-250 priority tier) - exceptional metrics but price prohibitive when multiple Arabic-native candidates available at $200-300
+**Result**: 66% rejection rate maintained fair evaluation while enforcing strict quality/language requirements. Final viable pool: 7 candidates, all with verification hours + Arabic capability.
 
 **Viable Candidates** (7 total - ranked by verification hours):
 
@@ -3139,7 +2038,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 7. **Eongyo J. #21** (CONDITIONAL - NO ARABIC ⚠️) - 113h, 0 completed jobs, $0 earned, no rating, $200, South Korea
    - **Studio**: AppShot Labs (appshotlabs.xyz) - specialized design studio for App Store/Play Store screenshots
    - **Portfolio Website**: appshotlabs.xyz (shows conversion-focused App Store screenshot design)
-   - **Portfolio Samples**: 
+   - **Portfolio Samples**:
      - ChatGPT app redesign (before/after comparison)
      - TripAdvisor redesign concept
      - Travel app screenshots (high-quality device frames)
@@ -3149,7 +2048,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
    - **Languages**: No Arabic listed in Upwork profile ⚠️
    - **RTL Awareness**: Mentioned understanding of bilingual requirements but no direct Arabic project samples shown
    - **Source Files**: Offers Figma/PSD source files with editable layers
-   - **Strengths**: 
+   - **Strengths**:
      - **Perfect specialization**: App Store screenshot design is core expertise (not general UI/UX)
      - **Professional studio**: AppShot Labs appears to be established studio brand
      - **Strong portfolio evidence**: Multiple app screenshot samples showing device frames, clean layouts
@@ -3203,72 +2102,6 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Days 7-14** (Feb 4-11): Revisions and final delivery
 - **Expected Completion**: February 11-18, 2026 (1-2 weeks buffer before Feb 17-24 deadline)
 
-**Backup Candidates** (Archived - January 27, 2026):
-- ✅ Alfatiha M. #2 ($300) - Rejected and archived
-- ✅ Ouisal S. #20 ($200) - Rejected and archived
-- ✅ Mohammed A. #12 ($200) - Rejected and archived
-- ✅ Akram A. #13 ($200) - Rejected and archived
-
----
-
-### Hiring Message for Rahma M. #16 (Ready to Send)
-
-**Subject**: DawaTime App Store Screenshot Project - Your Portfolio Impressed Me!
-
-**Message Body**:
-
-Hi Rahma,
-
-I reviewed your portfolio and I'm very impressed with your work! I looked at Qatar Moms, Quran Bee, and Spedia - all three show excellent App Store screenshot quality and strong Arabic RTL design, which is exactly what I need for my project.
-
-**About DawaTime:**
-DawaTime is a medication reminder app for the Kuwait/GCC market, currently live on both iOS App Store and Google Play Store. We need a complete redesign of our App Store screenshots to better showcase our features to Arabic-speaking users.
-
-**What I Need:**
-- 14-16 total screenshots (7-8 English + 7-8 Arabic)
-- **Arabic set is critical** - must feature proper RTL layout (not just mirrored English)
-- Professional device frames for both iOS (6.7") and Android
-- Modern, clean design using our brand green color (#8AC249)
-- High-resolution PNGs ready for App Store Connect and Google Play Console
-- Editable source files (Figma/PSD/Sketch)
-
-**Key Features to Showcase:**
-1. Hero/Splash: "Never Miss a Dose"
-2. Home Page: Medication cards showing stock levels
-3. **New Feature Highlight**: Refill Reminder Customization (Date/Time picker)
-4. Add Medication Form
-5. Smart Notification System (5 follow-ups every 30 minutes)
-6. Weekday Scheduling
-7. Theme Switcher (Light/Dark mode)
-
-**What I'll Provide:**
-- Full app access (iOS TestFlight + Google Play) for high-res UI screenshots
-- Brand guidelines (colors, logos, fonts)
-- Exact text copy for both English and Arabic
-- RTL layout guidance if needed
-- Arabic UI screenshots/context
-
-**Timeline & Budget:**
-- Timeline: 3-4 weeks (as you mentioned in your proposal)
-- Budget: $250 (your proposed rate)
-- Milestone payment structure preferred (50% upfront, 50% on delivery)
-
-**Why I'm Choosing You:**
-Your portfolio shows exactly what I need - native Arabic design expertise (not just translation), proven App Store screenshot experience, and professional quality across multiple live apps. The fact that you've worked on apps with 500K+ downloads (Quran Bee) gives me confidence you understand what works on the stores.
-
-Are you available to start this week? If yes, please confirm:
-1. Timeline works (3-4 weeks delivery)
-2. Budget confirmed ($250 fixed-price)
-3. You'll provide editable source files (Figma/PSD)
-
-Looking forward to working with you!
-
-Best regards,
-Hamad AlKhalaf
-DawaTime Developer
-
----
-
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
 - **Scenario A** (TOP CHOICE - ARABIC NATIVE): Rahma M. portfolio validates → Hire Rahma M. at $250 (BEST OVERALL: 1,347h, 83 jobs, $60K+, App Store proven, Arabic native)
@@ -3308,89 +2141,20 @@ DawaTime Developer
 
 ---
 
-### LinkedIn Direct Outreach (January 27, 2026)
+### External LinkedIn/Email Outreach (January 27, 2026)
 
 **Status**: ❌ **DISQUALIFIED** - 2 external contacts rejected for bypassing official application process
 
-**Context**: Two designers contacted developer directly via LinkedIn/email after discovering the Upwork job posting. These are NOT Upwork proposals - they are external outreach attempts.
+**Policy Decision**: Both candidates contacted developer directly via LinkedIn/email after discovering Upwork job posting. Decision: Auto-disqualify for bypassing official application workflow.
 
-**Disqualification Reason**: Both candidates bypassed the official Upwork job application process. All other candidates (21 total) followed the proper application workflow through the Upwork platform. Engaging with external contacts:
-- Violates fair evaluation process (other candidates applied properly)
+**Rationale**:
+
+- Violates fair evaluation process (21 other candidates applied properly)
+- Eliminates Upwork platform protections (escrow, dispute resolution, reviews)
 - May violate Upwork Terms of Service (circumventing platform)
-- Eliminates platform protections (escrow, dispute resolution, reviews)
-- Complicates comparison and evaluation consistency
+- Complicates evaluation consistency
 
-**Decision**: Archive both candidates. Focus exclusively on the 7 viable Upwork candidates who followed the official application process.
-
-**External Candidate #1: Drashti Soni (CMARIX Agency)**
-
-- **Company**: CMARIX - Sr. Business Development Executive
-- **Email**: drashti.soni@cmarix.com (sent to eng@hamadalkhalaf.com from LinkedIn)
-- **Website**: www.cmarix.com
-- **Date Received**: January 27, 2026 at 1:19 PM
-- **Subject**: "Hi Hamad → Complete App Store Screenshot Redesign | CMARIX"
-- **Proposal Type**: Agency outreach (not individual freelancer)
-- **Key Offering**:
-  - Full redesign of App Store and Google Play screenshots
-  - Conversion-focused visual refresh for Kuwait/GCC market
-  - 14-16 high-conversion screenshots optimized for iOS and Android
-  - Fully mirrored Arabic set with accurate RTL behavior, layout flow, and bilingual positioning
-  - Production-ready assets with strong attention to alignment, typography, and store-specific best practices
-- **Scheduling**: Calendly link provided - https://calendly.com/drashti-cmarix
-- **Phone**: +91-800-005-0808, +1-415-704-4242
-- **Position**: **AGENCY OUTREACH** - Likely significantly above $200 budget (agencies typically charge $500-2000+ for this scope)
-- **Disqualification Reasons**:
-  - Did not apply through official Upwork job posting
-  - Generic agency pitch (not personalized to DawaTime)
-  - No portfolio links in email (just calendly + contact info)
-  - Sales-focused approach (BDE reaching out, not designer directly)
-  - Unsolicited outreach after finding job on LinkedIn
-- **Status**: ❌ **DISQUALIFIED** - Bypassed official application process
-
-**External Candidate #2: Eman Ikhlaq (Individual Designer)**
-
-- **Contact**: help@dawatime.com, eng@hamadalkhalaf.com (sent to both emails)
-- **Date Received**: January 27, 2026 at 10:39 AM (earlier than CMARIX by 2h 40min)
-- **Subject**: "App Store Screenshot Redesign (English & Arabic) for DawaTime"
-- **Cc**: Amna Ikhlaq (appears to be collaborator/partner)
-- **Portfolio Website**: www.woofwee.com
-- **Portfolio Links** (3 Figma projects):
-  1. GPS Mobile App: https://www.figma.com/design/pockXQBXSoDRoyXUoyZENi3/GPS-Mobile-App-and-Front/Facing-Website?node-id=203-24s-i6t=CAyzVPTDPsSjRVSL-0
-  2. Project 2: https://www.figma.com/design/X2GK9QwXmQ4&KWEwsDy004rQKOK?node-id=0-1&p=f
-  3. Project 3: https://www.figma.com/design/pockUf9saY/RuDXe83uCT0f1MwUnlHfter?node-id=0-T&p=f
-- **Key Experience Claims**:
-  - High-conversion app store screenshots for mobile apps
-  - Strong focus on clear messaging, clean layouts, trust-building visuals
-  - Improves downloads by clearly communicating value at a glance
-  - Experience creating complete set of screenshots in both English and Arabic
-  - Adapts layouts properly for RTL rather than just mirroring
-  - Pays close attention to alignment, readability, device framing, and visual hierarchy
-  - Familiar with designing for both iOS and Android store requirements at high resolution
-- **Collaboration Approach**: Can work from provided copy, brand guidelines, and app access to capture high-quality UI screens
-- **Meeting Request**: Happy to collaborate closely, discuss timeline, scope, and budget in short meeting
-- **Portfolio Website**: www.woofwee.com (mentioned twice)
-- **Position**: **INDIVIDUAL DESIGNER** - Could potentially fit within budget, shows genuine interest in project
-- **Strengths Noted**:
-  - First to respond (2h 40min earlier than CMARIX)
-  - Personalized approach (specific to DawaTime project)
-  - Portfolio evidence (3 Figma links provided upfront)
-  - Arabic RTL experience claimed
-  - Individual designer (likely more budget-friendly than agency)
-- **Disqualification Reason**:
-  - Did not apply through official Upwork job posting
-  - All other candidates (21 total) followed proper application process
-  - Engaging with external contacts violates fair evaluation process
-- **Status**: ❌ **DISQUALIFIED** - Bypassed official application process
-
-**Final Decision**:
-
-Both candidates disqualified for bypassing the official Upwork application process. This decision maintains:
-- ✅ Fair evaluation process (all other 21 candidates applied properly)
-- ✅ Upwork platform protections (escrow, dispute resolution, reviews)
-- ✅ Consistent evaluation criteria (verification hours, portfolios, pricing)
-- ✅ Compliance with Upwork Terms of Service
-
-**Focus**: Continue with the 7 viable Upwork candidates (Rahma, Ouisal, Mohammed, Muhammad, Akram, Alfatiha, Eongyo) who followed the proper application workflow.
+**Result**: Focus exclusively on 7 viable Upwork candidates who followed proper application process. No exceptions for external outreach regardless of qualifications.
 
 ---
 
@@ -3466,21 +2230,23 @@ This is NOT a new app launch - it's an **upgrade story**:
   - "Never miss a dose" tagline
   - App Store + Google Play badges (dual platform availability)
 - **Caption (Final 10/10 Version)**:
+
   ```
   Never miss a dose 💚
-  
+
   Now available on both iOS and Android.
   Download DawaTime today → Link in bio 📲
-  
+
   ——————
-  
+
   لا تفوّت جرعة بعد اليوم 💚
-  
+
   متوفر الآن على iOS و Android.
   حمّل دواء تايم اليوم → الرابط في البايو 📲
-  
+
   #DawaTime #kuwait #الكويت #madeinkuwait #صحة
   ```
+
 - **Hashtag Strategy**: 5 hashtags (Instagram ad limit)
   - #DawaTime (brand tracking)
   - #kuwait + #الكويت (bilingual geographic targeting)
@@ -3674,7 +2440,7 @@ Update v1.4.4 Build 43:
 - 🔍 Watch production track review status
 - 🐛 Address any final issues before testing period ends
 
-**Post-Testing (Day 17+):**
+**Post-Testing (Day 19+):**
 
 - ⏳ Await Android production release approval from Google (typically 2-7 days)
 - ⏳ Await iOS App Store review completion (typically 1-3 days)
@@ -3982,124 +2748,31 @@ if (daysUntil == 0) {
 
 **Result**: Legal compliance enforced at both entry points. Fresh logins and app restarts both check for updated legal documents before allowing app access. Metadata only updates after legal acceptance.
 
-### 12th Medication Save Navigation Bug Fix (December 30, 2025)
+### December 2025 Bug Fixes
 
-**Status**: ✅ **FIXED** - Replaced FutureBuilder with initState check for medication limit
+**Status**: ✅ **COMPLETE** - 4 production issues resolved (Dec 29-30, 2025)
 
-**Issue**: When saving the 12th medication, the medication was saved successfully but the user remained on the add medication page with "You can only have up to 12 medications" warning displayed.
+**1. Navigation Bug Pattern** - FutureBuilder rebuilding post-navigation:
 
-**Root Cause**:
+- **Solution**: Replace continuous FutureBuilder with one-time `initState()` check + cached state variables
+- **Applied**: 12th medication save navigation (add_medications.dart)
 
-- `FutureBuilder` in add_medications.dart continuously rebuilding during async operations
-- Navigation (`Navigator.pop()`) completed but FutureBuilder queried Firestore post-navigation
-- Notification scheduling triggered widget rebuilds, causing FutureBuilder to re-execute
-- Duplicate medication count check in both FutureBuilder and save button handler
+**2. Duplicate Notification Pattern** - Background handler + Cloud Function both creating notifications:
 
-**Fix Applied** (add_medications.dart):
+- **Solution**: Remove local notification creation from background handler, let system display Cloud Function payload
+- **Applied**: FCM update notifications (main.dart, removed 55 lines)
 
-- Replaced continuous FutureBuilder pattern with one-time `initState()` check
-- Added `_isLoadingCount` and `_isAtLimit` state variables to cache medication count result
-- Moved limit check to `_checkMedicationLimit()` method called only once in `initState()`
-- Removed duplicate medication count check from save button handler
-- Result: Limit check happens once on page load, navigation works correctly after 12th medication save
+**3. SnackBar Persistence Pattern** - Flutter update changed action button behavior:
 
-**Code Cleanup (December 30, 2025)**:
+- **Solution**: Add `persist: false` to all SnackBars with action buttons
+- **Applied**: 5 locations (home_page.dart, medication_notifications.dart)
 
-- Removed 28 debug print statements across 4 files (add_medications.dart, main.dart, home_page.dart, medication_notifications.dart)
-- Fixed 25+ empty catch blocks: replaced `catch (e) {}` with `catch (_) {}` (Dart idiom for explicit ignore)
-- Removed 3 unused variable declarations (apnsToken, token, retryToken) in main.dart
-- Removed unused `foundation.dart` imports after debug cleanup
-- Incremented build number: 1.4.4+20 → 1.4.4+21
+**4. Database Path Consistency** - Mixed old/new structure usage:
 
-**Files Updated**:
+- **Solution**: Update all Firestore operations to use subcollection structure `/Users/{userId}/medications/{medicationId}`
+- **Applied**: CRUD operations, notification handlers, account deletion across 3 files
 
-- `/lib/add_medications.dart` - Medication limit check logic refactored
-- `/lib/main.dart` - Debug statements removed, empty catch blocks fixed, unused variables removed
-- `/lib/home_page.dart` - Empty catch blocks fixed
-- `/lib/utils/medication_notifications.dart` - Debug statements removed, empty catch blocks fixed
-- `/lib/utils/medication_helpers.dart` - Empty catch blocks fixed
-- `/pubspec.yaml` - Version: 1.4.4+20 → 1.4.4+21
-- `/android/app/build.gradle.kts` - versionCode: 20 → 21
-
-**Result**: 12th medication saves correctly and navigates back to home page. Codebase cleaned up with 0 analyzer warnings for targeted issues.
-
-### Duplicate FCM Notification Fix (December 30, 2025)
-
-**Status**: ✅ **FIXED** - Removed duplicate notification creation in background handler
-
-**Issue**: Users receiving 2 identical update notifications instead of 1 when app is backgrounded/terminated.
-
-**Root Cause**:
-
-- Cloud Function sends complete `notification` payload (title + body) which system auto-displays
-- Background handler (`_firebaseMessagingBackgroundHandler`) was ALSO creating a local notification
-- Result: Two notifications appeared simultaneously
-
-**Fix Applied** (main.dart):
-
-- Removed all local notification creation code from `_firebaseMessagingBackgroundHandler`
-- Background handler now just exists as entry point (Firebase requires it), but doesn't create notifications
-- System automatically displays notification from Cloud Function's payload when app is backgrounded
-- Foreground handler (`onMessage` listener) still creates local notification (required for foreground display)
-
-**Files Updated**:
-
-- `/lib/main.dart` (1422 → 1367 lines, removed 55 lines of duplicate notification code)
-
-**Result**: Only 1 notification appears in all scenarios. Background/terminated app uses system notification, foreground uses local notification.
-
-### SnackBar Persistence Fix (December 30, 2025)
-
-**Status**: ✅ **FIXED** - Added persist: false to all SnackBars with actions
-
-**Issue**: SnackBars with action buttons showing persistent close icon that remains on screen.
-
-**Root Cause**:
-
-- Recent Flutter update changed default behavior for SnackBars with actions
-- SnackBars with `action: SnackBarAction(...)` now show persistent close icon by default
-- This prevents the auto-dismiss behavior expected for temporary notifications
-
-**Fix Applied**:
-
-- Added `persist: false` to all 5 SnackBars that have action buttons:
-  1. Exact alarm permission prompt (home_page.dart line ~343)
-  2. Undo medication deletion (home_page.dart line ~998)
-  3. Undo swipe delete (home_page.dart line ~2786)
-  4. Undo take medication (home_page.dart line ~3416)
-  5. Exact alarm permission in notifications utility (medication_notifications.dart line ~397)
-
-**Files Updated**:
-
-- `/lib/home_page.dart` (4 snackbars fixed)
-- `/lib/utils/medication_notifications.dart` (1 snackbar fixed)
-
-**Result**: SnackBars behave as expected - they auto-dismiss without persistent close icons, while action buttons remain functional.
-
-### Database Operations Update (December 29, 2025)
-
-**Status**: ✅ **COMPLETE** - All Firestore operations now use new database structure
-
-**Issue**: After making new structure default, add/edit operations still used old collection paths causing "not-found" errors.
-
-**Fixes Applied**: Updated all direct Firestore operations across the codebase to use new subcollection structure:
-
-- Medication creation (`.add()`)
-- Medication editing (`.update()`)
-- Medication deletion (`.delete()`)
-- Inline edit dialogs
-- "Take Medication" button
-- Notification tap handlers
-- Account deletion cleanup
-- Medication count checks (12-limit)
-
-**Files Updated**:
-
-- `/lib/add_medications.dart` (1414 → 1419 lines)
-- `/lib/home_page.dart` (3938 → 3938 lines)
-- `/lib/settings.dart` (2306 → 2316 lines)
-
-**Result**: All operations (add, edit, delete, query) now consistently use `/Users/{userId}/medications/{medicationId}`. App is fully functional with new database structure.
+**Code Cleanup**: Removed 28 debug print statements, fixed 25+ empty catch blocks (`catch (_)`), removed 3 unused variables
 
 ### Critical iOS Notification Fixes
 
@@ -4674,16 +3347,18 @@ for (int i = 0; i <= 4; i++) {
 **Secret Manager Integration** (Added January 20, 2026):
 
 **Environment Variables Approach - DEPRECATED**:
+
 - ❌ **dotenv + process.env**: .env files NOT uploaded to Cloud Functions (local emulator only)
 - ❌ **defineString() + .env**: defineString() expects Firebase config, not .env files
 - ❌ **firebase functions:config:set**: Deprecated API, shutdown March 2026
 
 **Current Production Implementation - Secret Manager**:
+
 ```javascript
 // functions/index.js - Lines 1-11
-const {defineSecret} = require("firebase-functions/params");
+const { defineSecret } = require("firebase-functions/params");
 
-const emailUser = defineSecret("EMAIL_USER");        // "admin@dawatime.com"
+const emailUser = defineSecret("EMAIL_USER"); // "admin@dawatime.com"
 const emailPassword = defineSecret("EMAIL_PASSWORD"); // Zoho SMTP password
 
 // Lines 282-298: getTransporter() - Lazy initialization
@@ -4694,8 +3369,8 @@ function getTransporter() {
       port: 465,
       secure: true,
       auth: {
-        user: emailUser.value(),  // ✅ Reads from Secret Manager
-        pass: emailPassword.value(),  // ✅ Reads from Secret Manager
+        user: emailUser.value(), // ✅ Reads from Secret Manager
+        pass: emailPassword.value(), // ✅ Reads from Secret Manager
       },
     });
   }
@@ -4704,6 +3379,7 @@ function getTransporter() {
 ```
 
 **Secret Creation Commands**:
+
 ```bash
 # CRITICAL: Use echo -n to prevent trailing newline
 echo -n "admin@dawatime.com" | firebase functions:secrets:set EMAIL_USER
@@ -4714,15 +3390,18 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 ```
 
 **Secret Versions**:
+
 - **v1** (Deprecated): Created with `echo` (had trailing "\n" causing "501 Could not decode" SMTP error)
 - **v2** (Current): Created with `echo -n` (clean values, working)
 
 **Service Account Permissions**:
+
 - Account: medication-cd9b8@appspot.gserviceaccount.com
 - Role: roles/secretmanager.secretAccessor
 - Status: Automatically granted by `firebase deploy` on both secrets
 
 **Important Notes**:
+
 1. **functions/.env file**: Exists locally but NOT used in production (Firebase emulator only)
 2. **Secret updates**: Require redeployment of functions to use new versions
 3. **Error progression**: 535 (auth failed) → 501 (can't decode) → 200 (success) showed debugging path
@@ -4731,9 +3410,11 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 **Zoho Mail Configuration** (dawatime.com domain):
 
 **Primary Mailbox**:
+
 - **admin@dawatime.com** (DawaTime Admin) - Main account, used for SMTP sending
 
 **Email Aliases** (all route to admin@dawatime.com mailbox):
+
 - **design@dawatime.com** (DawaTime Designer) - Design/branding inquiries
 - **hamad@dawatime.com** (Hamad AlKhalaf) - Personal developer email
 - **help@dawatime.com** (DawaTime Support) - User support (Cloud Functions send here)
@@ -4742,12 +3423,14 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 - **testgoogle@dawatime.com** (Google Testing) - Android testing account
 
 **SMTP Configuration**:
+
 - Host: smtppro.zoho.com
 - Port: 465 (SSL/TLS)
 - Authentication: admin@dawatime.com + password (stored in Secret Manager)
 - Usage: Cloud Functions (emailAdminsOnContactMessage, requestAccountDeletion)
 
 **Email Flow**:
+
 - **User submits contact form** → Firestore ContactMessages collection → Cloud Function triggered
 - **Cloud Function sends email**: FROM admin@dawatime.com → TO help@dawatime.com
 - **Both addresses route to same mailbox** (admin@dawatime.com inbox)
@@ -6326,14 +5009,6 @@ await flutterLocalNotificationsPlugin.zonedSchedule(..., scheduledTZ, ...);
 - **Wrong timezone name**: Use `flutter_timezone` plugin, not `geolocator` (more reliable)
 - **DST transitions**: `tz.TZDateTime` handles automatically if timezone DB is loaded
 
-### flutter_slidable: ^4.0.0
-
-**Status**: Included in pubspec.yaml but **NOT USED** in codebase.
-
-**Reason for inclusion**: Likely used in earlier version, replaced with `Dismissible` widget for simpler swipe implementation.
-
-**Recommendation**: Remove from dependencies in next version to reduce APK size.
-
 ### geolocator: ^14.0.2 & geocoding: ^4.0.0
 
 **Status**: Included for **country-based restriction checks** (GCC regional compliance).
@@ -6838,7 +5513,7 @@ This section documents planned features for future DawaTime releases. Features a
 - **Estimated Effort**: 2-3 days
 - **Implementation**: Add `endDate` field, check in scheduling logic
 
-**7. Play Integrity API (Security)** ✅ COMPLETED (Day 16 - January 25, 2026)
+**7. Play Integrity API (Security)** ✅ COMPLETED (Day 19 - January 25, 2026)
 
 - **Status**: ✅ **PRODUCTION-READY** - Debug bypasses removed, production bundle built
 - **Purpose**: Verify app authenticity and protect against tampering, clones, and abuse
@@ -6867,17 +5542,17 @@ This section documents planned features for future DawaTime releases. Features a
 - **Deployment Strategy**:
   - **Part of v1.4.5 post-launch hotfix** (January 20-25, 2026)
   - Decision made Day 9 (January 13, 2026) to avoid risking v50 stability before Day 14 production launch
-  - ✅ **COMPLETED Day 16 (January 25, 2026)**: Deployed as v1.4.5+52
+  - ✅ **COMPLETED Day 19 (January 25, 2026)**: Deployed as v1.4.5+52
   - Combined release: Security (Play Integrity) + Stability (URL validation)
   - Priority: Stability for Day 14 deadline > adding new APIs
 
-- **Implementation Completed** (Day 16):
+- **Implementation Completed** (Day 19):
   - **Debug Bypasses Removed**:
-    1. **lib/main.dart** (lines 772-776): Removed 8-line kDebugMode bypass in _verifyPlayIntegrity(String userId)
+    1. **lib/main.dart** (lines 772-776): Removed 8-line kDebugMode bypass in \_verifyPlayIntegrity(String userId)
        - **Before**: `if (kDebugMode) { print('⚠️ DEBUG MODE: Skipping verification...'); return true; }`
        - **After**: Calls Firebase Cloud Function `verifyPlayIntegrity` in all builds
        - **Impact**: Splash screen now enforces security verification
-    2. **lib/login_page.dart** (lines 160-166): Removed 8-line kDebugMode bypass in _verifyPlayIntegrity()
+    2. **lib/login_page.dart** (lines 160-166): Removed 8-line kDebugMode bypass in \_verifyPlayIntegrity()
        - **Before**: Same kDebugMode guard pattern that returned true immediately
        - **After**: Calls Firebase Cloud Function `verifyPlayIntegrity` in all builds
        - **Impact**: Login flow now enforces security verification
@@ -6907,7 +5582,7 @@ This section documents planned features for future DawaTime releases. Features a
   - Block fake apps from receiving FCM notifications
   - Foundation for future freemium license protection (Phase 2)
 
-**8. Safe URL Launching (iOS SafariViewController Crash Fix)** ✅ COMPLETED (Day 17 - January 25, 2026)
+**8. Safe URL Launching (iOS SafariViewController Crash Fix)** ✅ COMPLETED (Day 19 - January 25, 2026)
 
 - **Status**: ✅ **DEPLOYED** - Included in v1.4.5+53 hotfix release
 - **Purpose**: Fix production iOS crash from url_launcher SafariViewController exceptions
@@ -6918,7 +5593,7 @@ This section documents planned features for future DawaTime releases. Features a
   - Graceful failure handling with SnackBar error feedback
   - Affects: Terms/Privacy links, external links (Instagram), update notifications
 - **Complexity**: Low (code hygiene, no new dependencies, 16 locations across 4 files)
-- **Implementation Completed** (Day 17):
+- **Implementation Completed** (Day 19):
   - **Pattern Applied**: `try { if (await canLaunchUrl(url)) { await launchUrl(...) } else { SnackBar error } } catch (e) { SnackBar error }`
   - **Files Modified**:
     - signup_page.dart (2 locations) - Terms & Privacy links
@@ -6942,11 +5617,11 @@ This section documents planned features for future DawaTime releases. Features a
   - Combined with Play Integrity API + Signup Buttons fix
   - Release notes: "Enhanced security & stability improvements"
 
-**9. Update Checker Bug Fix (False "Up to Date" Message)** ✅ COMPLETED (Day 16 - January 25, 2026)
+**9. Update Checker Bug Fix (False "Up to Date" Message)** ✅ COMPLETED (Day 19 - January 25, 2026)
 
 - **Purpose**: Fix update checker showing "app is up to date" when user has older version installed
 - **Issue Discovered**: Day 15 (January 21, 2026) during production testing after Day 15 launch
-- **Symptom**: 
+- **Symptom**:
   - User scenario: Had v1.4.4 installed for testing → Reinstalled v1.3.4 from App Store → Changed Firestore AppConfig/Version to "1.4.4" → Reopened app
   - Expected: "Update Required" dialog forcing user to update
   - Actual: Settings → "Check for Updates" button showed "You're up to date!"
@@ -6955,12 +5630,12 @@ This section documents planned features for future DawaTime releases. Features a
   - **SharedPreferences persistence**: Update check timestamp survives app reinstall
   - **No version change detection**: App didn't track which version was last run
   - Result: 24-hour cache from v1.4.4 blocked update checks when user downgraded to v1.3.4
-- **Impact**: 
+- **Impact**:
   - **HIGH SEVERITY**: Force update mechanism broken for users downgrading/reinstalling
   - Prevents enforcing critical security updates
   - Could leave users on vulnerable versions indefinitely
   - MOH partnership risk if medication safety fixes can't be forced
-- **Solution Implemented** (Day 16 - January 25, 2026):
+- **Solution Implemented** (Day 19 - January 25, 2026):
   - **Chosen Approach**: Option 2 - Store last known version + detect changes
   - **Modified Function**: `_shouldCheckForUpdates()` in lib/main.dart lines 583-608
   - **Implementation Details**:
@@ -7001,7 +5676,7 @@ This section documents planned features for future DawaTime releases. Features a
   - ✅ Enables confident deployment of future security fixes
   - ✅ Demonstrates thorough quality assurance (caught in production testing)
 - **Files Modified**:
-  - lib/main.dart (lines 583-608): _shouldCheckForUpdates function
+  - lib/main.dart (lines 583-608): \_shouldCheckForUpdates function
   - Added: Version change detection logic (13 lines)
   - Added: SharedPreferences keys: `'last_known_version'` (stores app version string)
 - **How It Works**:
@@ -7010,12 +5685,12 @@ This section documents planned features for future DawaTime releases. Features a
   - **Scenario 3 - Downgrade/Reinstall**: Stored version (1.4.4) ≠ current (1.3.4) → Clears cache → Forces update check ✅
   - **Scenario 4 - Upgrade**: Stored version (1.3.4) ≠ current (1.4.4) → Clears cache → Forces update check ✅
 
-**10. Signup Buttons Android Fix (Terms & Privacy Links Not Working)** ✅ COMPLETED (Day 17 - January 25, 2026)
+**10. Signup Buttons Android Fix (Terms & Privacy Links Not Working)** ✅ COMPLETED (Day 19 - January 25, 2026)
 
 - **Status**: ✅ **VALIDATED** - User confirmed working on physical Android device
 - **Purpose**: Fix Terms & Conditions and Privacy Policy links not working on Android signup page
 - **Issue Discovered**: Day 15 (January 21, 2026) - production user complaint from Android/Samsung device
-- **Symptom**: 
+- **Symptom**:
   - User cannot tap Terms & Conditions or Privacy Policy links on signup page
   - Links fail silently without any error feedback
   - Affects new user onboarding flow
@@ -7024,11 +5699,11 @@ This section documents planned features for future DawaTime releases. Features a
   - LaunchMode.platformDefault incompatible with Android 11+ package visibility restrictions
   - Android 11+ requires explicit package queries in AndroidManifest.xml for https:// intents
   - Missing queries → launchUrl silently fails → no browser opens → no user feedback
-- **Impact**: 
+- **Impact**:
   - **CRITICAL SEVERITY**: Blocked new user signups on Android
   - Legal compliance issue (users agreeing without reading)
   - Affected production users immediately after Day 15 launch
-- **Implementation Completed** (Day 17 - January 25, 2026):
+- **Implementation Completed** (Day 19 - January 25, 2026):
   - **3-part fix**:
     1. Added Android 11+ queries in AndroidManifest.xml (lines 66-69):
        ```xml
@@ -7043,7 +5718,7 @@ This section documents planned features for future DawaTime releases. Features a
     - android/app/src/main/AndroidManifest.xml (added queries)
     - lib/signup_page.dart (lines 294-330, 349-375): Terms & Privacy links
   - **Build**: v1.4.5+53 (54.3MB, 155.6s build time)
-- **Validation Results** (Day 17):
+- **Validation Results** (Day 19):
   - **Test Device**: Physical Android device (Galaxy A15 5G)
   - **User Confirmation**: **"signup text buttons now work in android"** ✅
   - Both Terms & Privacy links confirmed opening in external browser
@@ -7327,7 +6002,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Financial Projections (Rough Estimates)
 
-**Current State** (January 2026 - Day 27): 105 users (101 real + 4 dev/test), $0 revenue
+**Current State** (January 2026 - Day 23): 108 users (103 real + 5 excluded accounts), $0 revenue
 
 **2026** (Phase 1 - Free Growth):
 
@@ -7366,7 +6041,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Implementation Timeline (Milestone-Driven)
 
-**Current State** (January 2026 - Day 27): 105 users (68 pre-testing + 15 closed testing + 22 post-launch), production launched Day 15
+**Current State** (January 2026 - Day 23): 108 users (68 pre-testing + 15 closed testing + 25 post-launch), production launched Day 15
 
 **Q1 2026** (Jan-Mar): **Production Launch & Stability**
 
@@ -7374,7 +6049,7 @@ This section documents planned features for future DawaTime releases. Features a
 - Marketing: Instagram, Kuwait forums, word-of-mouth
 - Monetization: None
 - **Milestone Target**: 500-1,000 users
-- **Current Progress (Day 27)**: 105 users (101 real + 4 dev/test), growing slowly post-launch
+- **Current Progress (Day 23)**: 108 users (103 real + 5 excluded accounts: personal hamad_alkhalaf_99, testing hamad@dawatime, Apple/Google testing, designer design@dawatime), 7-day ad campaign complete (289 website visits, 61 store downloads during campaign period)
 - **Decision Point**: If <500 users by March, analyze user acquisition strategy
 
 **Q2 2026** (Apr-Jun): **MOH Partnership & Quick Wins**
