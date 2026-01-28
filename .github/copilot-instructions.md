@@ -1061,19 +1061,21 @@ const url = 'https://dawatime.com/terms-and-conditions';
 
 ### Google Search Console HTTP Redirect Fix (January 19, 2026 - Day 13)
 
-**Status**: ✅ **COMPLETE** - HTTP→HTTPS redirect validation issue resolved
+**Status**: ✅ **RESOLVED** - Cloudflare Redirect Rule working (January 29, 2026 - Day 29 Evening)
 
 **Issue Discovery** (Day 13 - January 19, 2026):
 
 Google Search Console reported two issues:
 
 1. **"Alternate page with proper canonical tag"** (https://www.dawatime.com/)
-   - **Status**: Informational, not an error
-   - **Explanation**: www subdomain correctly redirects to non-www with canonical tag
-   - **Action**: Validated as intentional behavior
+   - **Initial Status (Day 13)**: Informational, not an error
+   - **Current Status (Day 24 - January 24, 2026)**: ❌ **VALIDATION FAILED**
+   - **Impact**: 1 affected page (https://www.dawatime.com/)
+   - **Explanation**: www subdomain correctly redirects to non-www with canonical tag, but Google validation failed
+   - **Root Cause**: Likely missing Firebase Hosting custom domain configuration for www subdomain
 
 2. **"Page with redirect" validation failed** (http://dawatime.com/)
-   - **Status**: Real issue requiring fix
+   - **Status**: ✅ Fixed (resolved after HTTP→HTTPS redirect added)
    - **Problem**: HTTP to HTTPS redirect validation failed
    - **Root cause**: Missing explicit HTTP→HTTPS redirect configuration in firebase.json
 
@@ -1122,15 +1124,98 @@ firebase deploy --only hosting
 
 **Google Search Console Actions**:
 
-1. **Issue 1** ("Alternate page with proper canonical tag"):
-   - Click "VALIDATE FIX" button
-   - Confirms www→non-www redirect is intentional
-   - Expected to resolve immediately (informational issue)
+1. **Issue 1** ("Alternate page with proper canonical tag") - ❌ **NEEDS RESOLUTION**:
+
+   **Why Validation Failed**:
+   - Firebase Hosting has BOTH dawatime.com AND www.dawatime.com configured as custom domains
+   - When www is a separate custom domain, it serves content directly (HTTP 200) instead of redirecting
+   - The redirect rule in firebase.json is bypassed
+   - Google validation fails because www doesn't redirect to non-www
+
+   **Root Cause Discovery** (Day 29 Morning - January 29, 2026):
+
+   ```bash
+   curl -I https://www.dawatime.com
+   # Shows: HTTP/2 200 (serving content directly)
+   # Expected: HTTP/2 301 Moved Permanently → https://dawatime.com/
+   ```
+   
+   **Additional Discovery** (Day 29 Evening - January 29, 2026):
+   
+   After removing www.dawatime.com from Firebase custom domains and redeploying:
+   ```bash
+   curl -I https://www.dawatime.com
+   # Shows: HTTP/2 404 (Firebase doesn't recognize hostname)
+   # Problem: Firebase redirect rules only apply to CONFIGURED custom domains
+   ```
+   
+   **Key Lesson**: Firebase Hosting redirect rules (from firebase.json) do NOT work for domains that aren't configured as custom domains. When a request arrives for an unconfigured hostname, Firebase returns 404 without checking redirect rules.
+
+   **Resolution Steps** (Updated Day 29 Evening - Cloudflare Solution):
+   
+   **Root Cause Discovered**: Firebase Hosting redirect rules (from firebase.json) do NOT apply to domains that aren't configured as custom domains. When www.dawatime.com was removed from Firebase, it started returning HTTP 404 because Firebase doesn't recognize the hostname at all.
+   
+   **Correct Solution: Cloudflare Redirect Rules** (CDN-level redirect):
+   
+   1. **Navigate to Cloudflare Dashboard**:
+      - Go to: https://dash.cloudflare.com
+      - Select `dawatime.com` domain
+   
+   2. **Create Redirect Rule**:
+      - Click "Rules" in left sidebar → "Redirect Rules"
+      - Click "Create redirect rule" (or use "Redirect from WWW to root" template)
+      - Configure:
+        - **Rule name**: "Redirect from WWW to root"
+        - **When incoming requests match**: Select "Wildcard pattern"
+        - **Request URL**: `https://www.dawatime.com/*`
+        - **Then**: Redirect
+        - **Target URL**: `https://dawatime.com/${1}` ← **CRITICAL: Must include full domain + ${1}**
+        - **Status code**: 301
+      - Click "Deploy rule"
+   
+   **CRITICAL**: The Target URL **must** be `https://dawatime.com/${1}` (NOT just `https://${1}`). The wildcard `${1}` contains only the path portion, so you need the full destination domain in the Target URL.
+   
+   3. **Enable Cloudflare Proxy** (Required for Redirect Rules):
+      - Navigate to DNS → Records
+      - Find www CNAME record (medication-cd9b8.web.app)
+      - Click "Edit"
+      - Toggle proxy status from grey cloud (DNS only) to orange cloud (Proxied)
+      - Click "Save"
+   
+   4. **Why This Works**:
+      - Cloudflare intercepts www requests at edge servers (before reaching Firebase)
+      - Redirect Rules require proxy enabled (orange cloud) to function
+      - Returns 301 redirect directly from Cloudflare (faster than Firebase)
+      - No Firebase custom domain configuration needed
+      - Free tier includes 70 redirect rules
+   
+   5. **Test Redirect After Rule Creation**:
+      ```bash
+      curl -I https://www.dawatime.com
+      # Should show: HTTP/2 301
+      # Location: https://dawatime.com/
+      # server: cloudflare
+      ```
+   
+   6. **Revalidate in Search Console**:
+      - Click "START NEW VALIDATION" button
+      - Google will recrawl within 1-3 days
+      - Expected result: Validation passes, issue resolves
+   
+   **DNS Configuration** (Must Enable Proxy):
+   - CNAME: `www` → `medication-cd9b8.web.app`
+   - Proxy status: **ENABLED (orange cloud)** ← Required for redirect rules to work
+   - Cloudflare Redirect Rules only intercept traffic when proxy is enabled
+
+   **Why This Works**:
+   - With only dawatime.com configured, www traffic routes through main hosting
+   - Firebase applies redirect rules from firebase.json
+   - Google validation detects proper 301 redirect
+   - Canonical tag on https://dawatime.com/ confirms non-www as primary
 
 2. **Issue 2** ("Page with redirect"):
-   - Click "SEE DETAILS" → "VALIDATE FIX"
-   - Google will recrawl and verify HTTP→HTTPS redirect
-   - Expected resolution: 1-3 days
+   - ✅ **RESOLVED** - HTTP→HTTPS redirect validated successfully
+   - No further action needed
 
 **Verification**:
 
@@ -1153,9 +1238,16 @@ curl -I https://www.dawatime.com
 
 **Timeline**:
 
-- **Day 13 (Jan 19)**: Issue discovered, fix deployed
-- **Days 14-16**: Google Search Console revalidation in progress
-- **Expected resolution**: Both issues resolved by January 22, 2026
+- **Day 13 (Jan 19)**: Issue discovered, HTTP→HTTPS fix deployed
+- **Days 14-23**: Google Search Console revalidation in progress
+- **Day 24 (Jan 24)**: WWW subdomain validation failed
+- **Day 29 Morning (Jan 29)**: Root cause discovered via curl test - www serving HTTP 200 instead of 301 redirect
+- **Day 29 Morning (Jan 29)**: Removed www.dawatime.com from Firebase custom domains, purged Cloudflare cache
+- **Day 29 Evening (Jan 29)**: Discovered Firebase redirect rules don't work for unconfigured domains (404 error)
+- **Day 29 Evening (Jan 29)**: ✅ **RESOLVED** - Cloudflare Redirect Rule created with correct pattern `https://dawatime.com/${1}`
+- **Day 29 Evening (Jan 29)**: Enabled Cloudflare proxy (orange cloud) on www DNS record
+- **Day 29 Evening (Jan 29)**: curl test confirms HTTP 301 redirect working perfectly
+- **Next step**: Trigger Google Search Console validation (1-3 days for completion)
 
 ---
 
@@ -3659,33 +3751,61 @@ Future<void> _saveFCMToken(String uid) async {
 - **Domain registrar**: Porkbun (purchased June 25, 2025)
 - **DNS provider**: Cloudflare (configured July 8, 2025)
 
-**WWW Subdomain Setup**:
+**WWW Subdomain Setup** (CORRECTED - January 29, 2026):
+
+**DNS Configuration** (Cloudflare):
 
 - Type: CNAME
 - Name: `www`
 - Target: `medication-cd9b8.web.app` (Firebase Hosting URL)
-- Proxy status: **Grey cloud (DNS only)** - MUST be disabled for Firebase SSL provisioning
+- Proxy status: **Grey cloud (DNS only)** - MUST be disabled for redirect to work
 - TTL: Auto or 300
 
-**Adding Custom Domain in Firebase Hosting Console**:
+**Firebase Hosting Configuration**:
 
-1. Navigate to: https://console.firebase.google.com/project/medication-cd9b8/hosting
-2. Click "Add custom domain" button
-3. Enter domain name (e.g., `www.dawatime.com`)
-4. Click "Continue"
-5. Firebase verifies DNS records automatically (if CNAME is correct)
-6. If ownership verification required, add TXT record to Cloudflare as instructed
-7. Wait for SSL certificate provisioning (5-60 minutes)
-8. Status will change from "Needs Setup" → "Pending" → "Connected"
+- **DO NOT add www.dawatime.com as a custom domain**
+- Only configure `dawatime.com` as custom domain
+- When www is configured separately, it serves content directly (HTTP 200) instead of redirecting
+- The redirect rule in firebase.json only works when www routes through main domain
+
+**How It Works**:
+
+1. User visits `https://www.dawatime.com`
+2. DNS CNAME points to Firebase Hosting
+3. Firebase sees it's accessing www subdomain (not configured as separate domain)
+4. Firebase applies redirect rule from firebase.json
+5. User redirected with 301 to `https://dawatime.com`
 
 **Troubleshooting www subdomain**:
 
-1. Verify DNS provider: `dig dawatime.com SOA` (check for cloudflare.com in output)
-2. Check CNAME record: `dig @rick.ns.cloudflare.com www.dawatime.com CNAME`
-3. Ensure Cloudflare proxy (orange cloud) is DISABLED - Firebase cannot verify with proxy enabled
-4. Clear local DNS cache: `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
-5. Verify CNAME returns `medication-cd9b8.web.app` (not dawatime.com)
-6. Wait for SSL provisioning (5-60 minutes)
+1. **Verify www is NOT in Firebase custom domains**:
+   - Navigate to: https://console.firebase.google.com/project/medication-cd9b8/hosting/sites
+   - Should show ONLY `dawatime.com` (not www.dawatime.com)
+   - If www.dawatime.com appears, remove it
+
+2. **Check DNS configuration**:
+
+   ```bash
+   dig @rick.ns.cloudflare.com www.dawatime.com CNAME
+   # Should return: medication-cd9b8.web.app
+   ```
+
+3. **Ensure Cloudflare proxy is DISABLED**:
+   - Grey cloud icon (DNS only)
+   - Orange cloud breaks Firebase redirect rules
+
+4. **Test redirect**:
+
+   ```bash
+   curl -I https://www.dawatime.com
+   # Should show: HTTP/2 301 Moved Permanently
+   # Location: https://dawatime.com/
+   ```
+
+5. **Clear local DNS cache** (if testing after changes):
+   ```bash
+   sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+   ```
 
 ## Developer Workflows
 
