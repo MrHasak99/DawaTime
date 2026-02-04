@@ -2244,13 +2244,73 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Screenshot 3 alternate: Different Settings layout
 - **Status**: Archived for now, may evaluate after iOS fixes delivered
 
+**Revised iOS Delivery** (Day 35 - February 4, 2026):
+
+**Status**: ✅ **BOTH FIXES VERIFIED COMPLETE**
+
+**Screenshot 1 - English:**
+- ✅ Top: "Never Miss a Dose" (tagline)
+- ✅ Bottom: "DAWATIME" (app name - correct)
+- ✅ Font: Bold/prominent (proper brand font)
+
+**Screenshot 1 - Arabic:**
+- ✅ Top: "لا تفوّت أي جرعة" (tagline)
+- ✅ Bottom: **"دواء تايم"** (DawaTime app name - FIXED!)
+- ✅ Font: Bold/prominent (proper brand font)
+
+**Screenshot 5 - English:**
+- ✅ Dialog title: "Take **Augmentin**" (typo fixed)
+- ✅ Dialog text: "Did you take your **Augmentin**?" (typo fixed)
+
+**Screenshots 2-4, 6-7:**
+- ✅ All verified as production-ready
+
+**Milestone Payments & Contract Status** (Day 35 Evening - February 4, 2026):
+
+**✅ Milestone 1: COMPLETED & PAID**
+- Amount: $125.00
+- Status: Approved February 4, 2026 at 9:44 PM
+- Deliverable: First draft of 14-16 screenshots (7-8 English + 7-8 Arabic) with device frames
+- Payment released with message:
+  > "Perfect, Rahma! Both fixes look excellent - the font and text corrections are exactly what I needed.
+  > 
+  > I'm releasing Milestone 1 ($125) now - you delivered exactly as promised and the quality is outstanding.
+  > 
+  > Quick question: What would you charge for 14 matching Android screenshots (7 English + 7 Arabic) with proper Android device frames (Pixel/Galaxy)? If pricing works, we can add a Milestone 3 for the Android work.
+  > 
+  > For Milestone 2, please export the iOS screenshots as high-res PNGs (2796 x 1290) with the naming we discussed, plus the Figma source file.
+  > 
+  > Thanks for the fast turnaround!"
+
+**🟢 Milestone 2: ACTIVE & FUNDED**
+- Amount: $125.00
+- Status: Activated February 4, 2026 at 9:46 PM
+- Deliverable: Final high-resolution PNGs + editable Figma/PSD source files
+- Expected: 14 iOS PNGs (2796 x 1290), proper naming, Figma source
+- Timeline: Delivery expected within 3-7 days
+
+**⏳ Milestone 3: PENDING ANDROID QUOTE**
+- Amount: TBD (awaiting Rahma's quote)
+- Status: Not yet created (conditional on pricing)
+- Deliverable: 14 Android screenshots (7 English + 7 Arabic) with Pixel/Galaxy device frames
+- Decision: Accept if $100-200, negotiate if higher, decline if prohibitive
+- Rationale: Professional Google Play Store listing requires Android device frames (not iPhone)
+
+**Android Decision Point** (Day 35 - February 4, 2026):
+- ⚠️ **Issue Identified**: iOS screenshots use iPhone device frames
+- ⚠️ **Rahma's Recommendation**: Export separate Android versions with proper Pixel/Galaxy frames for Google Play Store (professional best practice)
+- 📧 **Quote Requested**: Message sent asking for Android pricing with M1 payment release
+- ⏳ **Awaiting Response**: Expected within 24 hours
+- **Options**: 
+  1. Accept Android M3 quote → Professional dual-platform launch
+  2. Use iPhone screenshots on both stores → Less professional but functional
+
 **Next Steps**:
-- ⏳ **Tomorrow (Feb 4)**: Rahma delivers revised iOS screenshots
-- ⏳ Review fixes (Screenshot 1 font/text, Screenshot 5 typo)
-- ⏳ If approved → Release Milestone 1 ($125) same day
-- ⏳ Discuss Android version if needed (separate pricing/milestone)
-- ⏳ Export high-res PNGs for App Store Connect & Play Console
-- ⏳ Deploy v1.4.5+53 + new screenshots simultaneously
+- ⏳ **Wait for Rahma's Android quote** (expected within 24 hours)
+- ⏳ **Decision**: Accept Android pricing OR proceed with iOS-only
+- ⏳ **Milestone 2 delivery**: iOS PNGs + Figma source (3-7 days)
+- ⏳ **Potential Milestone 3**: Android screenshots (if quote accepted)
+- ⏳ Deploy v1.4.5+53 + new screenshots simultaneously (Feb 17-24 window)
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
