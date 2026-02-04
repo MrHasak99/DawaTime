@@ -1,4 +1,5 @@
 import 'package:dawatime/l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,7 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _confirmPasswordError = false;
 
   Future<bool> _verifyPlayIntegrity() async {
-    if (!Platform.isAndroid) return true;
+    if (kIsWeb || !Platform.isAndroid) return true;
 
     try {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -330,7 +331,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
                                               url,
-                                            mode: LaunchMode.externalApplication,
+                                              mode:
+                                                  LaunchMode
+                                                      .externalApplication,
                                             );
                                           } else {
                                             if (context.mounted) {
@@ -412,7 +415,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
                                               url,
-                                            mode: LaunchMode.externalApplication,
+                                              mode:
+                                                  LaunchMode
+                                                      .externalApplication,
                                             );
                                           } else {
                                             if (context.mounted) {

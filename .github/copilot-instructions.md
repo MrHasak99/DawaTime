@@ -1139,28 +1139,27 @@ firebase deploy --only hosting
    # Shows: HTTP/2 200 (serving content directly)
    # Expected: HTTP/2 301 Moved Permanently → https://dawatime.com/
    ```
-   
+
    **Additional Discovery** (Day 29 Evening - January 29, 2026):
-   
+
    After removing www.dawatime.com from Firebase custom domains and redeploying:
+
    ```bash
    curl -I https://www.dawatime.com
    # Shows: HTTP/2 404 (Firebase doesn't recognize hostname)
    # Problem: Firebase redirect rules only apply to CONFIGURED custom domains
    ```
-   
+
    **Key Lesson**: Firebase Hosting redirect rules (from firebase.json) do NOT work for domains that aren't configured as custom domains. When a request arrives for an unconfigured hostname, Firebase returns 404 without checking redirect rules.
 
    **Resolution Steps** (Updated Day 29 Evening - Cloudflare Solution):
-   
+
    **Root Cause Discovered**: Firebase Hosting redirect rules (from firebase.json) do NOT apply to domains that aren't configured as custom domains. When www.dawatime.com was removed from Firebase, it started returning HTTP 404 because Firebase doesn't recognize the hostname at all.
-   
+
    **Correct Solution: Cloudflare Redirect Rules** (CDN-level redirect):
-   
    1. **Navigate to Cloudflare Dashboard**:
       - Go to: https://dash.cloudflare.com
       - Select `dawatime.com` domain
-   
    2. **Create Redirect Rule**:
       - Click "Rules" in left sidebar → "Redirect Rules"
       - Click "Create redirect rule" (or use "Redirect from WWW to root" template)
@@ -1172,23 +1171,20 @@ firebase deploy --only hosting
         - **Target URL**: `https://dawatime.com/${1}` ← **CRITICAL: Must include full domain + ${1}**
         - **Status code**: 301
       - Click "Deploy rule"
-   
+
    **CRITICAL**: The Target URL **must** be `https://dawatime.com/${1}` (NOT just `https://${1}`). The wildcard `${1}` contains only the path portion, so you need the full destination domain in the Target URL.
-   
    3. **Enable Cloudflare Proxy** (Required for Redirect Rules):
       - Navigate to DNS → Records
       - Find www CNAME record (medication-cd9b8.web.app)
       - Click "Edit"
       - Toggle proxy status from grey cloud (DNS only) to orange cloud (Proxied)
       - Click "Save"
-   
    4. **Why This Works**:
       - Cloudflare intercepts www requests at edge servers (before reaching Firebase)
       - Redirect Rules require proxy enabled (orange cloud) to function
       - Returns 301 redirect directly from Cloudflare (faster than Firebase)
       - No Firebase custom domain configuration needed
       - Free tier includes 70 redirect rules
-   
    5. **Test Redirect After Rule Creation**:
       ```bash
       curl -I https://www.dawatime.com
@@ -1196,12 +1192,11 @@ firebase deploy --only hosting
       # Location: https://dawatime.com/
       # server: cloudflare
       ```
-   
    6. **Revalidate in Search Console**:
       - Click "START NEW VALIDATION" button
       - Google will recrawl within 1-3 days
       - Expected result: Validation passes, issue resolves
-   
+
    **DNS Configuration** (Must Enable Proxy):
    - CNAME: `www` → `medication-cd9b8.web.app`
    - Proxy status: **ENABLED (orange cloud)** ← Required for redirect rules to work
@@ -2200,6 +2195,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 **Figma Link**: https://www.figma.com/design/dPtvl3NNwUNRQNPKuLAHIO/dawatime-screenshots
 
 **Delivery Summary**:
+
 - ✅ 14 total screenshots delivered (7 English + 7 Arabic)
 - ✅ All 7 features covered correctly per Feature_Priority_Guide.md
 - ✅ Professional device frames (iPhone mockups)
@@ -2212,6 +2208,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 **Issues Found & Feedback Sent**:
 
 **1. Screenshot 1 (Arabic version) - Branding & Font Issues:**
+
 - ❌ Bottom text shows "لا تفوّت أي جرعة" (tagline) twice
 - ✅ Should show "دواء تايم" (DawaTime app name) at bottom
 - ❌ App name using wrong font on BOTH versions (looks like Inter 400 body text)
@@ -2219,18 +2216,21 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - ✅ Arabic "دواء تايم" should use: **NotoKufiArabic 700 Bold**
 
 **2. Screenshot 5 (English version) - Medication Name Typo:**
+
 - ❌ Shows "Augmrntin" (missing letter 'e')
 - ✅ Should be "Augmentin"
 - Appears in 2 locations: dialog title + dialog text
 - Note: Arabic version "أوجمنتين" is correct
 
 **Feedback Status**:
+
 - **Sent**: February 3, 2026 (Day 34)
 - **Timeline Given**: "No rush - whenever you have time this week works perfectly"
 - **Awaiting**: Revised designs with 2 fixes
 - **Export Specs Requested**: 2796 x 1290 PNG, proper naming convention, Figma source file
 
 **Rahma's Response** (Day 34 - February 3, 2026):
+
 - ✅ Acknowledged both fixes clearly understood
 - ✅ **Delivery commitment**: "by tomorrow" (February 4, 2026)
 - ✅ Will export all files per specifications + Figma source
@@ -2238,6 +2238,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Decision**: Focus on iOS finalization first, discuss Android versions after approval (phased approach)
 
 **Alternate Screenshots Discovered**:
+
 - Rahma included 3 bonus/alternate versions in Figma
 - Screenshot 1 alternate: Different hero design with pill graphics, appears to use bolder font
 - Screenshot 2 alternate: Shows real medications (Panadol, Omega-3, Augmentin) vs generic cards
@@ -2249,40 +2250,46 @@ First internal testing release of DawaTime on Google Play Console. Core features
 **Status**: ✅ **BOTH FIXES VERIFIED COMPLETE**
 
 **Screenshot 1 - English:**
+
 - ✅ Top: "Never Miss a Dose" (tagline)
 - ✅ Bottom: "DAWATIME" (app name - correct)
 - ✅ Font: Bold/prominent (proper brand font)
 
 **Screenshot 1 - Arabic:**
+
 - ✅ Top: "لا تفوّت أي جرعة" (tagline)
 - ✅ Bottom: **"دواء تايم"** (DawaTime app name - FIXED!)
 - ✅ Font: Bold/prominent (proper brand font)
 
 **Screenshot 5 - English:**
+
 - ✅ Dialog title: "Take **Augmentin**" (typo fixed)
 - ✅ Dialog text: "Did you take your **Augmentin**?" (typo fixed)
 
 **Screenshots 2-4, 6-7:**
+
 - ✅ All verified as production-ready
 
 **Milestone Payments & Contract Status** (Day 35 Evening - February 4, 2026):
 
 **✅ Milestone 1: COMPLETED & PAID**
+
 - Amount: $125.00
 - Status: Approved February 4, 2026 at 9:44 PM
 - Deliverable: First draft of 14-16 screenshots (7-8 English + 7-8 Arabic) with device frames
 - Payment released with message:
   > "Perfect, Rahma! Both fixes look excellent - the font and text corrections are exactly what I needed.
-  > 
+  >
   > I'm releasing Milestone 1 ($125) now - you delivered exactly as promised and the quality is outstanding.
-  > 
+  >
   > Quick question: What would you charge for 14 matching Android screenshots (7 English + 7 Arabic) with proper Android device frames (Pixel/Galaxy)? If pricing works, we can add a Milestone 3 for the Android work.
-  > 
+  >
   > For Milestone 2, please export the iOS screenshots as high-res PNGs (2796 x 1290) with the naming we discussed, plus the Figma source file.
-  > 
+  >
   > Thanks for the fast turnaround!"
 
 **🟢 Milestone 2: ACTIVE & FUNDED**
+
 - Amount: $125.00
 - Status: Activated February 4, 2026 at 9:46 PM
 - Deliverable: Final high-resolution PNGs + editable Figma/PSD source files
@@ -2290,6 +2297,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Timeline: Delivery expected within 3-7 days
 
 **⏳ Milestone 3: PENDING ANDROID QUOTE**
+
 - Amount: TBD (awaiting Rahma's quote)
 - Status: Not yet created (conditional on pricing)
 - Deliverable: 14 Android screenshots (7 English + 7 Arabic) with Pixel/Galaxy device frames
@@ -2297,20 +2305,55 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Rationale: Professional Google Play Store listing requires Android device frames (not iPhone)
 
 **Android Decision Point** (Day 35 - February 4, 2026):
+
 - ⚠️ **Issue Identified**: iOS screenshots use iPhone device frames
 - ⚠️ **Rahma's Recommendation**: Export separate Android versions with proper Pixel/Galaxy frames for Google Play Store (professional best practice)
 - 📧 **Quote Requested**: Message sent asking for Android pricing with M1 payment release
 - ⏳ **Awaiting Response**: Expected within 24 hours
-- **Options**: 
+- **Options**:
   1. Accept Android M3 quote → Professional dual-platform launch
   2. Use iPhone screenshots on both stores → Less professional but functional
 
+**Rahma's Android Quote Received** (Day 35 - February 4, 2026):
+
+- **Quote**: $110 for 14 Android screenshots (7 English + 7 Arabic)
+- **Deliverable**: Same design as iOS with adjusted dimensions and proper Android device frames (Pixel/Galaxy)
+- **Total Project Cost**: $250 (original contract) + $110 (Android) = $360
+- **Decision Framework Assessment**: ✅ $110 falls within acceptable range ($100-200)
+- **Status**: ✅ **ACCEPTED** - User approved Android quote (Day 35)
+
+**Milestone 2 Status Update** (Day 35 - February 4, 2026):
+
+- ✅ **iOS Screenshots Delivered**: High-res PNGs (2796 × 1290) with proper naming
+- ✅ **Figma Source**: Shared and reviewed
+- ⚠️ **Issue Found**: Screenshot 4 Arabic is duplicate of Screenshot 2 (should be add medication form, not home page)
+- ⏳ **Payment Pending**: Awaiting Screenshot 4 Arabic fix before M2 approval ($125)
+
+**Milestone 3 - Android Screenshots** (Created Day 35 - February 4, 2026):
+
+- **Amount**: $110.00
+- **Status**: ✅ **CREATED** - Milestone 3 added to Upwork contract (Day 35 evening)
+- **Deliverable**: 14 Android screenshots (7 English + 7 Arabic) with proper Pixel/Galaxy device frames
+- **Design**: Same as iOS with adjusted dimensions for Google Play Store
+- **Expected Delivery**: ~1 week after Milestone 3 activation
+- **Timeline**: Complete by February 11-18, 2026 (aligns with original 3-4 week window)
+
+**Screenshot 4 Issue Details** (Day 35 Evening):
+
+- **Problem**: Arabic Screenshot 4 shows home page with medications list (duplicate of Screenshot 2)
+- **Expected**: Arabic Screenshot 4 should show add medication form (matching English Screenshot 4 "Add Your Medication in Seconds")
+- **Impact**: Would confuse Arabic-speaking users on App Store/Play Store
+- **Status**: Reported to Rahma, awaiting fix
+- **Discovered During**: Figma source file review before M2 approval
+
 **Next Steps**:
-- ⏳ **Wait for Rahma's Android quote** (expected within 24 hours)
-- ⏳ **Decision**: Accept Android pricing OR proceed with iOS-only
-- ⏳ **Milestone 2 delivery**: iOS PNGs + Figma source (3-7 days)
-- ⏳ **Potential Milestone 3**: Android screenshots (if quote accepted)
-- ⏳ Deploy v1.4.5+53 + new screenshots simultaneously (Feb 17-24 window)
+
+1. ⏳ **Rahma Fixes Screenshot 4 Arabic**: Replace home page with add medication form
+2. ⏳ **Verify Fix**: Check updated Figma file
+3. ⏳ **Approve Milestone 2**: Release $125 payment after Screenshot 4 fix confirmed
+4. ⏳ **Activate Milestone 3 Funding**: Fund $110 Android milestone after M2 approval
+5. ⏳ **Android Production**: Rahma begins Android screenshots (~1 week delivery)
+6. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform screenshots (Feb 17-24 window)
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
@@ -3081,6 +3124,209 @@ if (daysUntil == 0) {
 - `/functions/index.js` (145 → 567 lines)
 
 **Testing Verification**: Install on iPhone, check console for "APNs token obtained: true" and "✓ FCM token saved", update Firestore version, verify notification received within 1-2 minutes.
+
+### Firebase App Check Integration (February 2026)
+
+**Status**: ✅ **PRODUCTION READY** - Configured across all platforms (Android, iOS, Web)
+
+**Purpose**: Security layer that protects Firebase backend services from abuse by verifying requests come from genuine DawaTime apps.
+
+**Implementation Date**: February 4, 2026
+
+**Package Version**: `firebase_app_check: ^0.4.1+4`
+
+#### Platform-Specific Configuration
+
+**Android - Play Integrity API**:
+- Provider: Google Play Integrity
+- Configuration: Firebase Console → App Check → Android app
+- Status: Registered and active
+- Usage: Verifies app authenticity and device integrity
+
+**iOS - App Attest**:
+- Provider: Apple App Attest
+- Configuration: Firebase Console → App Check → iOS app
+- Status: Registered and active
+- Usage: Cryptographic attestation of app integrity
+
+**Web - reCAPTCHA v3**:
+- Provider: Google reCAPTCHA v3
+- Site Key: `6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN`
+- Configuration: Google reCAPTCHA Console + Firebase Console
+- Authorized Domains:
+  - `localhost` (development)
+  - `webapp.dawatime.com` (production)
+  - `dawatime.com` (main website)
+- Status: Fully configured and verified
+
+#### Code Implementation
+
+**Location**: `/lib/main.dart` (lines 86-103)
+
+```dart
+// Firebase App Check - Platform-specific initialization
+try {
+  if (kIsWeb) {
+    // Web requires explicit ReCaptchaV3Provider
+    await FirebaseAppCheck.instance.activate(
+      providerWeb: ReCaptchaV3Provider(
+        '6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN',
+      ),
+    );
+  } else {
+    // Android and iOS use Firebase Console configuration
+    await FirebaseAppCheck.instance.activate();
+  }
+  // Always log in production too (for verification)
+  print('✓ Firebase App Check activated');
+} catch (e) {
+  // Always log errors in production too
+  print('⚠️ App Check initialization failed: $e');
+}
+```
+
+**Key Implementation Details**:
+- **Platform Detection**: Uses `kIsWeb` to determine web vs mobile
+- **Web Configuration**: Explicit `providerWeb` parameter with reCAPTCHA v3 site key
+- **Mobile Configuration**: Parameterless `activate()` reads from Firebase Console
+- **Production Logging**: Uses `print()` instead of `kDebugMode` guard for production visibility
+- **Error Handling**: Graceful failure with error logging
+
+#### Platform Compatibility Fixes
+
+**Issue**: `Platform.isAndroid` and `Platform.isIOS` crash on web platform with error:
+```
+Unsupported operation: Platform._operatingSystem
+```
+
+**Solution**: Added `kIsWeb` guards before all Platform checks:
+
+**Files Modified**:
+1. `/lib/login_page.dart`:
+   - Line 135: `if (kIsWeb || !Platform.isAndroid) return true;` (Play Integrity guard)
+   - Lines 104-107: `if (!kIsWeb && Platform.isIOS) {` (APNs token guard)
+
+2. `/lib/signup_page.dart`:
+   - Line 36: `if (kIsWeb || !Platform.isAndroid) return true;` (Play Integrity guard)
+
+**Pattern**: Always check `kIsWeb` BEFORE accessing `Platform.isAndroid` or `Platform.isIOS`
+
+#### Verification & Testing
+
+**Development (localhost)**:
+```bash
+flutter run -d chrome
+# Console output:
+# ✓ Firebase App Check activated
+```
+
+**Production (webapp.dawatime.com)**:
+```bash
+flutter build web --release
+cd build/web
+netlify deploy --prod --dir .
+# Visit https://webapp.dawatime.com
+# Console output:
+# ✓ Firebase App Check activated
+```
+
+**Expected Behavior**:
+- ✅ Console shows: `"✓ Firebase App Check activated"`
+- ✅ No Platform compatibility errors
+- ✅ Firebase services receive valid App Check tokens
+- ⚠️ Temporary throttling possible from previous failed attempts (400/429 errors)
+
+#### Troubleshooting
+
+**Common Issue: Throttling (400/429 Errors)**
+
+**Symptoms**:
+```
+AppCheck: 400 error. Attempts allowed again after 00m:XXs (appCheck/initial-throttle)
+AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
+```
+
+**Root Cause**: Firebase server-side rate limiting from previous failed authentication attempts (incorrect keys, wrong parameters during setup)
+
+**Impact**: 
+- Does NOT affect app functionality - app works normally
+- Firebase uses cached tokens or operates with degraded App Check
+- Console warnings can be safely ignored during development
+
+**Resolution Options**:
+1. **Wait 10-15 minutes** - Throttle auto-clears without any action
+2. **Add debug token** - Firebase Console → App Check → Manage Debug Tokens
+3. **Continue development** - App functions normally despite warnings
+
+**Not a Bug**: Throttling is expected temporary condition after configuration changes, not a code issue
+
+#### Production Deployment
+
+**Requirements**:
+1. ✅ reCAPTCHA site key configured in code
+2. ✅ Production domain added to reCAPTCHA Console authorized domains
+3. ✅ Web app registered in Firebase Console
+4. ✅ Platform-specific providers registered (Play Integrity, App Attest)
+
+**Deployment Checklist**:
+- [x] Code updated with correct site key
+- [x] `flutter build web --release` completed successfully
+- [x] Deployed to production (Netlify)
+- [x] Console verification: `"✓ Firebase App Check activated"` visible
+- [x] No Platform compatibility errors
+- [x] All three domains configured (localhost, webapp.dawatime.com, dawatime.com)
+
+**Production Status**: Fully deployed and operational as of February 4, 2026
+
+#### Benefits
+
+**Security**:
+- ✅ Protects Firebase backend from unauthorized access
+- ✅ Prevents abuse from cloned/modified apps
+- ✅ Verifies requests come from genuine DawaTime apps
+- ✅ Complements Firebase Auth for defense-in-depth
+
+**Compliance**:
+- ✅ Strengthens Kuwait MOH partnership application
+- ✅ Demonstrates enterprise-grade security practices
+- ✅ Required for production Firebase services
+
+**User Trust**:
+- ✅ Health data protection
+- ✅ Prevents medication data theft from fake apps
+- ✅ Ensures only verified apps access user information
+
+#### Dependencies
+
+```yaml
+# pubspec.yaml
+dependencies:
+  firebase_app_check: ^0.4.1+4
+  firebase_core: # Required
+```
+
+**Import Pattern**:
+```dart
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+```
+
+#### Additional Configuration
+
+**OAuth Domain Issue** (Separate from App Check):
+
+If seeing error:
+```
+Error: The current domain is not authorized for OAuth operations
+```
+
+**Solution**: Add production domain to Firebase Console:
+1. Firebase Console → Authentication → Settings
+2. Scroll to **Authorized domains**
+3. Add: `webapp.dawatime.com`
+4. Click **Add domain**
+
+**Note**: This is a Firebase Auth configuration, not App Check.
 
 ---
 

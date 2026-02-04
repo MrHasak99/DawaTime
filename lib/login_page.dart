@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final messaging = FirebaseMessaging.instance;
 
-      if (Platform.isIOS) {
+      if (!kIsWeb && Platform.isIOS) {
         try {
           final apnsToken = await messaging.getAPNSToken();
           if (apnsToken == null) {
@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<bool> _verifyPlayIntegrity() async {
-    if (!Platform.isAndroid) return true;
+    if (kIsWeb || !Platform.isAndroid) return true;
 
     try {
       if (kDebugMode) {

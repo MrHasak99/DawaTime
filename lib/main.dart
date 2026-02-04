@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dawatime/l10n/app_localizations.dart';
 import 'package:dawatime/utils/medication_helpers.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,6 +81,16 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     ).timeout(const Duration(seconds: 10));
   } catch (_) {}
+
+  if (kIsWeb) {
+    await FirebaseAppCheck.instance.activate(
+      providerWeb: ReCaptchaV3Provider(
+        '6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN',
+      ),
+    );
+  } else {
+    await FirebaseAppCheck.instance.activate();
+  }
 
   if (!kIsWeb) {
     try {
