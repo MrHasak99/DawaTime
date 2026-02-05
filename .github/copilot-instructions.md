@@ -297,6 +297,171 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
   - public/DawaTime-favicon.png (NEW: optimized favicon with larger icon, rounded corners, green background)
 - **Deployment**: Firebase Hosting (20 files deployed, live at https://dawatime.com)
 
+---
+
+### Web App Enhancements (January-February 2026)
+
+**Status**: ✅ **DEPLOYED** - Live at https://webapp.dawatime.com (February 5, 2026)
+
+**File**: web/index.html (Flutter Web App wrapper for Progressive Web App)
+
+**Context**: The Flutter web app serves as an alternative to mobile apps for users who prefer browser-based access. Unlike the marketing site (public/index.html at https://dawatime.com), the web app provides full CRUD functionality for medication management without requiring app downloads.
+
+#### 1. Kuwait-Specific SEO Optimization
+
+**Purpose**: Target Kuwait and GCC market with localized search engine optimization
+
+**Implementation**:
+- **Description meta tag**: Added "for Kuwait & GCC" regional positioning
+- **Keywords expansion**: 8 generic terms → 20+ Kuwait-specific keywords
+  - English: "medication reminder Kuwait", "pill tracker GCC", "medicine schedule Kuwait"
+  - Arabic: "دواء تايم", "تذكير الدواء الكويت", "جدول الأدوية"
+- **Author meta tag**: Added "Hamad AlKhalaf" for developer attribution
+- **Search control**: `<meta name="robots" content="noindex, nofollow">`
+  - Prevents web app from competing with marketing site in search results
+  - Marketing site (dawatime.com) handles SEO, web app serves authenticated users
+- **Geographic targeting**:
+  - `<meta name="geo.region" content="KW">` (Kuwait ISO code)
+  - `<meta name="language" content="English, Arabic">` (bilingual support)
+
+**Rationale**: noindex strategy ensures clean SEO separation—marketing site ranks in search engines, web app provides functionality.
+
+#### 2. Enhanced Social Media Integration
+
+**Purpose**: Proper Open Graph and Twitter Card metadata for social sharing
+
+**Implementation**:
+- **Open Graph tags** (8 new properties):
+  - `og:url`: https://webapp.dawatime.com
+  - `og:type`: website
+  - `og:title`: DawaTime - Never Miss a Dose
+  - `og:description`: Smart medication reminder app for Kuwait & GCC
+  - `og:image`: https://webapp.dawatime.com/icons/Icon-512.png
+  - `og:image:width`: 512
+  - `og:image:height`: 512
+  - `og:locale`: en_US (with ar_KW alternate)
+  - `og:site_name`: DawaTime
+- **Twitter Cards** (HTML5 compliance):
+  - Fixed: Changed `property="twitter:*"` to `name="twitter:*"` (HTML5 spec)
+  - Added: `twitter:url` metadata
+  - Card type: summary_large_image
+- **Image URLs**: Changed from relative to absolute (https://webapp.dawatime.com/icons/Icon-512.png)
+
+**Benefits**: Proper social media previews when users share web app links on Facebook, Twitter, LinkedIn, WhatsApp.
+
+#### 3. Loading Screen System
+
+**Purpose**: Prevent Flutter white flash during ~1-2 second app initialization
+
+**Implementation** (~108 lines total):
+
+**HTML Structure**:
+```html
+<div id="loading-screen">
+  <div class="loading-card">
+    <div class="pill-icon">
+      <div class="pill-body"></div>
+      <div class="pill-cap pill-cap-left"></div>
+      <div class="pill-cap pill-cap-right"></div>
+    </div>
+    <h1 class="app-name">DawaTime</h1>
+    <p class="tagline">Never miss a dose...</p>
+    <div class="spinner"></div>
+  </div>
+</div>
+```
+
+**Styling**:
+- **Background**: Green gradient (#8AC249 → #6fa32e, 45° diagonal)
+- **Card**: White rounded container (24px border-radius, centered)
+- **Pill Icon**: Animated SVG-like pill (80px width, green fill, white caps)
+- **Typography**: Nunito ExtraBold 32px for "DawaTime", 18px tagline
+- **Spinner**: Animated circular loader (2px green border, 1s rotation)
+- **Animations**:
+  - Pill pulse: scale(1) → scale(1.1) → scale(1) over 2s (infinite)
+  - Spinner rotation: 360° over 1s (infinite linear)
+  - Fade-out: opacity 1 → 0 over 0.5s when Flutter loads
+
+**JavaScript Removal**:
+```javascript
+window.addEventListener('flutter-first-frame', function() {
+  var loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) {
+    loadingScreen.classList.add('fade-out');
+    setTimeout(function() {
+      loadingScreen.remove();
+    }, 500);
+  }
+});
+```
+
+**User Experience**:
+- Prevents jarring white screen flash
+- Provides branded loading experience
+- Shows app initialization progress
+- Smooth fade-out transition to Flutter UI
+
+#### 4. Hidden SEO Content
+
+**Purpose**: Keyword-rich structured content for search engines (despite noindex)
+
+**Implementation** (~19 lines):
+```html
+<div style="position: absolute; left: -9999px;" aria-hidden="true">
+  <h1>DawaTime - Medication Reminder App for Kuwait</h1>
+  <h2>Smart Pill Tracker & Medicine Schedule</h2>
+  <h3>Features:</h3>
+  <ul>
+    <li>Set medication reminders with 5 follow-ups</li>
+    <li>Track refills and low stock alerts</li>
+    <li>Bilingual support (English/Arabic)</li>
+    <li>Weekday scheduling for complex medication plans</li>
+    <li>Dark mode and theme customization</li>
+    <li>Available on iOS, Android, and Web</li>
+    <li>Free medication management for Kuwait & GCC</li>
+  </ul>
+  <p>Contact: Available 24/7 via in-app support</p>
+</div>
+```
+
+**Positioning**: Off-screen (left: -9999px) with `aria-hidden="true"` for accessibility compliance
+
+**Purpose**: Provides search engines with structured H1/H2/H3 hierarchy and keyword-rich bullet points
+
+**Note**: Despite noindex meta tag, this content serves as fallback if indexing rules change or for web crawlers that ignore robots directives.
+
+#### 5. Technical Details
+
+**Changes Summary**:
+- **Total additions**: ~138 lines
+- **Total modifications**: ~10 lines
+- **Categories**: SEO (12 changes), social media (13 changes), loading screen (108 lines), hidden content (19 lines)
+
+**Deployment**:
+- **Platform**: Netlify
+- **URL**: https://webapp.dawatime.com
+- **Build command**: `flutter build web --release`
+- **Deploy command**: `netlify deploy --prod --dir build/web`
+- **Build time**: ~24 seconds
+- **Font optimization**: MaterialIcons tree-shaken 99.3% (1.6MB → 11.8KB)
+
+**Files Modified**:
+- `/web/index.html` (Flutter web wrapper)
+- `/web/manifest.json` (unchanged, PWA configuration)
+- `/web/robots.txt` (unchanged, allows all crawlers despite noindex meta tag)
+
+**Deployment History**:
+- **February 5, 2026**: Deployed via Netlify (4 assets uploaded to CDN)
+- **Status**: ✅ Live in production
+
+**Why These Changes**:
+- **SEO**: Kuwait/GCC targeting aligns with primary market positioning
+- **Loading screen**: Standard Flutter web best practice (prevents white flash)
+- **Social media**: Proper link previews improve user trust and sharing
+- **noindex**: Prevents confusion—marketing site for discovery, web app for usage
+
+---
+
 **v1.4.5+53 Hotfix Release** (Day 19 - January 25, 2026):
 
 **Release Status**: ✅ **DEPLOYED TO INTERNAL TESTING**
@@ -1356,6 +1521,252 @@ curl -I https://www.dawatime.com
    - Update `lastUpdated` timestamp
 4. Next time users open app, they'll be prompted to accept new version
 5. User acceptance tracked automatically in their profile
+
+---
+
+### Legal Document Page Enhancements (Late January - Early February 2026)
+
+**Status**: ✅ **COMPLETE** - Trust Box, Safety Box, and FOUC prevention implemented
+
+**Context**: After creating the dedicated legal document webpages in December 2025, additional enhancements were made to improve user trust, visual design, and performance.
+
+#### Trust Box - Privacy Policy (Commands 34-44)
+
+**Purpose**: Build user confidence by highlighting DawaTime's privacy commitments with a prominent, friendly callout box.
+
+**Design**:
+
+- **Color Theme**: Green (#8ac249) matching DawaTime brand
+- **Icon**: Material Design checkmark SVG (circle background with white checkmark)
+- **Style**: Outlined container with gradient background, rounded corners (12px)
+- **Position**: After main "Privacy Policy" heading, before document sections
+- **Tone**: Doctor-to-patient (empathetic, reassuring, professional)
+
+**Content** (Bilingual - English/Arabic):
+
+1. **Transparency**: "We explain in plain language what data we collect and why"
+2. **Security**: "Your medication information is encrypted and protected"
+3. **Control**: "You can delete your data anytime from Settings"
+
+**Implementation** (~65 lines):
+
+```html
+<div class="trust-box">
+  <div class="trust-icon">
+    <svg><!-- Checkmark icon --></svg>
+  </div>
+  <div class="trust-content">
+    <h3 class="en-content">Your Privacy Matters</h3>
+    <h3 class="ar-content">خصوصيتك تهمّنا</h3>
+    <ul class="trust-list">
+      <li class="en-content">
+        <svg class="checkmark-icon">...</svg>
+        <span
+          ><strong>Transparency:</strong> We explain in plain language...</span
+        >
+      </li>
+      <!-- 2 more bullets -->
+    </ul>
+  </div>
+</div>
+```
+
+**Styling**:
+
+- Flexbox layout (icon left, content right)
+- SVG checkmark bullets (green, 16px, inline with text)
+- Responsive design (stacks on mobile)
+- Theme-aware (adapts to light/dark mode)
+
+#### Safety Box - Terms & Conditions (Commands 46-48)
+
+**Purpose**: Set proper expectations about DawaTime's role as a medication reminder tool (not medical advice) with a clear, non-scary warning callout.
+
+**Design**:
+
+- **Color Theme**: Amber/orange (#FFA726) for professional warning tone
+- **Icon**: Material Design shield SVG (protection symbolism)
+- **Style**: Outlined container with gradient background, rounded corners (12px)
+- **Position**: After main "Terms & Conditions" heading, before document sections
+- **Tone**: Professional warning (helpful, not scary, legally clear)
+
+**Content** (Bilingual - English/Arabic):
+
+1. **Medical Disclaimer**: "DawaTime is a reminder tool, not a replacement for professional medical advice"
+2. **User Responsibility**: "Always consult your doctor about medication changes or concerns"
+3. **Liability**: "We provide the app 'as-is' and aren't liable for medical decisions"
+
+**Implementation** (~108 lines):
+
+```html
+<div class="safety-box">
+  <div class="safety-icon">
+    <svg><!-- Shield icon --></svg>
+  </div>
+  <div class="safety-content">
+    <h3 class="en-content">Important Safety Information</h3>
+    <h3 class="ar-content">معلومات السلامة المهمّة</h3>
+    <ul class="safety-list">
+      <li class="en-content">
+        <svg class="checkmark-icon amber">...</svg>
+        <span
+          ><strong>Medical Disclaimer:</strong> DawaTime is a reminder
+          tool...</span
+        >
+      </li>
+      <!-- 2 more bullets -->
+    </ul>
+  </div>
+</div>
+```
+
+**Styling**:
+
+- Identical structure to Trust Box (consistent design pattern)
+- Amber checkmark bullets instead of green
+- Amber border and gradient (warning color psychology)
+- Same responsive behavior and theme adaptation
+
+**Design Refinement (Command 48)**:
+
+- **Original**: Warning emoji (⚠️) for bullets
+- **Problem**: Emoji rendering inconsistent across browsers/devices, accessibility concerns
+- **Solution**: Replaced with amber SVG checkmark (same as Privacy Policy but amber instead of green)
+- **Benefit**: Consistent vector rendering, theme-aware, WCAG compliant
+
+#### Design System Pattern
+
+**Consistent Architecture** (Both Callout Boxes):
+
+- **Container**: Flexbox with icon + content areas
+- **Icon**: SVG in circular background (40px circle, 24px icon)
+- **Bullets**: SVG checkmarks (16px, colored to match theme)
+- **Typography**: Bold labels with regular explanatory text
+- **Responsive**: Flexbox wraps to column on mobile (<600px)
+- **Theming**: CSS custom properties for light/dark mode adaptation
+- **Gradients**: Subtle background gradients (5% opacity variation)
+
+**Color Psychology**:
+
+- **Green (Privacy Policy)**: Trust, safety, health (positive reinforcement)
+- **Amber (Terms & Conditions)**: Caution, attention, professionalism (appropriate warning)
+
+**Why Two Different Callouts**:
+
+- Privacy Policy → Reassurance (building confidence)
+- Terms & Conditions → Awareness (setting expectations)
+- Different purposes require different tones and colors
+- Consistent structure makes them feel like part of unified design system
+
+#### FOUC Prevention System (Commands 49-50)
+
+**Status**: ✅ **COMPLETE** - Blocking inline scripts prevent Flash of Unstyled Content
+
+**Problem**: Flash of Unstyled Content when users return to legal pages with saved theme/language preferences.
+
+**User Experience Issue**:
+
+1. User selects dark theme → localStorage saves `theme: 'dark'`
+2. User refreshes page → HTML loads with light default → CSS applies → JavaScript runs → theme switches
+3. **Visible flash**: Light background → Dark background (100-500ms delay)
+4. Same issue with language: English → Arabic causes layout shift (LTR → RTL)
+
+**Solution**: Blocking inline `<script>` in `<head>` that reads localStorage BEFORE CSS loads.
+
+**Implementation** (~25 lines per page):
+
+```html
+<head>
+  <link rel="icon" type="image/png" href="DawaTime.png" />
+
+  <!-- Critical: Apply theme/language BEFORE page renders to prevent FOUC -->
+  <script>
+    (function () {
+      // Apply theme immediately
+      const savedTheme = localStorage.getItem("theme") || "system";
+      const html = document.documentElement;
+
+      if (savedTheme === "dark") {
+        html.setAttribute("data-theme", "dark");
+      } else if (savedTheme === "system") {
+        // Check system preference
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (prefersDark) {
+          html.setAttribute("data-theme", "dark");
+        }
+      }
+
+      // Apply language immediately
+      const savedLang = localStorage.getItem("language") || "en";
+      if (savedLang === "ar") {
+        html.setAttribute("lang", "ar");
+        html.setAttribute("dir", "rtl");
+      }
+    })();
+  </script>
+
+  <style>
+    ...
+  </style>
+</head>
+```
+
+**Why This Works**:
+
+1. Browser parses `<head>` sequentially (top to bottom)
+2. Inline `<script>` executes immediately (blocking execution)
+3. localStorage read + HTML attribute set (~1-2ms)
+4. `<style>` tag parsed next
+5. CSS sees `[data-theme="dark"]` and `[lang="ar"]` already applied
+6. First paint renders with correct theme/language
+7. **No flash, no layout shift** ✅
+
+**Code Architecture Decision**:
+
+- **Critical Path** (inline `<head>` script): HTML attribute setting only, runs before CSS
+- **Interactive Path** (external shared-toggles.js): DOM manipulation, UI updates, event handlers
+
+**Why Split**:
+
+- Full `initTheme()` and `initLanguage()` functions in shared-toggles.js manipulate DOM (toggle buttons, content visibility, fonts)
+- DOM doesn't exist yet when `<head>` parses
+- Minimal script extracts only critical parts (HTML attributes) safe to run immediately
+- Keeps external JavaScript for interactive features (toggle buttons, user actions)
+
+**Performance Trade-off**:
+
+- **Cost**: ~1-2ms blocking execution in `<head>`
+- **Benefit**: Eliminates 100-500ms visible FOUC
+- **Net**: Improved perceived performance and UX
+
+**Files Modified**:
+
+- `/public/terms-and-conditions.html` (lines 10-36: added blocking script)
+- `/public/privacy-policy.html` (lines 8-34: added blocking script)
+
+**Industry Pattern**: This is a standard technique used for dark mode, internationalization, A/B testing, and any feature requiring instant state restoration before first paint.
+
+#### Summary of Enhancements
+
+**Privacy Policy Total Additions**: ~90 lines
+
+- Trust Box: ~65 lines
+- FOUC Prevention: ~25 lines
+
+**Terms & Conditions Total Additions**: ~133 lines
+
+- Safety Box: ~108 lines
+- FOUC Prevention: ~25 lines
+
+**Design System**: Consistent callout box pattern (Trust Box + Safety Box) with color-coded themes
+
+**Performance**: Blocking script eliminates FOUC (<2ms cost, 100-500ms benefit)
+
+**User Trust**: Professional presentation of legal commitments and medical disclaimers
+
+**Timeline**: Late January - Early February 2026 (Commands 34-50 across multiple sessions)
 
 ---
 

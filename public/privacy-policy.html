@@ -1,415 +1,1124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="canonical" href="https://dawatime.com/privacy-policy" />
     <title>Privacy Policy - DawaTime™ | سياسة الخصوصية - دواء تايم</title>
-    <link rel="icon" type="image/png" href="DawaTime.png">
+    <link rel="icon" type="image/png" href="DawaTime.png" />
+
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "system";
+        const html = document.documentElement;
+
+        if (savedTheme === "dark") {
+          html.setAttribute("data-theme", "dark");
+        } else if (savedTheme === "system") {
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          if (prefersDark) {
+            html.setAttribute("data-theme", "dark");
+          }
+        }
+
+        const savedLang = localStorage.getItem("language") || "en";
+        if (savedLang === "ar") {
+          html.setAttribute("lang", "ar");
+          html.setAttribute("dir", "rtl");
+        }
+      })();
+    </script>
+
     <style>
-        @font-face {
-            font-family: "Inter";
-            src: url("Inter_18pt-Regular.ttf") format("truetype");
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: "Nunito";
-            src: url("Nunito-ExtraBold.ttf") format("truetype");
-            font-weight: bold;
-            font-style: normal;
-        }
-        @import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap");
-        
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --primary-color: #8ac249;
-            --primary-hover: #7bb13b;
-            --card-bg: #f5f5f5;
-            --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
-        }
-        
-        [data-theme="dark"] {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --card-bg: #1a1a1a;
-            --shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: "Inter", Arial, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.8;
-            padding: 20px;
-            transition: background 0.3s, color 0.3s;
-        }
-        
-        [lang="ar"] body {
-            font-family: "Noto Kufi Arabic", Arial, sans-serif;
-        }
-        
+      @font-face {
+        font-family: "Inter";
+        src: url("Inter_18pt-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "Nunito";
+        src: url("Nunito-ExtraBold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap");
+
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --primary-color: #8ac249;
+        --primary-hover: #7bb13b;
+        --card-bg: #f5f5f5;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #000000;
+        --text-color: #ffffff;
+        --card-bg: #1a1a1a;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", Arial, sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.8;
+        padding: 20px;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      [lang="ar"] body {
+        font-family: "Noto Kufi Arabic", Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+
+      h1 {
+        font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
+        color: var(--primary-color);
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .meta {
+        text-align: center;
+        margin-bottom: 40px;
+        color: var(--text-color);
+        opacity: 0.8;
+      }
+
+      .trust-box {
+        background: linear-gradient(
+          135deg,
+          rgba(138, 194, 73, 0.05) 0%,
+          rgba(138, 194, 73, 0.02) 100%
+        );
+        border: 2px solid var(--primary-color);
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 40px;
+        position: relative;
+        box-shadow: 0 4px 16px rgba(138, 194, 73, 0.15);
+      }
+
+      .trust-box-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .trust-box-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--primary-color);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .trust-box-icon svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+      }
+
+      .trust-box-title {
+        font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
+        font-size: 1.5em;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0;
+      }
+
+      .trust-box-intro {
+        font-size: 1.05em;
+        margin-bottom: 20px;
+        color: var(--text-color);
+        opacity: 0.9;
+        line-height: 1.7;
+      }
+
+      .trust-box-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .trust-box-list li {
+        padding: 12px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 1.05em;
+        line-height: 1.6;
+      }
+
+      [lang="ar"] .trust-box-list li {
+        padding-left: 0;
+        padding-right: 40px;
+      }
+
+      .trust-box-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 12px;
+        width: 26px;
+        height: 26px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      [lang="ar"] .trust-box-list li::before {
+        left: auto;
+        right: 0;
+      }
+
+      .trust-box-list li strong {
+        color: var(--primary-color);
+        font-weight: 700;
+      }
+
+      h2 {
+        font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
+        color: var(--primary-color);
+        font-size: 1.8em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+
+      h3 {
+        font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin-bottom: 15px;
+        text-align: justify;
+      }
+
+      ul,
+      ol {
+        margin-left: 30px;
+        margin-bottom: 15px;
+      }
+
+      [lang="ar"] ul,
+      [lang="ar"] ol {
+        margin-left: 0;
+        margin-right: 30px;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      strong {
+        color: var(--primary-color);
+      }
+
+      .highlight {
+        background: rgba(138, 194, 73, 0.1);
+        border-left: 4px solid var(--primary-color);
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+      }
+
+      [lang="ar"] .highlight {
+        border-left: none;
+        border-right: 4px solid var(--primary-color);
+      }
+
+      @media (max-width: 768px) {
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+          padding: 20px;
         }
-        
         h1 {
-            font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-align: center;
+          font-size: 2em;
         }
-        
-        .meta {
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        
         h2 {
-            font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
-            color: var(--primary-color);
-            font-size: 1.8em;
-            margin-top: 30px;
-            margin-bottom: 15px;
+          font-size: 1.5em;
         }
-        
-        h3 {
-            font-family: "Nunito", "Noto Kufi Arabic", sans-serif;
-            font-size: 1.3em;
-            margin-top: 20px;
-            margin-bottom: 10px;
+        .theme-toggle,
+        .lang-toggle {
+          font-size: 12px;
+          padding: 10px 16px;
         }
-        
-        p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        
-        ul, ol {
-            margin-left: 30px;
-            margin-bottom: 15px;
-        }
-        
-        [lang="ar"] ul, [lang="ar"] ol {
-            margin-left: 0;
-            margin-right: 30px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
-        strong {
-            color: var(--primary-color);
-        }
-        
-        .highlight {
-            background: rgba(138, 194, 73, 0.1);
-            border-left: 4px solid var(--primary-color);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        
-        [lang="ar"] .highlight {
-            border-left: none;
-            border-right: 4px solid var(--primary-color);
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            h2 {
-                font-size: 1.5em;
-            }
-            .theme-toggle, .lang-toggle {
-                font-size: 12px;
-                padding: 10px 16px;
-            }
-        }
+      }
     </style>
-    <link rel="stylesheet" href="shared-toggles.css">
+    <link rel="stylesheet" href="shared-toggles.css" />
     <script src="shared-toggles.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="en-content">
-            <h1>Privacy Policy for DawaTime™</h1>
-            <div class="meta">
-                <strong>Version 1.1</strong><br>
-                <strong>Effective Date: January 04, 2026</strong>
-            </div>
-            
-            <p>This Privacy Policy ("Policy") outlines the practices and procedures of DawaTime™ ("we," "us," or "our") regarding the collection, use, and disclosure of personal and sensitive information through our mobile application (the "App") and its related services (collectively, the "Service"). Our commitment is to ensure the transparent and secure handling of your data.</p>
-            
-            <p>By creating an account, accessing, or using the Service, you signify your acknowledgment and agreement to the terms of this Policy.</p>
-            
-            <h2>Article 1: Definitions</h2>
-            <p>"<strong>Service</strong>" refers to the DawaTime™ mobile application and its related functionalities.</p>
-            
-            <p>"<strong>Personal Data</strong>" refers to any information relating to an identified or identifiable natural person. This includes, but is not limited to, your name and email address.</p>
-            
-            <p>"<strong>Sensitive Data</strong>" (or "Special Category Data" under GDPR) refers to health-related information provided by the user, including medication details.</p>
-            
-            <p>"<strong>Data Controller</strong>" refers to the entity responsible for determining the purposes and means of processing personal data. For the purposes of this Policy, the Data Controller is Hamad AlKhalaf.</p>
-            
-            <p>"<strong>Data Processor</strong>" refers to a natural or legal person who processes personal data on behalf of the Data Controller. In the context of our Service, our primary data processor is Google (for its Firebase services).</p>
-            
-            <h2>Article 2: Scope and Regulatory Compliance</h2>
-            <p><strong>2.1. Applicability:</strong> This Policy applies to all users of the Service.</p>
-            
-            <p><strong>2.2. Governing Principles:</strong> This policy incorporates principles from major international data privacy regulations, including the General Data Protection Regulation (GDPR) and is intended to meet the requirements of app store platforms, including the Apple App Store and Google Play Store.</p>
-            
-            <p><strong>2.3. Local Regulations (Kuwait):</strong> This Policy is designed to comply with all applicable local laws, including Kuwait's Data Privacy Protection Regulation (No. 26 of 2024).</p>
-            
-            <h2>Article 3: Information We Collect</h2>
-            
-            <p><strong>3.1. Account Information:</strong> To create and maintain an account, we collect your name and email address. Account authentication is managed by our Data Processor, Google Firebase Authentication. Passwords are hashed and are never stored in a readable format by us.</p>
-            
-            <p><strong>3.2. Medication Information (Sensitive Data):</strong> If you choose to provide it, you may provide specific details about your medications, including the medication's name, unit of measurement, dosage, frequency, current stock amount, refill alert thresholds, start dates, and adherence history (such as timestamps of when medications are marked as taken).</p>
-            
-            <p><strong>3.3. User Communications:</strong> We collect the content of any voluntary messages or feedback you submit through the Service.</p>
-            
-            <p><strong>3.4. Technical Information:</strong> To ensure functionality, security and service availability, we and our third-party service providers may process certain non-personally identifiable technical information, such as a unique device identifier, device type, operating system (including specific permission statuses required for core functionality, such as 'Exact Alarms' on Android), IP address and/or Geolocation data, version, and anonymized crash reports via Firebase Crashlytics. Additionally, we automatically collect and store your "App Version Number" and "Last Accessed Timestamp" when you open the App. This data is essential for managing system updates, troubleshooting compatibility issues, and ensuring safe data migration.</p>
-            
-            <p><strong>3.5. System Data and Compliance Tracking:</strong> In addition to the above, we collect and store specific data points to enhance user experience and ensure legal compliance:</p>
-            
-            <p>(a) <strong>FCM Tokens (Firebase Cloud Messaging):</strong> To enable the delivery of push notifications, specifically for app update notifications.</p>
-            
-            <p>(b) <strong>Language Preferences:</strong> We store your selection ("preferredLanguage") (Arabic or English) to ensure the App interface persists in your chosen language.</p>
-            
-            <p>(c) <strong>Legal Acceptance Records:</strong> To track your agreement to our legal documents, we record the "acceptedTermsVersion", "acceptedPrivacyVersion", and the "legalAcceptanceDate" (ISO timestamp).</p>
-            
-            <p>(d) <strong>Refill Preferences:</strong> To enable customization, we store your settings for "refillReminderDay" (1-7) and "refillReminderTime" (HH:mm).</p>
-            
-            <p><strong>Legal Basis:</strong> Legitimate Interests (for FCM tokens and Language); Legal Obligation (for Compliance Tracking); and Performance of a Contract (for Refill Preferences).</p>
-            
-            <h2>Article 4: Legal Basis for Processing</h2>
-            
-            <p><strong>4.1. Performance of a Contract:</strong> The legal basis for processing your Account Information is the necessity to perform the contract established with you when you agree to our Terms and Conditions. This is necessary for the creation, management, and provision of the Service.</p>
-            
-            <p><strong>4.2. Explicit Consent:</strong> The processing of Sensitive Data (Medication Information) is based on your explicit and informed consent. You provide this consent through a clear, affirmative action (e.g., ticking a checkbox or pressing an "Agree" button) before you can enter any health-related data. We do not process any Sensitive Data without this prior consent. You may withdraw this consent at any time by deleting your account, at which point the processing of this data will cease.</p>
-            
-            <p><strong>4.3. Legitimate Interests:</strong> We process your email address for essential account communications and technical information and user communications for the legitimate interests of maintaining and improving the Service, (b) providing customer support, (c) ensuring the security of the platform, (d) protecting our legal rights, and (e) monitoring app version adoption rates to plan system maintenance and safe migrations.</p>
-            
-            <p><strong>4.4 Location and IP-Based Access Restrictions:</strong> We may use your IP address and/or Geolocation data to determine your location for purposes including, but not limited to, compliance with regional legal requirements, service availability, and security protocols. Access to our app and its services is strictly prohibited for users or individuals located in, or accessing from, the State of Israel or attempting to access the app from an IP address originating in that region. This includes individuals who are physically present in Israel or whose IP addresses are identified as originating from Israel. If we detect access attempts from such locations, we may block or restrict your access, and use of our app and its services immediately.</p>
-            
-            <h2>Article 5: How We Use Your Information</h2>
-            
-            <p><strong>5.1. Service Provision:</strong> To deliver the core functionalities of the App, including setting up and authenticating your account, enabling you to input medication data, providing medication and refill reminders, tracking inventory levels, and synchronizing your data across devices.</p>
-            <p><em>Legal Basis: Performance of a Contract; Explicit Consent (for Sensitive Data).</em></p>
-            
-            <p><strong>5.2. Customer Support:</strong> To respond to your inquiries, provide support, and resolve issues you report.</p>
-            <p><em>Legal Basis: Legitimate Interests.</em></p>
-            
-            <p><strong>5.3. Account Management & Essential Communications:</strong> To send you essential administrative or account-related communications, such as updates to our Terms or Policy, security notices, or other transactional messages. These communications are not for marketing purposes.</p>
-            <p><em>Legal Basis: Legitimate Interests; Performance of a Contract.</em></p>
-            
-            <p><strong>5.4. Service Improvement and Security:</strong> To analyze anonymized and aggregated technical data to identify and fix bugs, understand usage patterns, improve the user experience, monitor the security and integrity of our Service, and tracking active app versions to identify users who may require update support or to prevent service disruptions during system upgrades.</p>
-            <p><em>Legal Basis: Legitimate Interests.</em></p>
-            
-            <h2>Article 6: Data Storage, Security, and Transfers</h2>
-            
-            <p><strong>6.1. Platform and Security:</strong> The Service is built on our Data Processor, Google Firebase. We may also utilize trusted third-party service providers for customer support and network security purposes. All Personal and Sensitive Data is encrypted in transit (using Transport Layer Security - TLS) and at rest on Google's secure servers. We have implemented appropriate technical and organizational measures designed to protect your data against accidental or unlawful destruction, loss, alteration, unauthorized disclosure, or access.</p>
-            
-            <p><strong>6.2. International Data Transfers:</strong> Your data may be processed in jurisdictions outside your country of residence, including the United States and the European Union. Firebase utilizes Standard Contractual Clauses (SCCs) to ensure data protection equivalence to GDPR standards. Your use of the Service constitutes your acknowledgment of and agreement to such transfers.</p>
-            
-            <p><strong>6.3. User Responsibility:</strong> You are responsible for maintaining the confidentiality of your account password. We encourage the use of strong, unique passwords. You agree to notify us immediately of any unauthorized use of your password or account or any other breach of security. Users are encouraged to regularly back up their medication schedule where possible, as the Service is not a system of record.</p>
-            
-            <h2>Article 7: Data Retention and Deletion</h2>
-            
-            <p><strong>7.1. Retention Period:</strong> We retain your Personal and Sensitive Data only for as long as is necessary to provide the Service to you and for the purposes set out in this Policy, which is generally for the duration that your account is active.</p>
-            
-            <p><strong>7.2. Account Deletion:</strong> Upon your deletion of the account via the in-app feature, we will initiate the process to permanently delete your data from our live systems. This process will be completed within a maximum of 30 days.</p>
-            
-            <p><strong>7.3. Exceptions:</strong> We may retain minimal information post-deletion only if required to comply with our legal obligations, for dispute resolution, or to enforce our Terms. For example, we may retain a record of a deletion request. Anonymized technical data, which cannot be linked to you, may be retained for statistical analysis.</p>
-            
-            <h2>Article 8: Your Data Protection Rights</h2>
-            
-            <p>Depending on your location, you may have the following rights concerning your personal data:</p>
-            
-            <p><strong>The Right to Access:</strong> The right to request a copy of the personal data we hold about you.</p>
-            
-            <p><strong>The Right to Rectification:</strong> The right to request that we correct any inaccurate or incomplete data. You can update most of your Account Information directly within the app's settings.</p>
-            
-            <p><strong>The Right to Erasure (Right to be Forgotten):</strong> The right to request the deletion of your account and personal data, which can be exercised via the in-app feature.</p>
-            
-            <p><strong>The Right to Data Portability:</strong> The right to request your data in a structured, commonly used, and machine-readable format.</p>
-            
-            <p><strong>The Right to Restrict Processing:</strong> The right to request a temporary halt to data processing under certain conditions.</p>
-            
-            <p><strong>The Right to Withdraw Consent:</strong> The right to withdraw your consent for processing Sensitive Data at any time by deleting your account. Withdrawing consent will not affect the lawfulness of processing based on consent before its withdrawal.</p>
-            
-            <p><strong>The Right to Object:</strong> The right to object to our processing of your personal data where we are relying on a legitimate interest as the legal basis.</p>
-            
-            <p><strong>The Right to Lodge a Complaint:</strong> The right to lodge a complaint with a data protection authority in your jurisdiction if you believe our processing of your personal data infringes applicable law.</p>
-            
-            <p>To exercise these rights (other than those directly available within the app), please contact the Data Controller at the email address provided in Article 10. We may need to request specific information from you to help us confirm your identity before processing your request. This is a security measure to ensure that personal data is not disclosed to any person who has no right to receive it.</p>
-            
-            <h2>Article 9: Children's Privacy</h2>
-            
-            <p>The Service is not intended for or directed at individuals under the age of 18 (or the relevant age of majority in their jurisdiction). We do not knowingly collect data from children. Account creation requires self-declaration and confirmation that the user is 18 years of age or older. If we become aware of data collection from a child, we will take immediate steps to delete it.</p>
-            
-            <h2>Article 10: Data Controller and Contact Information</h2>
-            
-            <p><strong>10.1. Data Controller:</strong> The data controller for your personal data is Hamad AlKhalaf, located in Kuwait.</p>
-            
-            <p><strong>10.2. Contact:</strong> For any questions or to exercise your rights under this Policy, please contact the Data Controller at <a href="mailto:legal@dawatime.com" style="color: var(--primary-color);">legal@dawatime.com</a>.</p>
-            
-            <h2>Article 11: Changes to this Privacy Policy</h2>
-            
-            <p>We reserve the right to amend this Privacy Policy. We will notify you of any changes by posting the new Policy within the Service. Material changes will be communicated through a more prominent notice, such as an in-app pop-up notification the next time you use the Service or by sending a notification to the email address associated with your account. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted within the App.</p>
+      <div class="en-content">
+        <h1>Privacy Policy for DawaTime™</h1>
+        <div class="meta">
+          <strong>Version 1.1</strong><br />
+          <strong>Effective Date: January 04, 2026</strong>
         </div>
-        
-        <div class="ar-content" style="display:none;">
-            <h1>سياسة الخصوصية لتطبيق DawaTime™</h1>
-            <div class="meta">
-                <strong>الإصدار ١.١</strong><br>
-                <strong>تاريخ السريان: ٠٤ يناير ٢٠٢٦</strong>
+
+        <!-- Trust Box: Human Readable Summary -->
+        <div class="trust-box">
+          <div class="trust-box-header">
+            <div class="trust-box-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                />
+              </svg>
             </div>
-            
-            <p>توضح سياسة الخصوصية هذه ("السياسة") الممارسات والإجراءات الخاصة بـ DawaTime™ ("نحن"، "لنا"، أو "الخاص بنا") فيما يتعلق بجمع واستخدام والكشف عن المعلومات الشخصية والحساسة من خلال تطبيقنا للهاتف المحمول ("التطبيق") والخدمات المتعلقة به (يُشار إليها مجتمعة بـ "الخدمة"). التزامنا هو ضمان التعامل الشفاف والآمن مع بياناتك.</p>
-            
-            <p>من خلال إنشاء حساب أو الوصول إلى الخدمة أو استخدامها، فإنك تقر وتوافق على شروط هذه السياسة.</p>
-            
-            <h2>المادة ١: التعريفات</h2>
-            
-            <p>"<strong>الخدمة</strong>" تشير إلى تطبيق DawaTime™ للهاتف المحمول والوظائف المتعلقة به.</p>
-            
-            <p>"<strong>البيانات الشخصية</strong>" تشير إلى أي معلومات تتعلق بشخص طبيعي مُعرَّف أو قابل للتعريف. وهذا يشمل، على سبيل المثال لا الحصر، اسمك وعنوان بريدك الإلكتروني.</p>
-            
-            <p>"<strong>البيانات الحساسة</strong>" (أو "فئة البيانات الخاصة" بموجب اللائحة العامة لحماية البيانات) تشير إلى المعلومات المتعلقة بالصحة التي يقدمها المستخدم، بما في ذلك تفاصيل الأدوية.</p>
-            
-            <p>"<strong>مراقب البيانات</strong>" يشير إلى الكيان المسؤول عن تحديد أغراض ووسائل معالجة البيانات الشخصية. لأغراض هذه السياسة، مراقب البيانات هو حمد الخلف.</p>
-            
-            <p>"<strong>معالج البيانات</strong>" يشير إلى شخص طبيعي أو اعتباري يقوم بمعالجة البيانات الشخصية نيابة عن مراقب البيانات. في سياق خدمتنا، معالج البيانات الأساسي لدينا هو Google (لخدمات Firebase الخاصة بها).</p>
-            
-            <h2>المادة ٢: النطاق والامتثال التنظيمي</h2>
-            
-            <p><strong>٢.١. التطبيق:</strong> تنطبق هذه السياسة على جميع مستخدمي الخدمة.</p>
-            
-            <p><strong>٢.٢. المبادئ الحاكمة:</strong> تتضمن هذه السياسة مبادئ من لوائح خصوصية البيانات الدولية الرئيسية، بما في ذلك اللائحة العامة لحماية البيانات (GDPR) وتهدف إلى تلبية متطلبات منصات متاجر التطبيقات، بما في ذلك Apple App Store و Google Play Store.</p>
-            
-            <p><strong>٢.٣. اللوائح المحلية (الكويت):</strong> تم تصميم هذه السياسة لتتوافق مع جميع القوانين المحلية المعمول بها، بما في ذلك لائحة حماية خصوصية البيانات في الكويت (رقم ٢٦ لسنة ٢٠٢٤).</p>
-            
-            <h2>المادة ٣: المعلومات التي نجمعها</h2>
-            
-            <p><strong>٣.١. معلومات الحساب:</strong> لإنشاء حساب والحفاظ عليه، نقوم بجمع اسمك وعنوان بريدك الإلكتروني. تتم إدارة مصادقة الحساب بواسطة معالج البيانات لدينا، Google Firebase Authentication. يتم تجزئة كلمات المرور ولا يتم تخزينها أبدًا بتنسيق قابل للقراءة من قبلنا.</p>
-            
-            <p><strong>٣.٢. معلومات الأدوية (بيانات حساسة):</strong> إذا اخترت تقديمها، يمكنك تقديم تفاصيل محددة حول أدويتك، بما في ذلك اسم الدواء، وحدة القياس، الجرعة، التكرار، كمية المخزون الحالي، حدود تنبيهات إعادة التعبئة، تواريخ البدء، وسجل الالتزام (مثل الطوابع الزمنية لوقت تحديد الأدوية كمأخوذة).</p>
-            
-            <p><strong>٣.٣. اتصالات المستخدم:</strong> نقوم بجمع محتوى أي رسائل أو ملاحظات طوعية تقدمها من خلال الخدمة.</p>
-            
-            <p><strong>٣.٤. المعلومات التقنية:</strong> لضمان الوظائف والأمان، قد نقوم نحن ومقدمو الخدمات من الأطراف الثالثة بمعالجة معلومات تقنية معينة غير شخصية، مثل معرف الجهاز الفريد، ونوع الجهاز، وإصدار نظام التشغيل (بما في ذلك حالات الأذونات المحددة المطلوبة للوظائف الأساسية، مثل "المنبهات الدقيقة" Exact Alarms على أجهزة Android)، وتقارير الأعطال المجهولة عبر Firebase Crashlytics. بالإضافة إلى ذلك، نقوم تلقائيًا بجمع وتخزين "رقم إصدار التطبيق" الخاص بك و"الطابع الزمني لآخر دخول" عند فتح التطبيق. تعتبر هذه البيانات ضرورية لإدارة تحديثات النظام، و استكشاف مشكلات التوافق وإصلاحها، وضمان أمان ترحيل البيانات.</p>
-            
-            <p><strong>٣.٥. بيانات النظام وتتبع الامتثال:</strong> بالإضافة إلى ما سبق، نقوم بجمع وتخزين نقاط بيانات محددة لتحسين تجربة المستخدم وضمان الامتثال القانوني:</p>
-            
-            <p>(أ) <strong>رموز FCM (المراسلة السحابية من Firebase):</strong> لتمكين إرسال الإشعارات الفورية، وتحديداً لإشعارات تحديث التطبيق.</p>
-            
-            <p>(ب) <strong>تفضيلات اللغة:</strong> نقوم بتخزين اختيارك ("preferredLanguage") (العربية أو الإنجليزية) لضمان استمرار واجهة التطبيق بلغتك المختارة.</p>
-            
-            <p>(ج) <strong>سجلات القبول القانوني:</strong> لتتبع موافقتك على مستنداتنا القانونية، نسجل "إصدار الشروط المقبول" (acceptedTermsVersion)، و "إصدار الخصوصية المقبول" (acceptedPrivacyVersion)، و "تاريخ القبول القانوني" (legalAcceptanceDate).</p>
-            
-            <p>(د) <strong>تفضيلات إعادة التعبئة:</strong> لتمكين التخصيص، نقوم بتخزين إعداداتك لـ "يوم تذكير إعادة التعبئة" (refillReminderDay) و "وقت تذكير إعادة التعبئة" (refillReminderTime).</p>
-            
-            <p><strong>الأساس القانوني:</strong> المصالح المشروعة (لرموز FCM واللغة)؛ الالتزام القانوني (لتتبع الامتثال)؛ وتنفيذ عقد (لتفضيلات إعادة التعبئة).</p>
-            
-            <h2>المادة ٤: الأساس القانوني للمعالجة</h2>
-            
-            <p><strong>٤.١. تنفيذ عقد:</strong> الأساس القانوني لمعالجة معلومات حسابك هو ضرورة تنفيذ العقد المبرم معك عند موافقتك على الشروط والأحكام الخاصة بنا. هذا ضروري لإنشاء الخدمة وإدارتها وتوفيرها.</p>
-            
-            <p><strong>٤.٢. الموافقة الصريحة:</strong> تستند معالجة البيانات الحساسة (معلومات الأدوية) إلى موافقتك الصريحة والمستنيرة. أنت تقدم هذه الموافقة من خلال إجراء إيجابي واضح (مثل وضع علامة في مربع اختيار أو الضغط على زر "أوافق") قبل أن تتمكن من إدخال أي بيانات متعلقة بالصحة. نحن لا نعالج أي بيانات حساسة بدون هذه الموافقة المسبقة. يمكنك سحب هذه الموافقة في أي وقت عن طريق حذف حسابك، و عندها ستتوقف معالجة هذه البيانات.</p>
-            
-            <p><strong>٤.٣. المصالح المشروعة:</strong> نقوم بمعالجة عنوان بريدك الإلكتروني للاتصالات الأساسية المتعلقة بالحساب والمعلومات التقنية واتصالات المستخدم للمصالح المشروعة المتمثلة في الحفاظ على الخدمة وتحسينها، و (ب) تقديم دعم العملاء، و (ج) ضمان أمن المنصة، (د) حماية حقوقنا القانونية، و (هـ) مراقبة معدلات اعتماد إصدار التطبيق لتخطيط صيانة النظام وعمليات الترحيل الآمنة.</p>
-            
-            <p><strong>٤.٤ قيود الوصول المستندة إلى الموقع و عنوان IP:</strong> قد نستخدم عنوان IP الخاص بك و/أو بيانات الموقع الجغرافي لتحديد موقعك لأغراض تشمل، على سبيل المثال لا الحصر، الامتثال للمتطلبات القانونية الإقليمية، وتوفر الخدمة، والبروتوكولات الأمنية. يُمنع منعًا باتًا وصول المستخدمين أو الأفراد الموجودين في دولة إسرائيل أو الذين يصلون منها، أو الذين يحاولون الوصول إلى التطبيق من عنوان IP نشأ في تلك المنطقة. يشمل ذلك الأفراد المتواجدين فعليًا في إسرائيل أو الذين تم تحديد عناوين IP الخاصة بهم على أنها نشأت من إسرائيل. إذا اكتشفنا محاولات وصول من مثل هذه المواقع، فقد نقوم بحظر أو تقييد وصولك واستخدامك لتطبيقنا وخدماتنا على الفور.</p>
-            
-            <h2>المادة ٥: كيف نستخدم معلوماتك</h2>
-            
-            <p><strong>٥.١. توفير الخدمة:</strong> لتقديم الوظائف الأساسية للتطبيق، بما في ذلك إعداد ومصادقة حسابك، وتمكينك من إدخال بيانات الدواء، وتقديم تذكيرات الأدوية وإعادة التعبئة، وتتبع مستويات المخزون، ومزامنة بياناتك عبر الأجهزة.</p>
-            <p><em>الأساس القانوني: تنفيذ عقد؛ الموافقة الصريحة (للبيانات الحساسة).</em></p>
-            
-            <p><strong>٥.٢. دعم العملاء:</strong> للرد على استفساراتك وتقديم الدعم وحل المشكلات التي تبلغ عنها.</p>
-            <p><em>الأساس القانوني: المصالح المشروعة.</em></p>
-            
-            <p><strong>٥.٣. إدارة الحساب والاتصالات الأساسية:</strong> لإرسال اتصالات إدارية أو متعلقة بالحساب ضرورية، مثل تحديثات شروطنا أو سياستنا، أو إشعارات الأمان، أو رسائل المعاملات الأخرى. هذه الاتصالات ليست لأغراض تسويقية.</p>
-            <p><em>الأساس القانوني: المصالح المشروعة؛ تنفيذ عقد.</em></p>
-            
-            <p><strong>٥.٤. تحسين الخدمة والأمان:</strong> لتحليل البيانات التقنية المجهولة والمجمعة لتحديد وإصلاح الأخطاء، وفهم أنماط الاستخدام، وتحسين تجربة المستخدم، ومراقبة أمان وسلامة خدمتنا، وتتبع إصدارات التطبيق النشطة لتحديد المستخدمين الذين قد يحتاجون إلى دعم التحديث أو لمنع انقطاع الخدمة أثناء ترقيات النظام.</p>
-            <p><em>الأساس القانوني: المصالح المشروعة.</em></p>
-            
-            <h2>المادة ٦: تخزين البيانات وأمنها ونقلها</h2>
-            
-            <p><strong>٦.١. المنصة والأمان:</strong> تم بناء الخدمة على معالج البيانات لدينا، Google Firebase. قد نستعين أيضًا بمقدمي خدمات طرف ثالث موثوقين لأغراض دعم العملاء وأمن الشبكة. يتم تشفير جميع البيانات الشخصية والحساسة أثناء النقل (باستخدام Transport Layer Security - TLS) وأثناء التخزين على خوادم Google الآمنة. لقد قمنا بتنفيذ تدابير فنية وتنظيمية مناسبة مصممة لحماية بياناتك من التدمير العرضي أو غير القانوني أو الفقدان أو التغيير أو الكشف غير المصرح به أو الوصول.</p>
-            
-            <p><strong>٦.٢. نقل البيانات الدولي:</strong> قد تتم معالجة بياناتك في ولايات قضائية خارج بلد إقامتك، بما في ذلك الولايات المتحدة والاتحاد الأوروبي. يستخدم Firebase البنود التعاقدية القياسية (SCCs) لضمان معادلة حماية البيانات لمعايير GDPR. يشكل استخدامك للخدمة إقرارًا وموافقة منك على عمليات النقل هذه.</p>
-            
-            <p><strong>٦.٣. مسؤولية المستخدم:</strong> أنت مسؤول عن الحفاظ على سرية كلمة مرور حسابك. نشجع على استخدام كلمات مرور قوية وفريدة. أنت توافق على إخطارنا فورًا بأي استخدام غير مصرح به لكلمة مرورك أو حسابك أو أي خرق آخر للأمان. يتم تشجيع المستخدمين على إجراء نسخ احتياطي لجدول أدويتهم بانتظام حيثما أمكن، حيث أن الخدمة ليست نظامًا للسجلات.</p>
-            
-            <h2>المادة ٧: الاحتفاظ بالبيانات وحذفها</h2>
-            
-            <p><strong>٧.١. فترة الاحتفاظ:</strong> نحتفظ ببياناتك الشخصية والحساسة فقط طالما كان ذلك ضروريًا لتقديم الخدمة لك وللأغراض المنصوص عليها في هذه السياسة، والتي تكون بشكل عام طوال مدة نشاط حسابك.</p>
-            
-            <p><strong>٧.٢. حذف الحساب:</strong> عند حذف حسابك عبر الميزة الموجودة داخل التطبيق، سنبدأ عملية الحذف الدائم لبياناتك من أنظمتنا الحية. سيتم إكمال هذه العملية في غضون ٣٠ يومًا كحد أقصى.</p>
-            
-            <p><strong>٧.٣. الاستثناءات:</strong> قد نحتفظ بمعلومات دنيا بعد الحذف فقط إذا كان ذلك مطلوبًا للامتثال لالتزاماتنا القانونية، أو لحل النزاعات، أو لإنفاذ شروطنا. على سبيل المثال، قد نحتفظ بسجل لطلب الحذف. قد يتم الاحتفاظ بالبيانات التقنية المجهولة، التي لا يمكن ربطها بك، للتحليل الإحصائي.</p>
-            
-            <h2>المادة ٨: حقوق حماية البيانات الخاصة بك</h2>
-            
-            <p>اعتمادًا على موقعك، قد تتمتع بالحقوق التالية فيما يتعلق ببياناتك الشخصية:</p>
-            
-            <p><strong>الحق في الوصول:</strong> الحق في طلب نسخة من البيانات الشخصية التي نحتفظ بها عنك.</p>
-            
-            <p><strong>الحق في التصحيح:</strong> الحق في طلب تصحيح أي بيانات غير دقيقة أو غير مكتملة. يمكنك تحديث معظم معلومات حسابك مباشرة من خلال إعدادات التطبيق.</p>
-            
-            <p><strong>الحق في الحذف (الحق في النسيان):</strong> الحق في طلب حذف حسابك وبياناتك الشخصية، والذي يمكن ممارسته عبر الميزة الموجودة داخل التطبيق.</p>
-            
-            <p><strong>الحق في نقل البيانات:</strong> الحق في طلب بياناتك بتنسيق منظم وشائع الاستخدام وقابل للقراءة آليًا.</p>
-            
-            <p><strong>الحق في تقييد المعالجة:</strong> الحق في طلب وقف مؤقت لمعالجة البيانات في ظل ظروف معينة.</p>
-            
-            <p><strong>الحق في سحب الموافقة:</strong> الحق في سحب موافقتك على معالجة البيانات الحساسة في أي وقت عن طريق حذف حسابك. لن يؤثر سحب الموافقة على قانونية المعالجة بناءً على الموافقة قبل سحبها.</p>
-            
-            <p><strong>الحق في الاعتراض:</strong> الحق في الاعتراض على معالجتنا لبياناتك الشخصية حيث نعتمد على مصلحة مشروعة كأساس قانوني.</p>
-            
-            <p><strong>الحق في تقديم شكوى:</strong> الحق في تقديم شكوى إلى هيئة حماية البيانات في ولايتك القضائية إذا كنت تعتقد أن معالجتنا لبياناتك الشخصية تنتهك القانون المعمول به.</p>
-            
-            <p>لممارسة هذه الحقوق (بخلاف تلك المتاحة مباشرة داخل التطبيق)، يرجى الاتصال بمراقب البيانات على عنوان البريد الإلكتروني الموضح في المادة ١٠. قد نحتاج إلى طلب معلومات محددة منك لمساعدتنا في تأكيد هويتك قبل معالجة طلبك. هذا إجراء أمني لضمان عدم الكشف عن البيانات الشخصية لأي شخص ليس له الحق في تلقيها.</p>
-            
-            <h2>المادة ٩: خصوصية الأطفال</h2>
-            
-            <p>الخدمة غير مخصصة للأفراد دون سن ١٨ عامًا (أو السن القانونية للرشد في ولايتهم القضائية) وليست موجهة إليهم. نحن لا نجمع بيانات من الأطفال عن قصد. يتطلب إنشاء الحساب إقرارًا ذاتيًا وتأكيدًا على أن المستخدم يبلغ من العمر ١٨ عامًا أو أكثر. إذا علمنا بجمع بيانات من طفل، فسنتخذ خطوات فورية لحذفها.</p>
-            
-            <h2>المادة ١٠: مراقب البيانات ومعلومات الاتصال</h2>
-            
-            <p><strong>١٠.١. مراقب البيانات:</strong> مراقب البيانات لبياناتك الشخصية هو حمد الخلف، ومقره في الكويت.</p>
-            
-            <p><strong>١٠.٢. الاتصال:</strong> لأي أسئلة أو لممارسة حقوقك بموجب هذه السياسة، يرجى الاتصال بمراقب البيانات على <a href="mailto:legal@dawatime.com" style="color: var(--primary-color);">legal@dawatime.com</a>.</p>
-            
-            <h2>المادة ١١: التغييرات على سياسة الخصوصية هذه</h2>
-            
-            <p>نحتفظ بالحق في تعديل سياسة الخصوصية هذه. سنخطرك بأي تغييرات عن طريق نشر السياسة الجديدة داخل الخدمة. سيتم الإبلاغ عن التغييرات الجوهرية من خلال إشعار أكثر وضوحًا، مثل إشعار منبثق داخل التطبيق في المرة التالية التي تستخدم فيها الخدمة أو عن طريق إرسال إشعار إلى عنوان البريد الإلكتروني المرتبط بحسابك. يُنصح بمراجعة سياسة الخصوصية هذه بشكل دوري لأي تغييرات. تكون التغييرات على سياسة الخصوصية هذه سارية المفعول عند نشرها داخل التطبيق.</p>
+            <h2 class="trust-box-title">Your Privacy in Simple Terms</h2>
+          </div>
+          <p class="trust-box-intro">
+            We understand privacy policies can be overwhelming. Here's what
+            matters most:
+          </p>
+          <ul class="trust-box-list">
+            <li>
+              <strong>Your data stays yours.</strong> We never sell or share
+              your medication information with anyone. Not pharmaceutical
+              companies, not insurance providers, not advertisers. Your health
+              information is completely private.
+            </li>
+            <li>
+              <strong>Everything is stored securely.</strong> Your medication
+              details are encrypted and stored on your device and Google's
+              secure servers (Firebase). Think of it like a locked safe that
+              only you have the key to.
+            </li>
+            <li>
+              <strong>Delete anytime, instantly.</strong> Changed your mind? Tap
+              "Delete Account" in settings, and within 30 days, your data is
+              permanently erased. No questions asked, no hoops to jump through.
+            </li>
+          </ul>
         </div>
+
+        <p>
+          This Privacy Policy ("Policy") outlines the practices and procedures
+          of DawaTime™ ("we," "us," or "our") regarding the collection, use, and
+          disclosure of personal and sensitive information through our mobile
+          application (the "App") and its related services (collectively, the
+          "Service"). Our commitment is to ensure the transparent and secure
+          handling of your data.
+        </p>
+
+        <p>
+          By creating an account, accessing, or using the Service, you signify
+          your acknowledgment and agreement to the terms of this Policy.
+        </p>
+
+        <h2>Article 1: Definitions</h2>
+        <p>
+          "<strong>Service</strong>" refers to the DawaTime™ mobile application
+          and its related functionalities.
+        </p>
+
+        <p>
+          "<strong>Personal Data</strong>" refers to any information relating to
+          an identified or identifiable natural person. This includes, but is
+          not limited to, your name and email address.
+        </p>
+
+        <p>
+          "<strong>Sensitive Data</strong>" (or "Special Category Data" under
+          GDPR) refers to health-related information provided by the user,
+          including medication details.
+        </p>
+
+        <p>
+          "<strong>Data Controller</strong>" refers to the entity responsible
+          for determining the purposes and means of processing personal data.
+          For the purposes of this Policy, the Data Controller is Hamad
+          AlKhalaf.
+        </p>
+
+        <p>
+          "<strong>Data Processor</strong>" refers to a natural or legal person
+          who processes personal data on behalf of the Data Controller. In the
+          context of our Service, our primary data processor is Google (for its
+          Firebase services).
+        </p>
+
+        <h2>Article 2: Scope and Regulatory Compliance</h2>
+        <p>
+          <strong>2.1. Applicability:</strong> This Policy applies to all users
+          of the Service.
+        </p>
+
+        <p>
+          <strong>2.2. Governing Principles:</strong> This policy incorporates
+          principles from major international data privacy regulations,
+          including the General Data Protection Regulation (GDPR) and is
+          intended to meet the requirements of app store platforms, including
+          the Apple App Store and Google Play Store.
+        </p>
+
+        <p>
+          <strong>2.3. Local Regulations (Kuwait):</strong> This Policy is
+          designed to comply with all applicable local laws, including Kuwait's
+          Data Privacy Protection Regulation (No. 26 of 2024).
+        </p>
+
+        <h2>Article 3: Information We Collect</h2>
+
+        <p>
+          <strong>3.1. Account Information:</strong> To create and maintain an
+          account, we collect your name and email address. Account
+          authentication is managed by our Data Processor, Google Firebase
+          Authentication. Passwords are hashed and are never stored in a
+          readable format by us.
+        </p>
+
+        <p>
+          <strong>3.2. Medication Information (Sensitive Data):</strong> If you
+          choose to provide it, you may provide specific details about your
+          medications, including the medication's name, unit of measurement,
+          dosage, frequency, current stock amount, refill alert thresholds,
+          start dates, and adherence history (such as timestamps of when
+          medications are marked as taken).
+        </p>
+
+        <p>
+          <strong>3.3. User Communications:</strong> We collect the content of
+          any voluntary messages or feedback you submit through the Service.
+        </p>
+
+        <p>
+          <strong>3.4. Technical Information:</strong> To ensure functionality,
+          security and service availability, we and our third-party service
+          providers may process certain non-personally identifiable technical
+          information, such as a unique device identifier, device type,
+          operating system (including specific permission statuses required for
+          core functionality, such as 'Exact Alarms' on Android), IP address
+          and/or Geolocation data, version, and anonymized crash reports via
+          Firebase Crashlytics. Additionally, we automatically collect and store
+          your "App Version Number" and "Last Accessed Timestamp" when you open
+          the App. This data is essential for managing system updates,
+          troubleshooting compatibility issues, and ensuring safe data
+          migration.
+        </p>
+
+        <p>
+          <strong>3.5. System Data and Compliance Tracking:</strong> In addition
+          to the above, we collect and store specific data points to enhance
+          user experience and ensure legal compliance:
+        </p>
+
+        <p>
+          (a) <strong>FCM Tokens (Firebase Cloud Messaging):</strong> To enable
+          the delivery of push notifications, specifically for app update
+          notifications.
+        </p>
+
+        <p>
+          (b) <strong>Language Preferences:</strong> We store your selection
+          ("preferredLanguage") (Arabic or English) to ensure the App interface
+          persists in your chosen language.
+        </p>
+
+        <p>
+          (c) <strong>Legal Acceptance Records:</strong> To track your agreement
+          to our legal documents, we record the "acceptedTermsVersion",
+          "acceptedPrivacyVersion", and the "legalAcceptanceDate" (ISO
+          timestamp).
+        </p>
+
+        <p>
+          (d) <strong>Refill Preferences:</strong> To enable customization, we
+          store your settings for "refillReminderDay" (1-7) and
+          "refillReminderTime" (HH:mm).
+        </p>
+
+        <p>
+          <strong>Legal Basis:</strong> Legitimate Interests (for FCM tokens and
+          Language); Legal Obligation (for Compliance Tracking); and Performance
+          of a Contract (for Refill Preferences).
+        </p>
+
+        <h2>Article 4: Legal Basis for Processing</h2>
+
+        <p>
+          <strong>4.1. Performance of a Contract:</strong> The legal basis for
+          processing your Account Information is the necessity to perform the
+          contract established with you when you agree to our Terms and
+          Conditions. This is necessary for the creation, management, and
+          provision of the Service.
+        </p>
+
+        <p>
+          <strong>4.2. Explicit Consent:</strong> The processing of Sensitive
+          Data (Medication Information) is based on your explicit and informed
+          consent. You provide this consent through a clear, affirmative action
+          (e.g., ticking a checkbox or pressing an "Agree" button) before you
+          can enter any health-related data. We do not process any Sensitive
+          Data without this prior consent. You may withdraw this consent at any
+          time by deleting your account, at which point the processing of this
+          data will cease.
+        </p>
+
+        <p>
+          <strong>4.3. Legitimate Interests:</strong> We process your email
+          address for essential account communications and technical information
+          and user communications for the legitimate interests of maintaining
+          and improving the Service, (b) providing customer support, (c)
+          ensuring the security of the platform, (d) protecting our legal
+          rights, and (e) monitoring app version adoption rates to plan system
+          maintenance and safe migrations.
+        </p>
+
+        <p>
+          <strong>4.4 Location and IP-Based Access Restrictions:</strong> We may
+          use your IP address and/or Geolocation data to determine your location
+          for purposes including, but not limited to, compliance with regional
+          legal requirements, service availability, and security protocols.
+          Access to our app and its services is strictly prohibited for users or
+          individuals located in, or accessing from, the State of Israel or
+          attempting to access the app from an IP address originating in that
+          region. This includes individuals who are physically present in Israel
+          or whose IP addresses are identified as originating from Israel. If we
+          detect access attempts from such locations, we may block or restrict
+          your access, and use of our app and its services immediately.
+        </p>
+
+        <h2>Article 5: How We Use Your Information</h2>
+
+        <p>
+          <strong>5.1. Service Provision:</strong> To deliver the core
+          functionalities of the App, including setting up and authenticating
+          your account, enabling you to input medication data, providing
+          medication and refill reminders, tracking inventory levels, and
+          synchronizing your data across devices.
+        </p>
+        <p>
+          <em
+            >Legal Basis: Performance of a Contract; Explicit Consent (for
+            Sensitive Data).</em
+          >
+        </p>
+
+        <p>
+          <strong>5.2. Customer Support:</strong> To respond to your inquiries,
+          provide support, and resolve issues you report.
+        </p>
+        <p><em>Legal Basis: Legitimate Interests.</em></p>
+
+        <p>
+          <strong>5.3. Account Management & Essential Communications:</strong>
+          To send you essential administrative or account-related
+          communications, such as updates to our Terms or Policy, security
+          notices, or other transactional messages. These communications are not
+          for marketing purposes.
+        </p>
+        <p>
+          <em>Legal Basis: Legitimate Interests; Performance of a Contract.</em>
+        </p>
+
+        <p>
+          <strong>5.4. Service Improvement and Security:</strong> To analyze
+          anonymized and aggregated technical data to identify and fix bugs,
+          understand usage patterns, improve the user experience, monitor the
+          security and integrity of our Service, and tracking active app
+          versions to identify users who may require update support or to
+          prevent service disruptions during system upgrades.
+        </p>
+        <p><em>Legal Basis: Legitimate Interests.</em></p>
+
+        <h2>Article 6: Data Storage, Security, and Transfers</h2>
+
+        <p>
+          <strong>6.1. Platform and Security:</strong> The Service is built on
+          our Data Processor, Google Firebase. We may also utilize trusted
+          third-party service providers for customer support and network
+          security purposes. All Personal and Sensitive Data is encrypted in
+          transit (using Transport Layer Security - TLS) and at rest on Google's
+          secure servers. We have implemented appropriate technical and
+          organizational measures designed to protect your data against
+          accidental or unlawful destruction, loss, alteration, unauthorized
+          disclosure, or access.
+        </p>
+
+        <p>
+          <strong>6.2. International Data Transfers:</strong> Your data may be
+          processed in jurisdictions outside your country of residence,
+          including the United States and the European Union. Firebase utilizes
+          Standard Contractual Clauses (SCCs) to ensure data protection
+          equivalence to GDPR standards. Your use of the Service constitutes
+          your acknowledgment of and agreement to such transfers.
+        </p>
+
+        <p>
+          <strong>6.3. User Responsibility:</strong> You are responsible for
+          maintaining the confidentiality of your account password. We encourage
+          the use of strong, unique passwords. You agree to notify us
+          immediately of any unauthorized use of your password or account or any
+          other breach of security. Users are encouraged to regularly back up
+          their medication schedule where possible, as the Service is not a
+          system of record.
+        </p>
+
+        <h2>Article 7: Data Retention and Deletion</h2>
+
+        <p>
+          <strong>7.1. Retention Period:</strong> We retain your Personal and
+          Sensitive Data only for as long as is necessary to provide the Service
+          to you and for the purposes set out in this Policy, which is generally
+          for the duration that your account is active.
+        </p>
+
+        <p>
+          <strong>7.2. Account Deletion:</strong> Upon your deletion of the
+          account via the in-app feature, we will initiate the process to
+          permanently delete your data from our live systems. This process will
+          be completed within a maximum of 30 days.
+        </p>
+
+        <p>
+          <strong>7.3. Exceptions:</strong> We may retain minimal information
+          post-deletion only if required to comply with our legal obligations,
+          for dispute resolution, or to enforce our Terms. For example, we may
+          retain a record of a deletion request. Anonymized technical data,
+          which cannot be linked to you, may be retained for statistical
+          analysis.
+        </p>
+
+        <h2>Article 8: Your Data Protection Rights</h2>
+
+        <p>
+          Depending on your location, you may have the following rights
+          concerning your personal data:
+        </p>
+
+        <p>
+          <strong>The Right to Access:</strong> The right to request a copy of
+          the personal data we hold about you.
+        </p>
+
+        <p>
+          <strong>The Right to Rectification:</strong> The right to request that
+          we correct any inaccurate or incomplete data. You can update most of
+          your Account Information directly within the app's settings.
+        </p>
+
+        <p>
+          <strong>The Right to Erasure (Right to be Forgotten):</strong> The
+          right to request the deletion of your account and personal data, which
+          can be exercised via the in-app feature.
+        </p>
+
+        <p>
+          <strong>The Right to Data Portability:</strong> The right to request
+          your data in a structured, commonly used, and machine-readable format.
+        </p>
+
+        <p>
+          <strong>The Right to Restrict Processing:</strong> The right to
+          request a temporary halt to data processing under certain conditions.
+        </p>
+
+        <p>
+          <strong>The Right to Withdraw Consent:</strong> The right to withdraw
+          your consent for processing Sensitive Data at any time by deleting
+          your account. Withdrawing consent will not affect the lawfulness of
+          processing based on consent before its withdrawal.
+        </p>
+
+        <p>
+          <strong>The Right to Object:</strong> The right to object to our
+          processing of your personal data where we are relying on a legitimate
+          interest as the legal basis.
+        </p>
+
+        <p>
+          <strong>The Right to Lodge a Complaint:</strong> The right to lodge a
+          complaint with a data protection authority in your jurisdiction if you
+          believe our processing of your personal data infringes applicable law.
+        </p>
+
+        <p>
+          To exercise these rights (other than those directly available within
+          the app), please contact the Data Controller at the email address
+          provided in Article 10. We may need to request specific information
+          from you to help us confirm your identity before processing your
+          request. This is a security measure to ensure that personal data is
+          not disclosed to any person who has no right to receive it.
+        </p>
+
+        <h2>Article 9: Children's Privacy</h2>
+
+        <p>
+          The Service is not intended for or directed at individuals under the
+          age of 18 (or the relevant age of majority in their jurisdiction). We
+          do not knowingly collect data from children. Account creation requires
+          self-declaration and confirmation that the user is 18 years of age or
+          older. If we become aware of data collection from a child, we will
+          take immediate steps to delete it.
+        </p>
+
+        <h2>Article 10: Data Controller and Contact Information</h2>
+
+        <p>
+          <strong>10.1. Data Controller:</strong> The data controller for your
+          personal data is Hamad AlKhalaf, located in Kuwait.
+        </p>
+
+        <p>
+          <strong>10.2. Contact:</strong> For any questions or to exercise your
+          rights under this Policy, please contact the Data Controller at
+          <a
+            href="mailto:legal@dawatime.com"
+            style="color: var(--primary-color)"
+            >legal@dawatime.com</a
+          >.
+        </p>
+
+        <h2>Article 11: Changes to this Privacy Policy</h2>
+
+        <p>
+          We reserve the right to amend this Privacy Policy. We will notify you
+          of any changes by posting the new Policy within the Service. Material
+          changes will be communicated through a more prominent notice, such as
+          an in-app pop-up notification the next time you use the Service or by
+          sending a notification to the email address associated with your
+          account. You are advised to review this Privacy Policy periodically
+          for any changes. Changes to this Privacy Policy are effective when
+          they are posted within the App.
+        </p>
+      </div>
+
+      <div class="ar-content" style="display: none">
+        <h1>سياسة الخصوصية لتطبيق DawaTime™</h1>
+        <div class="meta">
+          <strong>الإصدار ١.١</strong><br />
+          <strong>تاريخ السريان: ٠٤ يناير ٢٠٢٦</strong>
+        </div>
+
+        <div class="trust-box">
+          <div class="trust-box-header">
+            <div class="trust-box-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                />
+              </svg>
+            </div>
+            <h2 class="trust-box-title">خصوصيتك ببساطة</h2>
+          </div>
+          <p class="trust-box-intro">
+            نتفهّم أن سياسات الخصوصية قد تكون معقّدة. إليك أهم ما يجب أن تعرفه:
+          </p>
+          <ul class="trust-box-list">
+            <li>
+              <strong>بياناتك ملكك وحدك.</strong> لن نبيع أو نشارك معلومات
+              أدويتك مع أي جهة. لا مع شركات الأدوية، ولا مع شركات التأمين، ولا
+              مع المعلنين. معلوماتك الصحية خاصة تماماً.
+            </li>
+            <li>
+              <strong>كل شيء مخزّن بأمان.</strong> تفاصيل أدويتك مشفّرة ومحفوظة
+              على جهازك وعلى خوادم Google الآمنة (Firebase). فكّر بها كخزنة
+              مقفلة أنت وحدك من يملك مفتاحها.
+            </li>
+            <li>
+              <strong>احذف حسابك في أي وقت.</strong> غيّرت رأيك؟ اضغط على "حذف
+              الحساب" في الإعدادات، وخلال ٣٠ يوماً ستُمسح بياناتك نهائياً. دون
+              أسئلة، ودون تعقيدات.
+            </li>
+          </ul>
+        </div>
+
+        <p>
+          توضح سياسة الخصوصية هذه ("السياسة") الممارسات والإجراءات الخاصة بـ
+          DawaTime™ ("نحن"، "لنا"، أو "الخاص بنا") فيما يتعلق بجمع واستخدام
+          والكشف عن المعلومات الشخصية والحساسة من خلال تطبيقنا للهاتف المحمول
+          ("التطبيق") والخدمات المتعلقة به (يُشار إليها مجتمعة بـ "الخدمة").
+          التزامنا هو ضمان التعامل الشفاف والآمن مع بياناتك.
+        </p>
+
+        <p>
+          من خلال إنشاء حساب أو الوصول إلى الخدمة أو استخدامها، فإنك تقر وتوافق
+          على شروط هذه السياسة.
+        </p>
+
+        <h2>المادة ١: التعريفات</h2>
+
+        <p>
+          "<strong>الخدمة</strong>" تشير إلى تطبيق DawaTime™ للهاتف المحمول
+          والوظائف المتعلقة به.
+        </p>
+
+        <p>
+          "<strong>البيانات الشخصية</strong>" تشير إلى أي معلومات تتعلق بشخص
+          طبيعي مُعرَّف أو قابل للتعريف. وهذا يشمل، على سبيل المثال لا الحصر،
+          اسمك وعنوان بريدك الإلكتروني.
+        </p>
+
+        <p>
+          "<strong>البيانات الحساسة</strong>" (أو "فئة البيانات الخاصة" بموجب
+          اللائحة العامة لحماية البيانات) تشير إلى المعلومات المتعلقة بالصحة
+          التي يقدمها المستخدم، بما في ذلك تفاصيل الأدوية.
+        </p>
+
+        <p>
+          "<strong>مراقب البيانات</strong>" يشير إلى الكيان المسؤول عن تحديد
+          أغراض ووسائل معالجة البيانات الشخصية. لأغراض هذه السياسة، مراقب
+          البيانات هو حمد الخلف.
+        </p>
+
+        <p>
+          "<strong>معالج البيانات</strong>" يشير إلى شخص طبيعي أو اعتباري يقوم
+          بمعالجة البيانات الشخصية نيابة عن مراقب البيانات. في سياق خدمتنا،
+          معالج البيانات الأساسي لدينا هو Google (لخدمات Firebase الخاصة بها).
+        </p>
+
+        <h2>المادة ٢: النطاق والامتثال التنظيمي</h2>
+
+        <p>
+          <strong>٢.١. التطبيق:</strong> تنطبق هذه السياسة على جميع مستخدمي
+          الخدمة.
+        </p>
+
+        <p>
+          <strong>٢.٢. المبادئ الحاكمة:</strong> تتضمن هذه السياسة مبادئ من
+          لوائح خصوصية البيانات الدولية الرئيسية، بما في ذلك اللائحة العامة
+          لحماية البيانات (GDPR) وتهدف إلى تلبية متطلبات منصات متاجر التطبيقات،
+          بما في ذلك Apple App Store و Google Play Store.
+        </p>
+
+        <p>
+          <strong>٢.٣. اللوائح المحلية (الكويت):</strong> تم تصميم هذه السياسة
+          لتتوافق مع جميع القوانين المحلية المعمول بها، بما في ذلك لائحة حماية
+          خصوصية البيانات في الكويت (رقم ٢٦ لسنة ٢٠٢٤).
+        </p>
+
+        <h2>المادة ٣: المعلومات التي نجمعها</h2>
+
+        <p>
+          <strong>٣.١. معلومات الحساب:</strong> لإنشاء حساب والحفاظ عليه، نقوم
+          بجمع اسمك وعنوان بريدك الإلكتروني. تتم إدارة مصادقة الحساب بواسطة
+          معالج البيانات لدينا، Google Firebase Authentication. يتم تجزئة كلمات
+          المرور ولا يتم تخزينها أبدًا بتنسيق قابل للقراءة من قبلنا.
+        </p>
+
+        <p>
+          <strong>٣.٢. معلومات الأدوية (بيانات حساسة):</strong> إذا اخترت
+          تقديمها، يمكنك تقديم تفاصيل محددة حول أدويتك، بما في ذلك اسم الدواء،
+          وحدة القياس، الجرعة، التكرار، كمية المخزون الحالي، حدود تنبيهات إعادة
+          التعبئة، تواريخ البدء، وسجل الالتزام (مثل الطوابع الزمنية لوقت تحديد
+          الأدوية كمأخوذة).
+        </p>
+
+        <p>
+          <strong>٣.٣. اتصالات المستخدم:</strong> نقوم بجمع محتوى أي رسائل أو
+          ملاحظات طوعية تقدمها من خلال الخدمة.
+        </p>
+
+        <p>
+          <strong>٣.٤. المعلومات التقنية:</strong> لضمان الوظائف والأمان، قد
+          نقوم نحن ومقدمو الخدمات من الأطراف الثالثة بمعالجة معلومات تقنية معينة
+          غير شخصية، مثل معرف الجهاز الفريد، ونوع الجهاز، وإصدار نظام التشغيل
+          (بما في ذلك حالات الأذونات المحددة المطلوبة للوظائف الأساسية، مثل
+          "المنبهات الدقيقة" Exact Alarms على أجهزة Android)، وتقارير الأعطال
+          المجهولة عبر Firebase Crashlytics. بالإضافة إلى ذلك، نقوم تلقائيًا
+          بجمع وتخزين "رقم إصدار التطبيق" الخاص بك و"الطابع الزمني لآخر دخول"
+          عند فتح التطبيق. تعتبر هذه البيانات ضرورية لإدارة تحديثات النظام، و
+          استكشاف مشكلات التوافق وإصلاحها، وضمان أمان ترحيل البيانات.
+        </p>
+
+        <p>
+          <strong>٣.٥. بيانات النظام وتتبع الامتثال:</strong> بالإضافة إلى ما
+          سبق، نقوم بجمع وتخزين نقاط بيانات محددة لتحسين تجربة المستخدم وضمان
+          الامتثال القانوني:
+        </p>
+
+        <p>
+          (أ) <strong>رموز FCM (المراسلة السحابية من Firebase):</strong> لتمكين
+          إرسال الإشعارات الفورية، وتحديداً لإشعارات تحديث التطبيق.
+        </p>
+
+        <p>
+          (ب) <strong>تفضيلات اللغة:</strong> نقوم بتخزين اختيارك
+          ("preferredLanguage") (العربية أو الإنجليزية) لضمان استمرار واجهة
+          التطبيق بلغتك المختارة.
+        </p>
+
+        <p>
+          (ج) <strong>سجلات القبول القانوني:</strong> لتتبع موافقتك على
+          مستنداتنا القانونية، نسجل "إصدار الشروط المقبول"
+          (acceptedTermsVersion)، و "إصدار الخصوصية المقبول"
+          (acceptedPrivacyVersion)، و "تاريخ القبول القانوني"
+          (legalAcceptanceDate).
+        </p>
+
+        <p>
+          (د) <strong>تفضيلات إعادة التعبئة:</strong> لتمكين التخصيص، نقوم
+          بتخزين إعداداتك لـ "يوم تذكير إعادة التعبئة" (refillReminderDay) و
+          "وقت تذكير إعادة التعبئة" (refillReminderTime).
+        </p>
+
+        <p>
+          <strong>الأساس القانوني:</strong> المصالح المشروعة (لرموز FCM واللغة)؛
+          الالتزام القانوني (لتتبع الامتثال)؛ وتنفيذ عقد (لتفضيلات إعادة
+          التعبئة).
+        </p>
+
+        <h2>المادة ٤: الأساس القانوني للمعالجة</h2>
+
+        <p>
+          <strong>٤.١. تنفيذ عقد:</strong> الأساس القانوني لمعالجة معلومات حسابك
+          هو ضرورة تنفيذ العقد المبرم معك عند موافقتك على الشروط والأحكام الخاصة
+          بنا. هذا ضروري لإنشاء الخدمة وإدارتها وتوفيرها.
+        </p>
+
+        <p>
+          <strong>٤.٢. الموافقة الصريحة:</strong> تستند معالجة البيانات الحساسة
+          (معلومات الأدوية) إلى موافقتك الصريحة والمستنيرة. أنت تقدم هذه
+          الموافقة من خلال إجراء إيجابي واضح (مثل وضع علامة في مربع اختيار أو
+          الضغط على زر "أوافق") قبل أن تتمكن من إدخال أي بيانات متعلقة بالصحة.
+          نحن لا نعالج أي بيانات حساسة بدون هذه الموافقة المسبقة. يمكنك سحب هذه
+          الموافقة في أي وقت عن طريق حذف حسابك، و عندها ستتوقف معالجة هذه
+          البيانات.
+        </p>
+
+        <p>
+          <strong>٤.٣. المصالح المشروعة:</strong> نقوم بمعالجة عنوان بريدك
+          الإلكتروني للاتصالات الأساسية المتعلقة بالحساب والمعلومات التقنية
+          واتصالات المستخدم للمصالح المشروعة المتمثلة في الحفاظ على الخدمة
+          وتحسينها، و (ب) تقديم دعم العملاء، و (ج) ضمان أمن المنصة، (د) حماية
+          حقوقنا القانونية، و (هـ) مراقبة معدلات اعتماد إصدار التطبيق لتخطيط
+          صيانة النظام وعمليات الترحيل الآمنة.
+        </p>
+
+        <p>
+          <strong>٤.٤ قيود الوصول المستندة إلى الموقع و عنوان IP:</strong> قد
+          نستخدم عنوان IP الخاص بك و/أو بيانات الموقع الجغرافي لتحديد موقعك
+          لأغراض تشمل، على سبيل المثال لا الحصر، الامتثال للمتطلبات القانونية
+          الإقليمية، وتوفر الخدمة، والبروتوكولات الأمنية. يُمنع منعًا باتًا وصول
+          المستخدمين أو الأفراد الموجودين في دولة إسرائيل أو الذين يصلون منها،
+          أو الذين يحاولون الوصول إلى التطبيق من عنوان IP نشأ في تلك المنطقة.
+          يشمل ذلك الأفراد المتواجدين فعليًا في إسرائيل أو الذين تم تحديد عناوين
+          IP الخاصة بهم على أنها نشأت من إسرائيل. إذا اكتشفنا محاولات وصول من
+          مثل هذه المواقع، فقد نقوم بحظر أو تقييد وصولك واستخدامك لتطبيقنا
+          وخدماتنا على الفور.
+        </p>
+
+        <h2>المادة ٥: كيف نستخدم معلوماتك</h2>
+
+        <p>
+          <strong>٥.١. توفير الخدمة:</strong> لتقديم الوظائف الأساسية للتطبيق،
+          بما في ذلك إعداد ومصادقة حسابك، وتمكينك من إدخال بيانات الدواء، وتقديم
+          تذكيرات الأدوية وإعادة التعبئة، وتتبع مستويات المخزون، ومزامنة بياناتك
+          عبر الأجهزة.
+        </p>
+        <p>
+          <em
+            >الأساس القانوني: تنفيذ عقد؛ الموافقة الصريحة (للبيانات
+            الحساسة).</em
+          >
+        </p>
+
+        <p>
+          <strong>٥.٢. دعم العملاء:</strong> للرد على استفساراتك وتقديم الدعم
+          وحل المشكلات التي تبلغ عنها.
+        </p>
+        <p><em>الأساس القانوني: المصالح المشروعة.</em></p>
+
+        <p>
+          <strong>٥.٣. إدارة الحساب والاتصالات الأساسية:</strong> لإرسال اتصالات
+          إدارية أو متعلقة بالحساب ضرورية، مثل تحديثات شروطنا أو سياستنا، أو
+          إشعارات الأمان، أو رسائل المعاملات الأخرى. هذه الاتصالات ليست لأغراض
+          تسويقية.
+        </p>
+        <p><em>الأساس القانوني: المصالح المشروعة؛ تنفيذ عقد.</em></p>
+
+        <p>
+          <strong>٥.٤. تحسين الخدمة والأمان:</strong> لتحليل البيانات التقنية
+          المجهولة والمجمعة لتحديد وإصلاح الأخطاء، وفهم أنماط الاستخدام، وتحسين
+          تجربة المستخدم، ومراقبة أمان وسلامة خدمتنا، وتتبع إصدارات التطبيق
+          النشطة لتحديد المستخدمين الذين قد يحتاجون إلى دعم التحديث أو لمنع
+          انقطاع الخدمة أثناء ترقيات النظام.
+        </p>
+        <p><em>الأساس القانوني: المصالح المشروعة.</em></p>
+
+        <h2>المادة ٦: تخزين البيانات وأمنها ونقلها</h2>
+
+        <p>
+          <strong>٦.١. المنصة والأمان:</strong> تم بناء الخدمة على معالج
+          البيانات لدينا، Google Firebase. قد نستعين أيضًا بمقدمي خدمات طرف ثالث
+          موثوقين لأغراض دعم العملاء وأمن الشبكة. يتم تشفير جميع البيانات
+          الشخصية والحساسة أثناء النقل (باستخدام Transport Layer Security - TLS)
+          وأثناء التخزين على خوادم Google الآمنة. لقد قمنا بتنفيذ تدابير فنية
+          وتنظيمية مناسبة مصممة لحماية بياناتك من التدمير العرضي أو غير القانوني
+          أو الفقدان أو التغيير أو الكشف غير المصرح به أو الوصول.
+        </p>
+
+        <p>
+          <strong>٦.٢. نقل البيانات الدولي:</strong> قد تتم معالجة بياناتك في
+          ولايات قضائية خارج بلد إقامتك، بما في ذلك الولايات المتحدة والاتحاد
+          الأوروبي. يستخدم Firebase البنود التعاقدية القياسية (SCCs) لضمان
+          معادلة حماية البيانات لمعايير GDPR. يشكل استخدامك للخدمة إقرارًا
+          وموافقة منك على عمليات النقل هذه.
+        </p>
+
+        <p>
+          <strong>٦.٣. مسؤولية المستخدم:</strong> أنت مسؤول عن الحفاظ على سرية
+          كلمة مرور حسابك. نشجع على استخدام كلمات مرور قوية وفريدة. أنت توافق
+          على إخطارنا فورًا بأي استخدام غير مصرح به لكلمة مرورك أو حسابك أو أي
+          خرق آخر للأمان. يتم تشجيع المستخدمين على إجراء نسخ احتياطي لجدول
+          أدويتهم بانتظام حيثما أمكن، حيث أن الخدمة ليست نظامًا للسجلات.
+        </p>
+
+        <h2>المادة ٧: الاحتفاظ بالبيانات وحذفها</h2>
+
+        <p>
+          <strong>٧.١. فترة الاحتفاظ:</strong> نحتفظ ببياناتك الشخصية والحساسة
+          فقط طالما كان ذلك ضروريًا لتقديم الخدمة لك وللأغراض المنصوص عليها في
+          هذه السياسة، والتي تكون بشكل عام طوال مدة نشاط حسابك.
+        </p>
+
+        <p>
+          <strong>٧.٢. حذف الحساب:</strong> عند حذف حسابك عبر الميزة الموجودة
+          داخل التطبيق، سنبدأ عملية الحذف الدائم لبياناتك من أنظمتنا الحية. سيتم
+          إكمال هذه العملية في غضون ٣٠ يومًا كحد أقصى.
+        </p>
+
+        <p>
+          <strong>٧.٣. الاستثناءات:</strong> قد نحتفظ بمعلومات دنيا بعد الحذف
+          فقط إذا كان ذلك مطلوبًا للامتثال لالتزاماتنا القانونية، أو لحل
+          النزاعات، أو لإنفاذ شروطنا. على سبيل المثال، قد نحتفظ بسجل لطلب الحذف.
+          قد يتم الاحتفاظ بالبيانات التقنية المجهولة، التي لا يمكن ربطها بك،
+          للتحليل الإحصائي.
+        </p>
+
+        <h2>المادة ٨: حقوق حماية البيانات الخاصة بك</h2>
+
+        <p>
+          اعتمادًا على موقعك، قد تتمتع بالحقوق التالية فيما يتعلق ببياناتك
+          الشخصية:
+        </p>
+
+        <p>
+          <strong>الحق في الوصول:</strong> الحق في طلب نسخة من البيانات الشخصية
+          التي نحتفظ بها عنك.
+        </p>
+
+        <p>
+          <strong>الحق في التصحيح:</strong> الحق في طلب تصحيح أي بيانات غير
+          دقيقة أو غير مكتملة. يمكنك تحديث معظم معلومات حسابك مباشرة من خلال
+          إعدادات التطبيق.
+        </p>
+
+        <p>
+          <strong>الحق في الحذف (الحق في النسيان):</strong> الحق في طلب حذف
+          حسابك وبياناتك الشخصية، والذي يمكن ممارسته عبر الميزة الموجودة داخل
+          التطبيق.
+        </p>
+
+        <p>
+          <strong>الحق في نقل البيانات:</strong> الحق في طلب بياناتك بتنسيق منظم
+          وشائع الاستخدام وقابل للقراءة آليًا.
+        </p>
+
+        <p>
+          <strong>الحق في تقييد المعالجة:</strong> الحق في طلب وقف مؤقت لمعالجة
+          البيانات في ظل ظروف معينة.
+        </p>
+
+        <p>
+          <strong>الحق في سحب الموافقة:</strong> الحق في سحب موافقتك على معالجة
+          البيانات الحساسة في أي وقت عن طريق حذف حسابك. لن يؤثر سحب الموافقة على
+          قانونية المعالجة بناءً على الموافقة قبل سحبها.
+        </p>
+
+        <p>
+          <strong>الحق في الاعتراض:</strong> الحق في الاعتراض على معالجتنا
+          لبياناتك الشخصية حيث نعتمد على مصلحة مشروعة كأساس قانوني.
+        </p>
+
+        <p>
+          <strong>الحق في تقديم شكوى:</strong> الحق في تقديم شكوى إلى هيئة حماية
+          البيانات في ولايتك القضائية إذا كنت تعتقد أن معالجتنا لبياناتك الشخصية
+          تنتهك القانون المعمول به.
+        </p>
+
+        <p>
+          لممارسة هذه الحقوق (بخلاف تلك المتاحة مباشرة داخل التطبيق)، يرجى
+          الاتصال بمراقب البيانات على عنوان البريد الإلكتروني الموضح في المادة
+          ١٠. قد نحتاج إلى طلب معلومات محددة منك لمساعدتنا في تأكيد هويتك قبل
+          معالجة طلبك. هذا إجراء أمني لضمان عدم الكشف عن البيانات الشخصية لأي
+          شخص ليس له الحق في تلقيها.
+        </p>
+
+        <h2>المادة ٩: خصوصية الأطفال</h2>
+
+        <p>
+          الخدمة غير مخصصة للأفراد دون سن ١٨ عامًا (أو السن القانونية للرشد في
+          ولايتهم القضائية) وليست موجهة إليهم. نحن لا نجمع بيانات من الأطفال عن
+          قصد. يتطلب إنشاء الحساب إقرارًا ذاتيًا وتأكيدًا على أن المستخدم يبلغ
+          من العمر ١٨ عامًا أو أكثر. إذا علمنا بجمع بيانات من طفل، فسنتخذ خطوات
+          فورية لحذفها.
+        </p>
+
+        <h2>المادة ١٠: مراقب البيانات ومعلومات الاتصال</h2>
+
+        <p>
+          <strong>١٠.١. مراقب البيانات:</strong> مراقب البيانات لبياناتك الشخصية
+          هو حمد الخلف، ومقره في الكويت.
+        </p>
+
+        <p>
+          <strong>١٠.٢. الاتصال:</strong> لأي أسئلة أو لممارسة حقوقك بموجب هذه
+          السياسة، يرجى الاتصال بمراقب البيانات على
+          <a
+            href="mailto:legal@dawatime.com"
+            style="color: var(--primary-color)"
+            >legal@dawatime.com</a
+          >.
+        </p>
+
+        <h2>المادة ١١: التغييرات على سياسة الخصوصية هذه</h2>
+
+        <p>
+          نحتفظ بالحق في تعديل سياسة الخصوصية هذه. سنخطرك بأي تغييرات عن طريق
+          نشر السياسة الجديدة داخل الخدمة. سيتم الإبلاغ عن التغييرات الجوهرية من
+          خلال إشعار أكثر وضوحًا، مثل إشعار منبثق داخل التطبيق في المرة التالية
+          التي تستخدم فيها الخدمة أو عن طريق إرسال إشعار إلى عنوان البريد
+          الإلكتروني المرتبط بحسابك. يُنصح بمراجعة سياسة الخصوصية هذه بشكل دوري
+          لأي تغييرات. تكون التغييرات على سياسة الخصوصية هذه سارية المفعول عند
+          نشرها داخل التطبيق.
+        </p>
+      </div>
     </div>
-    
-</body>
+  </body>
 </html>
