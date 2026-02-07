@@ -2201,8 +2201,71 @@ Report issues via Settings → Contact Me
 - **Description**: Enhanced bilingual description emphasizing 5 follow-up reminders, refill tracking, Arabic support
 - **Short Description**: "Never miss a dose. Smart medication reminders with refill tracking. Free!"
 - **Keywords** (98 chars): `pill,reminder,medication,medicine,tracker,refill,dose,prescription,vitamin,alarm,alert,schedule,rx`
+- **Keywords (Arabic)** (98 chars): `دواء,حبوب,تذكير,أدوية,منبه,جرعات,صحة,جدول,تنبيه,مخزون,تنظيم,منظم,مزمن,كبار,سكري,ضغط,وصفة,فيتامينات`
 - **Category**: Health & Fitness (NOT Medical - avoids organization account requirement)
 - **Slogan**: "Never miss a dose. | لا تفوّت جرعة بعد اليوم"
+
+**Full App Description (English)**:
+
+```
+Never miss a dose.
+
+DawaTime is your personal medication assistant, combining persistent reminders with smart inventory tracking. Simple enough for the elderly, powerful enough for complex treatments.
+
+WHY CHOOSE DAWATIME?
+
+UNBEATABLE REMINDERS
+Unlike standard alarms, DawaTime sends 5 follow-up notifications (every 30 mins) until you confirm the dose—even when the app is closed. We make sure the medication gets taken.
+
+SMART REFILL TRACKING
+• Visual Dashboard: See stock levels via color-coded cards (Green/Orange/Red).
+• Auto-Tracking: Automatically deducts pills or ml when marked as taken.
+• Refill Alerts: Get weekly notifications when you hit your custom low-stock threshold.
+
+TRULY BILINGUAL
+Full support for English and Arabic. The interface adapts perfectly to Arabic (RTL), making it ideal for local communities and elderly family members.
+
+FLEXIBLE & POWERFUL
+• Custom Cycles: Set schedules for "Every X Days" or specific weekdays (e.g., Mon/Thu).
+• Capacity: Manage up to 12 active medications.
+• Themes: Full Dark Mode and Light Mode support.
+• Easy Edits: Swipe gestures to manage your list quickly.
+
+From antibiotics to chronic care, DawaTime takes the stress out of medication management.
+
+Download now—completely free—and experience the smartest way to track your health.
+```
+
+**Full App Description (Arabic)**:
+
+```
+لا تفوّت جرعة دواء بعد اليوم.
+
+"دواء تايم" (DawaTime) هو مساعدك الشخصي لتنظيم الأدوية، حيث يجمع بين التنبيهات المستمرة والتتبع الذكي للمخزون. التطبيق بسيط بما يكفي لكبار السن، وقوي بما يكفي للخطط العلاجية المعقدة.
+
+لماذا تختار "دواء تايم"؟
+
+تنبيهات لا مثيل لها
+بخلاف التنبيهات القياسية، يرسل "دواء تايم" 5 إشعارات متابعة (كل 30 دقيقة) حتى تؤكد تناول الجرعة—حتى عندما يكون التطبيق مغلقاً. نحن نضمن تناول الدواء.
+
+تتبع ذكي لإعادة التعبئة
+• لوحة تحكم بصرية: شاهد مستويات المخزون عبر بطاقات ملونة (أخضر/برتقالي/أحمر).
+• تتبع تلقائي: يخصم الحبوب أو المليلترات تلقائياً عند تحديد الجرعة كأنها "تم تناولها".
+• تنبيهات إعادة التعبئة: احصل على إشعارات أسبوعية عندما يصل مخزونك إلى الحد الأدنى المخصص.
+
+ثنائي اللغة بالكامل
+دعم كامل للغتين الإنجليزية والعربية. تتكيف الواجهة تماماً مع اللغة العربية (من اليمين إلى اليسار)، مما يجعلها مثالية للمجتمعات المحلية وأفراد الأسرة من كبار السن.
+
+مرن وقوي
+• دورات مخصصة: اضبط جداول زمنية لـ "كل X يوم" أو أيام محددة من الأسبوع (مثل الاثنين/الخميس).
+• السعة: إدارة ما يصل إلى 12 نوعاً من الأدوية النشطة.
+• السمات: دعم كامل للوضع الداكن والوضع الفاتح.
+• تعديلات سهلة: إيماءات السحب لإدارة قائمتك بسرعة.
+
+من المضادات الحيوية إلى الرعاية المزمنة، يزيل "دواء تايم" التوتر من إدارة الأدوية.
+
+حمّل الآن — مجاناً بالكامل — واختبر الطريقة الأذكى لتتبع صحتك.
+```
 
 **Release Notes** (Internal Testing):
 First internal testing release of DawaTime on Google Play Console. Core features: medication reminders with 5 follow-ups, refill tracking, bilingual support (English/Arabic), dark mode, swipe gestures.
@@ -2285,6 +2348,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 - **Description**: New bilingual description with 5 follow-up reminders emphasis
 - **Keywords**: `pill,reminder,medication,medicine,tracker,refill,dose,prescription,vitamin,alarm,alert,schedule,rx` (98 chars)
+- **Keywords (Arabic)**: `دواء,حبوب,تذكير,أدوية,منبه,جرعات,صحة,جدول,تنبيه,مخزون,تنظيم,منظم,مزمن,كبار,سكري,ضغط,وصفة,فيتامينات` (98 chars)
 - **Short Description**: "Never miss a dose. Smart medication reminders with refill tracking. Free!"
 - **Slogan**: "Never miss a dose. | لا تفوّت جرعة بعد اليوم"
 - **Copyright**: 2026 Hamad AlKhalaf
@@ -2389,6 +2453,27 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Status: Current featured graphic adequate for launch
 - Enhancement Idea: Banner highlighting "Arabic Support" + "Made for Kuwait & GCC" positioning
 - Priority: Low (current graphic sufficient)
+
+**Featured Graphic Enhancement Request** (February 7, 2026 - Day 37):
+
+- **Status**: ⏳ **QUOTE REQUESTED** - Awaiting Rahma's response
+- **Date Sent**: February 7, 2026 (same day as M2 completion/M3 funding)
+- **Scope**: 2 featured graphics (1024x500px each)
+  - **English Version**: LTR layout, features "Bilingual Support" or "Never Miss a Dose"
+  - **Arabic Version**: RTL layout, features "دعم ثنائي اللغة" or "لا تفوّت جرعة بعد اليوم"
+- **Design**: Match bilingual screenshot approach, same DawaTime design style (#8AC249 green)
+- **Framed as**: Completely optional, not blocking Day 48+ deployment timeline
+- **Rationale**: 
+  - Global scalability (bilingual support vs. geographic positioning)
+  - Professional dual-language Play Store listings (separate English + Arabic pages)
+  - Brand consistency with Rahma's existing screenshot work
+  - Strengthen Play Store presence while maintaining current launch timeline
+- **Expected Quote Range**: $40-80 (estimate based on $250 for 28 screenshots = ~$8.90/image, 2 graphics = $18-20 base + complexity premium)
+- **Next Steps**: 
+  - Wait for Rahma's quote
+  - If price acceptable, create Milestone 4 and fund
+  - If declined or too expensive, proceed with existing 1024x500px graphic
+  - Document response in this section when received
 
 **Key Decision (January 9, 2026)**:
 **Proceed with current graphics for Day 14 production launch.** Screenshots can be updated post-launch without requiring app re-review. Priority is hitting production deadline with stable v1.4.4+50, not perfect marketing materials.
@@ -2777,6 +2862,18 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Total Screenshots**: 28 (14 iOS clean + 14 Android clean)
 - **Timeline**: Aligns with original 3-4 week project window
 
+**🆕 Potential Milestone 4 - Featured Graphics** (Day 37 - February 7, 2026):
+
+- **Status**: ⏳ **QUOTE REQUESTED** - Awaiting Rahma's response
+- **Scope**: 2 featured graphics (1024x500px each - English + Arabic)
+- **Request Sent**: February 7, 2026 (same day as M2 paid/M3 funded)
+- **Message**: 
+  > "Would you be interested in creating 2 featured graphics (1024x500px each) for Google Play Store - one English and one Arabic? They would match the bilingual screenshot approach, highlighting features like 'Bilingual Support' or 'Never Miss a Dose' using the same design style. The Arabic version would need RTL layout. What would you charge for both? Completely optional - if it works for you, great. If not, no problem! No rush on delivery - this wouldn't block our launch timeline."
+- **Rationale**: Global scalability (bilingual support vs. geographic positioning), professional dual-language Play Store listings
+- **Expected Quote**: $40-80 (estimate)
+- **Optional**: Not blocking Day 48+ deployment
+- **Next Action**: Document quote when received, decide whether to fund M4
+
 **Next Steps** (Updated Day 37 - February 7, 2026):
 
 1. ✅ **Rahma Fixes Screenshot 4 Arabic**: COMPLETE - Fixed February 5, 2026
@@ -2784,9 +2881,11 @@ First internal testing release of DawaTime on Google Play Console. Core features
 3. ✅ **Approve Milestone 2**: COMPLETE - $125 paid February 7, 2026
 4. ✅ **Activate Milestone 3 Funding**: COMPLETE - $110 funded February 7, 2026
 5. ⏳ **Android Production**: IN PROGRESS - Rahma begins Android screenshots + iOS status bar cleanup (delivery ~Feb 14-18)
-6. ⏳ **Review Dual-Platform Delivery**: Verify 28 total screenshots (14 iOS clean + 14 Android with Pixel/Galaxy frames, all with hidden status bars)
-7. ⏳ **Approve Milestone 3**: Release $110 payment after all screenshots approved
-8. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform clean screenshots (Feb 17-24 window)
+6. ⏳ **Featured Graphics Quote**: PENDING - Waiting for Rahma's response on optional M4 (2 graphics: English + Arabic)
+7. ⏳ **Review Dual-Platform Delivery**: Verify 28 total screenshots (14 iOS clean + 14 Android with Pixel/Galaxy frames, all with hidden status bars)
+8. ⏳ **Approve Milestone 3**: Release $110 payment after all screenshots approved
+9. ⏳ **Optional M4 Decision**: If quote acceptable, fund featured graphics milestone
+10. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform clean screenshots (+ optional featured graphics) (Feb 17-24 window)
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
