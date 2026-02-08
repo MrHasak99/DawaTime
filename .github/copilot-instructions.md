@@ -384,11 +384,11 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 **JavaScript Removal**:
 ```javascript
-window.addEventListener('flutter-first-frame', function() {
-  var loadingScreen = document.getElementById('loading-screen');
+window.addEventListener("flutter-first-frame", function () {
+  var loadingScreen = document.getElementById("loading-screen");
   if (loadingScreen) {
-    loadingScreen.classList.add('fade-out');
-    setTimeout(function() {
+    loadingScreen.classList.add("fade-out");
+    setTimeout(function () {
       loadingScreen.remove();
     }, 500);
   }
@@ -451,10 +451,12 @@ window.addEventListener('flutter-first-frame', function() {
 - `/web/robots.txt` (unchanged, allows all crawlers despite noindex meta tag)
 
 **Deployment History**:
+
 - **February 5, 2026**: Deployed via Netlify (4 assets uploaded to CDN)
 - **Status**: ✅ Live in production
 
 **Why These Changes**:
+
 - **SEO**: Kuwait/GCC targeting aligns with primary market positioning
 - **Loading screen**: Standard Flutter web best practice (prevents white flash)
 - **Social media**: Proper link previews improve user trust and sharing
@@ -2456,26 +2458,29 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Enhancement Idea: Banner highlighting "Arabic Support" + "Made for Kuwait & GCC" positioning
 - Priority: Low (current graphic sufficient)
 
-**Featured Graphic Enhancement Request** (February 7, 2026 - Day 32):
+**Featured Graphic Enhancement Request** (February 7-8, 2026 - Days 32-33):
 
-- **Status**: ⏳ **QUOTE REQUESTED** - Awaiting Rahma's response
+- **Status**: ✅ **DELIVERED** - Completed February 8, 2026 (Day 33)
 - **Date Sent**: February 7, 2026 (same day as M2 completion/M3 funding)
 - **Scope**: 2 featured graphics (1024x500px each)
   - **English Version**: LTR layout, features "Bilingual Support" or "Never Miss a Dose"
   - **Arabic Version**: RTL layout, features "دعم ثنائي اللغة" or "لا تفوّت جرعة بعد اليوم"
 - **Design**: Match bilingual screenshot approach, same DawaTime design style (#8AC249 green)
 - **Framed as**: Completely optional, not blocking Day 42+ deployment timeline
-- **Rationale**: 
+- **Rationale**:
   - Global scalability (bilingual support vs. geographic positioning)
   - Professional dual-language Play Store listings (separate English + Arabic pages)
   - Brand consistency with Rahma's existing screenshot work
   - Strengthen Play Store presence while maintaining current launch timeline
-- **Expected Quote Range**: $40-80 (estimate based on $250 for 28 screenshots = ~$8.90/image, 2 graphics = $18-20 base + complexity premium)
-- **Next Steps**: 
-  - Wait for Rahma's quote
-  - If price acceptable, create Milestone 4 and fund
-  - If declined or too expensive, proceed with existing 1024x500px graphic
-  - Document response in this section when received
+- **Rahma's Response**: Delivered proactively without waiting for quote approval
+  - Message: "I've already created the 2 featured graphics (1024×500) — one English and one Arabic (RTL) — following the same visual style and bilingual approach."
+  - Included in Figma with Android screenshots (https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-)
+- **Pricing**: TBD - No quote provided, delivered as project completion gesture
+- **Next Steps**:
+  - Review featured graphics in Figma
+  - Discuss payment with Rahma (separate invoice or included in M3?)
+  - Export final files for Play Store deployment
+  - Professional dual-language Play Store listings ready
 
 **Key Decision (January 9, 2026)**:
 **Proceed with current graphics for Day 14 production launch.** Screenshots can be updated post-launch without requiring app re-review. Priority is hitting production deadline with stable v1.4.4+50, not perfect marketing materials.
@@ -2690,7 +2695,9 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Initial Design Review** (Day 34 - February 3, 2026):
 
-**Figma Link**: https://www.figma.com/design/dPtvl3NNwUNRQNPKuLAHIO/dawatime-screenshots
+**Figma Link (Original iOS)**: https://www.figma.com/design/dPtvl3NNwUNRQNPKuLAHIO/dawatime-screenshots
+
+**Figma Link (Final - All Platforms)**: https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-
 
 **Delivery Summary**:
 
@@ -2794,13 +2801,15 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Delivered: 14 iOS PNGs (2796 x 1290), proper naming, Figma source
 - Payment released with confirmation: "Perfect, Rahma! Everything looks great—the Arabic Screenshot 4 fix is exactly what we needed. Releasing Milestone 2 now ($125)."
 
-**🟢 Milestone 3: ACTIVE & FUNDED**
+**⏳ Milestone 3: PENDING CORRECTION**
 
 - Amount: $110.00
-- Status: Activated and funded February 7, 2026
+- Status: ⏳ **PENDING CORRECTION** - Delivered February 8, 2026 (Day 33), correction requested same day
 - Deliverable: 14 Android screenshots (7 English + 7 Arabic) with Pixel/Galaxy device frames
 - Design: Same as iOS with adjusted dimensions for Google Play Store
-- Expected Delivery: ~1 week (February 14-18, 2026)
+- Actual Delivery: On schedule (February 8, 2026 - within 1 week estimate)
+- **Issue Discovered**: Arabic Screenshot 4 (both Galaxy and Pixel 10 Pro) shows duplicate home page instead of Add Medication form
+- **Payment Status**: ON HOLD ($110) pending correction delivery
 
 **Android Decision Point** (Day 35 - February 4, 2026):
 
@@ -2853,7 +2862,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 - **Amount**: $110.00
 - **Status**: ✅ **ACTIVE & FUNDED** - Milestone 3 funded February 7, 2026
-- **Deliverable**: 
+- **Deliverable**:
   - 14 Android screenshots (7 English + 7 Arabic) with proper Pixel/Galaxy device frames
   - 14 iOS screenshots REVISED with clean status bars (bonus - no additional cost)
   - Updated Figma source file with status bar layers hidden
@@ -2864,30 +2873,58 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Total Screenshots**: 28 (14 iOS clean + 14 Android clean)
 - **Timeline**: Aligns with original 3-4 week project window
 
-**🆕 Potential Milestone 4 - Featured Graphics** (Day 32 - February 7, 2026):
+**Android Screenshot 4 Issue Discovered** (Day 33 - February 8, 2026):
 
-- **Status**: ⏳ **QUOTE REQUESTED** - Awaiting Rahma's response
+- **Problem**: Arabic Screenshot 4 (both Galaxy and Pixel 10 Pro) shows home page with medications list (duplicate of Screenshot 2)
+- **Expected**: Arabic Screenshot 4 should show Add Medication form (matching English Screenshot 4 "Add Your Medication in Seconds")
+- **Affected Files**: 2 screenshots (Arabic-Android-Galaxy-sr-4, Arabic-Android-Pixel-ar-4)
+- **Impact**: Would confuse Arabic-speaking users on Google Play Store
+- **Historical Context**: Same issue as iOS Screenshot 4 (Day 35), which was fixed Day 36
+- **Root Cause Theory**: Android screenshots likely templated from pre-fix iOS files
+- **Status**: Correction requested from Rahma February 8, 2026
+- **Discovery**: Manual Figma review by user during deliverable verification
+
+**Milestone 3 Correction Request** (Day 33 - February 8, 2026):
+
+- ✅ **Message Sent**: Correction request delivered to Rahma February 8, 2026
+- ⏳ **Awaiting**: Corrected Arabic Screenshot 4 for both Galaxy and Pixel 10 Pro device frames
+- **Verification Checklist**:
+  - Arabic Screenshot 4 shows Add Medication form (not home page)
+  - Form includes: medication name field, unit dropdown, dosage, amount, refill threshold, time picker, date picker, save button
+  - All labels in Arabic with proper RTL layout
+  - Both Galaxy and Pixel 10 Pro versions corrected
+  - Matches English Screenshot 4 content
+- **Expected Turnaround**: 1 day (based on iOS Screenshot 4 fix precedent - reported Day 35, fixed Day 36)
+- **Payment Release**: M3 ($110) ready for approval once correction verified; M4 (featured graphics) may receive bonus payment separately
+
+**✅ Milestone 4 - Featured Graphics** (Day 32-33 - February 7-8, 2026):
+
+- **Status**: ✅ **COMPLETED & DELIVERED** - Delivered February 8, 2026 (Day 33)
+- **Payment Status**: ⏳ **ON HOLD** - Pending Android Screenshot 4 correction (bundled with M3 approval)
 - **Scope**: 2 featured graphics (1024x500px each - English + Arabic)
 - **Request Sent**: February 7, 2026 (same day as M2 paid/M3 funded)
-- **Message**: 
-  > "Would you be interested in creating 2 featured graphics (1024x500px each) for Google Play Store - one English and one Arabic? They would match the bilingual screenshot approach, highlighting features like 'Bilingual Support' or 'Never Miss a Dose' using the same design style. The Arabic version would need RTL layout. What would you charge for both? Completely optional - if it works for you, great. If not, no problem! No rush on delivery - this wouldn't block our launch timeline."
+- **Rahma's Response**: Delivered proactively without waiting for quote approval (included as bonus/goodwill)
+- **Deliverables**:
+  - 1 English featured graphic (1024x500px, LTR layout)
+  - 1 Arabic featured graphic (1024x500px, RTL layout)
+  - Both follow same visual style as screenshots (bilingual approach)
 - **Rationale**: Global scalability (bilingual support vs. geographic positioning), professional dual-language Play Store listings
-- **Expected Quote**: $40-80 (estimate)
+- **Pricing**: TBD - Rahma delivered without quote negotiation (may invoice separately or include as project completion bonus)
 - **Optional**: Not blocking Day 42+ deployment
-- **Next Action**: Document quote when received, decide whether to fund M4
+- **Result**: Professional dual-language Play Store presence ready for production
 
-**Next Steps** (Updated Day 32 - February 7, 2026):
+**Next Steps** (Updated Day 33 - February 8, 2026):
 
 1. ✅ **Rahma Fixes Screenshot 4 Arabic**: COMPLETE - Fixed February 5, 2026
 2. ✅ **Verify Fix**: COMPLETE - Verified February 7, 2026
 3. ✅ **Approve Milestone 2**: COMPLETE - $125 paid February 7, 2026
 4. ✅ **Activate Milestone 3 Funding**: COMPLETE - $110 funded February 7, 2026
-5. ⏳ **Android Production**: IN PROGRESS - Rahma begins Android screenshots + iOS status bar cleanup (delivery ~Feb 14-18)
-6. ⏳ **Featured Graphics Quote**: PENDING - Waiting for Rahma's response on optional M4 (2 graphics: English + Arabic)
-7. ⏳ **Review Dual-Platform Delivery**: Verify 28 total screenshots (14 iOS clean + 14 Android with Pixel/Galaxy frames, all with hidden status bars)
-8. ⏳ **Approve Milestone 3**: Release $110 payment after all screenshots approved
-9. ⏳ **Optional M4 Decision**: If quote acceptable, fund featured graphics milestone
-10. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform clean screenshots (+ optional featured graphics) (Feb 17-24 window)
+5. ✅ **Android Production & Featured Graphics**: COMPLETE - Delivered February 8, 2026 (Day 33)
+6. ⏳ **Review All Deliverables**: Verify 28 screenshots + 2 featured graphics in Figma (https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-)
+7. ⏳ **Approve Milestone 3**: Release $110 payment after review
+8. ⏳ **M4 Payment Decision**: Discuss featured graphics pricing (delivered proactively without quote)
+9. ⏳ **Export Screenshots**: Download final PNGs for both platforms
+10. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform screenshots + featured graphics (Feb 17-24 window)
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
@@ -3793,7 +3830,7 @@ AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
 
 **Root Cause**: Firebase server-side rate limiting from previous failed authentication attempts (incorrect keys, wrong parameters during setup)
 
-**Impact**: 
+**Impact**:
 - Does NOT affect app functionality - app works normally
 - Firebase uses cached tokens or operates with degraded App Check
 - Console warnings can be safely ignored during development
