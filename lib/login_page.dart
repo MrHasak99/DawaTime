@@ -218,6 +218,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _showLegalUpdateDialog(String uid) async {
+    if (!mounted) return;
     bool accepted = false;
     final loc = AppLocalizations.of(context)!;
 

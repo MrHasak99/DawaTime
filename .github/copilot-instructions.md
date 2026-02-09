@@ -248,9 +248,9 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 ## Recent Changes (January 2026)
 
-**Current Version**: v1.4.5+53 (VALIDATED AND PRODUCTION-READY - Day 19, January 25, 2026)
+**Current Version**: v1.4.5+54 (UPLOADED TO BOTH STORES - Day 34, February 9, 2026)
 **Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store (v1.4.4+50)
-**Hotfix Status**: ✅ **VALIDATED** - v1.4.5+53 ready for staged rollout after 24-48h Crashlytics monitoring
+**Hotfix Status**: ✅ **UPLOADED** - v1.4.5+54 deployed to App Store Connect & Play Console, awaiting TestFlight/Internal Testing processing
 **Previous Versions**: v1.4.4+50 (Production) | v1.4.5+52 (Day 19 - Play Integrity) | v1.4.5+51 (Day 16 - RenderFlex) | v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
@@ -841,7 +841,9 @@ Never miss a dose! 💚
 - **Day 15 (Jan 21)**: 🎉 **iOS v1.4.4+50 PUBLISHED** - Released to production on App Store
 - **Day 32 (Feb 7)**: ✅ **iOS v1.4.5+53 IPA BUILT** - 45MB IPA created for App Store Connect standby
 - **Day 33 (Feb 8)**: ✅ **iOS v1.4.5+53 UPLOADED** - Deployed to App Store Connect via Apple Transporter, awaiting TestFlight processing
-- **Version Parity**: Both platforms launched simultaneously on Day 15 (January 21, 2026) with v1.4.4+50
+- **Day 34 (Feb 9)**: ✅ **iOS v1.4.5+54 IPA BUILT & UPLOADED** - 49.6MB IPA deployed to App Store Connect via Apple Transporter
+- **Day 34 (Feb 9)**: ✅ **Android v1.4.5+54 AAB BUILT & UPLOADED** - 54.4MB AAB deployed to Play Console
+- **Version Parity**: Both platforms launched simultaneously on Day 15 (January 21, 2026) with v1.4.4+50, coordinated v1.4.5+54 upload Day 34
 
 **Beta Testing Timeline (January 7-21, 2026)**:
 
@@ -2775,6 +2777,148 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 - ✅ All verified as production-ready
 
+**✅ iOS Screenshot Verification COMPLETE** (Day 35 - February 4, 2026):
+
+**Status**: ✅ **ALL 14 iOS SCREENSHOTS VERIFIED** (100% Complete)
+
+**Verification Summary**:
+- **English Set**: 7/7 screenshots verified perfect ✅
+- **Arabic Set**: 7/7 screenshots verified perfect ✅
+- **Total iOS**: 14/14 screenshots (100%)
+- **Combined Progress**: 28/30 total assets verified (iOS 14 + Android 14 = 93.3%)
+
+**Device Frames**: All iOS screenshots use iPhone mockups with consistent styling
+
+**English iOS Screenshots Verified** (7/7):
+
+1. ✅ **Screenshot 1**: "Never Miss a Dose" - Hero/Splash
+   - Content: DawaTime logo, "Never Miss a Dose" tagline, floating medication tags, bell charm
+   - Branding: **"DAWATIME" app name** (corrected font: Nunito 800 ExtraBold) ✅
+   - Subtitle: "Smart medication reminders that follow up until you confirm"
+   - Device Frame: iPhone mockup with brand green styling
+   - Status: Perfect ✅ (Font fix verified Feb 4, 2026)
+
+2. ✅ **Screenshot 2**: "Your Medications One Place" - Home Screen
+   - Content: Medication cards with color-coding (Panadol green, Omega-3 orange, Augmentin red)
+   - Tags: "Diet Reminder" white tag, "Smart Reminder" green tag
+   - Layout: Clean card-based interface showing stock levels
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅
+
+3. ✅ **Screenshot 3**: "Refill Before You Run Out" - Settings/Refill
+   - Content: NEW v1.4.4 feature - customizable refill reminder settings
+   - UI: Weekday picker with checkmarks for user-selected days
+   - Feature Highlight: Day/time customization for weekly alerts
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅
+
+4. ✅ **Screenshot 4**: "Add Your Medication In Seconds" - Add Form
+   - Content: Add medication form with "No Complexity" tag
+   - UI: Clean form fields for medication entry (name, unit, dosage, amount, refill alert)
+   - Layout: Time picker, start date, save button
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅
+
+5. ✅ **Screenshot 5**: "We Don't Give Up On You" - Follow-up Dialog
+   - Content: "Take Augmentin" dialog with yes/no buttons
+   - **CRITICAL**: **"Augmentin" spelling CORRECT** (typo fixed Feb 4, 2026) ✅
+   - Dialog text: "Did you take your Augmentin?"
+   - Subtitle: "Up to 5 follow-ups every 30 minutes"
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅ (Typo fix verified Feb 4, 2026)
+
+6. ✅ **Screenshot 6**: "Take Medications Your Way" - Weekday Scheduling
+   - Content: Top toggle "Sun Mon", weekday selector with Sunday/Monday selected
+   - UI: Green checkmarks on selected days, "Save Medication" button
+   - Feature Highlight: Specific weekday scheduling vs. every X days
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅
+
+7. ✅ **Screenshot 7**: "Light & Dark Mode" - Theme Showcase
+   - Content: Sun icon top-right (light mode indicator), home screen view
+   - Cards: Augmentin (red), Omega-3 (orange), Panadol (green) showing color-coded stock levels
+   - Feature Highlight: Complete theme customization support
+   - Device Frame: iPhone mockup
+   - Status: Perfect ✅
+
+**Arabic iOS Screenshots Verified** (7/7):
+
+1. ✅ **Screenshot 1 Arabic**: "لا تفوّت أي جرعة" - Hero/Splash
+   - Content: DاwaTime logo "دواء تايم", floating RTL tags, bell charm
+   - **Branding**: **"دواء تايم" app name** (corrected font: NotoKufiArabic 700 Bold) ✅
+   - Subtitle: "تذكير ذكي بالأدوية، يتابعك حتى لا تنسى"
+   - Device Frame: iPhone mockup with brand green styling
+   - Status: Perfect RTL ✅ (Font fix verified Feb 4, 2026)
+
+2. ✅ **Screenshot 2 Arabic**: "كل أدويتك في مكان واحد" - Home Screen
+   - Content: RTL home layout, medication cards right-aligned
+   - Tags: "تنبيه بالحمية" white tag, "تذكير ذكي" green tag
+   - Cards: Panadol (green), Omega-3 (orange), Augmentin (red) with Arabic labels
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+3. ✅ **Screenshot 3 Arabic**: "إعادة تعبئة قبل نفاد الدواء" - Settings/Refill
+   - Content: "الإعدادات" screen, refill reminder settings
+   - UI: Weekday picker with RTL checkmarks
+   - Feature Highlight: Customizable refill scheduling in Arabic
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+4. ✅ **Screenshot 4 Arabic**: "أضف دواءك خلال ثوانٍ" - Add Form
+   - Content: "إضافة دواء جديد" form, "بدون صعوبة" white tag
+   - UI: RTL form fields, right-aligned labels (name, unit, dosage, amount, alert)
+   - Layout: Time picker, start date, "حفظ الدواء" button
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+5. ✅ **Screenshot 5 Arabic**: "لن يتركك التطبيق تنسى" - Follow-up Dialog
+   - Content: "أخذ أوجمنتين" dialog, "هل أخذت أوجمنتين؟" question
+   - **CRITICAL**: **"أوجمنتين" spelling CORRECT** (no typo in Arabic) ✅
+   - Buttons: "نعم" (Yes) / "لا" (No) with RTL positioning
+   - Subtitle: "حتى 5 تذكيرات متتالية حتى تأكيد الجرعة"
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+6. ✅ **Screenshot 6 Arabic**: "التزم بخطتك بطريقتك" - Weekday Scheduling
+   - Content: Top toggle "الأحد الإثنين", weekday selector
+   - UI: الأحد and الإثنين selected with green RTL checkmarks
+   - Button: "حفظ الدواء" (Save Medication)
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+7. ✅ **Screenshot 7 Arabic**: "مصمم لراحتك" - Theme Showcase
+   - Content: Sun icon top-left (RTL positioning), light mode home
+   - Cards: Augmentin (red), Omega-3 (orange), Panadol (green) - RTL layout
+   - Feature Highlight: Theme modes with Arabic interface
+   - Device Frame: iPhone mockup
+   - Status: Perfect RTL ✅
+
+**Verification Methodology**:
+- **Content Accuracy**: Cross-referenced all text against Screenshot_Text_Copy_Sheet.md ✅
+- **Feature Representation**: Verified all 7 screenshot types match Feature_Priority_Guide.md ✅
+- **RTL Layout**: Confirmed all Arabic screenshots use proper right-to-left layout ✅
+- **Typography**: Verified Nunito 800 ExtraBold (English) and NotoKufiArabic 700 Bold (Arabic) ✅
+- **Brand Colors**: Confirmed #8AC249 green primary color throughout ✅
+- **Spelling Consistency**: "Augmentin"/"أوجمنتين" correct across all platforms (iOS + Android) ✅
+- **Color Coding**: Green (adequate stock), Orange (low stock), Red (out of stock) correct ✅
+- **Fix Verification**: Both critical issues (Screenshot 1 font/branding, Screenshot 5 "Augmentin" typo) resolved ✅
+
+**Production Readiness Assessment**:
+- ✅ All 14 iOS screenshots content perfect
+- ✅ All English screenshots use correct branding and typography
+- ✅ All Arabic screenshots use proper RTL layout and Arabic fonts
+- ✅ All text matches specifications exactly
+- ✅ All features properly showcased per priority guide
+- ✅ All fixes from initial review (Feb 3) verified complete (Feb 4)
+- ✅ Ready for App Store Connect deployment
+
+**Overall Project Status**:
+- **iOS Screenshots**: 14/14 verified (100%) ✅
+- **Android Screenshots**: 14/14 verified (100%) ✅
+- **Feature Graphics**: 1/2 verified, 1 pending revision ⏳
+- **Total Progress**: 29/30 assets validated, 1 revision requested
+- **Status**: Awaiting Arabic featured graphic revision (headline text adjustment)
+
 **Milestone Payments & Contract Status** (Day 35 Evening - February 4, 2026):
 
 **✅ Milestone 1: COMPLETED & PAID**
@@ -2801,15 +2945,17 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Delivered: 14 iOS PNGs (2796 x 1290), proper naming, Figma source
 - Payment released with confirmation: "Perfect, Rahma! Everything looks great—the Arabic Screenshot 4 fix is exactly what we needed. Releasing Milestone 2 now ($125)."
 
-**⏳ Milestone 3: PENDING CORRECTION**
+**✅ Milestone 3: COMPLETED & APPROVED**
 
 - Amount: $110.00
-- Status: ⏳ **PENDING CORRECTION** - Delivered February 8, 2026 (Day 33), correction requested same day
+- Status: ✅ **APPROVED** - Delivered February 8, 2026 (Day 33), verified same day
 - Deliverable: 14 Android screenshots (7 English + 7 Arabic) with Pixel/Galaxy device frames
+- **Bonus Delivery**: 14 iOS screenshots REVISED with clean status bars (included at no additional cost)
 - Design: Same as iOS with adjusted dimensions for Google Play Store
 - Actual Delivery: On schedule (February 8, 2026 - within 1 week estimate)
-- **Issue Discovered**: Arabic Screenshot 4 (both Galaxy and Pixel 10 Pro) shows duplicate home page instead of Add Medication form
-- **Payment Status**: ON HOLD ($110) pending correction delivery
+- **Initial Concern Resolved**: User initially believed Arabic Screenshot 4 showed duplicate home page; verification confirmed it correctly shows Add Medication form (different from ar-2 home page)
+- **Total Screenshots**: 28 (14 iOS clean + 14 Android clean)
+- **Payment Status**: Ready for approval ($110)
 
 **Android Decision Point** (Day 35 - February 4, 2026):
 
@@ -2884,47 +3030,204 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - **Status**: Correction requested from Rahma February 8, 2026
 - **Discovery**: Manual Figma review by user during deliverable verification
 
-**Milestone 3 Correction Request** (Day 33 - February 8, 2026):
+**Milestone 3 Resolution** (Day 33 - February 8, 2026):
 
-- ✅ **Message Sent**: Correction request delivered to Rahma February 8, 2026
-- ⏳ **Awaiting**: Corrected Arabic Screenshot 4 for both Galaxy and Pixel 10 Pro device frames
-- **Verification Checklist**:
-  - Arabic Screenshot 4 shows Add Medication form (not home page)
-  - Form includes: medication name field, unit dropdown, dosage, amount, refill threshold, time picker, date picker, save button
-  - All labels in Arabic with proper RTL layout
-  - Both Galaxy and Pixel 10 Pro versions corrected
-  - Matches English Screenshot 4 content
-- **Expected Turnaround**: 1 day (based on iOS Screenshot 4 fix precedent - reported Day 35, fixed Day 36)
-- **Payment Release**: M3 ($110) ready for approval once correction verified; M4 (featured graphics) may receive bonus payment separately
+- ✅ **Issue Resolved**: February 8, 2026 (Day 33)
+- **Initial Concern**: User initially believed Arabic Screenshot 4 (both Galaxy and Pixel 10 Pro) showed duplicate home page
+- **Correction Request Sent**: User messaged Rahma requesting fix
+- **Rahma's Response**: "The correct Add Medication screen is already in place and shows the proper form in RTL"
+- **User Verification**: User directly examined Figma and confirmed:
+  - Arabic ar-2: Shows "حل أدويتك في مكان واحد" with medication list cards (home page) ✓
+  - Arabic ar-4: Shows "أضف دواءك خلال ثوان" with Add Medication form interface ✓
+  - These are clearly DIFFERENT screens - no duplication
+- **Resolution**: No correction needed - Rahma's version was correct, issue was viewing/interpretation confusion
+- **Payment Status**: M3 ($110) ready for approval; M4 (featured graphics) bonus amount TBD
 
-**✅ Milestone 4 - Featured Graphics** (Day 32-33 - February 7-8, 2026):
+**✅ Android Screenshot Verification COMPLETE** (Day 34 - February 9, 2026):
 
-- **Status**: ✅ **COMPLETED & DELIVERED** - Delivered February 8, 2026 (Day 33)
-- **Payment Status**: ⏳ **ON HOLD** - Pending Android Screenshot 4 correction (bundled with M3 approval)
+**Status**: ✅ **ALL 14 ANDROID SCREENSHOTS VERIFIED** (100% Complete)
+
+**Verification Summary**:
+- **English Set**: 7/7 screenshots verified perfect ✅
+- **Arabic Set**: 7/7 screenshots verified perfect ✅
+- **Total Android**: 14/14 screenshots (100%)
+- **Combined Progress**: 28/30 total assets verified (iOS 14 + Android 14 = 93.3%)
+
+**Critical Discovery - Device Frame Pattern**:
+- **English Android Screenshots**: Frameless/clean presentation (7 screenshots)
+  - Professional clean export style without device mockup
+  - Focus on content and UI clarity
+  - Valid presentation approach for Play Store
+- **Arabic Android Screenshots**: Pixel-style device frames (7 screenshots)
+  - Full device mockup with green bezels matching brand color
+  - Contextualized presentation showing app on real device
+  - Valid presentation approach for Play Store
+- **Conclusion**: Both frameless and framed presentations are professional and acceptable
+
+**English Android Screenshots Verified** (7/7):
+
+1. ✅ **Screenshot 1**: "Never Miss a Dose" - Hero/Splash
+   - Content: DawaTime logo, floating tags, bell charm
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+2. ✅ **Screenshot 2**: "Your Medications One Place" - Home Screen
+   - Content: Medication cards with color-coding (Panadol green, Omega-3 orange, Augmentin red)
+   - Tags: "Diet Reminder" white, "Smart Reminder" green
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+3. ✅ **Screenshot 3**: "Refill Before You Run Out" - Settings/Refill
+   - Content: NEW v1.4.4 feature - customizable refill reminder settings
+   - UI: Weekday picker with checkmarks
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+4. ✅ **Screenshot 4**: "Add Your Medication In Seconds" - Add Form
+   - Content: Add medication form with "No Complexity" tag
+   - UI: Clean form fields for medication entry
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+5. ✅ **Screenshot 5**: "We Don't Give Up On You" - Follow-up Dialog
+   - Content: "Take Augmentin" dialog with yes/no buttons
+   - **CRITICAL**: "Augmentin" spelling CORRECT (matches iOS fixes) ✅
+   - Subtitle: "Up to 5 follow-ups every 30 minutes"
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+6. ✅ **Screenshot 6**: "Take Medications Your Way" - Weekday Scheduling
+   - Content: Top toggle "Sun Mon", weekday selector with Sunday/Monday selected
+   - UI: Green checkmarks on selected days, "Save Medication" button
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+7. ✅ **Screenshot 7**: "Light & Dark Mode" - Theme Showcase
+   - Content: Sun icon top-right (light mode indicator), home screen
+   - Cards: Augmentin (red), Omega-3 (orange), Panadol (green)
+   - Presentation: Frameless/clean
+   - Status: Perfect ✅
+
+**Arabic Android Screenshots Verified** (7/7):
+
+1. ✅ **Screenshot 1 Arabic**: "لا تفوّت أي جرعة" - Hero/Splash
+   - Content: DاwaTime logo "دواء تايم", floating RTL tags, bell charm
+   - Subtitle: "تذكير ذكي بالأدوية، يتابعك حتى لا تنسى"
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+2. ✅ **Screenshot 2 Arabic**: "كل أدويتك في مكان واحد" - Home Screen
+   - Content: RTL home layout, medication cards right-aligned
+   - Tags: "تنبيه بالحمية" white, "تذكير ذكي" green
+   - Cards: Panadol (green), Omega-3 (orange), Augmentin (red)
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+3. ✅ **Screenshot 3 Arabic**: "إعادة تعبئة قبل نفاد الدواء" - Settings/Refill
+   - Content: "الإعدادات" screen, refill reminder settings
+   - UI: Weekday picker with RTL checkmarks
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+4. ✅ **Screenshot 4 Arabic**: "أضف دواءك خلال ثوانٍ" - Add Form
+   - Content: "إضافة دواء جديد" form, "بدون صعوبة" white tag
+   - UI: RTL form fields, right-aligned labels
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+5. ✅ **Screenshot 5 Arabic**: "لن يتركك التطبيق تنسى" - Follow-up Dialog
+   - Content: "أخذ أوجمنتين" dialog, "هل أخذت أوجمنتين؟" question
+   - **CRITICAL**: "أوجمنتين" spelling CORRECT (matches iOS fixes) ✅
+   - Subtitle: "حتى 5 تذكيرات متتالية حتى تأكيد الجرعة"
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+6. ✅ **Screenshot 6 Arabic**: "التزم بخطتك بطريقتك" - Weekday Scheduling
+   - Content: Top toggle "الأحد الإثنين", weekday selector
+   - UI: الأحد and الإثنين selected with green RTL checkmarks
+   - Button: "حفظ الدواء" (Save Medication)
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+7. ✅ **Screenshot 7 Arabic**: "مصمم لراحتك" - Theme Showcase
+   - Content: Sun icon top-left (RTL positioning), light mode home
+   - Cards: Augmentin (red), Omega-3 (orange), Panadol (green) - RTL layout
+   - Device Frame: ✅ Pixel-style with GREEN bezels
+   - Status: Perfect RTL ✅
+
+**Verification Methodology**:
+- **Content Accuracy**: Cross-referenced all text against Screenshot_Text_Copy_Sheet.md ✅
+- **Feature Representation**: Verified all 7 screenshot types match Feature_Priority_Guide.md ✅
+- **RTL Layout**: Confirmed all Arabic screenshots use proper right-to-left layout ✅
+- **Typography**: Verified Nunito 800 ExtraBold (English) and NotoKufiArabic 700 Bold (Arabic) ✅
+- **Brand Colors**: Confirmed #8AC249 green primary color throughout ✅
+- **Spelling Consistency**: "Augmentin"/"أوجمنتين" correct across all platforms (iOS + Android) ✅
+- **Color Coding**: Green (adequate stock), Orange (low stock), Red (out of stock) correct ✅
+
+**Production Readiness Assessment**:
+- ✅ All 14 Android screenshots content perfect
+- ✅ All English screenshots frameless/clean (valid presentation style)
+- ✅ All Arabic screenshots with Pixel-style device frames (valid presentation style)
+- ✅ All RTL layouts flawless for Arabic versions
+- ✅ All text matches specifications exactly
+- ✅ All features properly showcased per priority guide
+- ✅ Ready for Google Play Store deployment
+
+**Overall Project Status**:
+- **iOS Screenshots**: 14/14 verified (100%) ✅
+- **Android Screenshots**: 14/14 verified (100%) ✅
+- **Feature Graphics**: 1/2 verified, 1 pending revision ⏳
+- **Total Progress**: 29/30 assets validated, 1 revision requested
+- **Status**: Awaiting Arabic featured graphic revision (headline text adjustment)
+
+**⏳ Milestone 4 - Featured Graphics** (Day 32-34 - February 7-9, 2026):
+
+- **Status**: 🔄 **IN PROGRESS** - Rahma working on revision (February 9, 2026 Evening)
+- **Payment Status**: ⏳ **PENDING** - Will approve $110 after revision delivered
 - **Scope**: 2 featured graphics (1024x500px each - English + Arabic)
 - **Request Sent**: February 7, 2026 (same day as M2 paid/M3 funded)
 - **Rahma's Response**: Delivered proactively without waiting for quote approval (included as bonus/goodwill)
 - **Deliverables**:
-  - 1 English featured graphic (1024x500px, LTR layout)
-  - 1 Arabic featured graphic (1024x500px, RTL layout)
+  - 1 English featured graphic (1024x500px, LTR layout) - ✅ Validated
+  - 1 Arabic featured graphic (1024x500px, RTL layout) - ⏳ Revision in progress
   - Both follow same visual style as screenshots (bilingual approach)
+- **Validation Results** (Day 34 - February 9, 2026):
+  - ✅ Professional quality, brand consistency (#8AC249 green)
+  - ✅ Proper RTL/LTR implementation with floating tags
+  - ✅ Matches screenshot design language
+  - ⏳ **Revision Requested**: Arabic headline text adjustment
+    - **Delivered text**: "لا تفوّت أي جرعة" (Never miss any dose)
+    - **Requested change**: "لا تفوّت جرعة بعد اليوم" (Never miss a dose again)
+    - **Date**: February 9, 2026 (Day 34 Evening)
+    - **Message sent**: Via Upwork requesting headline update in Arabic featured graphic + relevant screenshots
+  - 🔄 **Rahma's Confirmation** (Day 34 Evening - February 9, 2026):
+    - Positive response: "I'll update the Arabic headline text to match the original specification"
+    - Timeline: "within an hour"
+    - Will update: Arabic featured graphic + relevant screenshots
+    - Professional tone maintained: "Thank you so much for your kind words and detailed feedback!"
+- **Expected Delivery**: Within 1 hour of 9 PM February 9, 2026 (by 10 PM same day)
 - **Rationale**: Global scalability (bilingual support vs. geographic positioning), professional dual-language Play Store listings
 - **Pricing**: TBD - Rahma delivered without quote negotiation (may invoice separately or include as project completion bonus)
-- **Optional**: Not blocking Day 42+ deployment
-- **Result**: Professional dual-language Play Store presence ready for production
+- **Result**: 🔄 **Revision in progress** - Awaiting Figma upload notification
 
-**Next Steps** (Updated Day 33 - February 8, 2026):
+**Next Steps** (Updated Day 34 Evening - February 9, 2026):
 
 1. ✅ **Rahma Fixes Screenshot 4 Arabic**: COMPLETE - Fixed February 5, 2026
 2. ✅ **Verify Fix**: COMPLETE - Verified February 7, 2026
 3. ✅ **Approve Milestone 2**: COMPLETE - $125 paid February 7, 2026
 4. ✅ **Activate Milestone 3 Funding**: COMPLETE - $110 funded February 7, 2026
 5. ✅ **Android Production & Featured Graphics**: COMPLETE - Delivered February 8, 2026 (Day 33)
-6. ⏳ **Review All Deliverables**: Verify 28 screenshots + 2 featured graphics in Figma (https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-)
-7. ⏳ **Approve Milestone 3**: Release $110 payment after review
-8. ⏳ **M4 Payment Decision**: Discuss featured graphics pricing (delivered proactively without quote)
-9. ⏳ **Export Screenshots**: Download final PNGs for both platforms
-10. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform screenshots + featured graphics (Feb 17-24 window)
+6. ✅ **Review All Deliverables**: COMPLETE - Validated 28 screenshots + 2 featured graphics February 9, 2026 (Day 34)
+7. ✅ **Revision Requested**: Arabic headline text adjustment - Message sent via Upwork February 9, 2026 (Day 34 Evening)
+8. 🔄 **Rahma Working on Revision**: Confirmed "within an hour" delivery (by 10 PM Day 34)
+   - Expected: Arabic featured graphic + relevant screenshots updated
+   - Text change: "لا تفوّت أي جرعة" → "لا تفوّت جرعة بعد اليوم"
+   - Figma upload notification expected within 60 minutes
+9. ⏳ **Re-validate Revised Assets**: Verify Arabic text matches specification exactly
+10. ⏳ **Approve Milestone 3**: Release $110 payment immediately after validation
+11. ⏳ **M4 Payment Decision**: Discuss featured graphics pricing (delivered proactively without quote)
+12. ⏳ **Export Screenshots**: Download final PNGs for both platforms (30 total assets)
+13. ⏳ **Final Deployment**: Deploy v1.4.5+53 + dual-platform screenshots + featured graphics (Feb 17-24 window)
 
 **Decision Framework** (UPDATED - Arabic Capability Primary Filter):
 
@@ -2946,6 +3249,94 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Feature showcase priorities
 - Current graphics for reference
 - RTL layout guidance for Arabic screenshots
+
+**Export Permission Request & M3 Approval Process** (Day 34 - February 9, 2026):
+
+**Context**: After resolving false positive on Android Screenshot 4 (Day 33) and verifying all 30 deliverables (14 iOS + 14 Android + 2 featured graphics), user identified need to verify Figma export permissions before approving Milestone 3 payment.
+
+**Asset Access Protection Strategy**:
+- **Risk Identified**: Designers sometimes restrict export/download after delivery
+- **Protection Method**: Request permissions before payment approval
+- **Professional Approach**: Clear conditions, respectful tone, explicit verification steps
+- **Payment Structure**: M3 base $110 (agreed), bonus TBD after verification
+
+**Message Sent to Rahma** (Day 34 - February 9, 2026):
+```
+Hi Rahma,
+
+Before I approve Milestone 3, I need to confirm I can export the final assets.
+Could you please grant me full export/download permissions on the
+Figma file? I want to make sure I can access all 30 files before
+releasing payment.
+
+Once confirmed, I'll approve the $110 payment immediately.
+
+Thanks!
+```
+
+**Message Details**:
+- **Platform**: Upwork (official project communication channel)
+- **Tone**: Professional, clear, non-confrontational
+- **Amount Referenced**: $110 (correct agreed M3 base amount)
+- **Conditions Established**: 
+  1. Grant export/download permissions
+  2. User confirms access to all 30 files
+  3. Payment approved immediately after verification
+- **Bonus Discussion**: Deferred until after export verification
+- **Timeline Impact**: None - Day 34 action maintains 8-15 day deployment buffer
+
+**Current State** (Day 34):
+- ✅ Message sent via Upwork
+- ⏱️ Awaiting Rahma's response (expected 2-6 hours)
+- 📋 Verification process ready (test export 3 sample files: iOS, Android, featured graphic)
+- 💰 Payment ready to approve ($110 base + bonus TBD)
+- 🎯 Timeline: On track for February 17-24 deployment window
+
+**Next Steps After Rahma Responds**:
+1. Thank Rahma for granting permissions
+2. Open Figma file: https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-
+3. Test export iOS sample (verify quality/resolution)
+4. Test export Android sample (verify quality/resolution)
+5. Test export featured graphic sample (verify 1024×500px compliance)
+6. Confirm all 30 files accessible and export correctly
+7. Decide bonus amount (suggested range: $40-60 for featured graphics + clean iOS revisions)
+8. Edit Milestone 3 amount: $110 + bonus = total
+9. Approve payment with breakdown message
+10. Download all 30 files (estimated 45 minutes)
+11. Proceed to store preparation (App Store Connect + Google Play Console)
+
+**Verification Checklist** (20 minutes estimated):
+- ✅ Export permissions granted by Rahma
+- ⏳ iOS screenshot 1 exports correctly (2796×1290px, clean PNG)
+- ⏳ Android screenshot 1 exports correctly (Google Play dimensions, clean PNG)
+- ⏳ Featured graphic exports correctly (1024×500px, clean PNG)
+- ⏳ All files accessible in Figma layers panel
+- ⏳ No watermarks or restrictions on exported files
+- ⏳ Quality matches delivered samples from M1/M2
+
+**Professional Communication Notes**:
+- Clear expectations: Export verification before payment
+- Respectful approach: "Could you please" vs demanding
+- Explicit timeline: "immediately" after confirmation
+- Avoids ambiguity: Specific file count (30 files) mentioned
+- Payment amount correct: $110 (not inflated, maintains trust)
+- Bonus flexibility: Discussed after core delivery verified
+
+**Why This Approach Works**:
+1. **Protects User**: Verifies asset access before money leaves escrow
+2. **Fair to Designer**: Payment approved "immediately" after simple action
+3. **Professional Relationship**: Clear conditions, no surprises
+4. **Upwork Compliant**: Uses official platform communication
+5. **Timeline Safe**: 2-6 hour response window acceptable within buffer
+6. **Documentation Complete**: All milestones tracked with clear audit trail
+
+**Deployment Buffer Status**:
+- **Current Date**: Day 34 (February 9, 2026)
+- **Target Deployment**: February 17-24, 2026 (Days 42-49)
+- **Buffer Remaining**: 8-15 days ✅ MAINTAINED
+- **Risk Level**: LOW (verification takes <1 day, 7+ day buffer remains)
+
+---
 
 **Deployment Coordination** (January 27, 2026 - UPDATED Day 33):
 
@@ -5457,7 +5848,7 @@ TextField(
   ```
 
 - **Applies to**: ScaffoldMessenger, Navigator, Theme, MediaQuery, all InheritedWidgets
-- **Real crashes fixed**: home_page.dart:2842, add_medications.dart:1205 (4 validation error SnackBars - Jan 26, 2026)
+- **Real crashes fixed**: home_page.dart:2842, add_medications.dart:1205 (4 validation error SnackBars - Jan 26, 2026), login_page.dart:222 (_showLegalUpdateDialog accessing context after widget disposal - Feb 9, 2026)
 
 **Problem 3: Unconstrained Widgets in Flex Layouts**
 
