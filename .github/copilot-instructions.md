@@ -190,6 +190,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **v1.2.1** (August 28, 2025): Arabic localization added
 - **v1.3.4** (October 26, 2025): Weekday scheduling + website APK distribution
 - **v1.4.4** (January 21, 2026): Database migration + iOS fixes + Play Store debut
+- **v1.4.5** (February 11, 2026): Play Integrity API + Safe URL launching + 7 critical stability fixes + 30 professional screenshots
 
 ### Stable Feature Set (v1.3.4)
 
@@ -246,15 +247,15 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 ---
 
-## Recent Changes (January 2026)
+## Recent Changes (February 2026)
 
-**Current Version**: v1.4.5+54 (READY TO PUBLISH - February 10, 2026)
-**Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store (v1.4.4+50)
-**Hotfix Status**: ✅ **ANDROID APPROVED** - Play Console approved v1.4.5+54, ready to publish | ⏳ **iOS IN REVIEW** - App Store Connect reviewing with new screenshots (30 assets)
+**Current Version**: v1.4.5+54 (DEPLOYED - February 11, 2026)
+**Production Status**: 🎉 **LIVE ON BOTH PLATFORMS** - iOS App Store & Google Play Store (v1.4.5+54)
+**Deployment Status**: ✅ **BOTH PLATFORMS LIVE** - v1.4.5 successfully deployed with all hotfixes and new screenshots
 **Previous Versions**: v1.4.4+50 (Production) | v1.4.5+52 (Day 19 - Play Integrity) | v1.4.5+51 (Day 16 - RenderFlex) | v1.4.4+49 (Day 7 Evening - Migration Fix) | v1.4.4+47 (Day 7 Morning - setState Fix) | v1.4.4+46 (Day 6 - Migration Safety) | v1.4.4+45 (Day 4 - Android 15) | v1.4.4+44 (Day 3 - Crash Fixes) | v1.4.4+42 (Days 1-2) | v1.4.4+43 & +48 (Skipped)
 **Database Structure**: `/Users/{userId}/medications/{medicationId}` (new subcollection structure, default since v1.4.4)
 **Migration Status**: Complete - three-phase complete replacement (delete new, copy old, delete old)
-**Key Features**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **Play Integrity API production security**, **Safe URL launching (16 locations)**, **Android signup buttons functional**, **Portfolio domain integration**, **Update checker version detection**, **RenderFlex overflow fixes**, **6 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**
+**Key Features (v1.4.5)**: iOS notifications working, FCM push notifications, single permission dialog, version tracking active, dual entry point legal document checks, customizable refill reminder scheduling, **Play Integrity API production security**, **Safe URL launching (16 locations)**, **Android signup buttons functional**, **Portfolio domain integration**, **Update checker version detection**, **RenderFlex overflow fixes**, **6 critical crash fixes**, **Android 15 edge-to-edge support**, **Complete migration replacement prevents zombie/duplicate data**, **Website SEO optimization**, **Clean legal document URLs**, **HTTP→HTTPS redirect validation fixed**, **30 professional screenshots (14 iOS + 14 Android + 2 featured graphics)**
 
 **🎉 Day 15 Production Launch (January 21, 2026)**:
 
@@ -266,7 +267,18 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - 🔗 **App Store Links**:
   - iOS: https://apps.apple.com/app/dawatime/id6748280994
   - Android: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
-- 📈 **Next Steps**: Monitor production metrics, prepare v1.4.5 hotfix (Days 16-20), Instagram marketing announcement
+- 📈 **Next Steps**: Monitor production metrics, Instagram marketing announcement
+
+**🎉 Day 36 v1.4.5 Hotfix Deployment (February 11, 2026)**:
+
+- ✅ **iOS v1.4.5+54**: Published to App Store - LIVE in production with new screenshots
+- ✅ **Android v1.4.5+54**: Published to Google Play Store - LIVE in production with new screenshots
+- 🛡️ **Security**: Play Integrity API production integration complete
+- 🔗 **Stability**: Safe URL launching (16 locations), Signup Buttons fix, Update Checker fix
+- 🎨 **Visual**: 30 professional screenshots (14 iOS + 14 Android + 2 featured graphics)
+- 🐛 **Bug Fixes**: RenderFlex overflow, Migration setState, Portfolio domain integration
+- 📊 **7 Critical Fixes**: Comprehensive stability and security update
+- 📈 **Next Steps**: Monitor Firebase Crashlytics, track user adoption, prepare for MOH partnership application (Q2 2026)
 
 **Website Post-Launch Updates (Day 15 - January 21, 2026)**:
 
