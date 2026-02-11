@@ -154,6 +154,8 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **June 23, 2025**: App renamed to "DawaTime" (Arabic: دواء = medicine)
 - **June 25, 2025**: Domain dawatime.com purchased from Porkbun
 - **July 2, 2025**: Brand green color (#8AC249) and app icons finalized
+  - **Logo & Brand Design Guide**: Created by freelancer Javeria Hareem Shiraz (https://www.upwork.com/freelancers/javeriahareemshiraz)
+  - Brand assets include: DawaTime logo, color palette, app icons, visual identity guidelines
 - **July 8, 2025**: Cloudflare DNS configuration for dawatime.com
 - **July 9, 2025**: Firebase Crashlytics, Analytics, and Performance monitoring integrated
 - **July 14, 2025**: App uploaded to App Store Connect
@@ -2407,9 +2409,12 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Upwork Job**: https://www.upwork.com/jobs/~022015687193682464731
 
-**Figma Designs**:
+**Figma Designs** (Designer's files):
 - Original iOS: https://www.figma.com/design/dPtvl3NNwUNRQNPKuLAHIO/dawatime-screenshots
 - Final (All Platforms): https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-
+
+**Figma Designs** (Private files - not shared with designer):
+- Screenshots: https://www.figma.com/design/K35vgdrXq3D3nUFUEEjVNx/Dawatime-Screenshots
 
 **Designer Hired**: Rahma M. #16 (Jan 27, 2026 at 1:08 PM)
 - **Verification**: 1,347h Upwork, 83 jobs, $60K+ earned, 100% JSS, Arabic native
