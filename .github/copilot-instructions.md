@@ -55,13 +55,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **Real-World Impact**: Solving actual medication adherence problems for 100+ Kuwaiti users
 - **Technical Breadth**: Flutter, Firebase, Cloud Functions, iOS/Android, web deployment, localization (Arabic/English)
 
-**Why This Story Matters**:
-
-- **For Employers**: Demonstrates perseverance, learning agility, and ability to ship real products while maintaining full-time government career
-- **For Collaborators**: Shows commitment to quality over quick wins (patient 3-year journey)
-- **For Interviews**: Powerful narrative: "I learned more from failing and rebuilding than from the course itself"
-- **For Future Self**: Documentation of growth from course project to production app with users and revenue potential
-- **Unique Angle**: Teaching the same course he failed demonstrates mastery - went from broken student project to 13 months volunteering to paid TA position, all while working full-time at MEW
+**Why This Story Matters**: Demonstrates perseverance and learning agility (shipping real products while at MEW), powerful failure→success narrative ("learned more from rebuilding"), taught same course he failed (broken project → 13 months volunteering → paid TA), documents growth from student to production.
 
 **Key Learnings from Failure → Success**:
 
@@ -327,6 +321,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 **Purpose**: Target Kuwait and GCC market with localized search engine optimization
 
 **Implementation**:
+
 - **Description meta tag**: Added "for Kuwait & GCC" regional positioning
 - **Keywords expansion**: 8 generic terms → 20+ Kuwait-specific keywords
   - English: "medication reminder Kuwait", "pill tracker GCC", "medicine schedule Kuwait"
@@ -346,6 +341,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 **Purpose**: Proper Open Graph and Twitter Card metadata for social sharing
 
 **Implementation**:
+
 - **Open Graph tags** (8 new properties):
   - `og:url`: https://webapp.dawatime.com
   - `og:type`: website
@@ -371,11 +367,15 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 **Implementation** (~108 lines total):
 
 **HTML Structure**:
+
 ```html
 <div id="loading-screen">
   <div class="loading-card">
-    <img src="icons/Icon-192.png" alt="DawaTime Logo" 
-         style="width: 96px; height: 96px; border-radius: 20px;" />
+    <img
+      src="icons/Icon-192.png"
+      alt="DawaTime Logo"
+      style="width: 96px; height: 96px; border-radius: 20px;"
+    />
     <h1 class="app-name">DawaTime</h1>
     <p class="tagline">Never miss a dose...</p>
     <div class="spinner"></div>
@@ -384,11 +384,13 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 ```
 
 **Logo Evolution**:
+
 - **Original (January 2026)**: CSS-based animated pill icon (green capsule shape)
 - **Updated (February 17, 2026)**: Professional branded logo (DawaTime.png)
 - **Rationale**: Display actual brand identity instead of generic placeholder
 
 **Styling**:
+
 - **Background**: Green gradient (#8AC249 → #6fa32e, 45° diagonal)
 - **Card**: White rounded container (24px border-radius, centered)
 - **Logo**: Professional DawaTime brand icon (96px × 96px, rounded corners 20px)
@@ -400,6 +402,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
   - Fade-out: opacity 1 → 0 over 0.5s when Flutter loads
 
 **JavaScript Removal**:
+
 ```javascript
 window.addEventListener("flutter-first-frame", function () {
   var loadingScreen = document.getElementById("loading-screen");
@@ -413,6 +416,7 @@ window.addEventListener("flutter-first-frame", function () {
 ```
 
 **User Experience**:
+
 - Prevents jarring white screen flash
 - Provides branded loading experience
 - Shows app initialization progress
@@ -423,6 +427,7 @@ window.addEventListener("flutter-first-frame", function () {
 **Purpose**: Keyword-rich structured content for search engines (despite noindex)
 
 **Implementation** (~19 lines):
+
 ```html
 <div style="position: absolute; left: -9999px;" aria-hidden="true">
   <h1>DawaTime - Medication Reminder App for Kuwait</h1>
@@ -450,11 +455,13 @@ window.addEventListener("flutter-first-frame", function () {
 #### 5. Technical Details
 
 **Changes Summary**:
+
 - **Total additions**: ~138 lines
 - **Total modifications**: ~10 lines
 - **Categories**: SEO (12 changes), social media (13 changes), loading screen (108 lines), hidden content (19 lines)
 
 **Deployment**:
+
 - **Platform**: Netlify
 - **URL**: https://webapp.dawatime.com
 - **Build command**: `flutter build web --release`
@@ -463,6 +470,7 @@ window.addEventListener("flutter-first-frame", function () {
 - **Font optimization**: MaterialIcons tree-shaken 99.3% (1.6MB → 11.8KB)
 
 **Files Modified**:
+
 - `/web/index.html` (Flutter web wrapper)
 - `/web/manifest.json` (unchanged, PWA configuration)
 - `/web/robots.txt` (unchanged, allows all crawlers despite noindex meta tag)
@@ -656,38 +664,7 @@ Never miss a dose! 💚
 - ⏳ Watch for user feedback on signup flow and portfolio link
 - ⏳ Prepare iOS v1.4.5+53 upload to App Store Connect (coordinated release)
 
-**Signup Buttons Fix Journey** (Discovery to Validation):
-
-**Discovery Phase** (Day 15 - January 21, 2026):
-
-- Production user complaint: "Terms & Privacy links not working on Android/Samsung device"
-- Testing confirmed: iOS works perfectly, Android fails silently with no feedback
-- Impact: CRITICAL - blocks new user signups on Android (legal compliance issue)
-
-**Diagnosis Phase** (Day 19 - January 25, 2026):
-
-- Root cause identified: LaunchMode.platformDefault incompatible with Android 11+ package visibility
-- Android 11+ requires explicit package queries in AndroidManifest.xml for https:// intents
-- Missing queries → launchUrl silently fails → no browser opens → no user feedback
-
-**Implementation Phase** (Day 19 - January 25, 2026):
-
-- **3-part fix**:
-  1. Added Android 11+ `<queries>` block with VIEW action + https scheme
-  2. Changed LaunchMode.platformDefault → LaunchMode.externalApplication (external browser)
-  3. Added try-catch with SnackBar error feedback for graceful failure
-- **Files Modified**:
-  - android/app/src/main/AndroidManifest.xml (added queries)
-  - lib/signup_page.dart (2 locations: Terms lines 294-330, Privacy lines 349-375)
-- **Build**: v1.4.5+53 (54.3MB, 155.6s build time)
-
-**Validation Phase** (Day 19 - January 25, 2026):
-
-- Physical device testing on Galaxy A15 5G (Android)
-- User confirmation: **"signup text buttons now work in android"**
-- Both Terms & Privacy links confirmed opening in external browser
-- Fix proven effective: Android 11+ queries + LaunchMode.externalApplication solves silent failure
-- Result: ✅ NEW USER SIGNUPS UNBLOCKED
+**Signup Buttons Fix Journey** (Days 15-19): Discovery: Android/Samsung Terms & Privacy links fail silently, blocks signups (CRITICAL). Diagnosis: LaunchMode.platformDefault incompatible with Android 11+ package visibility, missing AndroidManifest.xml queries. Implementation (3-part fix): Added `<queries>` block (lines 66-69), changed to LaunchMode.externalApplication, added try-catch+SnackBar. Files: AndroidManifest.xml, signup_page.dart (lines 294-330, 349-375). Validation: Galaxy A15 5G tested, user confirmed working, signups unblocked. Build: v1.4.5+53 (54.3MB).
 
 **Files Modified (v1.4.5+53 Complete Changeset)**:
 
@@ -734,85 +711,9 @@ Never miss a dose! 💚
 - **Week 2-4 Optimization**: Switch to #medicationreminder (conversion focus) after launch awareness wave
 - **Month 2-3 Expansion**: Add Bahrain, Qatar if Kuwait CPI <2 KWD performs well
 
-**Campaign Performance Tracking**:
+**Campaign Performance Tracking** (7-Day Results, Jan 21-27, 2026): 11,525 views, 7,198 reach, 289 website visits ($0.24 CPI), $69.84 spend (99.8%), ✅ COMPLETED. Engagement: 30 likes, 8 shares, 9 saves, 237 profile visits, 3 follows. Kuwait governorates balanced (Hawalli 26.5%, Capital 26.2%). Demographics: 77.9% male, 25-34 age 36.3%. Performance: 4.0% visit conversion rate, CTR 1.24% (acceptable for awareness), cost-effective ($0.01 CPM), balanced geographic distribution validates Kuwait-wide appeal.
 
-- **FINAL RESULTS (January 29, 2026)** - 7-Day Campaign Complete:
-  - **Views**: 11,525 total impressions
-  - **Reach**: 7,198 unique people
-  - **Website Visits**: 289 (goal metric - final)
-  - **Link Clicks**: 143 clicks on ad link
-  - **Cost Per Website Visit**: $0.24 (final average)
-  - **Spend**: $69.84 of $70.00 (99.8% budget utilization)
-  - **Status**: ✅ **COMPLETED**
-  - **Duration**: Full 7 days (Jan 21-27, 2026)
-  - **Engagement (Total)**:
-    - Likes and reactions: 30
-    - Shares: 8
-    - Saves: 9
-    - Comments: 2
-    - Profile visits: 237
-    - External link taps: 21
-    - Messaging conversations started: 2
-    - Follows: 3
-  - **Top Locations** (Kuwait Governorates):
-    - Hawalli Governorate: 26.5%
-    - Capital Governorate: 26.2%
-    - Ahmadi Governorate: 16.2%
-    - Farwaniya Governorate: 13.5%
-    - Mubarak Al-Kabeer Governorate: 10.9%
-  - **Demographics**:
-    - **Gender**: Male 77.9%, Female 21.8%, Unknown 0.3%
-    - **Age Range**: 25-34 (36.3%), 35-44 (25.3%), 45-54 (14.3%), 18-24 (12.8%), 55-64 (6.6%), 65+ (5.7%)
-  - **Performance Analysis**:
-    - ✅ **Strong Total Reach**: 7,198 unique accounts reached across Kuwait
-    - ✅ **Efficient Cost**: $0.24 per website visit (below target of $0.25-0.30)
-    - ✅ **Excellent Budget Execution**: 99.8% spend (optimal pacing, no waste)
-    - ✅ **Geographic Coverage**: Balanced distribution across all 5 Kuwait governorates
-    - 📊 **Website Visit Conversion**: 289 visits / 7,198 reach = 4.0% conversion rate (strong for awareness campaign)
-    - 📊 **Link Click Efficiency**: 143 link clicks vs 289 website visits (2.02x ratio) indicates strong bio link traffic + organic interest
-    - 💡 **Profile Engagement**: 237 profile visits (3.3% of reach) shows users researching brand before downloading
-    - 🎯 **Audience Fit**: 36.3% in 25-34 age range aligns with target chronic medication users
-    - 🎯 **Male Skew**: 77.9% male audience may indicate health app adoption patterns in Kuwait
-  - **Key Takeaways**:
-    - ✅ Cost-effective awareness campaign ($70 reached 7,198 people = $0.01 CPM)
-    - ✅ Strong website engagement (289 visits = actionable interest)
-    - ⚠️ CTR 1.24% (143 clicks / 11,525 views) slightly below 1.5% target but acceptable for awareness
-    - 💡 Profile visits (237) suggest users researching app credibility before download
-    - 📈 Geographic distribution validates Kuwait-wide appeal (no concentration in single governorate)
-  - **Next Steps**:
-    - Monitor Firebase/App Store conversion data (website visits → app installs)
-    - Calculate true CPI (Cost Per Install) with download data
-    - Evaluate Week 2-4 campaign strategy based on install conversion rate
-    - Consider A/B testing creative variations for CTR improvement
-
-**Campaign Conversion Analysis**:
-
-- **Ad Spend**: $69.84 (7 days)
-- **Website Visits**: 289 (from Instagram ad + bio link traffic)
-- **Store Downloads During Campaign**: 61 total (iOS: 47, Android: 14)
-  - Campaign period: Jan 21-28, 2026
-  - iOS: 10 + 5 + 6 + 6 + 7 + 6 + 7 = 47 downloads
-  - Android: 4 + 4 + 1 + 1 + 1 + 2 + 1 = 14 downloads
-- **New Registered Users**: 10 (108 total - 98 pre-campaign = 10 new signups)
-- **Conversion Funnel**:
-  - Website Visit → Store Download: 61/289 = 21% (strong - users click through to stores)
-  - Store Download → Registration: 10/61 = 16% (indicates many downloads are reinstalls/updates from existing 98 users)
-- **Cost Per Metrics**:
-  - **Cost Per Website Visit**: $0.24 (excellent - below target)
-  - **Cost Per Download**: $69.84 / 61 = **$1.14 per download**
-  - **Cost Per Registered User**: $69.84 / 10 = **$6.98 per new user**
-- **Performance Assessment**:
-  - ✅ **CPI**: $1.14 is EXCEPTIONAL (82% below target of 2 KWD = ~$6.50)
-  - ✅ **Download Conversion**: 21% (website → store) is strong for health apps
-  - ⚠️ **Registration Rate**: 16% (download → signup) lower than expected because many downloads came from existing 98 users reinstalling/updating
-  - 💡 **Reality Check**: Campaign drove awareness among existing user base (profile research, reinstalls) + attracted 10 genuinely new users
-  - 📊 **True New User CPI**: $6.98 is slightly above target ($6.50) but acceptable for Week 1 awareness campaign
-- **Key Insights**:
-  - Campaign successfully reached Kuwait market (7,198 unique people)
-  - Strong website engagement (289 visits = high interest)
-  - Download rate validates product appeal (61 downloads)
-  - Low registration rate reflects mature existing user base (98 pre-campaign users reinstalling)
-  - **For Week 2-4**: Target cold audiences (exclude existing followers/users) to increase new user registration rate
+**Campaign Conversion Analysis**: $69.84 spend → 289 visits → 61 downloads (iOS: 47, Android: 14) → 10 new users (98→108 total). Funnel: 21% visit-to-download, 16% download-to-signup. Cost metrics: $0.24/visit, $1.14/download (82% below target), $6.98/new user. Performance: Exceptional CPI, strong download conversion, low signup rate due to existing user reinstalls. Week 2-4 optimization: target cold audiences.
 
 **Store Installation Data (Days 15-29: Jan 21-29, 2026)**:
 
@@ -996,46 +897,9 @@ class MainActivity : FlutterActivity() {
 - `pubspec.yaml` - Version: 1.4.4+44 → 1.4.4+45
 - `android/app/build.gradle.kts` - versionCode: 44 → 45
 
-**Benefits**:
+**Benefits**: Resolves Play Console SDK 35 warnings, fixes SignInHubActivity crash, proper edge-to-edge display on Android 15+ with backward compatibility.
 
-- ✅ Resolves Play Console warnings for SDK 35 compliance
-- ✅ Backward compatible with older Android versions
-- ✅ Proper edge-to-edge display on Android 15+
-- ✅ Fixes SignInHubActivity crash (Google Play Services authentication)
-- ✅ No changes needed to Flutter UI code (handled at native level + configuration)
-
-**Known Limitation - Google Play Console Deprecation Warnings** (January 25, 2026):
-
-Despite implementing the `MainActivity.kt` edge-to-edge fix above, Google Play Console still shows deprecation warnings for v1.4.5+52 and later builds. This is a **Flutter framework limitation**, not an issue with your app code.
-
-**Warnings Displayed**:
-
-- "Edge-to-edge may not display for all users"
-- "Your app uses deprecated APIs or parameters for edge-to-edge"
-
-**Root Cause**: Flutter framework itself (v3.38.6 stable as of January 25, 2026) uses deprecated Android APIs internally:
-
-- `io.flutter.embedding.android.FlutterFragmentActivity.configureStatusBarForFullscreenFlutterExperience`
-- `io.flutter.plugin.platform.PlatformPlugin.setSystemChromeSystemUIOverlayStyle`
-- `androidx.activity.i.u` (AndroidX Activity library)
-
-These are internal Flutter framework calls using deprecated methods like `setStatusBarColor` and `setNavigationBarColor`.
-
-**Impact**: ℹ️ **Informational only** - Does NOT block production release
-
-- ✅ Your app will NOT be rejected
-- ✅ Users will NOT experience any issues
-- ✅ Edge-to-edge display works correctly on Android 15+
-- ℹ️ Affects all Flutter apps targeting SDK 35 (not specific to DawaTime)
-- ⏳ Will be resolved when Flutter framework team updates deprecated API usage
-
-**Resolution Strategy**:
-
-1. **Immediate**: Accept as informational warning (doesn't block release)
-2. **Short-term**: Mark as "upstream issue" or "Flutter framework limitation" in Play Console
-3. **Long-term**: Monitor Flutter stable releases for edge-to-edge framework improvements, upgrade Flutter when available
-
-**Flutter Version Used**: 3.38.6 stable (as of January 25, 2026 - latest stable release)
+**Known Limitation**: Google Play Console still shows deprecation warnings for Flutter framework's internal use of deprecated Android APIs (`setStatusBarColor`, `setNavigationBarColor`). This is a Flutter v3.38.6 framework limitation affecting all apps targeting SDK 35, not specific to DawaTime. App will NOT be rejected and users won't experience issues. Accept as informational warning until Flutter framework updates.
 
 ---
 
@@ -1253,23 +1117,17 @@ const url = 'https://dawatime.com/terms-and-conditions';
 
 ### Google Search Console HTTP Redirect Fix (January 19, 2026 - Day 13)
 
-**Status**: ✅ **RESOLVED** - Cloudflare Redirect Rule working (January 29, 2026 - Day 29 Evening)
+**Status**: ✅ **RESOLVED** - HTTP→HTTPS redirect deployed (February 17, 2026)
 
-**Issue Discovery** (Day 13 - January 19, 2026):
-
-Google Search Console reported two issues:
+**Issues Discovered** (Day 13 - January 19, 2026):
 
 1. **"Alternate page with proper canonical tag"** (https://www.dawatime.com/)
-   - **Initial Status (Day 13)**: Informational, not an error
-   - **Current Status (Day 24 - January 24, 2026)**: ❌ **VALIDATION FAILED**
-   - **Impact**: 1 affected page (https://www.dawatime.com/)
-   - **Explanation**: www subdomain correctly redirects to non-www with canonical tag, but Google validation failed
-   - **Root Cause**: Likely missing Firebase Hosting custom domain configuration for www subdomain
+   - Status: ✅ **RESOLVED** (Day 29 - January 29, 2026) via Cloudflare Redirect Rule
+   - Root Cause: Firebase Hosting custom domain configuration for www subdomain
 
-2. **"Page with redirect" validation failed** (http://dawatime.com/)
-   - **Status**: ✅ Fixed (resolved after HTTP→HTTPS redirect added)
-   - **Problem**: HTTP to HTTPS redirect validation failed
-   - **Root cause**: Missing explicit HTTP→HTTPS redirect configuration in firebase.json
+2. **"Page with redirect"** (http://dawatime.com/)
+   - Status: ✅ **RESOLVED** (February 17, 2026) - HTTP→HTTPS redirect deployed
+   - Root Cause: Missing explicit HTTP→HTTPS redirect configuration in firebase.json (despite documentation stating it was added Day 13)
 
 **Root Cause Analysis**:
 
@@ -1277,10 +1135,11 @@ Google Search Console reported two issues:
 - However, Google Search Console validation requires **explicit redirect configuration**
 - Existing firebase.json only had www→non-www redirect, not HTTP→HTTPS
 - Result: Validation failed despite redirect working in practice
+- Documentation error: Day 13 docs stated redirect was added, but it was actually missing until Day 60
 
-**Fix Implementation** (firebase.json):
+**Fix Implementation** (February 17, 2026):
 
-Added explicit HTTP to HTTPS redirect rule:
+Added explicit HTTP to HTTPS redirect rule to firebase.json:
 
 ```json
 "redirects": [
@@ -1304,117 +1163,67 @@ Added explicit HTTP to HTTPS redirect rule:
 firebase deploy --only hosting
 ```
 
+Result: 20 files deployed successfully to Firebase Hosting
+
 **Files Modified**:
 
-- `/firebase.json` - Added HTTP→HTTPS redirect rule (line 58-62)
+- `/firebase.json` - Added HTTP→HTTPS redirect rule (February 17, 2026)
 
 **Redirect Chain Now Complete**:
 
-1. `http://dawatime.com{,/**}` → `https://dawatime.com` (NEW - fixes validation)
-2. `https://www.dawatime.com{,/**}` → `https://dawatime.com` (existing)
-3. `*.html` pages → clean URLs (existing - 5 redirect rules)
+1. `http://dawatime.com{,/**}` → `https://dawatime.com` (ADDED Feb 17, 2026 - fixes validation)
+2. `https://www.dawatime.com{,/**}` → `https://dawatime.com` (existing - resolved Jan 29 via Cloudflare)
+3. `*.html` pages → clean URLs (existing - 5 redirect rules from Day 8)
 
-**Google Search Console Actions**:
-
-1. **Issue 1** ("Alternate page with proper canonical tag") - ❌ **NEEDS RESOLUTION**:
-
-   **Why Validation Failed**:
-   - Firebase Hosting has BOTH dawatime.com AND www.dawatime.com configured as custom domains
-   - When www is a separate custom domain, it serves content directly (HTTP 200) instead of redirecting
-   - The redirect rule in firebase.json is bypassed
-   - Google validation fails because www doesn't redirect to non-www
-
-   **Root Cause Discovery** (Day 29 Morning - January 29, 2026):
-
-   ```bash
-   curl -I https://www.dawatime.com
-   # Shows: HTTP/2 200 (serving content directly)
-   # Expected: HTTP/2 301 Moved Permanently → https://dawatime.com/
-   ```
-
-   **Additional Discovery** (Day 29 Evening - January 29, 2026):
-
-   After removing www.dawatime.com from Firebase custom domains and redeploying:
-
-   ```bash
-   curl -I https://www.dawatime.com
-   # Shows: HTTP/2 404 (Firebase doesn't recognize hostname)
-   # Problem: Firebase redirect rules only apply to CONFIGURED custom domains
-   ```
-
-   **Key Lesson**: Firebase Hosting redirect rules (from firebase.json) do NOT work for domains that aren't configured as custom domains. When a request arrives for an unconfigured hostname, Firebase returns 404 without checking redirect rules.
-
-   **Resolution Steps** (Updated Day 29 Evening - Cloudflare Solution):
-
-   **Root Cause Discovered**: Firebase Hosting redirect rules (from firebase.json) do NOT apply to domains that aren't configured as custom domains. When www.dawatime.com was removed from Firebase, it started returning HTTP 404 because Firebase doesn't recognize the hostname at all.
-
-   **Correct Solution: Cloudflare Redirect Rules** (CDN-level redirect):
-   1. **Navigate to Cloudflare Dashboard**:
-      - Go to: https://dash.cloudflare.com
-      - Select `dawatime.com` domain
-   2. **Create Redirect Rule**:
-      - Click "Rules" in left sidebar → "Redirect Rules"
-      - Click "Create redirect rule" (or use "Redirect from WWW to root" template)
-      - Configure:
-        - **Rule name**: "Redirect from WWW to root"
-        - **When incoming requests match**: Select "Wildcard pattern"
-        - **Request URL**: `https://www.dawatime.com/*`
-        - **Then**: Redirect
-        - **Target URL**: `https://dawatime.com/${1}` ← **CRITICAL: Must include full domain + ${1}**
-        - **Status code**: 301
-      - Click "Deploy rule"
-
-   **CRITICAL**: The Target URL **must** be `https://dawatime.com/${1}` (NOT just `https://${1}`). The wildcard `${1}` contains only the path portion, so you need the full destination domain in the Target URL.
-   3. **Enable Cloudflare Proxy** (Required for Redirect Rules):
-      - Navigate to DNS → Records
-      - Find www CNAME record (medication-cd9b8.web.app)
-      - Click "Edit"
-      - Toggle proxy status from grey cloud (DNS only) to orange cloud (Proxied)
-      - Click "Save"
-   4. **Why This Works**:
-      - Cloudflare intercepts www requests at edge servers (before reaching Firebase)
-      - Redirect Rules require proxy enabled (orange cloud) to function
-      - Returns 301 redirect directly from Cloudflare (faster than Firebase)
-      - No Firebase custom domain configuration needed
-      - Free tier includes 70 redirect rules
-   5. **Test Redirect After Rule Creation**:
-      ```bash
-      curl -I https://www.dawatime.com
-      # Should show: HTTP/2 301
-      # Location: https://dawatime.com/
-      # server: cloudflare
-      ```
-   6. **Revalidate in Search Console**:
-      - Click "START NEW VALIDATION" button
-      - Google will recrawl within 1-3 days
-      - Expected result: Validation passes, issue resolves
-
-   **DNS Configuration** (Must Enable Proxy):
-   - CNAME: `www` → `medication-cd9b8.web.app`
-   - Proxy status: **ENABLED (orange cloud)** ← Required for redirect rules to work
-   - Cloudflare Redirect Rules only intercept traffic when proxy is enabled
-
-   **Why This Works**:
-   - With only dawatime.com configured, www traffic routes through main hosting
-   - Firebase applies redirect rules from firebase.json
-   - Google validation detects proper 301 redirect
-   - Canonical tag on https://dawatime.com/ confirms non-www as primary
-
-2. **Issue 2** ("Page with redirect"):
-   - ✅ **RESOLVED** - HTTP→HTTPS redirect validated successfully
-   - No further action needed
-
-**Verification**:
+**Verification** (February 17, 2026):
 
 Test redirect chain manually:
 
 ```bash
 # Test HTTP → HTTPS (should show 301)
 curl -I http://dawatime.com
+# Result: HTTP/1.1 301 Moved Permanently
+# Location: https://dawatime.com/
 
 # Test www → non-www (should show 301)
 curl -I https://www.dawatime.com
+# Result: HTTP/2 301
+# Location: https://dawatime.com/
 ```
+
+**Google Search Console Actions**:
+
+1. **Issue 1** ("Alternate page with proper canonical tag") - ✅ **RESOLVED** (Jan 29 via Cloudflare):
+
+   **Root Cause**: Firebase redirect rules only work for configured custom domains. When www.dawatime.com was configured as a separate custom domain, it served content directly (HTTP 200) instead of redirecting. Removing it from Firebase caused 404 errors.
+
+   **Solution: Cloudflare Redirect Rules** (CDN-level redirect):
+
+   Configuration at https://dash.cloudflare.com:
+   - **Rule name**: "Redirect from WWW to root"
+   - **Request URL**: `https://www.dawatime.com/*`
+   - **Target URL**: `https://dawatime.com/${1}` (must include full domain)
+   - **Status code**: 301
+   - **DNS**: Enable Cloudflare proxy (orange cloud) on www CNAME record
+
+   Verification:
+
+   ```bash
+   curl -I https://www.dawatime.com
+   # Should return: HTTP/2 301, Location: https://dawatime.com/, server: cloudflare
+   ```
+
+2. **Issue 2** ("Page with redirect"):
+   - ✅ **RESOLVED** - HTTP→HTTPS redirect validated successfully (February 17, 2026)
+   - Final action: User must click "VALIDATE FIX" in Google Search Console
+
+**Resolution Timeline**:
+
+- **Day 13 (Jan 19)**: Issues discovered
+- **Day 29 (Jan 29)**: WWW issue resolved via Cloudflare Redirect Rule
+- **February 17, 2026**: HTTP→HTTPS redirect added to firebase.json and deployed
+
+**Key Lesson**: Documentation stated HTTP→HTTPS redirect was added on Day 13, but code review revealed it was actually missing until February 17. Always verify code matches documentation, especially for critical SEO configurations.
 
 **Benefits**:
 
@@ -1423,18 +1232,25 @@ curl -I https://www.dawatime.com
 - ✅ **Compliance**: Meets Google Search Console validation requirements
 - ✅ **User Experience**: No broken links from HTTP URLs
 
-**Timeline**:
+**Additional Discovery - Unused Verification Tokens** (February 17, 2026):
 
-- **Day 13 (Jan 19)**: Issue discovered, HTTP→HTTPS fix deployed
-- **Days 14-23**: Google Search Console revalidation in progress
-- **Day 24 (Jan 24)**: WWW subdomain validation failed
-- **Day 29 Morning (Jan 29)**: Root cause discovered via curl test - www serving HTTP 200 instead of 301 redirect
-- **Day 29 Morning (Jan 29)**: Removed www.dawatime.com from Firebase custom domains, purged Cloudflare cache
-- **Day 29 Evening (Jan 29)**: Discovered Firebase redirect rules don't work for unconfigured domains (404 error)
-- **Day 29 Evening (Jan 29)**: ✅ **RESOLVED** - Cloudflare Redirect Rule created with correct pattern `https://dawatime.com/${1}`
-- **Day 29 Evening (Jan 29)**: Enabled Cloudflare proxy (orange cloud) on www DNS record
-- **Day 29 Evening (Jan 29)**: curl test confirms HTTP 301 redirect working perfectly
-- **Next step**: Trigger Google Search Console validation (1-3 days for completion)
+During Google Search Console investigation, discovered 1 unused ownership token warning. Investigation revealed **TWO** redundant google-site-verification TXT records in Cloudflare DNS:
+
+1. `google-site-verification=pSAXwvhRbk-CBVEUy_Z+H07-66QdiuJ_zhyTLaMfwc=`
+2. `google-site-verification=6uJUUhL_R2zFcQVb3eH4muNi_nOeRCxXELQdJyPoS8k=`
+
+**Current Verification Method**: Firebase Hosting automatic verification (most reliable, maintenance-free)
+
+**Recommendation**: Delete BOTH TXT records from Cloudflare DNS - they are redundant and create unnecessary security surface. Firebase Hosting verification is active and sufficient.
+
+**Manual Cleanup Steps**:
+
+1. Login to Cloudflare Dashboard: https://dash.cloudflare.com
+2. Select `dawatime.com` domain
+3. Navigate to DNS → Records
+4. Find both google-site-verification TXT records
+5. Click Delete (trash icon) for each record
+6. Verify: Google Search Console continues working (Firebase verification remains active)
 
 ---
 
@@ -1678,12 +1494,7 @@ curl -I https://www.dawatime.com
 - **Green (Privacy Policy)**: Trust, safety, health (positive reinforcement)
 - **Amber (Terms & Conditions)**: Caution, attention, professionalism (appropriate warning)
 
-**Why Two Different Callouts**:
-
-- Privacy Policy → Reassurance (building confidence)
-- Terms & Conditions → Awareness (setting expectations)
-- Different purposes require different tones and colors
-- Consistent structure makes them feel like part of unified design system
+**Why Two Different Callouts**: Privacy Policy (reassurance, building confidence), Terms & Conditions (awareness, setting expectations), different purposes require different tones/colors but unified design system structure.
 
 #### FOUC Prevention System (Commands 49-50)
 
@@ -1755,12 +1566,7 @@ curl -I https://www.dawatime.com
 - **Critical Path** (inline `<head>` script): HTML attribute setting only, runs before CSS
 - **Interactive Path** (external shared-toggles.js): DOM manipulation, UI updates, event handlers
 
-**Why Split**:
-
-- Full `initTheme()` and `initLanguage()` functions in shared-toggles.js manipulate DOM (toggle buttons, content visibility, fonts)
-- DOM doesn't exist yet when `<head>` parses
-- Minimal script extracts only critical parts (HTML attributes) safe to run immediately
-- Keeps external JavaScript for interactive features (toggle buttons, user actions)
+**Why Split**: Full `initTheme()`/`initLanguage()` functions manipulate DOM (doesn't exist during `<head>` parsing), so minimal inline script handles only HTML attributes, keeping external JavaScript for interactive features (toggle buttons, user actions).
 
 **Performance Trade-off**:
 
@@ -1834,142 +1640,13 @@ curl -I https://www.dawatime.com
 
 ### Pre-Deployment Review & Dependency Analysis (January 5, 2026)
 
-**Status**: ✅ **COMPLETE** - Comprehensive deployment readiness check performed
-
-**Deployment Readiness Assessment**:
-
-- ✅ **Code Quality**: `flutter analyze` - 0 errors, 0 warnings
-- ✅ **Version Consistency**: All platforms aligned (1.4.4+42)
-- ✅ **Android Configuration**: Signing, ProGuard, target SDK 35 (latest requirement)
-- ✅ **iOS Configuration**: APNs production, deployment target 15.0, export compliance set
-- ✅ **Firebase Integration**: All config files present, Firestore rules secured
-- ✅ **Localization**: 100% coverage (192 lines English, 194 lines Arabic)
-- ✅ **Security**: Sensitive files excluded from git, proper authentication
-- ✅ **Development Environment**: Flutter 3.38.5, Dart 3.10.4, all toolchains ready
-
-**Dependency Update Investigation**:
-Analyzed 8 packages with available updates to assess upgrade feasibility:
-
-**Major Version Updates (Deferred for Post-Deployment)**:
-
-1. **package_info_plus**: 8.3.1 → 9.0.0
-   - ⚠️ Breaking: Requires AGP ≥8.12.1 (current: 8.9.1), Gradle ≥8.13 (current: 8.11.1), Kotlin 2.2.0
-   - No API changes, purely build infrastructure requirements
-   - **Decision**: Defer - would require extensive build tool updates
-
-2. **android_intent_plus**: 5.3.1 → 6.0.0
-   - ⚠️ Breaking: Same requirements as package_info_plus above
-   - No API changes, purely build infrastructure requirements
-   - Current usage (`openExactAlarmSettings()`) unaffected
-   - **Decision**: Defer - same build tool constraints
-
-3. **flutter_timezone**: 4.1.1 → 5.0.1
-   - ⚠️ API Change: Return type changed from `String` to `TimezoneInfo` object
-   - May require code changes in `main.dart` timezone initialization
-   - Already requires Java 17 (✓ we have this)
-   - **Decision**: Defer - requires API migration testing
-
-**Transitive Dependencies** (auto-resolved, minor updates):
-
-- `characters`: 1.4.0 → 1.4.1
-- `matcher`: 0.12.17 → 0.12.18
-- `material_color_utilities`: 0.11.1 → 0.13.0
-- `test_api`: 0.7.7 → 0.7.8
-
-**Rationale for Deferring Updates**:
-
-- ✅ Current versions stable and fully functional
-- ✅ No critical security patches in updates
-- ⚠️ Major updates require build infrastructure upgrades (AGP 8.12.1, Gradle 8.13, Kotlin 2.2.0)
-- ⚠️ High risk of build failures during deployment window
-- ⚠️ No user-facing benefits to justify deployment risk
-- ✓ Better strategy: Deploy stable v1.4.4+42, then update incrementally post-production
-
-**Post-Deployment Update Path** (Recommended):
-
-1. Deploy v1.4.4+42 with current dependencies
-2. Monitor production for 1-2 weeks for stability
-3. Create separate branch for dependency updates
-4. Update build tools first: AGP → 8.12.1, Gradle → 8.13, Kotlin → 2.2.0
-5. Run `flutter pub upgrade --major-versions`
-6. Test thoroughly on physical devices (Android 14/15, iOS 15+)
-7. Deploy as v1.4.5 with updated dependencies
-
-**Confidence Assessment**: 95% ready for production deployment with current dependency set
+**Status**: ✅ **COMPLETE** - All platforms ready for deployment (v1.4.4+42). Code quality: 0 errors/warnings. Configuration: Android SDK 35, iOS 15.0+, Firebase secured, 100% localization coverage. Deferred 3 major dependency updates (package_info_plus, android_intent_plus, flutter_timezone) requiring build tool upgrades to post-production. Current versions stable with no critical patches. Strategy: Deploy stable, monitor 1-2 weeks, then update incrementally.
 
 ---
 
 ### Website Toggle System Centralization (January 5, 2026)
 
-**Status**: ✅ **COMPLETE** - Centralized theme/language toggle system across all website pages
-
-**Problem**: All 6 website pages (index.html, support.html, account-deletion.html, terms-and-conditions.html, privacy-policy.html, user-management.html) had duplicate toggle button implementations (~100-150 lines each = 600+ lines total) causing maintenance issues and styling inconsistencies.
-
-**Solution**: Created shared toggle system with single source of truth:
-
-- `shared-toggles.css` (134 lines): Centralized styling for toggle buttons
-- `shared-toggles.js` (210 lines): Centralized toggle logic with IIFE pattern
-
-**Issues Fixed During Migration**:
-
-1. **Conflicting Variables** (index.html):
-   - Problem: Had `let currentLanguage` and `let currentThemeMode` variables that conflicted with shared system
-   - Solution: Removed conflicting variables, kept only `window.translations` object
-
-2. **Duplicate CSS** (all pages):
-   - Problem: index.html, account-deletion.html, support.html, terms-and-conditions.html, privacy-policy.html had inline CSS for `.dark-mode-toggle`, `.language-toggle`, `.icon-*` classes
-   - Solution: Removed ~150 lines from index.html, ~115 lines from each other page
-   - Total: ~600+ lines of duplicate code eliminated
-
-3. **Theme Toggle Icon Colors** (shared-toggles.css):
-   - Problem: Icons used `#333` (dark gray) instead of `white`, causing inconsistent appearance
-   - Solution: Changed all icon colors to `white` for proper contrast
-   - Fixed: `.icon-light`, `.icon-dark`, `.icon-auto` border and background colors
-
-4. **Missing CSS Variables** (support.html):
-   - Problem: Lacked `--card-bg` and `--card-border` variables, causing tooltip to use fallback colors
-   - Solution: Added missing variables to both `:root` and `[data-theme="dark"]`
-   - Light: `--card-bg: #f5f5f5`, `--card-border: rgba(138, 194, 73, 0.2)`
-   - Dark: `--card-bg: #1a1a1a`, `--card-border: rgba(138, 194, 73, 0.3)`
-
-5. **Cache-Busting** (index.html, support.html):
-   - Problem: Browser caching old versions of shared files
-   - Solution: Added `?v=2` parameter to force reload: `shared-toggles.css?v=2` and `shared-toggles.js?v=2`
-
-**Translation Pattern Support** (shared-toggles.js):
-The shared system supports three different translation patterns across pages:
-
-1. **Class-based** (terms-and-conditions.html, privacy-policy.html): `.en-content`/`.ar-content` with display toggling
-2. **Attribute-based** (support.html, account-deletion.html, user-management.html): `data-en`/`data-ar` with innerHTML replacement
-3. **Object-based** (index.html): `data-translate` with `window.translations` object lookup
-
-**Files Updated**:
-
-- `/public/shared-toggles.css` - **CREATED** (134 lines)
-- `/public/shared-toggles.js` - **CREATED** (210 lines)
-- `/public/index.html` - Removed ~150 lines of duplicate CSS, removed conflicting variables, added `?v=2`
-- `/public/support.html` - Removed ~115 lines of duplicate CSS, added missing CSS variables, added `?v=2`
-- `/public/account-deletion.html` - Removed ~115 lines of duplicate CSS
-- `/public/terms-and-conditions.html` - Removed ~140 lines of duplicate CSS
-- `/public/privacy-policy.html` - Removed ~140 lines of duplicate CSS
-- `/public/user-management.html` - Already cleaned in previous sessions
-
-**Benefits**:
-
-- ✅ Single source of truth: Changes to toggle logic only need to happen once
-- ✅ Consistent styling: All pages look identical
-- ✅ 70% code reduction: ~600 lines → 344 lines total
-- ✅ Better maintainability: New pages just need 2 lines: `<link>` + `<script>`
-- ✅ Cache-busting: Version parameters prevent stale browser caches
-- ✅ Full theme support: Tooltips adapt properly to light/dark themes
-
-**Architecture Notes**:
-
-- Shared files use IIFE (Immediately Invoked Function Expression) to avoid global scope pollution
-- Toggle buttons injected dynamically via `createToggles()` function
-- State persisted in localStorage: `language` and `theme` keys
-- Language attribute stored in `document.documentElement.getAttribute('lang')`
-- Theme applied via `data-theme` attribute on `<body>`
+**Status**: ✅ **COMPLETE** - Created shared-toggles.css (134 lines) and shared-toggles.js (210 lines) with IIFE pattern. Eliminated ~600 lines of duplicate toggle code across 6 website pages (70% reduction). Fixed conflicting variables, icon colors, CSS variables, and cache-busting. Supports 3 translation patterns: class-based, attribute-based, object-based. Single source of truth for theme/language toggles.
 
 ---
 
@@ -2416,29 +2093,35 @@ First internal testing release of DawaTime on Google Play Console. Core features
 **Upwork Job**: https://www.upwork.com/jobs/~022015687193682464731
 
 **Figma Designs** (Designer's files):
+
 - Original iOS: https://www.figma.com/design/dPtvl3NNwUNRQNPKuLAHIO/dawatime-screenshots
 - Final (All Platforms): https://www.figma.com/design/TTW7I04DucS4KHzwDezvEU/dawatime-screenshots--IOS-Android-
 
 **Figma Designs** (Private files - not shared with designer):
+
 - Screenshots: https://www.figma.com/design/K35vgdrXq3D3nUFUEEjVNx/Dawatime-Screenshots
 
 **Designer Hired**: Rahma M. #16 (Jan 27, 2026 at 1:08 PM)
+
 - **Verification**: 1,347h Upwork, 83 jobs, $60K+ earned, 100% JSS, Arabic native
 - **Portfolio**: Qatar Moms (iOS), Quran Bee (Android 500K+ downloads), Spedia (iOS)
 - **Contract**: $250 + $110 Android + $40 featured graphics = $400 total
 - **Timeline**: 3-4 weeks (Jan 28 - Feb 10)
 
 **Handoff**: Jan 28, 2026 at 3:03 PM
+
 - Test account: design@dawatime.com
 - Documentation: Feature_Priority_Guide.md, Screenshot_Text_Copy_Sheet.md
 - Brand assets: Google Drive (DawaTime → Design Guide → Store Graphics)
 
 **Deliverables** (30 assets total):
+
 - 14 iOS screenshots (7 English + 7 Arabic) - 2796×1290px iPhone mockups
 - 14 Android screenshots (7 English + 7 Arabic) - English frameless, Arabic Pixel frames
 - 2 Featured graphics (English + Arabic) - 1024×500px RTL/LTR layouts
 
 **Key Dates**:
+
 - Feb 3 (Day 34): Initial delivery (14 iOS screenshots) - 95% production-ready
 - Feb 4 (Day 35): Revisions completed (2 fixes: Screenshot 1 font, Screenshot 5 typo)
 - Feb 7 (Day 32): Milestone 2 paid ($125), Milestone 3 funded ($110 Android + iOS cleanup)
@@ -2447,12 +2130,14 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Feb 10 (Day 35): Contract closed with 5-star review
 
 **Brand Compliance**:
+
 - Primary color: #8AC249 green throughout
 - Fonts: Nunito 800 ExtraBold (English), NotoKufiArabic 700 Bold (Arabic)
 - Features: Medication reminders, refill tracking, weekday scheduling, theme modes
 - RTL layouts: All 14 Arabic screenshots verified perfect
 
 **Milestone Payments**:
+
 - M1: $125 (Feb 4) - Initial iOS screenshots
 - M2: $125 (Feb 7) - High-res PNGs + Figma source
 - M3: $110 (Feb 10) - 14 Android screenshots + iOS status bar cleanup
@@ -2671,18 +2356,7 @@ Update v1.4.4 Build 43:
 
 **Critical Timing Decision**: DO NOT release immediately after v1.4.4+42
 
-**Why Spacing Updates is Essential**:
-
-- ❌ **Bad**: Releasing v43 within 1 hour of v42
-  - Testers haven't installed first version yet
-  - Looks rushed/artificial
-  - No time to collect feedback
-  - Doesn't show "sustained engagement" over testing period
-- ✅ **Good**: Strategic update cadence over 16 days
-  - Shows responsiveness to feedback
-  - Demonstrates sustained engagement
-  - Allows proper testing cycles
-  - Professional release rhythm
+**Why Spacing Updates is Essential**: ❌ Bad (v43 within 1 hour of v42: testers haven't installed, looks rushed, no feedback time, no sustained engagement). ✅ Good (strategic 16-day cadence: shows responsiveness, sustained engagement, proper testing cycles, professional rhythm).
 
 **Recommended Release Timeline**:
 
@@ -2725,11 +2399,11 @@ Update v1.4.4 Build 43:
 - 📊 Final stability validation on both platforms (iOS 7+ days testing, Android 13+ days)
 - 📝 Review aggregated feedback from both platforms
 - 🔍 Last chance to catch any edge cases before Day 14 production submission
-- 🔧 **Day 13 (Jan 19)**: Google Search Console HTTP redirect fix
-  - Fixed "Page with redirect" validation failure (HTTP→HTTPS)
-  - Added explicit redirect rule to firebase.json
-  - Deployed to Firebase Hosting
-  - Awaiting Google revalidation (1-3 days)
+- 🔧 **Day 13 (Jan 19)**: Google Search Console HTTP redirect investigation
+  - Discovered "Page with redirect" validation failure (HTTP→HTTPS)
+  - Identified missing explicit redirect rule in firebase.json
+  - Deployed SEO improvements (canonical tags, sitemap, robots.txt)
+  - **Note**: HTTP→HTTPS redirect documented but not actually added until Feb 17, 2026
 - **Strategy**: Both platforms ready with v1.4.4+50 for simultaneous production launch
 
 **Day 14 (January 20, 2026) - CRITICAL DEADLINE:**
@@ -2959,47 +2633,13 @@ if (daysUntil == 0) {
 
 **Status**: ✅ **IMPLEMENTED** - Enhanced UX and security patches
 
-**Visual Form Validation**:
+**Visual Form Validation**: Added red TextField error effects with boolean error flags (`_emailError`, `_passwordError`, `_nameError`, `_confirmPasswordError`), conditional styling on validation failure, auto-clearing via `onChanged` callbacks.
 
-- Added red TextField error effects to login and signup forms (matching medication form patterns)
-- Implemented boolean error flags: `_emailError`, `_passwordError`, `_nameError`, `_confirmPasswordError`
-- Conditional styling on InputDecoration: borders, labels, and errorText turn red on validation failure
-- Auto-clearing errors via `onChanged` callbacks when user starts typing
-- Pattern: `if (_emailError && value.isNotEmpty) { setState(() => _emailError = false); }`
+**Enhanced Signup Debugging**: Integrated `dart:developer`, added 3-stage SnackBar feedback (blue/orange/green), 10-second timeout handling, comprehensive error catching.
 
-**Enhanced Signup Debugging**:
+**Security Fixes**: Firestore Rules - AppConfig public read access | Intro Guide - email verification check | npm - Fixed qs DoS vulnerability (GHSA-6rw7-vpxm-498p), upgraded to ≥6.14.1, 0 vulnerabilities.
 
-- Integrated `dart:developer` with named logger pattern: `developer.log('message', name: 'SignUp')`
-- Added visible SnackBar feedback at three stages:
-  - Blue SnackBar: "Validating legal documents..."
-  - Orange SnackBar: "Creating your account..."
-  - Green SnackBar: "Account created successfully!"
-- Added 10-second timeout handling for Firestore operations
-- Comprehensive error catching with stack traces for debugging
-- Console logs track: Button press → Legal doc fetch → Auth creation → Completion
-
-**Security & Architecture Fixes**:
-
-- **Firestore Rules**: Updated `AppConfig` to allow public read access (required for unauthenticated users during signup to fetch legal document versions)
-- **Intro Guide Race Condition**: Added email verification check in `_checkIntroGuide()` to prevent guide from flashing during signup flow
-- **npm Security Vulnerability**: Fixed qs package DoS vulnerability (GHSA-6rw7-vpxm-498p)
-  - Upgraded qs from <6.14.1 to ≥6.14.1 via `npm audit fix`
-  - Fixed in both root `package.json` and `functions/package.json`
-  - Vulnerability: arrayLimit bypass causing memory exhaustion via transitive dependencies (express, body-parser)
-  - Status: 0 vulnerabilities in both directories
-
-**Files Updated**:
-
-- `/lib/login_page.dart` (added error flags, conditional styling, onChanged handlers)
-- `/lib/signup_page.dart` (added developer.log, SnackBar feedback, timeout handling, comprehensive error catching)
-- `/lib/home_page.dart` (added email verification check to `_checkIntroGuide()`)
-- `/firestore.rules` (changed AppConfig from `if request.auth != null` to `if true` for public read)
-- `/functions/package.json` - npm audit fix applied
-- `/package.json` - npm audit fix applied
-- `/pubspec.yaml` - Version: 1.4.4+25 → 1.4.4+28
-- `/android/app/build.gradle.kts` - versionCode: 25 → 28
-
-**Result**: Login and signup forms now match medication forms' validation UX. Signup flow is fully instrumented with visible feedback and comprehensive logging. Security vulnerabilities resolved with zero npm audit findings.
+**Files**: login_page.dart, signup_page.dart, home_page.dart, firestore.rules, functions/package.json, package.json, pubspec.yaml (1.4.4+25→1.4.4+28), build.gradle.kts (25→28)
 
 ---
 
@@ -3007,173 +2647,51 @@ if (daysUntil == 0) {
 
 **Status**: ✅ **IMPLEMENTED** - Legal checks at both login and app startup
 
-**Architecture**: Two separate entry points require two separate legal checks:
+**Entry Point 1 (login_page.dart)**: Fresh login → Check versions via `_checkLegalDocumentVersions(uid)` → Show dialog if needed → User accepts/declines → Update metadata via `_updateLoginMetadata(uid)` → Navigate to HomePage
 
-**Entry Point 1: Fresh Login (login_page.dart)**
+**Entry Point 2 (main.dart AuthGate)**: App startup → Detect logged-in user → Check versions → Show dialog with `_showingLegalDialog` flag → User accepts → Update Firestore → Update metadata via `_saveFCMToken(uid)` → Show HomePage
 
-- User actively logs in via email/password
-- After successful authentication:
-  1. Check legal document versions via `_checkLegalDocumentVersions(uid)`
-  2. If update needed → Show dialog via `_showLegalUpdateDialog(uid)`
-  3. User accepts → Update Firestore legal acceptance fields
-  4. If user declines → Sign out and stay on login page
-  5. Update metadata (FCM token, lastAppVersion, lastAccessedAt) via `_updateLoginMetadata(uid)`
-  6. Navigate directly to HomePage
-
-**Entry Point 2: App Startup (AuthGate in main.dart)**
-
-- App opens, user already logged in from previous session
-- AuthGate StreamBuilder detects authenticated user
-- FutureBuilder checks legal document versions before HomePage navigation
-- If update needed → Show dialog with `_showingLegalDialog` flag blocking HomePage
-- User accepts → Update Firestore, set `_lastCheckedUserId = uid`, set `_showingLegalDialog = false`
-- Update metadata via `_saveFCMToken(uid)`
-- Show HomePage
-
-**Implementation Details**:
-
-- Both entry points have identical legal check logic (version comparison)
-- Both entry points have identical legal update dialog UI
-- Both entry points update metadata ONLY after legal acceptance (or if no update needed)
-- login_page.dart navigates directly to HomePage (existing architecture preserved)
-- AuthGate handles app startup with existing session
-
-**Files Updated**:
-
-- `/lib/main.dart` (AuthGate):
-  - `_showingLegalDialog` flag prevents HomePage rendering during legal check
-  - `_lastCheckedUserId` tracks which user has been checked this session
-  - `_saveFCMToken(uid)` updates metadata after legal check passes
-- `/lib/login_page.dart`:
-  - Restored `_checkLegalDocumentVersions()` method
-  - Restored `_showLegalUpdateDialog()` method
-  - Restored `_updateLoginMetadata()` method
-  - Updated login flow: Auth → Legal check → Metadata update → HomePage navigation
-- `/pubspec.yaml` - Version: 1.4.4+24 → 1.4.4+25
-- `/android/app/build.gradle.kts` - versionCode: 24 → 25
-
-**Result**: Legal compliance enforced at both entry points. Fresh logins and app restarts both check for updated legal documents before allowing app access. Metadata only updates after legal acceptance.
+**Files**: main.dart (AuthGate with `_showingLegalDialog` and `_lastCheckedUserId`), login_page.dart (restored 3 methods), pubspec.yaml (1.4.4+24→1.4.4+25), build.gradle.kts (24→25)
 
 ### December 2025 Bug Fixes
 
 **Status**: ✅ **COMPLETE** - 4 production issues resolved (Dec 29-30, 2025)
 
-**1. Navigation Bug Pattern** - FutureBuilder rebuilding post-navigation:
+1. **Navigation Bug**: FutureBuilder rebuilding post-navigation → Replaced with one-time `initState()` check (add_medications.dart)
+2. **Duplicate Notification**: Background handler + Cloud Function both creating notifications → Removed local notification creation (main.dart, -55 lines)
+3. **SnackBar Persistence**: Flutter update changed action button behavior → Added `persist: false` to 5 SnackBar locations
+4. **Database Path**: Mixed old/new structure → Updated all Firestore operations to use subcollection structure `/Users/{userId}/medications/{medicationId}`
 
-- **Solution**: Replace continuous FutureBuilder with one-time `initState()` check + cached state variables
-- **Applied**: 12th medication save navigation (add_medications.dart)
-
-**2. Duplicate Notification Pattern** - Background handler + Cloud Function both creating notifications:
-
-- **Solution**: Remove local notification creation from background handler, let system display Cloud Function payload
-- **Applied**: FCM update notifications (main.dart, removed 55 lines)
-
-**3. SnackBar Persistence Pattern** - Flutter update changed action button behavior:
-
-- **Solution**: Add `persist: false` to all SnackBars with action buttons
-- **Applied**: 5 locations (home_page.dart, medication_notifications.dart)
-
-**4. Database Path Consistency** - Mixed old/new structure usage:
-
-- **Solution**: Update all Firestore operations to use subcollection structure `/Users/{userId}/medications/{medicationId}`
-- **Applied**: CRUD operations, notification handlers, account deletion across 3 files
-
-**Code Cleanup**: Removed 28 debug print statements, fixed 25+ empty catch blocks (`catch (_)`), removed 3 unused variables
+**Code Cleanup**: Removed 28 debug print statements, fixed 25+ empty catch blocks, removed 3 unused variables
 
 ### Critical iOS Notification Fixes
 
-**Issue**: Users reported no medication reminders on iOS for 2 weeks, only receiving incorrect refill alerts.
+**Issue**: No medication reminders on iOS for 2 weeks, only incorrect refill alerts.
 
-**Root Causes Identified**:
+**Root Causes**: (1) Missing main scheduling loop for `everyXDays` medications, (2) Missing `interruptionLevel: InterruptionLevel.timeSensitive` - iOS 15+ was suppressing alerts, (3) Stale weekly refill notifications persisting.
 
-1. Missing main scheduling loop for `everyXDays` medications - only within-window notifications were scheduled
-2. Missing `interruptionLevel: InterruptionLevel.timeSensitive` on iOS notifications - iOS 15+ was suppressing alerts
-3. Stale weekly refill notifications persisting even after medication refilled - iOS doesn't reliably cancel repeating notifications by ID
+**Fixes**: Added while loop in `scheduleMedicationNotification()` (lines 416-477), added `interruptionLevel` to all DarwinNotificationDetails, implemented startup cleanup using `cancelAll()`, added `cancelAllRefillNotifications()`, enhanced debug logging.
 
-**Fixes Applied** (medication_notifications.dart, home_page.dart):
-
-- Added while loop in `scheduleMedicationNotification()` to advance scheduled time for future notifications (lines 416-477)
-- Added `interruptionLevel: InterruptionLevel.timeSensitive` to all DarwinNotificationDetails configurations
-- Implemented startup cleanup in `_scheduleAfterPermissionCheck()` using `cancelAll()` before rescheduling
-- Added new `cancelAllRefillNotifications()` function for nuclear cleanup
-- Enhanced debug logging throughout notification scheduling/cancellation for troubleshooting
-
-**Files Updated**:
-
-- `/lib/utils/medication_notifications.dart` (504 → 637 lines)
-- `/lib/home_page.dart` (3785 → 3856 lines)
-
-**Testing Verification**: Deploy to physical iOS device, add test medication for 2-3 minutes ahead, verify notification fires at exact time with follow-ups.
+**Files**: `/lib/utils/medication_notifications.dart` (504 → 637 lines), `/lib/home_page.dart` (3785 → 3856 lines)
 
 ### Database Migration & Permission Fixes (December 29, 2025)
 
-**Issue**: Multiple issues discovered during v1.4.4 testing and migration deployment.
+**Issues**: Permission-denied errors on AppConfig, FCM null check, duplicate token cleanup, migration cleanup failing, duplicate permission dialogs, wrong database default.
 
-**Root Causes Identified**:
+**Fixes**: firestore.rules - Added AppConfig read, separated delete from update validation | main.dart - Changed to `Platform.isIOS`, removed duplicate FCM token cleanup/permissions | AppDelegate.swift - Removed duplicate `requestAuthorization()` | home_page.dart - New structure default, cleaner logging | functions/index.js - Added `checkVersionAdoption` monitoring
 
-1. Permission-denied errors when reading AppConfig collection (legal documents, version checks)
-2. FCM initialization null check error when checking platform for iOS
-3. Duplicate FCM token cleanup causing permission errors with cross-user queries
-4. Migration cleanup failing due to Firestore security rules requiring validation on delete
-5. Duplicate notification permission dialogs on fresh install (AppDelegate + FCM both requesting)
-6. New database structure not defaulting correctly (showing "using old location" logs)
-
-**Fixes Applied**:
-
-- **firestore.rules**: Added `AppConfig` read permission for all authenticated users (needed for legal document version checks)
-- **firestore.rules**: Separated `allow delete` from `allow update` to remove validation requirement during migration cleanup
-- **main.dart**: Changed iOS platform check from `Theme.of(context).platform` to `Platform.isIOS` (fixes null check error)
-- **main.dart**: Removed client-side duplicate FCM token cleanup (now handled by Cloud Function only)
-- **main.dart**: Removed redundant permission requests (kept only FCM's `requestPermission()`)
-- **AppDelegate.swift**: Removed `requestAuthorization()` call - permission now requested only by Firebase Messaging
-- **home_page.dart**: Changed `_useNewStructure` default behavior to use new structure by default (null or true)
-- **home_page.dart**: Removed duplicate "Using OLD/NEW location" logging from `_getMedicationsCollection()`
-- **functions/index.js**: Added `checkVersionAdoption` Cloud Function for monitoring user version distribution
-
-**Files Updated**:
-
-- `/firestore.rules` (60 → 67 lines) - Added AppConfig read, separated delete from update validation
-- `/lib/main.dart` (1423 → 1422 lines) - Fixed iOS platform check, removed duplicate permissions/token cleanup
-- `/ios/Runner/AppDelegate.swift` (45 → 31 lines) - Removed duplicate permission request
-- `/lib/home_page.dart` (3950 → 3938 lines) - New structure default, cleaner logging
-- `/functions/index.js` (567 → 694 lines) - Added version adoption monitoring function
-
-**Testing Verification**:
-
-- Fresh app install shows only ONE notification permission dialog
-- No permission-denied errors in console
-- Migration cleanup successfully deletes old data
-- Console shows clean logs: "✅ Only new location has data - using new structure"
-- Version tracking active via `lastAppVersion` field
+**Files**: firestore.rules (60→67), main.dart (1423→1422), AppDelegate.swift (45→31), home_page.dart (3950→3938), functions/index.js (567→694)
 
 ### iOS FCM Token Registration Fixes (December 2025)
 
 **Issue**: iPhone not receiving remote update notifications from Cloud Function.
 
-**Root Causes Identified**:
+**Root Causes**: iOS requires APNs token before FCM token, Cloud Function only sent `data` payload (iOS needs `notification`), missing APNs alert config, no token refresh handling, no invalid token cleanup, AppDelegate not registering remote notifications.
 
-1. iOS requires APNs token to be registered before FCM token can be generated
-2. Cloud Function only sent `data` payload - iOS requires `notification` payload for reliable delivery
-3. Missing APNs alert configuration in Cloud Function payload
-4. No token refresh handling when FCM tokens expire/change
-5. No invalid token cleanup causing repeated failures
-6. AppDelegate not properly registering for remote notifications
+**Fixes**: main.dart - APNs token acquisition with retry (lines 295-309, 546-591), `onTokenRefresh` listener (lines 378-392) | AppDelegate.swift - Remote notification registration | functions/index.js - `notification` payload, complete APNs config, error logging, automatic invalid token cleanup.
 
-**Fixes Applied**:
+**Files**: main.dart (1200→1423 lines), AppDelegate.swift (13→45 lines)
 
-- **main.dart**: Added APNs token acquisition before FCM token with retry logic (lines 295-309, 546-591)
-- **main.dart**: Added `onTokenRefresh` listener to auto-update Firestore when tokens change (lines 378-392)
-- **AppDelegate.swift**: Added proper remote notification registration in `didFinishLaunchingWithOptions`
-- **functions/index.js**: Added `notification` payload with title/body for both iOS and Android
-- **functions/index.js**: Added complete APNs configuration with alert, sound, badge, and proper headers
-- **functions/index.js**: Implemented detailed error logging showing failed token details
-- **functions/index.js**: Added automatic invalid token cleanup from Firestore
-- Enhanced debug logging for FCM token acquisition and APNs status
-
-**Files Updated**:
-
-- `/lib/main.dart` (1200 → 1423 lines)
-- `/ios/Runner/AppDelegate.swift` (13 → 45 lines)
 - `/functions/index.js` (145 → 567 lines)
 
 **Testing Verification**: Install on iPhone, check console for "APNs token obtained: true" and "✓ FCM token saved", update Firestore version, verify notification received within 1-2 minutes.
@@ -3191,18 +2709,21 @@ if (daysUntil == 0) {
 #### Platform-Specific Configuration
 
 **Android - Play Integrity API**:
+
 - Provider: Google Play Integrity
 - Configuration: Firebase Console → App Check → Android app
 - Status: Registered and active
 - Usage: Verifies app authenticity and device integrity
 
 **iOS - App Attest**:
+
 - Provider: Apple App Attest
 - Configuration: Firebase Console → App Check → iOS app
 - Status: Registered and active
 - Usage: Cryptographic attestation of app integrity
 
 **Web - reCAPTCHA v3**:
+
 - Provider: Google reCAPTCHA v3
 - Site Key: `6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN`
 - Configuration: Google reCAPTCHA Console + Firebase Console
@@ -3239,6 +2760,7 @@ try {
 ```
 
 **Key Implementation Details**:
+
 - **Platform Detection**: Uses `kIsWeb` to determine web vs mobile
 - **Web Configuration**: Explicit `providerWeb` parameter with reCAPTCHA v3 site key
 - **Mobile Configuration**: Parameterless `activate()` reads from Firebase Console
@@ -3248,6 +2770,7 @@ try {
 #### Platform Compatibility Fixes
 
 **Issue**: `Platform.isAndroid` and `Platform.isIOS` crash on web platform with error:
+
 ```
 Unsupported operation: Platform._operatingSystem
 ```
@@ -3255,6 +2778,7 @@ Unsupported operation: Platform._operatingSystem
 **Solution**: Added `kIsWeb` guards before all Platform checks:
 
 **Files Modified**:
+
 1. `/lib/login_page.dart`:
    - Line 135: `if (kIsWeb || !Platform.isAndroid) return true;` (Play Integrity guard)
    - Lines 104-107: `if (!kIsWeb && Platform.isIOS) {` (APNs token guard)
@@ -3267,6 +2791,7 @@ Unsupported operation: Platform._operatingSystem
 #### Verification & Testing
 
 **Development (localhost)**:
+
 ```bash
 flutter run -d chrome
 # Console output:
@@ -3274,6 +2799,7 @@ flutter run -d chrome
 ```
 
 **Production (webapp.dawatime.com)**:
+
 ```bash
 flutter build web --release
 cd build/web
@@ -3284,6 +2810,7 @@ netlify deploy --prod --dir .
 ```
 
 **Expected Behavior**:
+
 - ✅ Console shows: `"✓ Firebase App Check activated"`
 - ✅ No Platform compatibility errors
 - ✅ Firebase services receive valid App Check tokens
@@ -3294,6 +2821,7 @@ netlify deploy --prod --dir .
 **Common Issue: Throttling (400/429 Errors)**
 
 **Symptoms**:
+
 ```
 AppCheck: 400 error. Attempts allowed again after 00m:XXs (appCheck/initial-throttle)
 AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
@@ -3302,11 +2830,13 @@ AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
 **Root Cause**: Firebase server-side rate limiting from previous failed authentication attempts (incorrect keys, wrong parameters during setup)
 
 **Impact**:
+
 - Does NOT affect app functionality - app works normally
 - Firebase uses cached tokens or operates with degraded App Check
 - Console warnings can be safely ignored during development
 
 **Resolution Options**:
+
 1. **Wait 10-15 minutes** - Throttle auto-clears without any action
 2. **Add debug token** - Firebase Console → App Check → Manage Debug Tokens
 3. **Continue development** - App functions normally despite warnings
@@ -3316,12 +2846,14 @@ AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
 #### Production Deployment
 
 **Requirements**:
+
 1. ✅ reCAPTCHA site key configured in code
 2. ✅ Production domain added to reCAPTCHA Console authorized domains
 3. ✅ Web app registered in Firebase Console
 4. ✅ Platform-specific providers registered (Play Integrity, App Attest)
 
 **Deployment Checklist**:
+
 - [x] Code updated with correct site key
 - [x] `flutter build web --release` completed successfully
 - [x] Deployed to production (Netlify)
@@ -3334,17 +2866,20 @@ AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
 #### Benefits
 
 **Security**:
+
 - ✅ Protects Firebase backend from unauthorized access
 - ✅ Prevents abuse from cloned/modified apps
 - ✅ Verifies requests come from genuine DawaTime apps
 - ✅ Complements Firebase Auth for defense-in-depth
 
 **Compliance**:
+
 - ✅ Strengthens Kuwait MOH partnership application
 - ✅ Demonstrates enterprise-grade security practices
 - ✅ Required for production Firebase services
 
 **User Trust**:
+
 - ✅ Health data protection
 - ✅ Prevents medication data theft from fake apps
 - ✅ Ensures only verified apps access user information
@@ -3359,6 +2894,7 @@ dependencies:
 ```
 
 **Import Pattern**:
+
 ```dart
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -3369,11 +2905,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 **OAuth Domain Issue** (Separate from App Check):
 
 If seeing error:
+
 ```
 Error: The current domain is not authorized for OAuth operations
 ```
 
 **Solution**: Add production domain to Firebase Console:
+
 1. Firebase Console → Authentication → Settings
 2. Scroll to **Authorized domains**
 3. Add: `webapp.dawatime.com`
@@ -3416,13 +2954,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, designed fo
 - **Currency**: Future pricing features should use KWD (Kuwaiti Dinar) as default
 - **Pharmacy partnerships**: Should focus on Kuwaiti chains (Al-Dawaiya, Boots, etc.) before expanding regionally
 
-**Why This Matters for Development**:
-
-- Feature priorities should reflect Kuwaiti user needs
-- UI/UX decisions should consider Arabic-first design
-- Pharmacy integrations should target regional providers
-- Marketing and app store presence optimized for GCC
-- Compliance with Kuwaiti health data regulations
+**Development Impact**: Feature priorities reflect Kuwaiti needs, Arabic-first UI/UX, regional pharmacy integrations, GCC-optimized marketing, Kuwait health data compliance.
 
 ## Architecture & Key Components
 
@@ -3508,26 +3040,7 @@ DawaTime is a Flutter medication reminder app with Firebase backend, designed fo
   - Used in 4 call sites for displaying "Next Reminder" in UI (ListView cards and detail dialogs)
   - **Import pattern**: `import 'package:dawatime/utils/medication_helpers.dart';`
 
-**Refactoring Benefits**:
-
-- Single source of truth for notification logic (eliminates sync bugs)
-- Reduced code duplication: ~897 lines eliminated (703 from home_page.dart, 194 from add_medications.dart)
-- Improved maintainability: Bug fixes and feature updates only need to happen once
-- Cleaner imports: Files only import what they actually use
-- Better organization: Utilities separated by function (strings, notifications, helpers)
-
-**Import Dependencies**:
-
-- `medication_notifications.dart` depends on: `home_page.dart` (Medications class), `main.dart` (flutterLocalNotificationsPlugin, navigatorKey), `l10n` (localization)
-- `medication_helpers.dart` depends on: `home_page.dart` (Medications class), `main.dart` (navigatorKey), `l10n` (localization)
-- `string_utils.dart` has no external dependencies (pure utility function)
-
-**Call Site Verification**:
-
-- `scheduleMedicationNotification()`: 13 call sites (10 in home_page.dart, 2 in add_medications.dart, 1 internal)
-- `getNextReminder()`: 4 call sites (all in home_page.dart for UI display)
-- `convertArabicNumerals()`: 27+ call sites (8 in home_page.dart, 19 in add_medications.dart)
-- `cancelMedicationReminders()`: 3 call sites (2 in home_page.dart, 1 internal)
+**Refactoring Benefits**: Single source of truth, ~897 lines eliminated, improved maintainability, cleaner imports, better organization.
 - `rescheduleAllMedications()`: 2 call sites (1 in home_page.dart, 1 in main.dart)
 
 ### Data Model & Firestore Structure
@@ -3961,12 +3474,14 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 **Root Cause**: Gmail automatically filters emails sent FROM alias TO alias on the same account to prevent mail loops. When Cloud Functions sent emails FROM admin@dawatime.com (alias) TO help@dawatime.com (alias), Gmail detected this pattern and delivered the email ONLY to the Sent folder, skipping the Inbox entirely.
 
 **Symptoms**:
+
 - Cloud Functions log showed "Email sent successfully" ✅
 - Email appeared in Sent folder ✅
 - Email DID NOT appear in Inbox ❌
 - Users saw no notification of new contact form submission
 
 **Investigation Timeline**:
+
 - February 17, 11:18 AM UTC: Test with old code (TO: help@dawatime.com) → Filtered to Sent only
 - February 17, 11:31 AM UTC: Fix deployed (TO changed to eng@hamadalkhalaf.com)
 - February 17, 11:36 AM UTC: Test with new code → **Delivered to Inbox** ✅
@@ -3974,18 +3489,20 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 **Solution**: Change TO address from alias (help@dawatime.com) to primary email (eng@hamadalkhalaf.com) while maintaining FROM alias for professional branding.
 
 **Updated Code Pattern**:
+
 ```javascript
 // Cloud Function email configuration
 const mailOptions = {
-  from: "DawaTime Admin <admin@dawatime.com>",  // ✅ Alias for branding
-  to: "eng@hamadalkhalaf.com",                   // ✅ Primary email (bypasses filtering)
-  replyTo: userEmail,                            // ✅ User's email for responses
+  from: "DawaTime Admin <admin@dawatime.com>", // ✅ Alias for branding
+  to: "eng@hamadalkhalaf.com", // ✅ Primary email (bypasses filtering)
+  replyTo: userEmail, // ✅ User's email for responses
   subject: "New Contact Message",
-  html: emailBody
+  html: emailBody,
 };
 ```
 
 **Gmail "Send mail as" Configuration** (Required for Alias Sending):
+
 - Navigate to: https://mail.google.com/mail/u/0/#settings/accounts
 - Section: "Send mail as"
 - Must add each @dawatime.com alias:
@@ -3998,6 +3515,7 @@ const mailOptions = {
 - **Reply Behavior**: Select "Reply from the same address the message was sent to" for professional consistency
 
 **How Gmail Alias Sending Works**:
+
 1. SMTP authenticates with PRIMARY account (eng@hamadalkhalaf.com)
 2. FROM header uses ALIAS (admin@dawatime.com) for branding
 3. TO header uses PRIMARY email (eng@hamadalkhalaf.com) to avoid filtering
@@ -4006,6 +3524,7 @@ const mailOptions = {
 6. Email delivers to Inbox normally ✅
 
 **Key Learnings**:
+
 - ✅ Use aliases for FROM addresses (professional branding)
 - ✅ Use primary email for TO addresses (avoid Gmail filtering)
 - ❌ Never send FROM alias TO alias on same account (triggers loop detection)
@@ -5283,7 +4802,7 @@ Future<void> cancelMedicationReminders(String docId) async {
 | 4:00 PM | ❌ **No notification** (cancelled) |
 | **Next day 2:00 PM** | ✅ **Fresh notifications scheduled** for next medication time |
 
-**Why This Works**: By iterating through all possible weekdays (1-7) and all follow-up indices (0-4), we ensure that every single pending notification for this medication is cancelled, regardless of which weekday or follow-up stage it's in. This prevents any stale notifications from the current schedule from persisting after confirmation.
+**Why This Works**: Iterating weekdays 1-7 and follow-up indices 0-4 ensures all pending notifications cancelled regardless of stage, preventing stale reminders after confirmation.
 
 **Important**: This is **intentional behavior** to prevent annoying users with reminders for medication they've already confirmed taking.
 
@@ -5752,11 +5271,7 @@ analyzer:
     use_build_context_synchronously: ignore # Disabled due to async/await patterns
 ```
 
-**Why `use_build_context_synchronously` ignored?**
-
-- App heavily uses async operations before accessing `context` (Firestore queries, dialogs)
-- Manually checks `context.mounted` before usage instead
-- Consider re-enabling and adding explicit `if (!mounted) return;` checks
+**Why `use_build_context_synchronously` ignored?** App uses async operations before context access (Firestore queries, dialogs), manually checks context.mounted instead; consider re-enabling with explicit if (!mounted) return checks.
 
 ### Common Lint Warnings to Watch
 
@@ -6492,13 +6007,7 @@ This section documents planned features for future DawaTime releases. Features a
 - Build reputation as trusted public health tool
 - Validate product-market fit with strong retention metrics
 
-**Why No Monetization Yet**:
-
-- ✅ MOH partnership easier with non-commercial positioning
-- ✅ User trust critical in health apps (ads erode trust immediately)
-- ✅ App Store reviews higher without monetization pressure
-- ✅ Word-of-mouth growth stronger for "truly free" apps
-- ✅ **105 users → 5% conversion = 5 paying users** (not worth complexity)
+**Why No Monetization Yet**: MOH partnership easier non-commercial, user trust critical (ads erode immediately), App Store reviews higher, word-of-mouth stronger for "truly free", 105 users insufficient (5% = 5 paying users, not worth complexity).
 
 ### Phase 2: Freemium Launch (Conditional: Q2 2027 - Q1 2028)
 
@@ -6590,12 +6099,7 @@ This section documents planned features for future DawaTime releases. Features a
    - Featured pharmacy listings (not ads)
    - Win-win: Users get convenience, pharmacies get customers
 
-**Why B2B Works Long-Term**:
-
-- ✅ Much higher revenue potential than consumer subscriptions
-- ✅ App remains free/cheap for end users
-- ✅ Aligns with public health mission
-- ✅ Validates DawaTime as serious healthcare tool
+**Why B2B Works Long-Term**: Higher revenue potential than consumer subscriptions, app remains free/cheap for users, aligns with public health mission, validates DawaTime as serious healthcare tool.
 
 ### Alternative Monetization (Considered & Rejected)
 
