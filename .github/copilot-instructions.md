@@ -374,11 +374,8 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 ```html
 <div id="loading-screen">
   <div class="loading-card">
-    <div class="pill-icon">
-      <div class="pill-body"></div>
-      <div class="pill-cap pill-cap-left"></div>
-      <div class="pill-cap pill-cap-right"></div>
-    </div>
+    <img src="icons/Icon-192.png" alt="DawaTime Logo" 
+         style="width: 96px; height: 96px; border-radius: 20px;" />
     <h1 class="app-name">DawaTime</h1>
     <p class="tagline">Never miss a dose...</p>
     <div class="spinner"></div>
@@ -386,14 +383,19 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 </div>
 ```
 
+**Logo Evolution**:
+- **Original (January 2026)**: CSS-based animated pill icon (green capsule shape)
+- **Updated (February 17, 2026)**: Professional branded logo (DawaTime.png)
+- **Rationale**: Display actual brand identity instead of generic placeholder
+
 **Styling**:
 - **Background**: Green gradient (#8AC249 → #6fa32e, 45° diagonal)
 - **Card**: White rounded container (24px border-radius, centered)
-- **Pill Icon**: Animated SVG-like pill (80px width, green fill, white caps)
+- **Logo**: Professional DawaTime brand icon (96px × 96px, rounded corners 20px)
 - **Typography**: Nunito ExtraBold 32px for "DawaTime", 18px tagline
 - **Spinner**: Animated circular loader (2px green border, 1s rotation)
 - **Animations**:
-  - Pill pulse: scale(1) → scale(1.1) → scale(1) over 2s (infinite)
+  - Logo pulse: scale(1) → scale(1.05) → scale(1) over 2s (infinite)
   - Spinner rotation: 360° over 1s (infinite linear)
   - Fade-out: opacity 1 → 0 over 0.5s when Flutter loads
 
@@ -467,7 +469,11 @@ window.addEventListener("flutter-first-frame", function () {
 
 **Deployment History**:
 
-- **February 5, 2026**: Deployed via Netlify (4 assets uploaded to CDN)
+- **February 5, 2026**: Initial SEO optimization deployment (4 assets uploaded to CDN)
+- **February 17, 2026**: Logo update deployment (5 assets uploaded to CDN)
+  - Replaced CSS pill icon with professional branded logo (DawaTime.png)
+  - Build time: 22.0s, MaterialIcons tree-shaken 99.3%
+  - Deployed to: https://webapp.dawatime.com
 - **Status**: ✅ Live in production
 
 **Why These Changes**:
@@ -3861,19 +3867,19 @@ for (int i = 0; i <= 4; i++) {
 // functions/index.js - Lines 1-11
 const { defineSecret } = require("firebase-functions/params");
 
-const emailUser = defineSecret("EMAIL_USER"); // "admin@dawatime.com"
-const emailPassword = defineSecret("EMAIL_PASSWORD"); // Zoho SMTP password
+const emailUser = defineSecret("EMAIL_USER"); // "eng@hamadalkhalaf.com"
+const emailPassword = defineSecret("EMAIL_PASSWORD"); // Google Workspace App Password
 
 // Lines 282-298: getTransporter() - Lazy initialization
 function getTransporter() {
   if (!transporter) {
     transporter = nodemailer.createTransport({
-      host: "smtppro.zoho.com",
-      port: 465,
-      secure: true,
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Uses STARTTLS
       auth: {
-        user: emailUser.value(), // ✅ Reads from Secret Manager
-        pass: emailPassword.value(), // ✅ Reads from Secret Manager
+        user: emailUser.value(), // ✅ Reads from Secret Manager (eng@hamadalkhalaf.com)
+        pass: emailPassword.value(), // ✅ Reads from Secret Manager (App Password)
       },
     });
   }
@@ -3885,8 +3891,8 @@ function getTransporter() {
 
 ```bash
 # CRITICAL: Use echo -n to prevent trailing newline
-echo -n "admin@dawatime.com" | firebase functions:secrets:set EMAIL_USER
-echo -n "P6&Ee$kr#p29" | firebase functions:secrets:set EMAIL_PASSWORD
+echo -n "eng@hamadalkhalaf.com" | firebase functions:secrets:set EMAIL_USER
+echo -n "YOUR_GOOGLE_WORKSPACE_APP_PASSWORD" | firebase functions:secrets:set EMAIL_PASSWORD
 
 # Deploy functions to use secrets
 firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAccountDeletion
@@ -3894,8 +3900,11 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 
 **Secret Versions**:
 
-- **v1** (Deprecated): Created with `echo` (had trailing "\n" causing "501 Could not decode" SMTP error)
-- **v2** (Current): Created with `echo -n` (clean values, working)
+- **v1-v2** (Deprecated - January 2026): Zoho Mail credentials (zoho@hamadalkhalaf.com)
+- **v3** (Current - February 17, 2026): Google Workspace credentials (eng@hamadalkhalaf.com)
+  - Migration completed: February 17, 2026
+  - Gmail alias loop filtering issue discovered and resolved same day
+  - Production verified: Emails delivering to Inbox correctly
 
 **Service Account Permissions**:
 
@@ -3907,56 +3916,121 @@ firebase deploy --only functions:emailAdminsOnContactMessage,functions:requestAc
 
 1. **functions/.env file**: Exists locally but NOT used in production (Firebase emulator only)
 2. **Secret updates**: Require redeployment of functions to use new versions
-3. **Error progression**: 535 (auth failed) → 501 (can't decode) → 200 (success) showed debugging path
+3. **Google Workspace App Password**: Required for SMTP authentication (not regular password)
 4. **defineSecret() vs defineString()**: defineSecret reads Secret Manager, defineString reads environment variables
 
-**Zoho Mail Configuration** (dawatime.com domain):
+**Google Workspace Configuration** (February 2026 Migration):
 
-**Primary Mailbox**:
+**Primary Account**:
 
-- **admin@dawatime.com** (DawaTime Admin) - Main account, used for SMTP sending
+- **eng@hamadalkhalaf.com** (Hamad AlKhalaf) - Main Google Workspace account, used for SMTP authentication
 
-**Email Aliases** (all route to admin@dawatime.com mailbox):
+**Email Aliases** (all @dawatime.com addresses are aliases of eng@hamadalkhalaf.com):
 
-- **design@dawatime.com** (DawaTime Designer) - Design/branding inquiries
-- **hamad@dawatime.com** (Hamad AlKhalaf) - Personal developer email
-- **help@dawatime.com** (DawaTime Support) - User support (Cloud Functions send here)
-- **legal@dawatime.com** (DawaTime Legal) - Legal/privacy inquiries
+- **admin@dawatime.com** (DawaTime Admin) - Used as FROM address for Cloud Functions, configured in Gmail "Send mail as"
+- **design@dawatime.com** (DawaTime Designer) - Design/branding inquiries, configured in Gmail "Send mail as"
+- **hamad@dawatime.com** (Hamad AlKhalaf) - Personal developer email, configured in Gmail "Send mail as"
+- **help@dawatime.com** (DawaTime Support) - User support responses, configured in Gmail "Send mail as"
+- **legal@dawatime.com** (DawaTime Legal) - Legal/privacy inquiries, configured in Gmail "Send mail as"
 - **testapple@dawatime.com** (Apple Testing) - iOS testing account
 - **testgoogle@dawatime.com** (Google Testing) - Android testing account
 
+**Note**: All aliases configured in Gmail Settings → Accounts → "Send mail as" with "Treat as an alias" checked for Google Workspace domains. This allows Cloud Functions to authenticate with primary account (eng@hamadalkhalaf.com) while sending FROM professional aliases.
+
 **SMTP Configuration**:
 
-- Host: smtppro.zoho.com
-- Port: 465 (SSL/TLS)
-- Authentication: admin@dawatime.com + password (stored in Secret Manager)
+- Host: smtp.gmail.com
+- Port: 587 (STARTTLS)
+- Secure: false (uses STARTTLS for encryption)
+- Authentication: eng@hamadalkhalaf.com + Google Workspace App Password (stored in Secret Manager)
 - Usage: Cloud Functions (emailAdminsOnContactMessage, requestAccountDeletion)
 
-**Email Flow**:
+**Gmail Alias Loop Filtering Issue & Solution** (Discovered February 17, 2026):
+
+**Root Cause**: Gmail automatically filters emails sent FROM alias TO alias on the same account to prevent mail loops. When Cloud Functions sent emails FROM admin@dawatime.com (alias) TO help@dawatime.com (alias), Gmail detected this pattern and delivered the email ONLY to the Sent folder, skipping the Inbox entirely.
+
+**Symptoms**:
+- Cloud Functions log showed "Email sent successfully" ✅
+- Email appeared in Sent folder ✅
+- Email DID NOT appear in Inbox ❌
+- Users saw no notification of new contact form submission
+
+**Investigation Timeline**:
+- February 17, 11:18 AM UTC: Test with old code (TO: help@dawatime.com) → Filtered to Sent only
+- February 17, 11:31 AM UTC: Fix deployed (TO changed to eng@hamadalkhalaf.com)
+- February 17, 11:36 AM UTC: Test with new code → **Delivered to Inbox** ✅
+
+**Solution**: Change TO address from alias (help@dawatime.com) to primary email (eng@hamadalkhalaf.com) while maintaining FROM alias for professional branding.
+
+**Updated Code Pattern**:
+```javascript
+// Cloud Function email configuration
+const mailOptions = {
+  from: "DawaTime Admin <admin@dawatime.com>",  // ✅ Alias for branding
+  to: "eng@hamadalkhalaf.com",                   // ✅ Primary email (bypasses filtering)
+  replyTo: userEmail,                            // ✅ User's email for responses
+  subject: "New Contact Message",
+  html: emailBody
+};
+```
+
+**Gmail "Send mail as" Configuration** (Required for Alias Sending):
+- Navigate to: https://mail.google.com/mail/u/0/#settings/accounts
+- Section: "Send mail as"
+- Must add each @dawatime.com alias:
+  - DawaTime Admin <admin@dawatime.com> ✅
+  - DawaTime Design <design@dawatime.com> ✅
+  - Hamad AlKhalaf <hamad@dawatime.com> ✅
+  - DawaTime Support <help@dawatime.com> ✅
+  - DawaTime Legal <legal@dawatime.com> ✅
+- **Critical Setting**: Check "Treat as an alias" for Google Workspace domains
+- **Reply Behavior**: Select "Reply from the same address the message was sent to" for professional consistency
+
+**How Gmail Alias Sending Works**:
+1. SMTP authenticates with PRIMARY account (eng@hamadalkhalaf.com)
+2. FROM header uses ALIAS (admin@dawatime.com) for branding
+3. TO header uses PRIMARY email (eng@hamadalkhalaf.com) to avoid filtering
+4. Gmail recognizes alias is verified → allows sending
+5. Recipient sees professional FROM address (admin@dawatime.com)
+6. Email delivers to Inbox normally ✅
+
+**Key Learnings**:
+- ✅ Use aliases for FROM addresses (professional branding)
+- ✅ Use primary email for TO addresses (avoid Gmail filtering)
+- ❌ Never send FROM alias TO alias on same account (triggers loop detection)
+- ✅ "Email sent successfully" in logs doesn't guarantee Inbox delivery
+- ✅ Visual confirmation (user checks Inbox) critical for delivery validation
+
+**Email Flow** (Updated February 17, 2026):
 
 - **User submits contact form** → Firestore ContactMessages collection → Cloud Function triggered
-- **Cloud Function sends email**: FROM admin@dawatime.com → TO help@dawatime.com
-- **Both addresses route to same mailbox** (admin@dawatime.com inbox)
+- **Cloud Function sends email**: FROM admin@dawatime.com → TO eng@hamadalkhalaf.com
+- **Email delivers to Inbox** (primary email bypasses alias loop filtering)
+- **Professional appearance**: User sees "DawaTime Admin" sender
 - **ReplyTo field**: Set to user's email address for easy response
+- **When replying**: Gmail automatically replies FROM admin@dawatime.com (maintains consistency)
 
-**`emailAdminsOnContactMessage` (line 306-334)**:
+**`emailAdminsOnContactMessage` (line 291-318)**:
 
 - Trigger: Firestore document `ContactMessages/{messageId}` onCreate
-- Sends email via Nodemailer (Zoho SMTP: `smtppro.zoho.com:465`)
-- From: `admin@dawatime.com`, To: `help@dawatime.com`
+- Sends email via Nodemailer (Google Workspace SMTP: `smtp.gmail.com:587`)
+- **FROM**: `admin@dawatime.com` (alias for professional branding)
+- **TO**: `eng@hamadalkhalaf.com` (primary email to bypass Gmail filtering) ✅
 - **SMTP Credentials**: Stored in Google Cloud Secret Manager (EMAIL_USER, EMAIL_PASSWORD)
+- **Authentication**: eng@hamadalkhalaf.com + Google Workspace App Password
 - **Secret Access**: Configured via `runWith({secrets: [emailUser, emailPassword]})` in function definition
-- **Authentication**: Uses `emailUser.value()` and `emailPassword.value()` from defineSecret() API
 - **Service Account**: medication-cd9b8@appspot.gserviceaccount.com has roles/secretmanager.secretAccessor
-- **Status**: ✅ Production-ready, verified working January 20, 2026
+- **Status**: ✅ Production-ready, verified working February 17, 2026
 
-**`requestAccountDeletion` (line 334-446)**:
+**`requestAccountDeletion` (line 390-420)**:
 
 - HTTPS callable function (POST only)
 - Authenticates user with email/password
 - Deletes Firestore user data recursively
 - Deletes Firebase Auth account
 - Sends confirmation email via Nodemailer (uses same Secret Manager credentials as emailAdminsOnContactMessage)
+- **FROM**: `admin@dawatime.com` (alias for professional branding)
+- **TO**: `eng@hamadalkhalaf.com` (primary email to bypass Gmail filtering) ✅
 - **Secret Access**: Configured via `runWith({secrets: [emailUser, emailPassword]})` in function definition
 - Returns success/failure JSON response
 - **Status**: ✅ Production-ready with Secret Manager integration
