@@ -301,7 +301,8 @@ cd functions && npm audit fix  # Updated transitive dependencies
 **Remaining Issues**: 5 moderate severity vulnerabilities in eslint/ajv (devDependencies only, not in production build)
 - ajv <8.18.0 (ReDoS with `$data` option)
 - Requires `npm audit fix --force` (breaking changes to eslint@4.1.1)
-- **Decision**: Keep current versions - dev dependencies don't affect production Cloud Functions
+- **Attempted Fix**: ❌ Running `npm audit fix --force` downgraded eslint to deprecated v4.1.1 and increased vulnerabilities from 5→7
+- **Decision**: Keep current versions (reverted to eslint@8.57.1) - dev dependencies don't affect production Cloud Functions
 - **Risk**: Low (only affects local development/linting, not deployed code)
 
 **Files Modified**:
