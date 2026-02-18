@@ -277,6 +277,39 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - � **Production Crash Fixed**: v1.4.4 iOS SafariViewController crash confirmed via Crashlytics (FlutterError at url_launcher_ios.dart:176)
 - 📈 **Next Steps**: Monitor Crashlytics for v1.4.5 crash-free rate validation, track user adoption, prepare for MOH partnership application (Q2 2026)
 
+**npm Security Updates (February 18, 2026)**:
+
+**Status**: ✅ **COMPLETE** - All 4 Dependabot alerts resolved
+
+**Vulnerabilities Fixed**:
+- ✅ **fast-xml-parser (HIGH)**: DoS through entity expansion in DOCTYPE (GHSA-jmr7-xgp7-cmfj)
+  - Fixed in root package.json (changed 3 packages)
+  - Fixed in functions/package.json
+- ✅ **qs (LOW)**: arrayLimit bypass in comma parsing allows denial of service (GHSA-w7fw-mjwx-w883)
+  - Fixed in root package.json (upgraded to ≥6.14.1)
+  - Fixed in functions/package.json (upgraded to ≥6.14.1)
+
+**Commands Executed**:
+```bash
+# Root directory
+npm audit fix  # Changed 3 packages, audited 621 packages
+
+# Functions directory
+cd functions && npm audit fix  # Updated transitive dependencies
+```
+
+**Remaining Issues**: 5 moderate severity vulnerabilities in eslint/ajv (devDependencies only, not in production build)
+- ajv <8.18.0 (ReDoS with `$data` option)
+- Requires `npm audit fix --force` (breaking changes to eslint@4.1.1)
+- **Decision**: Keep current versions - dev dependencies don't affect production Cloud Functions
+- **Risk**: Low (only affects local development/linting, not deployed code)
+
+**Files Modified**:
+- `/package-lock.json` - Updated fast-xml-parser and qs versions
+- `/functions/package-lock.json` - Updated fast-xml-parser and qs versions
+
+**Result**: All 4 GitHub Dependabot alerts cleared ✅ (0 high severity, 0 low severity in production dependencies)
+
 **Website Post-Launch Updates (Day 15 - January 21, 2026)**:
 
 - **Google Play Badge Integration**:
