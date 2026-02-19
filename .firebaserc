@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "medication-cd9b8"
+  },
+  "targets": {
+    "medication-cd9b8": {
+      "hosting": {
+        "main": [
+          "dawatime-com"
+        ],
+        "webapp": [
+          "dawatime-webapp"
+        ]
+      }
+    }
   }
 }
