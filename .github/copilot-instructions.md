@@ -298,12 +298,23 @@ npm audit fix  # Changed 3 packages, audited 621 packages
 cd functions && npm audit fix  # Updated transitive dependencies
 ```
 
-**Remaining Issues**: 5 moderate severity vulnerabilities in eslint/ajv (devDependencies only, not in production build)
-- ajv <8.18.0 (ReDoS with `$data` option)
-- Requires `npm audit fix --force` (breaking changes to eslint@4.1.1)
-- **Attempted Fix**: ❌ Running `npm audit fix --force` downgraded eslint to deprecated v4.1.1 and increased vulnerabilities from 5→7
-- **Decision**: Keep current versions (reverted to eslint@8.57.1) - dev dependencies don't affect production Cloud Functions
-- **Risk**: Low (only affects local development/linting, not deployed code)
+**Remaining Issues**: 29 vulnerabilities (3 moderate, 26 high) in devDependencies only, not in production build
+
+**Dependabot Alert #35 - ajv ReDoS (February 19, 2026)**:
+- **Alert**: ajv <8.18.0 vulnerable to ReDoS when using `$data` option (GHSA-2g4f-4pwh-qvx6)
+- **Severity**: Moderate (5.5/10 CVSS), low exploitability (EPSS 0.086%)
+- **Location**: functions/package-lock.json (nested in eslint dependencies)
+- **Attempted Fix #1** (Feb 18): ❌ Running `npm audit fix --force` downgraded eslint to deprecated v4.1.1 and increased vulnerabilities
+- **Attempted Fix #2** (Feb 19): ❌ Added explicit "ajv": ">=8.18.0" to devDependencies
+  - Failed because eslint@8.57.1 has bundled ajv in nested node_modules
+  - npm doesn't override nested dependencies with top-level versions
+- **Decision**: Accept dev-only risk and keep current versions (reverted ajv addition)
+- **Rationale**: 
+  - All 29 vulnerabilities are in devDependencies (eslint, firebase-functions-test/jest, geoip-lite)
+  - Zero impact on deployed Cloud Functions (production code unaffected)
+  - `npm audit fix --force` would break modern linting (downgrade to eslint 4.1.1 from 2017)
+  - Risk limited to local development environment only
+- **Risk**: Low (malicious code would need to be introduced during development to exploit)
 
 **Files Modified**:
 - `/package-lock.json` - Updated fast-xml-parser and qs versions
