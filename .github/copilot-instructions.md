@@ -104,12 +104,12 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 **Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
 
-**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 103 real users in Kuwait with production apps on both iOS and Android (108 total including test accounts)."_
+**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 113 real users in Kuwait with production apps on both iOS and Android (118 total including test accounts)."_
 
-**Current Status** (January 2026 - Day 23):
+**Current Status** (February 2026 - Day 44):
 
-- **Users**: 108 registered users in Kuwait (68 pre-testing + 15 closed testing + 25 post-launch)
-  - **Real users**: 103 (excludes 5 accounts below)
+- **Users**: 118 registered users in Kuwait (68 pre-testing + 15 closed testing + 35 post-launch)
+  - **Real users**: 113 (excludes 5 accounts below)
   - **Developer/Personal/Test accounts**: 5 total
     1. Personal account: hamad_alkhalaf_99@hotmail.com (genuine active use)
     2. Personal testing: hamad@dawatime.com
@@ -124,7 +124,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **Revenue**: $0 (strategic choice - growth phase, Phase 1 of monetization roadmap)
 - **Privacy**: Home address publicly visible on Play Store (MEW employment prevents business registration)
 - **7-Day Ad Campaign**: ✅ COMPLETE - $69.84 spent, 7,198 reach, 289 website visits, 11,525 impressions
-- **Next Milestone**: Growth phase - targeting 500-1,000 users by March 2026 (Q1 2026)
+- **Next Milestone**: Growth phase - targeting 200-300 users by March 2026 (Q1 2026, recalibrated based on 0.48/day organic growth rate)
 - **Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL fix + Update Checker + Signup Buttons Android) - deploy Days 16-20
 - **Vision**: Public health tool first, commercial product second
 
@@ -749,15 +749,16 @@ Never miss a dose! 💚
 
 **Campaign Conversion Analysis**: $69.84 spend → 289 visits → 61 downloads (iOS: 47, Android: 14) → 10 new users (98→108 total). Funnel: 21% visit-to-download, 16% download-to-signup. Cost metrics: $0.24/visit, $1.14/download (82% below target), $6.98/new user. Performance: Exceptional CPI, strong download conversion, low signup rate due to existing user reinstalls. Week 2-4 optimization: target cold audiences.
 
-**Store Installation Data (Days 15-29: Jan 21-29, 2026)**:
+**Store Installation Data (Days 15-44: Jan 21-Feb 18, 2026)**:
 
-- **iOS**: 57 total downloads (47 during 7-day campaign Jan 21-27, launch day peak: 10 installs)
+- **iOS**: 57 total downloads (47 during 7-day campaign Jan 21-27, launch day peak: 10 installs, 10 post-campaign Jan 28-Feb 18)
 - **Android**: 14 production installs (Jan 21-28) + 33 closed testing (Jan 15-20)
-- **Combined Production Performance**: 61 downloads (iOS: 47, Android: 14) - Platform split: iOS 77%, Android 23%
-- **Campaign Correlation**: 61 downloads aligned with 7-day Instagram ad campaign (Jan 21-27, $69.84 spend, 289 website visits, 7,198 reach)
-- **Firebase Authentication Total (Day 23)**: 108 users (103 real + 5 dev/test accounts: hamad_alkhalaf_99, hamad@dawatime, testapple@dawatime, testgoogle@dawatime, design@dawatime)
-- **User Growth**: 98 pre-campaign → 108 post-campaign = 10 new registered users in 8 days
-- **Install-to-Registration Rate**: 61 downloads → 10 new registrations = 16% conversion (indicates many downloads are reinstalls/updates from existing 98 users)
+- **Combined Production Performance**: 71 downloads (iOS: 57, Android: 14) - Platform split: iOS 80%, Android 20%
+- **Campaign Correlation**: 61 downloads during 7-day Instagram ad campaign (Jan 21-27, $69.84 spend, 289 website visits, 7,198 reach)
+- **Post-Campaign Performance**: 10 additional iOS downloads (Jan 28-Feb 18, 22-day period) = organic growth
+- **Firebase Authentication Total (Day 44)**: 118 users (113 real + 5 dev/test accounts: hamad_alkhalaf_99, hamad@dawatime, testapple@dawatime, testgoogle@dawatime, design@dawatime)
+- **User Growth**: 98 pre-campaign → 118 current = 20 new registered users in 29 days
+- **Install-to-Registration Rate**: 71 downloads → 20 new registrations = 28% conversion (improved from 16% during campaign)
 
 **LinkedIn Professional Positioning**:
 
@@ -2986,6 +2987,83 @@ DawaTime is a Flutter medication reminder app with Firebase backend, designed fo
 - **Time formats**: Support for both 12-hour (common in GCC) and 24-hour formats
 - **Currency**: Future pricing features should use KWD (Kuwaiti Dinar) as default
 - **Pharmacy partnerships**: Should focus on Kuwaiti chains (Al-Dawaiya, Boots, etc.) before expanding regionally
+
+**Phased Geographic Expansion Strategy**:
+
+DawaTime follows a success-driven geographic expansion model, validating product-market fit in each region before expanding to the next:
+
+**Phase 1: Kuwait Market (2025-2027)** - *Current Focus*
+- **Goal**: Establish strong local presence and brand recognition
+- **Milestones**: 
+  - 2026: Reach 1,200-1,800 active users
+  - 2027: Grow to 2,500-3,000 users for freemium viability
+- **Success Criteria**: 
+  - 4.5+ App Store rating (50+ reviews)
+  - 40%+ 30-day retention
+  - Kuwait MOH partnership secured
+  - Proven monetization model (if freemium launched)
+- **Market Advantages**: 
+  - Developer is Kuwaiti (local credibility)
+  - Arabic-first design resonates with target audience
+  - Understanding of local healthcare system and pharmacy networks
+  - High smartphone penetration (99%)
+- **Key Metrics**: User growth rate, retention, App Store rating, word-of-mouth acquisition
+
+**Phase 2: Middle East Expansion (2028+)** - *Conditional on Kuwait Success*
+- **Target Markets** (Priority Order):
+  1. **GCC First**: Saudi Arabia, UAE, Qatar, Bahrain, Oman
+     - Shared language (Arabic)
+     - Similar healthcare systems
+     - Cultural familiarity
+     - Regional pharmacy networks
+  2. **Extended Middle East**: Egypt, Jordan, Lebanon (if GCC validates)
+- **Prerequisites**:
+  - ✅ Kuwait market proven (3,000+ active users, stable retention)
+  - ✅ Freemium model validated (if applicable)
+  - ✅ Positive unit economics (CAC < LTV)
+  - ✅ Scalable infrastructure (Firebase can handle 10x growth)
+- **Expansion Strategy**:
+  - Start with UAE (largest GCC tech market, high expat population)
+  - Leverage Kuwait success stories in marketing
+  - Partner with regional pharmacy chains
+  - Localize for regional Arabic dialects (if needed)
+  - Adjust pricing for local purchasing power (KWD → SAR, AED, etc.)
+- **Challenges**:
+  - Country-specific health regulations (Saudi FDA, UAE DHA)
+  - Regional medication database variations
+  - Pharmacy partnership negotiations per country
+  - Marketing spend required for each new market
+- **Success Metrics**: User acquisition cost (CAC), market penetration rate, retention by country
+
+**Phase 3: Global Expansion (2030+)** - *Conditional on Middle East Success*
+- **Target Markets** (Tiered Approach):
+  - **Tier 1**: English-speaking markets (US, UK, Canada, Australia)
+  - **Tier 2**: European Union (multilingual support required)
+  - **Tier 3**: Asia-Pacific (localization-heavy)
+- **Prerequisites**:
+  - ✅ Middle East market validated (10,000+ active users across region)
+  - ✅ Multilingual infrastructure proven (Arabic/English → additional languages)
+  - ✅ Profitable unit economics across Middle East markets
+  - ✅ Team capacity for international operations
+- **Localization Requirements**:
+  - Add major languages (Spanish, French, German, Mandarin, Hindi, etc.)
+  - Comply with regional health regulations (FDA, EMA, etc.)
+  - Partner with international pharmacy chains (CVS, Walgreens, Boots, etc.)
+  - Adapt to regional medication naming conventions
+- **Challenges**:
+  - Regulatory complexity (FDA approval for health apps in US)
+  - Competition with established players (Medisafe, MyTherapy, etc.)
+  - Higher customer acquisition costs in saturated markets
+  - Cultural differences in healthcare/medication management
+  - Time zone support for global user base
+- **Success Metrics**: International user growth, retention by region, revenue per geography
+
+**Expansion Timeline Estimate**:
+- **2025-2027**: Kuwait dominance (Phase 1)
+- **2028-2029**: GCC expansion (Phase 2 start)
+- **2030+**: Global markets (Phase 3, conditional on Phase 2 success)
+
+**Strategic Rationale**: This phased approach minimizes risk by validating product-market fit in culturally/linguistically similar markets (Kuwait → GCC → Middle East) before tackling the complexity and competition of global markets. Each phase builds on learnings from the previous, allowing iterative improvement of product, marketing, and business model before scaling internationally.
 
 **Development Impact**: Feature priorities reflect Kuwaiti needs, Arabic-first UI/UX, regional pharmacy integrations, GCC-optimized marketing, Kuwait health data compliance.
 
@@ -5755,18 +5833,55 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Minor Features (Planned)
 
-**1. Medication Notes**
+**Priority Order**: Features ranked by value/ease ratio - Quick wins (high value + low complexity) first, complex features last.
 
-- **Purpose**: Allow users to add custom notes to each medication
+**1. Optional Medication Notifications**
+
+- **Purpose**: Allow users to disable time-based reminders for specific medications (PRN/"as needed" medications)
 - **Features**:
-  - Free-text notes field per medication
-  - Display notes in medication details dialog
-  - Optional notes in reminder notifications
-- **Complexity**: Low (single field addition to Firestore document)
-- **Estimated Effort**: 2-3 days
-- **Implementation**: Add `notes` field to Medications class, update add/edit forms
+  - Checkbox in add/edit medication form (placed under refill alert section)
+  - Toggle to enable/disable medication reminders per medication
+  - **Conditional UI Display**:
+    - When checkbox **enabled** (notifications ON):
+      - Show: Notify at time picker
+      - Show: Start date picker
+      - Show: Frequency mode selector (Every X days / Days of week)
+      - Show: All frequency-related fields (frequency number, weekday checkboxes)
+    - When checkbox **disabled** (notifications OFF):
+      - Hide: All scheduling UI elements (no need for timing if not notifying)
+      - Show: Only basic medication info (name, dosage, amount, refill threshold)
+      - Medication still tracks stock/dosage
+      - Refill alerts continue to work (independent toggle)
+  - Defaults to enabled (safe default for critical medications)
+- **Complexity**: Low (boolean field + conditional UI rendering + notification scheduling check)
+- **Estimated Effort**: 1-2 days
+- **Implementation**:
+  - Add `notificationsEnabled` boolean field to Medications model (default: `true`)
+  - Add checkbox in add/edit form under refill alert section
+  - Wrap scheduling UI in conditional: `if (notificationsEnabled) { /* show time pickers */ }`
+  - Check `notificationsEnabled` before calling `scheduleMedicationNotification()`
+  - Skip scheduling if disabled, but still allow manual "Take Medication" confirmation
+- **UI Location**: Add/edit medication form, positioned under refill threshold field
+- **User Benefit**: Proper handling of PRN medications (pain relievers, allergy meds), reduces notification fatigue for less critical medications, cleaner form for stock-only tracking
+- **Safety Considerations**:
+  - Always defaults to ON to protect against accidental disabling
+  - Clear label: "Enable medication reminders" or "Reminder notifications"
+  - Helper text: "Disable only for as-needed (PRN) medications"
+- **Why Priority #1**: Highest value-to-effort ratio - solves real user pain (PRN medications), lowest complexity (1-2 days), prevents app abandonment from notification fatigue
 
-**2. Google/Apple Sign-In (OAuth)**
+**2. Optional End Date**
+
+- **Purpose**: Automatically stop reminders after a specified date (e.g., antibiotics course)
+- **Features**:
+  - End date picker in add/edit form
+  - Automatic reminder cancellation when end date reached
+  - Visual indicator for time-limited medications
+- **Complexity**: Low (date field addition, scheduling check)
+- **Estimated Effort**: 2-3 days
+- **Implementation**: Add `endDate` field, check in scheduling logic
+- **Why Priority #2**: Quick win - common use case (antibiotics courses), simple implementation, clear user value
+
+**3. Google/Apple Sign-In (OAuth)**
 
 - **Purpose**: Faster onboarding with one-tap social authentication
 - **Features**:
@@ -5797,19 +5912,33 @@ This section documents planned features for future DawaTime releases. Features a
   - Better UX for users already signed in to Google/Apple
   - Leverages provider security infrastructure
   - Fits GCC smartphone usage patterns
+- **Why Priority #3**: High value (improves onboarding), moderate complexity (well-documented APIs), fits GCC market (Google/Apple dominant)
 
-**3. Choose Your Own Medication Icons**
+**4. Medication Notes**
 
-- **Purpose**: Visual differentiation with customizable icons and colors
+- **Purpose**: Allow users to add custom notes to each medication
 - **Features**:
-  - Icon selection: Pill, Injection, Ointment, Liquid, Inhaler
-  - Color picker for medication cards
-  - Icons persist in medication list and reminders
-- **Complexity**: Medium (requires asset management, color picker UI)
-- **Estimated Effort**: 1 week
-- **Implementation**: Add `iconType` and `colorHex` fields, create icon asset library
+  - Free-text notes field per medication
+  - Display notes in medication details dialog
+  - Optional notes in reminder notifications
+- **Complexity**: Low (single field addition to Firestore document)
+- **Estimated Effort**: 2-3 days
+- **Implementation**: Add `notes` field to Medications class, update add/edit forms
+- **Why Priority #4**: Simple implementation, decent user value (doctor instructions, side effects tracking), low risk
 
-**4. Multiple Daily Reminders**
+**5. Alternative Edit/Delete Medications Methods**
+
+- **Purpose**: Provide additional UI patterns for medication management beyond swipe gestures
+- **Features**:
+  - Long-press context menu
+  - Three-dot menu button on cards
+  - Batch selection mode for multi-delete
+- **Complexity**: Low-Medium (UI enhancements, no schema changes)
+- **Estimated Effort**: 3-5 days
+- **Rationale**: Some users may not discover swipe gestures
+- **Why Priority #5**: Improves accessibility/discoverability, moderate effort, no schema changes
+
+**6. Multiple Daily Reminders**
 
 - **Purpose**: Support medications taken multiple times per day at specific times
 - **Features**:
@@ -5826,262 +5955,19 @@ This section documents planned features for future DawaTime releases. Features a
   - Display: Show all times in medication card (e.g., "8 AM, 2 PM, 8 PM")
   - Backward compatible: Single time = existing behavior
 - **User Benefit**: Clearer than "every X hours" - users think in "times per day" not intervals
+- **Why Priority #6**: High user value (fills scheduling gap), but medium complexity (schema changes, UI updates)
 
-**5. Alternative Edit/Delete Medications Methods**
+**7. Choose Your Own Medication Icons**
 
-- **Purpose**: Provide additional UI patterns for medication management beyond swipe gestures
+- **Purpose**: Visual differentiation with customizable icons and colors
 - **Features**:
-  - Long-press context menu
-  - Three-dot menu button on cards
-  - Batch selection mode for multi-delete
-- **Complexity**: Low-Medium (UI enhancements, no schema changes)
-- **Estimated Effort**: 3-5 days
-- **Rationale**: Some users may not discover swipe gestures
-
-**6. Optional End Date**
-
-- **Purpose**: Automatically stop reminders after a specified date (e.g., antibiotics course)
-- **Features**:
-  - End date picker in add/edit form
-  - Automatic reminder cancellation when end date reached
-  - Visual indicator for time-limited medications
-- **Complexity**: Low (date field addition, scheduling check)
-- **Estimated Effort**: 2-3 days
-- **Implementation**: Add `endDate` field, check in scheduling logic
-
-**7. Play Integrity API (Security)** ✅ COMPLETED (Day 19 - January 25, 2026)
-
-- **Status**: ✅ **PRODUCTION-READY** - Debug bypasses removed, production bundle built
-- **Purpose**: Verify app authenticity and protect against tampering, clones, and abuse
-- **Features**:
-  - App binary verification (ensure it's genuine DawaTime from Play Store)
-  - Device integrity checks (detect rooted/compromised devices)
-  - License verification (detect sideloaded/pirated APKs)
-  - Backend token validation via Firebase Cloud Function
-  - Graceful degradation (log suspicious activity, don't hard-block users)
-  - Call at critical moments: login, signup, medication CRUD, FCM token registration
-- **Complexity**: Low-Medium (well-documented Google API, requires backend setup)
-- **Estimated Effort**: 1-2 days (implementation + testing)
-- **Implementation**:
-  - Add package: `play_integrity: ^1.0.0` (or latest)
-  - Create Firebase Cloud Function: `verifyPlayIntegrity` to verify tokens server-side
-  - Call `obtainIntegrityVerdict()` at security-critical operations
-  - Handle API responses: PLAY_RECOGNIZED, MEETS_DEVICE_INTEGRITY, MEETS_BASIC_INTEGRITY
-  - Log failures to Firebase Analytics for monitoring
-  - Graceful UX: Show warning for suspicious devices but allow access (avoid false positives)
-- **Why Needed**:
-  - Health data protection (prevent malicious clones stealing medication data)
-  - MOH partnership positioning (demonstrates serious security for government approval)
-  - User trust (health apps require higher security standards than typical apps)
-  - Prevent fake apps from hijacking notifications or credentials
-  - Play Store credibility (may improve approval/review process)
-- **Deployment Strategy**:
-  - **Part of v1.4.5 post-launch hotfix** (January 20-25, 2026)
-  - Decision made Day 9 (January 13, 2026) to avoid risking v50 stability before Day 14 production launch
-  - ✅ **COMPLETED Day 19 (January 25, 2026)**: Deployed as v1.4.5+52
-  - Combined release: Security (Play Integrity) + Stability (URL validation)
-  - Priority: Stability for Day 14 deadline > adding new APIs
-
-- **Implementation Completed** (Day 19):
-  - **Debug Bypasses Removed**:
-    1. **lib/main.dart** (lines 772-776): Removed 8-line kDebugMode bypass in \_verifyPlayIntegrity(String userId)
-       - **Before**: `if (kDebugMode) { print('⚠️ DEBUG MODE: Skipping verification...'); return true; }`
-       - **After**: Calls Firebase Cloud Function `verifyPlayIntegrity` in all builds
-       - **Impact**: Splash screen now enforces security verification
-    2. **lib/login_page.dart** (lines 160-166): Removed 8-line kDebugMode bypass in \_verifyPlayIntegrity()
-       - **Before**: Same kDebugMode guard pattern that returned true immediately
-       - **After**: Calls Firebase Cloud Function `verifyPlayIntegrity` in all builds
-       - **Impact**: Login flow now enforces security verification
-    3. **lib/signup_page.dart** (lines 35-85): ✅ Already production-ready (no bypasses found)
-       - Clean implementation - calls Cloud Function directly without kDebugMode guards
-  - **Total Changes**: 16 lines removed across 2 files
-
-- **Validation Results**:
-  - ✅ **flutter analyze**: No issues found (ran in 3.4s)
-  - ✅ **Production Bundle**: Built successfully
-    - File: build/app/outputs/bundle/release/app-release.aab
-    - Size: 54.3MB
-    - Build Time: 147.9 seconds
-    - Version: 1.4.5+52
-  - ✅ **Tree-Shaking**: MaterialIcons reduced 99.6% (1.6MB → 6.8KB)
-  - ⏳ **Physical Device Testing**: Pending (after upload to Internal Testing)
-- **Testing Requirements**:
-  - Physical devices (multiple Android versions 7-15)
-  - Rooted devices (verify graceful degradation)
-  - Custom ROMs (OnePlus, Xiaomi, Samsung with Knox)
-  - VPN/proxy scenarios (ensure API works)
-  - Production Play Store install vs sideloaded APK detection
-- **Benefits**:
-  - Protect user health data from malicious clones
-  - Strengthen MOH partnership application ("enterprise-grade security")
-  - Prevent spam/abuse via contact form
-  - Block fake apps from receiving FCM notifications
-  - Foundation for future freemium license protection (Phase 2)
-
-**8. Safe URL Launching (iOS SafariViewController Crash Fix)** ✅ COMPLETED (Day 19 - January 25, 2026)
-
-- **Status**: ✅ **DEPLOYED** - Included in v1.4.5+54 hotfix release
-- **Purpose**: Fix production iOS crash from url_launcher SafariViewController exceptions
-- **Production Crash Confirmed** (February 11, 2026 - Day 36):
-  - **Crashlytics Report**: `Fatal Exception: FlutterError` from v1.4.4 production
-  - **Stack Trace**: `UrlLauncherIOS._failedSafariViewControllerLoadException` at url_launcher_ios.dart:176
-  - **Impact**: Crashed when opening Terms/Privacy/Update links on iOS devices
-  - **Validation**: Confirms the issue existed in v1.4.4, justifies v1.4.5 hotfix
-- **Features**:
-  - Validate all URLs with `canLaunchUrl()` before calling `launchUrl()`
-  - Prevent fatal FlutterError on iOS when SafariViewController fails to load
-  - Apply consistent safe pattern across all 16 launchUrl calls in codebase
-  - Graceful failure handling with SnackBar error feedback
-  - Affects: Terms/Privacy links, external links (Instagram), update notifications
-- **Complexity**: Low (code hygiene, no new dependencies, 16 locations across 4 files)
-- **Implementation Completed** (Day 19):
-  - **Pattern Applied**: `try { if (await canLaunchUrl(url)) { await launchUrl(...) } else { SnackBar error } } catch (e) { SnackBar error }`
-  - **Files Modified**:
-    - signup_page.dart (2 locations) - Terms & Privacy links
-    - main.dart (8 locations) - Force update dialog, legal dialogs, intro guide
-    - settings.dart (3 locations) - Account deletion confirmation, legal links
-    - login_page.dart (4 locations) - Legal update dialog, intro guide
-- **Validation Results**:
-  - ✅ **flutter analyze**: No issues found
-  - ⏳ **Physical Device Testing**: Tested on Android (Galaxy A15 5G), iOS testing pending
-  - ✅ **Code Review**: All 16 locations verified with proper error handling
-- **Testing Status**:
-  - Android: Validated (no regressions)
-  - iOS: ✅ **Production validation confirmed** - v1.4.4 crash observed in Crashlytics (Day 36)
-- **Production Crash Evidence** (February 11, 2026):
-  - **Version**: v1.4.4 (before fix)
-  - **Error**: `Fatal Exception: FlutterError` at `UrlLauncherIOS._failedSafariViewControllerLoadException`
-  - **Location**: url_launcher_ios.dart:176 → 148 → 94
-  - **Validation**: Confirms the issue existed, justifies v1.4.5 hotfix deployment
-- **Benefits Delivered**:
-  - ✅ Prevents iOS production crashes when opening Terms/Privacy/Update links (validated via v1.4.4 Crashlytics)
-  - ✅ Improves App Store crash-free metrics
-  - ✅ Shows rapid response to production issues (good for MOH partnership)
-  - ✅ Minimal risk hotfix (all changes defensive, no new features)
-- **Monitoring**: Watch v1.4.5 Crashlytics to confirm crash eliminated
-- **Deployment**:
-  - **Part of v1.4.5+53 hotfix** (January 25, 2026)
-  - Combined with Play Integrity API + Signup Buttons fix
-  - Release notes: "Enhanced security & stability improvements"
-
-**9. Update Checker Bug Fix (False "Up to Date" Message)** ✅ COMPLETED (Day 19 - January 25, 2026)
-
-- **Purpose**: Fix update checker showing "app is up to date" when user has older version installed
-- **Issue Discovered**: Day 15 (January 21, 2026) during production testing after Day 15 launch
-- **Symptom**:
-  - User scenario: Had v1.4.4 installed for testing → Reinstalled v1.3.4 from App Store → Changed Firestore AppConfig/Version to "1.4.4" → Reopened app
-  - Expected: "Update Required" dialog forcing user to update
-  - Actual: Settings → "Check for Updates" button showed "You're up to date!"
-  - Critical: Users on older versions won't be forced to update for security/stability fixes
-- **Root Cause** (Confirmed):
-  - **SharedPreferences persistence**: Update check timestamp survives app reinstall
-  - **No version change detection**: App didn't track which version was last run
-  - Result: 24-hour cache from v1.4.4 blocked update checks when user downgraded to v1.3.4
-- **Impact**:
-  - **HIGH SEVERITY**: Force update mechanism broken for users downgrading/reinstalling
-  - Prevents enforcing critical security updates
-  - Could leave users on vulnerable versions indefinitely
-  - MOH partnership risk if medication safety fixes can't be forced
-- **Solution Implemented** (Day 19 - January 25, 2026):
-  - **Chosen Approach**: Option 2 - Store last known version + detect changes
-  - **Modified Function**: `_shouldCheckForUpdates()` in lib/main.dart lines 583-608
-  - **Implementation Details**:
-    1. Gets current app version from `PackageInfo.fromPlatform()`
-    2. Retrieves stored version from SharedPreferences key `'last_known_version'`
-    3. If versions don't match → Version change detected:
-       - Clears `'last_update_check'` cache
-       - Updates `'last_known_version'` to current version
-       - Returns `true` to force update check
-    4. If versions match → Continues with normal 24-hour cache logic
-    5. Stores current version for future comparisons
-  - **Debug Logging Added**:
-    ```dart
-    if (kDebugMode) {
-      print('🔄 App version changed: $storedVersion → $currentVersion');
-      print('   Forcing update check...');
-    }
-    ```
-- **Complexity**: Low (10-line addition to existing function)
-- **Estimated Effort**: 10 minutes (actual implementation time)
-- **Testing Plan** (Pending Physical Device Testing):
-  - iOS: Install v1.4.4 → Reinstall v1.3.4 → Set Firestore to 1.4.5 → Verify dialog appears
-  - Android: Same test sequence as iOS
-  - Edge cases: First install, upgrade (v1.3.4→v1.4.4), downgrade (v1.4.4→v1.3.4)
-  - Verify cache doesn't block legitimate update checks
-- **Validation Completed**:
-  - ✅ flutter analyze: No issues found (4.2s)
-  - ✅ Code compiles successfully
-  - ⏳ Physical device testing: Pending (requires reinstall scenario)
-- **Deployment Strategy**:
-  - **Part of v1.4.5 post-launch hotfix** (January 22-26, 2026)
-  - Deploy alongside Play Integrity API
-  - Release notes: "Fixed update checker to properly detect when app needs updating"
-  - Critical for future version releases (v1.4.6, v1.5.0, etc.)
-- **Benefits**:
-  - ✅ Ensures force update mechanism works reliably
-  - ✅ Protects users from staying on vulnerable versions
-  - ✅ Enables confident deployment of future security fixes
-  - ✅ Demonstrates thorough quality assurance (caught in production testing)
-- **Files Modified**:
-  - lib/main.dart (lines 583-608): \_shouldCheckForUpdates function
-  - Added: Version change detection logic (13 lines)
-  - Added: SharedPreferences keys: `'last_known_version'` (stores app version string)
-- **How It Works**:
-  - **Scenario 1 - First Install**: No stored version → Stores current version → Normal cache check
-  - **Scenario 2 - Normal Open**: Stored version matches current → Normal 24-hour cache check
-  - **Scenario 3 - Downgrade/Reinstall**: Stored version (1.4.4) ≠ current (1.3.4) → Clears cache → Forces update check ✅
-  - **Scenario 4 - Upgrade**: Stored version (1.3.4) ≠ current (1.4.4) → Clears cache → Forces update check ✅
-
-**10. Signup Buttons Android Fix (Terms & Privacy Links Not Working)** ✅ COMPLETED (Day 19 - January 25, 2026)
-
-- **Status**: ✅ **VALIDATED** - User confirmed working on physical Android device
-- **Purpose**: Fix Terms & Conditions and Privacy Policy links not working on Android signup page
-- **Issue Discovered**: Day 15 (January 21, 2026) - production user complaint from Android/Samsung device
-- **Symptom**:
-  - User cannot tap Terms & Conditions or Privacy Policy links on signup page
-  - Links fail silently without any error feedback
-  - Affects new user onboarding flow
-  - Users must agree to legal documents they cannot access (compliance issue)
-- **Root Cause Identified**:
-  - LaunchMode.platformDefault incompatible with Android 11+ package visibility restrictions
-  - Android 11+ requires explicit package queries in AndroidManifest.xml for https:// intents
-  - Missing queries → launchUrl silently fails → no browser opens → no user feedback
-- **Impact**:
-  - **CRITICAL SEVERITY**: Blocked new user signups on Android
-  - Legal compliance issue (users agreeing without reading)
-  - Affected production users immediately after Day 15 launch
-- **Implementation Completed** (Day 19 - January 25, 2026):
-  - **3-part fix**:
-    1. Added Android 11+ queries in AndroidManifest.xml (lines 66-69):
-       ```xml
-       <queries>
-         <intent><action android:name="android.intent.action.VIEW" />
-           <data android:scheme="https" /></intent>
-       </queries>
-       ```
-    2. Changed LaunchMode.platformDefault → LaunchMode.externalApplication in signup_page.dart (2 locations)
-    3. Added error handling with SnackBar feedback
-  - **Files Modified**:
-    - android/app/src/main/AndroidManifest.xml (added queries)
-    - lib/signup_page.dart (lines 294-330, 349-375): Terms & Privacy links
-  - **Build**: v1.4.5+53 (54.3MB, 155.6s build time)
-- **Validation Results** (Day 19):
-  - **Test Device**: Physical Android device (Galaxy A15 5G)
-  - **User Confirmation**: **"signup text buttons now work in android"** ✅
-  - Both Terms & Privacy links confirmed opening in external browser
-  - Fix proven effective: Android 11+ queries + LaunchMode.externalApplication solves silent failure
-  - **Result**: ✅ NEW USER SIGNUPS UNBLOCKED
-- **Complexity**: Low (URL launching pattern change, Android manifest update)
-- **Actual Effort**: 2 hours (diagnosis + implementation + testing)
-- **Benefits Delivered**:
-  - ✅ Unblocks new user signups on Android
-  - ✅ Resolves legal compliance issue
-  - ✅ Provides user feedback when links fail (SnackBar)
-  - ✅ Better Android device compatibility (Samsung, OnePlus, Xiaomi)
-- **Deployment**:
-  - **Part of v1.4.5+53 hotfix** (January 25, 2026)
-  - Deployed to Google Play Console Internal Testing
-  - Combined with Play Integrity API + Safe URL fixes + other stability improvements
+  - Icon selection: Pill, Injection, Ointment, Liquid, Inhaler
+  - Color picker for medication cards
+  - Icons persist in medication list and reminders
+- **Complexity**: Medium (requires asset management, color picker UI)
+- **Estimated Effort**: 1 week
+- **Implementation**: Add `iconType` and `colorHex` fields, create icon asset library
+- **Why Priority #7**: Lowest priority - cosmetic feature, requires asset library creation, moderate effort for low functional value
 
 ---
 
@@ -6105,6 +5991,34 @@ This section documents planned features for future DawaTime releases. Features a
 - RTL layout for Arabic text
 - Localized date/time formatting
 - 192 English strings, 194 Arabic strings
+
+**4. Play Integrity API (Security)** (Implemented January 2026)
+
+- App authenticity verification and tamper protection
+- Device integrity checks for rooted/compromised devices
+- Backend token validation via Firebase Cloud Function
+- Deployed as v1.4.5+52 on Day 19 (January 25, 2026)
+
+**5. Safe URL Launching** (Implemented January 2026)
+
+- Fixed iOS SafariViewController crashes from url_launcher
+- Added canLaunchUrl() validation before all launchUrl() calls (16 locations)
+- Graceful error handling with SnackBar feedback
+- Deployed as v1.4.5+54, confirmed via Crashlytics validation
+
+**6. Update Checker Bug Fix** (Implemented January 2026)
+
+- Fixed false "up to date" message after version changes
+- Added version change detection via SharedPreferences
+- Clears 24-hour cache when app version doesn't match stored version
+- Ensures force update mechanism works reliably for security fixes
+
+**7. Signup Buttons Android Fix** (Implemented January 2026)
+
+- Fixed Terms & Privacy links not working on Android signup page
+- Added Android 11+ package queries in AndroidManifest.xml
+- Changed LaunchMode.platformDefault → LaunchMode.externalApplication
+- Unblocked new user signups on Android devices
 
 ---
 
@@ -6190,37 +6104,38 @@ This section documents planned features for future DawaTime releases. Features a
 
 **Strategy**: Stay completely free to maximize user base and establish market presence.
 
-**Current Status** (January 2026): 98 registered users (94 real + 4 dev/test accounts | 68 pre-testing + 15 closed testing + 15 post-launch)
+**Current Status** (February 2026 - Day 44): 118 registered users (113 real + 5 dev/test accounts | 68 pre-testing + 15 closed testing + 35 post-launch)
 
 **Growth Milestones** (Conditional Timeline):
 
-- **Q1 2026** (Jan-Mar): Production launch → **Target: 500-1,000 users**
-- **Q2 2026** (Apr-Jun): MOH partnership + minor features → **Target: 1,000-2,000 users**
-- **Q3 2026** (Jul-Sep): AutoFill implementation → **Target: 2,000-4,000 users**
-- **Q4 2026** (Oct-Dec): Evaluate freemium readiness → **Decision Point: 3,000+ users?**
+- **Q1 2026** (Jan-Mar): Production launch → **Target: 200-300 users** (recalibrated based on historical 19.6/month average, 0.48/day organic post-campaign)
+- **Q2 2026** (Apr-Jun): MOH partnership + minor features → **Target: 400-600 users** (4 quick-win features improve retention, MOH partnership boost)
+- **Q3 2026** (Jul-Sep): AutoFill implementation → **Target: 800-1,200 users** (AutoFill differentiation drives acquisition)
+- **Q4 2026** (Oct-Dec): Evaluate freemium readiness → **Decision Point: 1,200-1,800 users realistic by year-end**
 
-**Decision Framework (Q4 2026)**:
+**Decision Framework (Q4 2026)** (Revised - Realistic Thresholds):
 
-- ✅ **If 3,000+ users**: Proceed to Phase 2 (Q2-Q3 2027 freemium launch)
-- ⏸️ **If 1,500-3,000 users**: Delay 6 months, focus on growth (Q3-Q4 2027 freemium)
-- ❌ **If <1,500 users**: Stay free through 2027, reassess 2028
+- ✅ **If 1,500+ users**: Proceed to Phase 2 freemium development (Q3-Q4 2027 launch, extended timeline)
+- ⏸️ **If 800-1,500 users**: Delay freemium to 2028, focus on sustained growth through 2027
+- ❌ **If <800 users**: Reassess product-market fit, consider pivot or niche positioning
 
 **Goals**:
 
-- Reach critical mass in Kuwait market (3,000+ minimum, 10,000+ ideal)
-- Secure Kuwait MOH partnership for drug database
+- Reach critical mass in Kuwait market (1,500+ by year-end 2026, 3,000+ by mid-2027)
+- Secure Kuwait MOH partnership for drug database (Q2 2026)
 - Build reputation as trusted public health tool
-- Validate product-market fit with strong retention metrics
+- Validate product-market fit with strong retention metrics (40%+ 30-day retention)
+- Achieve sustainable organic growth (3-5 users/day baseline by Q4 2026)
 
-**Why No Monetization Yet**: MOH partnership easier non-commercial, user trust critical (ads erode immediately), App Store reviews higher, word-of-mouth stronger for "truly free", 105 users insufficient (5% = 5 paying users, not worth complexity).
+**Why No Monetization Yet**: MOH partnership easier non-commercial, user trust critical (ads erode immediately), App Store reviews higher, word-of-mouth stronger for "truly free", current user base insufficient for viable freemium conversion (need 1,500+ minimum).
 
-### Phase 2: Freemium Launch (Conditional: Q2 2027 - Q1 2028)
+### Phase 2: Freemium Launch (Conditional: Q1 2028+)
 
 **Strategy**: Introduce gentle freemium model with generous free tier.
 
 **Prerequisite Milestones** (Must hit BEFORE launching freemium):
 
-- ✅ **3,000+ active users** (minimum viable conversion pool)
+- ✅ **2,500-3,000+ active users** (minimum viable conversion pool)
 - ✅ **4.5+ App Store rating** (50+ reviews minimum)
 - ✅ **40%+ 30-day retention** (users find value)
 - ✅ **Premium features built** (Caregiver Mode, Medication Log)
@@ -6269,7 +6184,7 @@ This section documents planned features for future DawaTime releases. Features a
 - App Store compliance: Clearly communicate limitations before download
 - Revenue sharing: 30% to Apple/Google, 70% to DawaTime
 
-### Phase 3: B2B Revenue (Conditional: 2028+)
+### Phase 3: B2B Revenue (Conditional: 2029+)
 
 **Strategy**: Enterprise licensing to healthcare providers and insurers.
 
@@ -6338,27 +6253,35 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Financial Projections (Rough Estimates)
 
-**Current State** (January 2026 - Day 23): 108 users (103 real + 5 excluded accounts), $0 revenue
+**Current State** (February 2026 - Day 44): 118 users (113 real + 5 excluded accounts), $0 revenue
 
 **2026** (Phase 1 - Free Growth):
 
 - Revenue: $0
 - Costs: ~$2,000-3,000/year (Firebase, hosting, developer time)
 - Goal: User growth, not profit
-- **Target**: 98 → 2,000-4,000 users by year end
+- **Target**: 118 → 1,200-1,800 users by year end (realistic based on 0.48/day organic baseline + feature improvements + marketing campaigns)
 
-**Q2-Q4 2027** (Phase 2 - Conditional Freemium):
+**2027** (Phase 1 - Continued Free Growth):
 
-- **Scenario A** (3,000 users, 5% conversion = 150 paying):
+- Revenue: $0
+- Costs: ~$2,000-3,000/year (Firebase, hosting, developer time)
+- Goal: Reach 3,000+ users for freemium viability
+- **Target**: 1,500 (end of 2026) → 2,500-3,000 users by mid-2027
+
+**Q1 2028** (Phase 2 - Conditional Freemium):
+
+- **Assumption**: Freemium launches if 2,500-3,000+ users achieved by Q3 2027
+- **Scenario A** (2,500 users, 5% conversion = 125 paying):
+  - MRR: 125 × 1.5 KWD × $3.30 = ~$618/month (~$7,416/year)
+  - After App Store fees: ~$5,200/year
+  - Net Profit: ~$2,200/year (after costs)
+- **Scenario B** (3,000 users, 5% conversion = 150 paying):
   - MRR: 150 × 1.5 KWD × $3.30 = ~$742/month (~$8,900/year)
   - After App Store fees: ~$6,200/year
   - Net Profit: ~$3,200/year (after costs)
-- **Scenario B** (5,000 users, 5% conversion = 250 paying):
-  - MRR: 250 × 1.5 KWD × $3.30 = ~$1,237/month (~$14,844/year)
-  - After App Store fees: ~$10,400/year
-  - Net Profit: ~$7,400/year (after costs)
 
-**2028** (Phase 2 - Mature Freemium):
+**2029** (Phase 2 - Mature Freemium):
 
 - **Assumption**: 10,000 active users (if growth continues)
 - **Conversion Rate**: 5-10% to premium (500-1,000 paying users)
@@ -6377,68 +6300,74 @@ This section documents planned features for future DawaTime releases. Features a
 
 ### Implementation Timeline (Milestone-Driven)
 
-**Current State** (January 2026 - Day 23): 108 users (68 pre-testing + 15 closed testing + 25 post-launch), production launched Day 15
+**Current State** (February 2026 - Day 44): 118 users (68 pre-testing + 15 closed testing + 35 post-launch), production launched Day 15
 
 **Q1 2026** (Jan-Mar): **Production Launch & Stability**
 
 - Focus: Production approval, bug fixes, user feedback
 - Marketing: Instagram, Kuwait forums, word-of-mouth
 - Monetization: None
-- **Milestone Target**: 500-1,000 users
-- **Current Progress (Day 23)**: 108 users (103 real + 5 excluded accounts: personal hamad_alkhalaf_99, testing hamad@dawatime, Apple/Google testing, designer design@dawatime), 7-day ad campaign complete (289 website visits, 61 store downloads during campaign period)
-- **Decision Point**: If <500 users by March, analyze user acquisition strategy
+- **Milestone Target**: 200-300 users (recalibrated based on historical growth: 19.6 users/month average, 0.48 users/day organic post-campaign)
+- **Current Progress (Day 44)**: 118 users (113 real + 5 excluded accounts: personal hamad_alkhalaf_99, testing hamad@dawatime, Apple/Google testing, designer design@dawatime), 7-day ad campaign complete (289 website visits, 61 store downloads during campaign period), iOS total downloads: 57 (Jan 20-Feb 18)
+- **Decision Point**: If <200 users by March 31, maintain free growth through Q2 and reassess marketing strategy
 
 **Q2 2026** (Apr-Jun): **MOH Partnership & Quick Wins**
 
 - Focus: Submit MOH partnership request (2-4 weeks approval)
-- Build: Medication Notes, Optional End Date, Google/Apple Sign-In
+- Build: **Optional Medication Notifications** (NEW #1 priority - prevents notification fatigue), Optional End Date, Google/Apple Sign-In, Medication Notes
 - Monetization: Optional donations button (soft ask)
-- **Milestone Target**: 1,000-2,000 users
-- **Decision Point**: If <1,000 users by June, intensify marketing
+- **Milestone Target**: 400-600 users (from ~250 Q1 end, need 150-350 new in 90 days = 1.7-3.9/day)
+- **Decision Point**: If <400 users by June 30, reassess feature-market fit and marketing effectiveness
+- **Rationale**: All 4 features are "quick wins" (2-3 days each), improve retention, support Phase 1 growth goals
 
 **Q3 2026** (Jul-Sep): **AutoFill Development**
 
 - Focus: Implement AutoFill Medication (with MOH approval)
 - Build: Multiple Daily Reminders, Alternative Edit/Delete Methods
-- Marketing: AutoFill as unique selling point
-- **Milestone Target**: 2,000-4,000 users
-- **Decision Point**: If <2,000 users by September, reassess market fit
+- Marketing: AutoFill as unique selling point (Kuwait MOH database integration)
+- **Milestone Target**: 800-1,200 users (from ~500 Q2 end, need 300-700 new in 92 days = 3.3-7.6/day)
+- **Decision Point**: If <800 users by September 30, evaluate AutoFill feature adoption and user acquisition effectiveness
 
 **Q4 2026** (Oct-Dec): **CRITICAL DECISION POINT**
 
-- **Evaluate**: Do you have 3,000+ users?
-  - ✅ **YES (3,000+)**: Proceed to freemium development (Q1-Q2 2027 launch)
+- **Evaluate**: Year-end user count and growth trajectory
+  - ✅ **STRONG (1,500+ users)**: Proceed to Phase 2 freemium development (Q3-Q4 2027 launch)
+    - Realistic path to 3,000+ by mid-2027
     - Start building: Caregiver Mode, Medication Log, subscription system
     - **Note**: Business registration still blocked by MEW employment
-  - ⏸️ **MAYBE (1,500-3,000)**: Delay freemium 6 months, focus on growth
-    - Continue free features, optimize conversion funnel
-  - ❌ **NO (<1,500)**: Stay free through 2027, reassess growth strategy
-    - Analyze retention, consider pivot, evaluate market demand
+  - ⏸️ **MODERATE (800-1,500 users)**: Delay freemium to 2028, continue free growth through 2027
+    - Focus on retention optimization and organic acquisition
+    - Evaluate marketing ROI and feature adoption
+  - ❌ **WEAK (<800 users)**: Reassess product-market fit and strategic direction
+    - Analyze why growth stalled despite feature improvements
+    - Consider niche positioning (chronic illness, elderly care focus)
+    - Evaluate pivot opportunities or Kuwait-specific partnerships
 
 **MEW Employment Impact on Freemium**: Kuwait government employees cannot register commercial businesses. Freemium model can still launch via personal developer accounts, but B2B partnerships (Phase 3) would require business registration and thus leaving MEW employment.
 
-**Q1-Q2 2027** (Conditional): **Freemium Development** (if 3,000+ users)
+**Q3-Q4 2027** (Conditional): **Freemium Development** (if 1,500+ users by Q4 2026)
 
 - Build: Caregiver Mode (3-4 weeks), Medication Log (2-3 weeks)
 - Implement: App Store subscriptions, Google Play Billing
 - Test: Pricing, messaging, grandfather logic
 - Marketing: Announce "New premium features coming!"
+- **Prerequisite**: Sustained growth to 2,500-3,000+ users by Q3 2027
 
-**Q3 2027** (Conditional): **Freemium Launch** (if prerequisites met)
+**Q1 2028** (Conditional): **Freemium Launch** (if prerequisites met)
 
 - Launch: 4-medication free tier, premium tier with pricing
 - Monitor: Conversion rates, churn, user feedback
 - Iterate: Adjust pricing/features based on data
-- **Milestone Target**: 5% conversion rate (150-250 paying users)
+- **Milestone Target**: 5% conversion rate (125-150 paying users minimum from 2,500-3,000 user base)
 
-**Q4 2027-Q1 2028**: **Freemium Optimization**
+**2028**: **Freemium Optimization**
 
 - Analyze: What drives conversions? What causes churn?
 - Improve: Premium features based on feedback
 - Market: Premium tier value proposition
 - **Milestone Target**: 1,000+ paying subscribers
 
-**2028+** (Conditional): **B2B Outreach** (if freemium validated)
+**2029+** (Conditional): **B2B Outreach** (if freemium validated)
 
 - Outreach: Kuwait health insurers, healthcare providers
 - Goal: First enterprise partnership
@@ -6450,7 +6379,7 @@ This section documents planned features for future DawaTime releases. Features a
 
 **Phase 1** (Free Growth) - **MOST CRITICAL**:
 
-- **User Growth Rate**: 2x every 2-3 months (from 100 → 3,000+)
+- **User Growth Rate**: Q1: 200-300 | Q2: 400-600 | Q3: 800-1,200 | Q4: 1,200-1,800 (2026 targets)
 - **User Retention**: 30-day retention >40% (users find value)
 - **App Store Rating**: 4.5+ stars (50+ reviews minimum)
 - **DAU/MAU Ratio**: >30% (users open app regularly)
