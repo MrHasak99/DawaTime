@@ -494,12 +494,12 @@ window.addEventListener("flutter-first-frame", function () {
 - **Total modifications**: ~10 lines
 - **Categories**: SEO (12 changes), social media (13 changes), loading screen (108 lines), hidden content (19 lines)
 
-**Deployment**:
+**Deployment** (Migrated to Firebase Hosting - February 19, 2026):
 
-- **Platform**: Netlify
+- **Platform**: Firebase Hosting (multi-site target: `webapp`)
 - **URL**: https://webapp.dawatime.com
 - **Build command**: `flutter build web --release`
-- **Deploy command**: `netlify deploy --prod --dir build/web`
+- **Deploy command**: `firebase deploy --only hosting:webapp`
 - **Build time**: ~24 seconds
 - **Font optimization**: MaterialIcons tree-shaken 99.3% (1.6MB → 11.8KB)
 
@@ -2061,13 +2061,13 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - Distribution: Public download via website
 - Hosting: 16 files deployed
 
-**Web App (Netlify)**:
+**Web App (Firebase Hosting - Migrated February 19, 2026)**:
 
 - Deployed: https://webapp.dawatime.com
-- Assets: 7 files uploaded to CDN
+- Platform: Firebase Hosting multi-site (target: `webapp`)
+- Assets: 42 files deployed
 - Version tracking: version.json with build number
 - Build time: 22.3s
-- Deploy ID: 695b7be0ba8ac7b532bda500
 - **SEO Strategy**: Blocked from search engines via robots.txt (Day 11)
   - Purpose: Convenience tool for existing users (CRUD without notifications)
   - Not an acquisition channel - search traffic directed to dawatime.com
@@ -2112,7 +2112,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 - 10:50 - iOS IPA built (300.9s)
 - 11:45 - APK deployed to Firebase Hosting
 - 11:51 - Web app built (24.1s)
-- 11:57 - Web app deployed to Netlify (30.7s)
+- 11:57 - Web app deployed to Netlify (30.7s) [Migrated to Firebase Hosting Feb 19, 2026, Netlify project deleted same day]
 - 17:01 - Android AAB built for Play Console (62.4s)
 - Status: All platforms live/ready for review
 
@@ -2836,8 +2836,7 @@ flutter run -d chrome
 
 ```bash
 flutter build web --release
-cd build/web
-netlify deploy --prod --dir .
+firebase deploy --only hosting:webapp
 # Visit https://webapp.dawatime.com
 # Console output:
 # ✓ Firebase App Check activated
@@ -2890,7 +2889,7 @@ AppCheck: Requests throttled due to previous 400 error (appCheck/throttled)
 
 - [x] Code updated with correct site key
 - [x] `flutter build web --release` completed successfully
-- [x] Deployed to production (Netlify)
+- [x] Deployed to production (Firebase Hosting)
 - [x] Console verification: `"✓ Firebase App Check activated"` visible
 - [x] No Platform compatibility errors
 - [x] All three domains configured (localhost, webapp.dawatime.com, dawatime.com)
@@ -3788,7 +3787,8 @@ DawaTime uses Firebase Hosting multi-site configuration to host two separate app
 - **After**: Both sites consolidated on Firebase Hosting using multi-site architecture
 - **Reason**: Simplified infrastructure by hosting all services (Auth, Firestore, Functions, Hosting) on single Firebase project
 - **Date**: February 19, 2026
-- **Old Sites**: medication-cd9b8 (deprecated), dawatime.netlify.app (deprecated)
+- **Old Sites**: medication-cd9b8 (deprecated)
+- **Netlify Status**: Project deleted February 19, 2026 (custom domain had been removed, zero user impact)
 
 **Configuration Files**:
 
