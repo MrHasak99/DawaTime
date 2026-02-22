@@ -282,6 +282,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 **Status**: ✅ **COMPLETE** - All 4 Dependabot alerts resolved
 
 **Vulnerabilities Fixed**:
+
 - ✅ **fast-xml-parser (HIGH)**: DoS through entity expansion in DOCTYPE (GHSA-jmr7-xgp7-cmfj)
   - Fixed in root package.json (changed 3 packages)
   - Fixed in functions/package.json
@@ -290,6 +291,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
   - Fixed in functions/package.json (upgraded to ≥6.14.1)
 
 **Commands Executed**:
+
 ```bash
 # Root directory
 npm audit fix  # Changed 3 packages, audited 621 packages
@@ -301,6 +303,7 @@ cd functions && npm audit fix  # Updated transitive dependencies
 **Remaining Issues**: 29 vulnerabilities (3 moderate, 26 high) in devDependencies only, not in production build
 
 **Dependabot Alert #35 - ajv ReDoS (February 19, 2026)**:
+
 - **Alert**: ajv <8.18.0 vulnerable to ReDoS when using `$data` option (GHSA-2g4f-4pwh-qvx6)
 - **Severity**: Moderate (5.5/10 CVSS), low exploitability (EPSS 0.086%)
 - **Location**: functions/package-lock.json (nested in eslint dependencies)
@@ -309,7 +312,7 @@ cd functions && npm audit fix  # Updated transitive dependencies
   - Failed because eslint@8.57.1 has bundled ajv in nested node_modules
   - npm doesn't override nested dependencies with top-level versions
 - **Decision**: Accept dev-only risk and keep current versions (reverted ajv addition)
-- **Rationale**: 
+- **Rationale**:
   - All 29 vulnerabilities are in devDependencies (eslint, firebase-functions-test/jest, geoip-lite)
   - Zero impact on deployed Cloud Functions (production code unaffected)
   - `npm audit fix --force` would break modern linting (downgrade to eslint 4.1.1 from 2017)
@@ -317,6 +320,7 @@ cd functions && npm audit fix  # Updated transitive dependencies
 - **Risk**: Low (malicious code would need to be introduced during development to exploit)
 
 **Files Modified**:
+
 - `/package-lock.json` - Updated fast-xml-parser and qs versions
 - `/functions/package-lock.json` - Updated fast-xml-parser and qs versions
 
@@ -3003,24 +3007,26 @@ DawaTime is a Flutter medication reminder app with Firebase backend, designed fo
 
 DawaTime follows a success-driven geographic expansion model, validating product-market fit in each region before expanding to the next:
 
-**Phase 1: Kuwait Market (2025-2027)** - *Current Focus*
+**Phase 1: Kuwait Market (2025-2027)** - _Current Focus_
+
 - **Goal**: Establish strong local presence and brand recognition
-- **Milestones**: 
+- **Milestones**:
   - 2026: Reach 1,200-1,800 active users
   - 2027: Grow to 2,500-3,000 users for freemium viability
-- **Success Criteria**: 
+- **Success Criteria**:
   - 4.5+ App Store rating (50+ reviews)
   - 40%+ 30-day retention
   - Kuwait MOH partnership secured
   - Proven monetization model (if freemium launched)
-- **Market Advantages**: 
+- **Market Advantages**:
   - Developer is Kuwaiti (local credibility)
   - Arabic-first design resonates with target audience
   - Understanding of local healthcare system and pharmacy networks
   - High smartphone penetration (99%)
 - **Key Metrics**: User growth rate, retention, App Store rating, word-of-mouth acquisition
 
-**Phase 2: Middle East Expansion (2028+)** - *Conditional on Kuwait Success*
+**Phase 2: Middle East Expansion (2028+)** - _Conditional on Kuwait Success_
+
 - **Target Markets** (Priority Order):
   1. **GCC First**: Saudi Arabia, UAE, Qatar, Bahrain, Oman
      - Shared language (Arabic)
@@ -3046,7 +3052,8 @@ DawaTime follows a success-driven geographic expansion model, validating product
   - Marketing spend required for each new market
 - **Success Metrics**: User acquisition cost (CAC), market penetration rate, retention by country
 
-**Phase 3: Global Expansion (2030+)** - *Conditional on Middle East Success*
+**Phase 3: Global Expansion (2030+)** - _Conditional on Middle East Success_
+
 - **Target Markets** (Tiered Approach):
   - **Tier 1**: English-speaking markets (US, UK, Canada, Australia)
   - **Tier 2**: European Union (multilingual support required)
@@ -3070,6 +3077,7 @@ DawaTime follows a success-driven geographic expansion model, validating product
 - **Success Metrics**: International user growth, retention by region, revenue per geography
 
 **Expansion Timeline Estimate**:
+
 - **2025-2027**: Kuwait dominance (Phase 1)
 - **2028-2029**: GCC expansion (Phase 2 start)
 - **2030+**: Global markets (Phase 3, conditional on Phase 2 success)
@@ -3163,6 +3171,7 @@ DawaTime follows a success-driven geographic expansion model, validating product
   - **Import pattern**: `import 'package:dawatime/utils/medication_helpers.dart';`
 
 **Refactoring Benefits**: Single source of truth, ~897 lines eliminated, improved maintainability, cleaner imports, better organization.
+
 - `rescheduleAllMedications()`: 2 call sites (1 in home_page.dart, 1 in main.dart)
 
 ### Data Model & Firestore Structure
@@ -3465,6 +3474,36 @@ for (int i = 0; i <= 4; i++) {
 - Alert dialogs are non-blocking (user can dismiss and continue using app)
 
 ### Firebase Integration Details
+
+**Firebase Project Information**:
+
+- **Project ID**: `medication-cd9b8`
+- **Current Owner**: eng@hamadalkhalaf.com (Google Workspace account)
+- **Ownership Transfer**: February 22, 2026
+  - **From**: hasak81099@gmail.com (original owner)
+  - **To**: eng@hamadalkhalaf.com (current owner)
+  - **Reason**: Consolidation under professional Google Workspace domain
+  - **Verification**: ✅ Complete - CLI access confirmed, deployment permissions verified
+  - **Firebase CLI Version**: Updated to v15.7.0 (from v15.5.1) on transfer day
+- **Service Account**: medication-cd9b8@appspot.gserviceaccount.com
+- **Project URL**: https://console.firebase.google.com/project/medication-cd9b8
+- **Active Services**: Authentication, Firestore Database, Cloud Functions, Hosting (multi-site), Cloud Storage, Analytics, Crashlytics, Performance Monitoring, App Check, Cloud Messaging (FCM)
+
+**Ownership Transfer Verification** (February 22, 2026):
+
+1. ✅ Firebase CLI logout from old account: `firebase logout` (hasak81099@gmail.com)
+2. ✅ Firebase CLI login with new account: `firebase login` (eng@hamadalkhalaf.com)
+3. ✅ Project access verified: `firebase projects:list` showed medication-cd9b8
+4. ✅ Active project confirmed: `firebase use` displayed correct project
+5. ✅ Deployment permissions tested: `firebase deploy --only hosting:main --dry-run` succeeded
+
+**Important Notes**:
+
+- All Firebase configurations, service accounts, and secrets remain unchanged after ownership transfer
+- SMTP authentication continues using eng@hamadalkhalaf.com (already configured before transfer)
+- No user-facing or backend functionality affected by ownership change
+- All Cloud Functions and hosting configurations preserved
+- No code changes required in project files (firebase.json, .firebaserc, google-services.json, etc.)
 
 #### Cloud Functions (`functions/index.js`)
 
@@ -3959,12 +3998,8 @@ DawaTime uses Firebase Hosting multi-site configuration to host two separate app
   "targets": {
     "medication-cd9b8": {
       "hosting": {
-        "main": [
-          "dawatime-com"
-        ],
-        "webapp": [
-          "dawatime-webapp"
-        ]
+        "main": ["dawatime-com"],
+        "webapp": ["dawatime-webapp"]
       }
     }
   }
@@ -4820,7 +4855,7 @@ TextField(
   ```
 
 - **Applies to**: ScaffoldMessenger, Navigator, Theme, MediaQuery, all InheritedWidgets
-- **Real crashes fixed**: home_page.dart:2842, add_medications.dart:1205 (4 validation error SnackBars - Jan 26, 2026), login_page.dart:222 (_showLegalUpdateDialog accessing context after widget disposal - Feb 9, 2026)
+- **Real crashes fixed**: home_page.dart:2842, add_medications.dart:1205 (4 validation error SnackBars - Jan 26, 2026), login_page.dart:222 (\_showLegalUpdateDialog accessing context after widget disposal - Feb 9, 2026)
 
 **Problem 3: Unconstrained Widgets in Flex Layouts**
 
