@@ -277,6 +277,121 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - � **Production Crash Fixed**: v1.4.4 iOS SafariViewController crash confirmed via Crashlytics (FlutterError at url_launcher_ios.dart:176)
 - 📈 **Next Steps**: Monitor Crashlytics for v1.4.5 crash-free rate validation, track user adoption, prepare for MOH partnership application (Q2 2026)
 
+**Infrastructure Cleanup & Migration (February 27, 2026)**:
+
+**Status**: ✅ **COMPLETE** - Flutter web app migrated from Netlify → Firebase Hosting; DNS decluttered; project files cleaned up; ESLint fixed
+
+---
+
+#### Flutter Web App Migration: Netlify → Firebase Hosting
+
+- **Trigger**: Decision to consolidate all hosting on Firebase/Google to eliminate Cloudflare dependency and simplify the stack
+- **Build**: `flutter build web --release` — succeeded (42 files output to `build/web/`)
+- **Deploy**: `firebase deploy --only hosting:webapp` — deployed to `dawatime-webapp` Firebase Hosting site
+- **Live URL**: https://webapp.dawatime.com (CNAME → `dawatime-webapp.web.app` ✅)
+- **Custom Domain**: `webapp.dawatime.com` was already "Connected" in Firebase Console (pre-configured)
+- **CDN**: Firebase uses Fastly CDN (`x-served-by: cache-dxb*` headers) — same performance tier as Netlify
+- **Firebase target**: `webapp` → `dawatime-webapp` (defined in `.firebaserc` and `firebase.json`)
+- **Files deleted**:
+  - `netlify.toml` — Netlify configuration file, no longer needed
+  - `.netlify/` — Netlify local state folder (contained `state.json`, `functions-internal/`, `v1/`)
+
+---
+
+#### DNS Cleanup (Cloudflare)
+
+**Zoho Records Removed** (Zoho Mail stopped being used weeks prior, replaced by Google Workspace):
+
+- ✅ **SPF record updated**: Removed `include:zohomail.com` from `v=spf1` TXT record
+  - Before: `v=spf1 include:zohomail.com include:_spf.google.com ~all`
+  - After: `v=spf1 include:_spf.google.com ~all`
+- ✅ **`zoho-verification` TXT record deleted** (domain ownership verification for Zoho, no longer needed)
+
+**SendGrid Records Removed** (SendGrid was never actually used — email notifications use Nodemailer with Google Workspace SMTP `smtp.gmail.com`, not SendGrid):
+
+- ✅ Deleted 6 stale SendGrid DNS records:
+  - `em1234.dawatime.com` CNAME (SendGrid click tracking)
+  - `s1._domainkey.dawatime.com` CNAME (SendGrid DKIM key 1)
+  - `s2._domainkey.dawatime.com` CNAME (SendGrid DKIM key 2)
+  - `url1234.dawatime.com` CNAME (SendGrid link branding)
+  - `dawatime.com` TXT `v=DKIM1; k=rsa; p=...` (SendGrid DKIM public key)
+  - `_dmarc.dawatime.com` TXT `v=DMARC1; p=none; rua=mailto:...@sendgrid.com` (SendGrid DMARC reporting)
+
+**Remaining DNS records (all active/needed)**:
+
+| Record | Type | Purpose |
+|--------|------|---------|
+| `dawatime.com` | A | Firebase Hosting landing page (185.199.x.x) |
+| `www.dawatime.com` | CNAME | → `dawatime.com` |
+| `webapp.dawatime.com` | CNAME | → `dawatime-webapp.web.app` (Flutter web app) |
+| `dawatime.com` | MX | Google Workspace email routing |
+| `dawatime.com` | TXT SPF | `v=spf1 include:_spf.google.com ~all` |
+| `google._domainkey` | TXT | Google Workspace DKIM signing |
+| `_dmarc` | TXT | DMARC policy for email authentication |
+
+---
+
+#### Project File Cleanup
+
+**Files deleted**:
+
+| File | Reason |
+|------|--------|
+| `netlify.toml` | Netlify config — no longer using Netlify |
+| `.netlify/` | Netlify local state folder |
+| `package.json` (root) | Duplicate/leftover — real one is `functions/package.json` |
+| `package-lock.json` (root) | Duplicate/leftover — same reason |
+| `ios/Runner.xcodeproj/project.pbxproj.backup` | Xcode backup file |
+| `.firebase/hosting.YnVpbGQvd2Vi.cache` | Firebase deploy cache for `build/web` |
+| `.firebase/hosting.cHVibGlj.cache` | Firebase deploy cache for `public/` |
+| `functions/migrate-to-subcollections.js` | One-time migration script (already completed long ago) |
+
+**`.gitignore` updated**:
+- Removed stale Netlify comment block
+- Re-added `.netlify` as a proper gitignore entry
+
+**`functions/index.js` updated**:
+- Removed `require` and `exports` for the deleted migration script:
+  ```js
+  // REMOVED:
+  const { migrateMedicationsToSubcollections } = require("./migrate-to-subcollections");
+  exports.migrateMedicationsToSubcollections = migrateMedicationsToSubcollections;
+  ```
+
+---
+
+#### ESLint Fix (`functions/index.js`)
+
+- **Problem**: 543 pre-existing ESLint errors (2-space indentation vs required 4-space, `object-curly-spacing` violations)
+- **Auto-fix**: `./node_modules/.bin/eslint --fix index.js` resolved all but 2
+- **Manual fix**: 2 `max-len` violations (lines exceeded 80-char limit) fixed by splitting filter callbacks:
+  ```js
+  // Before (81+ chars):
+  const arabicUsers = deduplicatedUsers.filter((u) => u.language === "ar");
+  const englishUsers = deduplicatedUsers.filter((u) => u.language !== "ar");
+
+  // After:
+  const arabicUsers = deduplicatedUsers.filter(
+      (u) => u.language === "ar",
+  );
+  const englishUsers = deduplicatedUsers.filter(
+      (u) => u.language !== "ar",
+  );
+  ```
+- **Result**: `npm run lint` → **0 errors** ✅
+
+---
+
+#### Email Notification Architecture (Confirmed)
+
+Email notifications (contact form → Firestore → Cloud Function → email to admin) use:
+- **Transport**: Nodemailer with `smtp.gmail.com` (Google Workspace SMTP)
+- **Credentials**: Firebase Secret Manager (`EMAIL_USER`, `EMAIL_PASSWORD`) — NOT in source code
+- **Local dev only**: `functions/.env` contains plaintext credentials (properly listed in `functions/.gitignore`, never committed to Git)
+- **NOT using**: SendGrid (all SendGrid DNS records were stale leftovers from an abandoned setup attempt)
+
+---
+
 **npm Security Updates (February 18, 2026)**:
 
 **Status**: ✅ **COMPLETE** - All 4 Dependabot alerts resolved
