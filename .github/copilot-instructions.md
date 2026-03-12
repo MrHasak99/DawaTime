@@ -1419,6 +1419,51 @@ During Google Search Console investigation, discovered 1 unused ownership token 
 
 ---
 
+### Google Search Console - "Page with redirect" Validation Failure (March 12, 2026)
+
+**Status**: ✅ **COMPLETE** - sitemap and robots.txt fixed, deployed to Firebase Hosting
+
+**Issue**: Google Search Console showed "Validation Failed - Page with redirect" for 2 URLs:
+- `http://dawatime.com/` (last crawled Mar 4, 2026)
+- `https://www.dawatime.com/` (last crawled Mar 2, 2026)
+
+**Root Cause Analysis**:
+
+These pages are **working correctly as 301 redirects** — they are supposed to redirect:
+- `http://dawatime.com/` → `https://dawatime.com/` (via Cloudflare/Firebase)
+- `https://www.dawatime.com/` → `https://dawatime.com/` (via Cloudflare Redirect Rule)
+
+The "Validation Failed" status is **expected behavior** — redirect pages can never be indexed as standalone pages. Google's validation will always fail for redirect URLs because they are not indexable. The canonical `https://dawatime.com/` is correctly indexed.
+
+**Key Insight**: The `http://dawatime.com{,/**}` redirect rule in `firebase.json` is dead code — Firebase Hosting only serves HTTPS, so this rule never fires at the Firebase level. The HTTP→HTTPS redirect is handled by Cloudflare infrastructure automatically. The rule is harmless but misleading.
+
+**Fixes Applied (March 12, 2026)**:
+
+1. **`/public/robots.txt`** — Added missing `Disallow: /user-management` rule (was documented as required since Day 8 but was absent from the file):
+   ```
+   User-agent: *
+   Allow: /
+   Disallow: /user-management
+
+   Sitemap: https://dawatime.com/sitemap.xml
+   ```
+
+2. **`/public/sitemap.xml`** — Two changes:
+   - Removed `/user-management` entry (Firebase Auth action handler page — password reset, email verification — not a public indexable page)
+   - Updated `lastmod` to `2026-03-12` for homepage (`/`) and support page (`/support`)
+
+3. **Deployment**: `firebase deploy --only hosting:main` — 20 files deployed successfully ✅
+
+**What NOT to do**: Do not attempt to "fix" the redirect validation in Google Search Console by clicking "Start New Validation" — redirect pages will always fail indexing validation. These URLs are correctly redirecting and should remain as-is.
+
+**DNS**: Cloudflare DNS remains as-is. The `www` redirect is handled by the Cloudflare Redirect Rule (configured January 29, 2026). No DNS changes needed.
+
+**Files Modified**:
+- `/public/robots.txt` — Added `Disallow: /user-management`
+- `/public/sitemap.xml` — Removed `/user-management`, updated lastmod dates
+
+---
+
 ### Legal Document Webpages & App Integration (December 2025)
 
 **Status**: ✅ **COMPLETE** - Dedicated legal document pages created and integrated into app

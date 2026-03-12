@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /user-management
 
 Sitemap: https://dawatime.com/sitemap.xml
