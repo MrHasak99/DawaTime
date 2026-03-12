@@ -319,15 +319,15 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 **Remaining DNS records (all active/needed)**:
 
-| Record | Type | Purpose |
-|--------|------|---------|
-| `dawatime.com` | A | Firebase Hosting landing page (185.199.x.x) |
-| `www.dawatime.com` | CNAME | → `dawatime.com` |
-| `webapp.dawatime.com` | CNAME | → `dawatime-webapp.web.app` (Flutter web app) |
-| `dawatime.com` | MX | Google Workspace email routing |
-| `dawatime.com` | TXT SPF | `v=spf1 include:_spf.google.com ~all` |
-| `google._domainkey` | TXT | Google Workspace DKIM signing |
-| `_dmarc` | TXT | DMARC policy for email authentication |
+| Record                | Type    | Purpose                                       |
+| --------------------- | ------- | --------------------------------------------- |
+| `dawatime.com`        | A       | Firebase Hosting landing page (185.199.x.x)   |
+| `www.dawatime.com`    | CNAME   | → `dawatime.com`                              |
+| `webapp.dawatime.com` | CNAME   | → `dawatime-webapp.web.app` (Flutter web app) |
+| `dawatime.com`        | MX      | Google Workspace email routing                |
+| `dawatime.com`        | TXT SPF | `v=spf1 include:_spf.google.com ~all`         |
+| `google._domainkey`   | TXT     | Google Workspace DKIM signing                 |
+| `_dmarc`              | TXT     | DMARC policy for email authentication         |
 
 ---
 
@@ -335,27 +335,32 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 
 **Files deleted**:
 
-| File | Reason |
-|------|--------|
-| `netlify.toml` | Netlify config — no longer using Netlify |
-| `.netlify/` | Netlify local state folder |
-| `package.json` (root) | Duplicate/leftover — real one is `functions/package.json` |
-| `package-lock.json` (root) | Duplicate/leftover — same reason |
-| `ios/Runner.xcodeproj/project.pbxproj.backup` | Xcode backup file |
-| `.firebase/hosting.YnVpbGQvd2Vi.cache` | Firebase deploy cache for `build/web` |
-| `.firebase/hosting.cHVibGlj.cache` | Firebase deploy cache for `public/` |
-| `functions/migrate-to-subcollections.js` | One-time migration script (already completed long ago) |
+| File                                          | Reason                                                    |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `netlify.toml`                                | Netlify config — no longer using Netlify                  |
+| `.netlify/`                                   | Netlify local state folder                                |
+| `package.json` (root)                         | Duplicate/leftover — real one is `functions/package.json` |
+| `package-lock.json` (root)                    | Duplicate/leftover — same reason                          |
+| `ios/Runner.xcodeproj/project.pbxproj.backup` | Xcode backup file                                         |
+| `.firebase/hosting.YnVpbGQvd2Vi.cache`        | Firebase deploy cache for `build/web`                     |
+| `.firebase/hosting.cHVibGlj.cache`            | Firebase deploy cache for `public/`                       |
+| `functions/migrate-to-subcollections.js`      | One-time migration script (already completed long ago)    |
 
 **`.gitignore` updated**:
+
 - Removed stale Netlify comment block
 - Re-added `.netlify` as a proper gitignore entry
 
 **`functions/index.js` updated**:
+
 - Removed `require` and `exports` for the deleted migration script:
   ```js
   // REMOVED:
-  const { migrateMedicationsToSubcollections } = require("./migrate-to-subcollections");
-  exports.migrateMedicationsToSubcollections = migrateMedicationsToSubcollections;
+  const {
+    migrateMedicationsToSubcollections,
+  } = require("./migrate-to-subcollections");
+  exports.migrateMedicationsToSubcollections =
+    migrateMedicationsToSubcollections;
   ```
 
 ---
@@ -365,19 +370,17 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **Problem**: 543 pre-existing ESLint errors (2-space indentation vs required 4-space, `object-curly-spacing` violations)
 - **Auto-fix**: `./node_modules/.bin/eslint --fix index.js` resolved all but 2
 - **Manual fix**: 2 `max-len` violations (lines exceeded 80-char limit) fixed by splitting filter callbacks:
+
   ```js
   // Before (81+ chars):
   const arabicUsers = deduplicatedUsers.filter((u) => u.language === "ar");
   const englishUsers = deduplicatedUsers.filter((u) => u.language !== "ar");
 
   // After:
-  const arabicUsers = deduplicatedUsers.filter(
-      (u) => u.language === "ar",
-  );
-  const englishUsers = deduplicatedUsers.filter(
-      (u) => u.language !== "ar",
-  );
+  const arabicUsers = deduplicatedUsers.filter((u) => u.language === "ar");
+  const englishUsers = deduplicatedUsers.filter((u) => u.language !== "ar");
   ```
+
 - **Result**: `npm run lint` → **0 errors** ✅
 
 ---
@@ -385,6 +388,7 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 #### Email Notification Architecture (Confirmed)
 
 Email notifications (contact form → Firestore → Cloud Function → email to admin) use:
+
 - **Transport**: Nodemailer with `smtp.gmail.com` (Google Workspace SMTP)
 - **Credentials**: Firebase Secret Manager (`EMAIL_USER`, `EMAIL_PASSWORD`) — NOT in source code
 - **Local dev only**: `functions/.env` contains plaintext credentials (properly listed in `functions/.gitignore`, never committed to Git)
@@ -1424,12 +1428,14 @@ During Google Search Console investigation, discovered 1 unused ownership token 
 **Status**: ✅ **COMPLETE** - sitemap and robots.txt fixed, deployed to Firebase Hosting
 
 **Issue**: Google Search Console showed "Validation Failed - Page with redirect" for 2 URLs:
+
 - `http://dawatime.com/` (last crawled Mar 4, 2026)
 - `https://www.dawatime.com/` (last crawled Mar 2, 2026)
 
 **Root Cause Analysis**:
 
 These pages are **working correctly as 301 redirects** — they are supposed to redirect:
+
 - `http://dawatime.com/` → `https://dawatime.com/` (via Cloudflare/Firebase)
 - `https://www.dawatime.com/` → `https://dawatime.com/` (via Cloudflare Redirect Rule)
 
@@ -1440,6 +1446,7 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
 **Fixes Applied (March 12, 2026)**:
 
 1. **`/public/robots.txt`** — Added missing `Disallow: /user-management` rule (was documented as required since Day 8 but was absent from the file):
+
    ```
    User-agent: *
    Allow: /
@@ -1459,6 +1466,7 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
 **DNS**: Cloudflare DNS remains as-is. The `www` redirect is handled by the Cloudflare Redirect Rule (configured January 29, 2026). No DNS changes needed.
 
 **Files Modified**:
+
 - `/public/robots.txt` — Added `Disallow: /user-management`
 - `/public/sitemap.xml` — Removed `/user-management`, updated lastmod dates
 
