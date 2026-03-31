@@ -7,7 +7,7 @@
 
 **DawaTime** is a production-grade medication reminder application designed for the Kuwait and GCC market. Built with Flutter and Firebase, it focuses on extreme reliability, bilingual accessibility (English/Arabic), and smart scheduling to help users never miss a dose.
 
-> **"دواء" (Dawa)** = Medicine in Arabic. **"Time"** = Never miss it.
+> **"Dawa" (دواء)** = Medicine in Arabic &nbsp;•&nbsp; **"Time"** = Never miss it.
 
 ---
 
