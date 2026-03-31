@@ -117,7 +117,7 @@
       const arText = element.getAttribute("data-ar");
       if (enText && arText) {
         const textToSet = newLang === "ar" ? arText : enText;
-        element.innerHTML = textToSet;
+        element.textContent = textToSet;
       }
     });
 
@@ -187,7 +187,7 @@
       document.querySelectorAll("[data-en][data-ar]").forEach((element) => {
         const arText = element.getAttribute("data-ar");
         if (arText) {
-          element.innerHTML = arText;
+          element.textContent = arText;
         }
       });
 
