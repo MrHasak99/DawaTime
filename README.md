@@ -26,11 +26,11 @@
 
 ## 📱 Download
 
-| Platform | Link | Status |
-|---|---|---|
-| iOS App Store | [Download](https://apps.apple.com/app/dawatime/id6748280994) | ✅ Live (v1.4.5) |
+| Platform          | Link                                                                             | Status           |
+| ----------------- | -------------------------------------------------------------------------------- | ---------------- |
+| iOS App Store     | [Download](https://apps.apple.com/app/dawatime/id6748280994)                     | ✅ Live (v1.4.5) |
 | Google Play Store | [Download](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime) | ✅ Live (v1.4.5) |
-| Web App | [Open](https://webapp.dawatime.com) | ✅ Live |
+| Web App           | [Open](https://webapp.dawatime.com)                                              | ✅ Live          |
 
 ---
 
@@ -55,19 +55,19 @@ Flutter App (iOS / Android / Web)
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology |
-|---|---|
-| **Mobile Framework** | Flutter (Dart) |
-| **Authentication** | Firebase Auth (email/password + verification) |
-| **Database** | Cloud Firestore (subcollection structure) |
-| **Cloud Logic** | Firebase Cloud Functions (Node.js) |
-| **Push Notifications** | Firebase Cloud Messaging (FCM) |
-| **Local Notifications** | `flutter_local_notifications` |
-| **Background Tasks** | `workmanager` (hourly medication rescheduling) |
-| **Observability** | Firebase Crashlytics, Analytics, Performance |
-| **Hosting** | Firebase Hosting (multi-site: main + webapp) |
-| **Security** | Firebase App Check + Play Integrity API |
-| **Localization** | Flutter ARB files (English + Arabic) |
+| Layer                   | Technology                                     |
+| ----------------------- | ---------------------------------------------- |
+| **Mobile Framework**    | Flutter (Dart)                                 |
+| **Authentication**      | Firebase Auth (email/password + verification)  |
+| **Database**            | Cloud Firestore (subcollection structure)      |
+| **Cloud Logic**         | Firebase Cloud Functions (Node.js)             |
+| **Push Notifications**  | Firebase Cloud Messaging (FCM)                 |
+| **Local Notifications** | `flutter_local_notifications`                  |
+| **Background Tasks**    | `workmanager` (hourly medication rescheduling) |
+| **Observability**       | Firebase Crashlytics, Analytics, Performance   |
+| **Hosting**             | Firebase Hosting (multi-site: main + webapp)   |
+| **Security**            | Firebase App Check + Play Integrity API        |
+| **Localization**        | Flutter ARB files (English + Arabic)           |
 
 ---
 
@@ -116,12 +116,14 @@ dawatime/
 ### Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/MrHasak99/dawatime.git
    cd dawatime
    ```
 
 2. **Install Flutter dependencies**:
+
    ```bash
    flutter pub get
    ```
@@ -139,6 +141,7 @@ dawatime/
    - Create the `/AppConfig/Version` document with `version: "1.4.5"`
 
 5. **Deploy Cloud Functions**:
+
    ```bash
    cd functions
    npm install
@@ -154,35 +157,36 @@ dawatime/
 
 ## 📋 Version History
 
-| Version | Date | Highlights |
-|---|---|---|
-| v1.1.1 | Aug 2025 | First iOS App Store release |
-| v1.2.1 | Aug 2025 | Arabic localization + RTL support |
-| v1.3.4 | Oct 2025 | Weekday scheduling + website distribution |
-| v1.4.4 | Jan 21, 2026 | Database migration + iOS fixes + Google Play debut |
-| v1.4.5 | Feb 11, 2026 | Play Integrity API + Safe URL launching + 7 critical fixes |
+| Version | Date         | Highlights                                                 |
+| ------- | ------------ | ---------------------------------------------------------- |
+| v1.1.1  | Aug 14, 2025 | First iOS App Store release                                |
+| v1.2.1  | Aug 28, 2025 | Arabic localization + RTL support                          |
+| v1.2.2  | Aug 31, 2025 | Bug fixes                                                  |
+| v1.3.4  | Oct 28, 2025 | Weekday scheduling + website distribution                  |
+| v1.4.4  | Jan 21, 2026 | Database migration + iOS fixes + Google Play debut         |
+| v1.4.5  | Feb 11, 2026 | Play Integrity API + Safe URL launching + 7 critical fixes |
 
 ---
 
 ## 📖 The Story: From Failure to Production
 
-DawaTime is a reincarnation of a failed 2022 Flutter course final project. The original submission had broken save functionality, no notifications, and local-only storage. Rather than abandoning the concept, the developer rebuilt it from scratch — while working full-time at Kuwait's Ministry of Electricity & Water — and went on to teach the same Flutter course as a Teacher Assistant.
+DawaTime is a reincarnation of a [failed 2022 Flutter course final project](https://github.com/MrHasak99/UC-final-project-flutter). The original submission had broken save functionality, no notifications, and local-only storage. Rather than abandoning the concept, Hamad rebuilt it from scratch — while working full-time at Kuwait's Ministry of Electricity & Water — and went on to teach the same Flutter course he had once failed.
 
-| Original Failed Project (2022) | DawaTime Rebuild (2025–2026) |
-|---|---|
-| ❌ Uninitialized variables → crashes | ✅ Proper state management |
-| ❌ Local-only SharedPreferences | ✅ Firebase Firestore cloud database |
-| ❌ Single medication storage | ✅ Unlimited medications (subcollections) |
-| ❌ No notification system | ✅ 5 follow-up reminders per medication |
-| ❌ No authentication | ✅ Firebase Auth with email verification |
-| ❌ Broken delete button | ✅ Swipe gestures with undo |
-| ❌ 0 users (never worked) | ✅ 110+ active users in Kuwait |
+| Original Failed Project (2022)       | DawaTime Rebuild (2025–2026)              |
+| ------------------------------------ | ----------------------------------------- |
+| ❌ Uninitialized variables → crashes | ✅ Proper state management                |
+| ❌ Local-only SharedPreferences      | ✅ Firebase Firestore cloud database      |
+| ❌ Single medication storage         | ✅ Unlimited medications (subcollections) |
+| ❌ No notification system            | ✅ 5 follow-up reminders per medication   |
+| ❌ No authentication                 | ✅ Firebase Auth with email verification  |
+| ❌ Broken delete button              | ✅ Swipe gestures with undo               |
+| ❌ 0 users (never worked)            | ✅ 110+ active users in Kuwait            |
 
 ---
 
 ## 👤 Developer
 
-**Hamad AlKhalaf** — Full-stack developer, Flutter Teacher Assistant at CODED, and full-time employee at Kuwait's Ministry of Electricity & Water.
+**Hamad AlKhalaf** — Full-stack developer and full-time employee at Kuwait's Ministry of Electricity & Water.
 
 - 🌐 [Portfolio](https://hamadalkhalaf.com)
 - 💼 [LinkedIn](https://www.linkedin.com/in/hamad-alkhalaf/)
@@ -201,4 +205,4 @@ All rights reserved © Hamad AlKhalaf.
 
 ---
 
-*DawaTime — Never miss a dose. 💚*
+_DawaTime — Never miss a dose. 💚_

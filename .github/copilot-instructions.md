@@ -6,7 +6,7 @@
 
 **Original Failed Project**:
 
-- **Repository**: https://github.com/MrHasak99/UC-final-project-2 (uploaded December 20, 2022)
+- **Repository**: https://github.com/MrHasak99/UC-final-project-flutter (uploaded December 20, 2022)
 - **Context**: CODED UniCODE Flutter course final project (2-week program, December 2022)
 - **Outcome**: Passed the course, but submitted broken/incomplete project at last possible minute
 - **Key Issues**: Rushed submission with critical bugs (save functionality broken, null safety crashes), acknowledged as personal failure despite passing grade
