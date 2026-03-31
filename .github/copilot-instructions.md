@@ -45,18 +45,6 @@
 - **January 21, 2026**: Website post-launch updates - Google Play badge integration, Web App reactivation, improved Arabic translations, larger logo with favicon optimization
 - **January 21, 2026**: Marketing campaigns launched - Instagram paid advertising (50-75 KWD/month Kuwait targeting), LinkedIn professional positioning (failure→success narrative), multi-channel brand coordination (Instagram consumer + LinkedIn professional + Portfolio evergreen)
 
-**Portfolio Strategy**:
-DawaTime serves as the **first project** in Hamad's programming portfolio (https://hamadalkhalaf.com), demonstrating:
-
-- **Resilience**: Turning failure into learning opportunity
-- **Professional Growth**: Evolution from student code to production-ready app
-- **End-to-End Development**: Concept → Design → Development → Testing → Production → Growth
-- **Strategic Thinking**: Not just building features, but planning sustainable business model
-- **Real-World Impact**: Solving actual medication adherence problems for 100+ Kuwaiti users
-- **Technical Breadth**: Flutter, Firebase, Cloud Functions, iOS/Android, web deployment, localization (Arabic/English)
-
-**Why This Story Matters**: Demonstrates perseverance and learning agility (shipping real products while at MEW), powerful failure→success narrative ("learned more from rebuilding"), taught same course he failed (broken project → 13 months volunteering → paid TA), documents growth from student to production.
-
 **Key Learnings from Failure → Success**:
 
 1. **Scope Management**: Started with MVP (medication reminders), added features incrementally
@@ -102,10 +90,6 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 | ❌ Typos, poor code quality               | ✅ Production monitoring (Crashlytics, Analytics)     |
 | ❌ 0 users (never worked)                 | ✅ 108 active users in Kuwait market (103 real users) |
 
-**Portfolio Narrative Power**: This technical analysis demonstrates not just "I rebuilt an app" but "I identified fundamental flaws (uninitialized variables, broken architecture, missing features), implemented professional solutions (Firebase cloud architecture, proper state management, working notifications), and shipped a production app with real users." The failure becomes a strength by showing deep understanding of what makes software succeed vs fail.
-
-**Interview Talking Point**: _"I learned more from failing and rebuilding than from the course itself. My final project failed because uninitialized variables crashed the save functionality, local-only storage limited scalability, and core features like notifications were missing entirely. While working full-time at Kuwait's Ministry of Electricity & Water, I joined CODED as Student Mentor, volunteering for 13 months before being promoted to paid Teacher Assistant position, supporting the same UniCODE course I had failed. Two years after that, I rebuilt from scratch with Firebase cloud architecture, proper state management, and working notifications. Result: 113 real users in Kuwait with production apps on both iOS and Android (118 total including test accounts)."_
-
 **Current Status** (February 2026 - Day 44):
 
 - **Users**: 118 registered users in Kuwait (68 pre-testing + 15 closed testing + 35 post-launch)
@@ -127,12 +111,6 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - **Next Milestone**: Growth phase - targeting 200-300 users by March 2026 (Q1 2026, recalibrated based on 0.48/day organic growth rate)
 - **Next Hotfix**: v1.4.5 (Play Integrity API + Safe URL fix + Update Checker + Signup Buttons Android) - deploy Days 16-20
 - **Vision**: Public health tool first, commercial product second
-
-**App Store Links**:
-
-- **iOS App Store**: https://apps.apple.com/app/dawatime/id6748280994
-- **Google Play Store**: https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime
-- **Google Play Testing**: https://play.google.com/apps/testing/com.mrhasak99.dawatime
 
 ---
 
@@ -179,14 +157,6 @@ DawaTime serves as the **first project** in Hamad's programming portfolio (https
 - Customizable refill reminder scheduling (day/time selection)
 - Legal document version tracking system
 - **Deployed simultaneously**: iOS App Store + Google Play Store (coordinated launch)
-
-**Version History**:
-
-- **v1.1.1** (August 14, 2025): First iOS App Store release
-- **v1.2.1** (August 28, 2025): Arabic localization added
-- **v1.3.4** (October 26, 2025): Weekday scheduling + website APK distribution
-- **v1.4.4** (January 21, 2026): Database migration + iOS fixes + Play Store debut
-- **v1.4.5** (February 11, 2026): Play Integrity API + Safe URL launching + 7 critical stability fixes + 30 professional screenshots
 
 ### Stable Feature Set (v1.3.4)
 
