@@ -249,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               Navigator.pop(context);
                                               try {
                                                 final url = Uri.parse(
-                                                  'https://hamadalkhalaf.com',
+                                                  'https://portfolio.hamadalkhalaf.com',
                                                 );
                                                 if (await canLaunchUrl(url)) {
                                                   await launchUrl(

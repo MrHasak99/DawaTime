@@ -701,7 +701,7 @@ window.addEventListener("flutter-first-frame", function () {
   - Added "visitPortfolio" localization keys in app_en.arb, app_ar.arb
   - Made developer name section clickable in settings.dart (lines 225-285)
   - Added Column with developer name + "Visit Portfolio" link (language icon + underlined text)
-  - Links to: https://hamadalkhalaf.com
+  - Links to: https://portfolio.hamadalkhalaf.com
 - **Impact**: Users can access developer's portfolio website from app settings
 - **Testing**: ✅ **User confirmed: "portfolio is now shown and it works"**
 
@@ -878,7 +878,7 @@ Never miss a dose! 💚
 
 - **Instagram** (Consumer): Local pride (#MadeInKuwait), health benefit ("Never miss a dose"), bilingual GCC targeting, paid ads for acquisition
 - **LinkedIn** (Professional): Builder credibility, failure→success narrative, technical showcase, growth mindset
-- **Portfolio** (Evergreen): https://hamadalkhalaf.com - Capability-focused, dual-platform availability, no limiting metrics
+- **Portfolio** (Evergreen): https://portfolio.hamadalkhalaf.com - Capability-focused, dual-platform availability, no limiting metrics
 - **Milestone**: January 21, 2026 - Coordinated multi-platform marketing launch (Instagram paid + LinkedIn organic + Portfolio integration)
 
 **Post-Launch Actions** (Days 15-22):
@@ -2464,7 +2464,7 @@ This is NOT a new app launch - it's an **upgrade story**:
 
 - **Instagram** (Consumer): Local pride (#MadeInKuwait), health benefit ("Never miss a dose"), bilingual Kuwait/GCC targeting, paid advertising for user acquisition
 - **LinkedIn** (Professional): Builder credibility, failure→success narrative, technical execution showcase, growth mindset positioning
-- **Portfolio** (Evergreen): https://hamadalkhalaf.com - Capability-focused, dual-platform availability, no limiting metrics
+- **Portfolio** (Evergreen): https://portfolio.hamadalkhalaf.com - Capability-focused, dual-platform availability, no limiting metrics
 - **Day 15 Milestone**: January 21, 2026 marks coordinated multi-platform marketing launch (Instagram paid ads + LinkedIn organic + Portfolio integration)
 
 **Post-Launch Strategy**:

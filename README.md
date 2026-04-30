@@ -188,7 +188,7 @@ DawaTime is a reincarnation of a [failed 2022 Flutter course final project](http
 
 **Hamad AlKhalaf** — Full-stack developer and full-time employee at Kuwait's Ministry of Electricity & Water.
 
-- 🌐 [Portfolio](https://hamadalkhalaf.com)
+- 🌐 [Portfolio](https://portfolio.hamadalkhalaf.com)
 - 💼 [LinkedIn](https://www.linkedin.com/in/hamad-alkhalaf/)
 - 📸 [Instagram](https://www.instagram.com/eng.hamad_alkhalaf/)
 - 📱 [DawaTime on Instagram](https://www.instagram.com/dawatime.app/)
