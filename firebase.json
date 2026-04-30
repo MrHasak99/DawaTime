@@ -58,16 +58,6 @@
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "redirects": [
         {
-          "source": "http://dawatime.com{,/**}",
-          "destination": "https://dawatime.com",
-          "type": 301
-        },
-        {
-          "source": "https://www.dawatime.com{,/**}",
-          "destination": "https://dawatime.com",
-          "type": 301
-        },
-        {
           "source": "/account-deletion.html",
           "destination": "/account-deletion",
           "type": 301
