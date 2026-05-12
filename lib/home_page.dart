@@ -536,6 +536,8 @@ class _HomePageState extends State<HomePage> {
               startDate: nextScheduled,
               daysOfWeek: medication.daysOfWeek,
               lastTaken: medication.lastTaken,
+              refillThreshold: medication.refillThreshold,
+              refillNotified: medication.refillNotified,
             );
             await _getMedicationsCollection(
               userId,
@@ -2744,8 +2746,37 @@ class _HomePageState extends State<HomePage> {
                                                                     ),
                                                                   )
                                                                   : null,
-                                                          'refillNotified':
-                                                              false,
+                                                          'refillNotified': () {
+                                                            final newAmount =
+                                                                double.tryParse(
+                                                                  convertArabicNumerals(
+                                                                    amountController
+                                                                        .text,
+                                                                  ),
+                                                                ) ??
+                                                                0;
+                                                            final newThreshold =
+                                                                refillThresholdController
+                                                                        .text
+                                                                        .isNotEmpty
+                                                                    ? double.tryParse(
+                                                                      convertArabicNumerals(
+                                                                        refillThresholdController
+                                                                            .text,
+                                                                      ),
+                                                                    )
+                                                                    : null;
+                                                            if (newThreshold ==
+                                                                    null ||
+                                                                newThreshold <=
+                                                                    0 ||
+                                                                newAmount >
+                                                                    newThreshold) {
+                                                              return false;
+                                                            }
+                                                            return medication
+                                                                .refillNotified;
+                                                          }(),
                                                           'notifyTime':
                                                               selectedTime !=
                                                                       null
@@ -3542,6 +3573,33 @@ class _HomePageState extends State<HomePage> {
                                                               scheduled = true;
                                                             }
                                                           }
+                                                        }
+                                                      }
+                                                      if (restoredMedication
+                                                                  .refillThreshold !=
+                                                              null &&
+                                                          restoredMedication
+                                                                  .refillThreshold! >
+                                                              0) {
+                                                        if (restoredMedication
+                                                                .amount <=
+                                                            restoredMedication
+                                                                .refillThreshold!) {
+                                                          await scheduleWeeklyRefillNotification(
+                                                            restoredMedication,
+                                                            docId,
+                                                            widget.uid!,
+                                                          );
+                                                        } else {
+                                                          await cancelRefillNotifications(
+                                                            docId,
+                                                          );
+                                                          await _getMedicationsCollection(
+                                                            widget.uid!,
+                                                          ).doc(docId).update({
+                                                            'refillNotified':
+                                                                false,
+                                                          });
                                                         }
                                                       }
                                                       if (!scheduled) {

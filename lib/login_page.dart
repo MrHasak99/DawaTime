@@ -889,12 +889,19 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         }
                       } catch (e) {
+                        String errorMessage =
+                            '${AppLocalizations.of(context)!.resetEmailFailed} $e';
+                        if (e.toString().contains('requests-from-referer') &&
+                            e.toString().contains('blocked')) {
+                          errorMessage =
+                              'Error: localhost is not authorized in Firebase Console. Please add "localhost" to "Authorized domains" in Authentication settings.';
+                        }
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              backgroundColor: const Color(0xFF8AC249),
+                              backgroundColor: Colors.red,
                               content: Text(
-                                '${AppLocalizations.of(context)!.resetEmailFailed} $e',
+                                errorMessage,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

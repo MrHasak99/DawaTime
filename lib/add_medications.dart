@@ -1149,24 +1149,55 @@ class _AddMedicationsState extends State<AddMedications> {
                                                                         .daysOfWeek
                                                                 ? _selectedDaysOfWeek
                                                                 : null,
-                                                        'refillThreshold':
-                                                            refillThresholdController
-                                                                    .text
-                                                                    .isNotEmpty
-                                                                ? double.tryParse(
-                                                                  convertArabicNumerals(
-                                                                    refillThresholdController
-                                                                        .text,
-                                                                  ),
-                                                                )
-                                                                : null,
-                                                        'refillNotified': false,
-                                                      });
-                                                  final updatedDoc =
-                                                      await firestore
-                                                          .collection(
-                                                            widget.uid,
-                                                          )
+                                                         'refillThreshold':
+                                                             refillThresholdController
+                                                                     .text
+                                                                     .isNotEmpty
+                                                                 ? double.tryParse(
+                                                                   convertArabicNumerals(
+                                                                     refillThresholdController
+                                                                         .text,
+                                                                   ),
+                                                                 )
+                                                                 : null,
+                                                         'refillNotified': () {
+                                                           final newAmount = double.tryParse(
+                                                                 convertArabicNumerals(
+                                                                   amountController
+                                                                       .text,
+                                                                 ),
+                                                               ) ??
+                                                               0;
+                                                           final newThreshold = refillThresholdController
+                                                                   .text
+                                                                   .isNotEmpty
+                                                               ? double.tryParse(
+                                                                 convertArabicNumerals(
+                                                                   refillThresholdController
+                                                                       .text,
+                                                                 ),
+                                                               )
+                                                               : null;
+                                                           // Reset refillNotified if threshold removed or amount is now above threshold
+                                                           if (newThreshold ==
+                                                                   null ||
+                                                               newThreshold <=
+                                                                   0 ||
+                                                               newAmount >
+                                                                   newThreshold) {
+                                                             return false;
+                                                           }
+                                                           // Preserve existing value when still below threshold
+                                                           return widget
+                                                               .medication
+                                                               ?.refillNotified;
+                                                         }(),
+                                                       });
+                                                   final updatedDoc =
+                                                       await firestore
+                                                           .collection(
+                                                             widget.uid,
+                                                           )
                                                           .doc(widget.docId)
                                                           .get();
                                                   final updatedMedication =
