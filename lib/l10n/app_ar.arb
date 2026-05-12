@@ -192,5 +192,6 @@
   "viewTerms": "عرض الشروط والأحكام",
   "viewPrivacy": "عرض سياسة الخصوصية",
   "acceptUpdatedLegal": "أوافق على الشروط والأحكام وسياسة الخصوصية المحدثة",
-  "declineAndLogout": "رفض و تسجيل الخروج"
+  "declineAndLogout": "رفض و تسجيل الخروج",
+  "today": "اليوم"
 }

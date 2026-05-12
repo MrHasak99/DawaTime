@@ -606,4 +606,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get declineAndLogout => 'رفض و تسجيل الخروج';
+
+  @override
+  String get today => 'اليوم';
 }

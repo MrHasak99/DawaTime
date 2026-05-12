@@ -190,5 +190,6 @@
   "viewTerms": "View Terms & Conditions",
   "viewPrivacy": "View Privacy Policy",
   "acceptUpdatedLegal": "I accept the updated Terms & Conditions and Privacy Policy",
-  "declineAndLogout": "Decline & Logout"
+  "declineAndLogout": "Decline & Logout",
+  "today": "Today"
 }

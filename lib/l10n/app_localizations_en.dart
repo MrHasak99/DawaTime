@@ -606,4 +606,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get declineAndLogout => 'Decline & Logout';
+
+  @override
+  String get today => 'Today';
 }

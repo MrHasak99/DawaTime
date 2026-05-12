@@ -82,35 +82,21 @@ Future<void> main() async {
     ).timeout(const Duration(seconds: 10));
   } catch (_) {}
 
-  if (kIsWeb) {
-    await FirebaseAppCheck.instance.activate(
-      providerWeb: ReCaptchaV3Provider(
-        '6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN',
-      ),
-    );
-  } else {
-    await FirebaseAppCheck.instance.activate();
-  }
-
-  if (!kIsWeb) {
-    try {
-      Workmanager().initialize(callbackDispatcher);
-
-      Workmanager().registerPeriodicTask(
-        "medicationRescheduleTask",
-        "medicationRescheduleTask",
-        frequency: Duration(hours: 1),
-        initialDelay: Duration(minutes: 1),
-        constraints: Constraints(
-          networkType: NetworkType.notRequired,
-          requiresBatteryNotLow: false,
-          requiresCharging: false,
-          requiresDeviceIdle: false,
-          requiresStorageNotLow: false,
-        ),
+  try {
+    if (kIsWeb) {
+      await FirebaseAppCheck.instance
+          .activate(
+            providerWeb: ReCaptchaV3Provider(
+              '6LckwmAsAAAAABI25gZvyKhtYcEAou1nheMhIsxN',
+            ),
+          )
+          .timeout(const Duration(seconds: 5));
+    } else {
+      await FirebaseAppCheck.instance.activate().timeout(
+        const Duration(seconds: 5),
       );
-    } catch (_) {}
-  }
+    }
+  } catch (_) {}
 
   final prefs = await SharedPreferences.getInstance();
   final themeString = prefs.getString('themeMode');
@@ -227,14 +213,20 @@ Future<void> main() async {
         _firebaseMessagingBackgroundHandler,
       );
 
-      await messaging.requestPermission(alert: true, badge: true, sound: true);
+      try {
+        await messaging
+            .requestPermission(alert: true, badge: true, sound: true)
+            .timeout(const Duration(seconds: 5));
+      } catch (_) {}
       if (Platform.isIOS) {
         try {
-          await messaging.getAPNSToken();
+          await messaging.getAPNSToken().timeout(const Duration(seconds: 5));
         } catch (_) {}
       }
 
-      await messaging.getToken();
+      try {
+        await messaging.getToken().timeout(const Duration(seconds: 5));
+      } catch (_) {}
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         if (message.data['type'] == 'update_available') {
@@ -338,6 +330,27 @@ Future<void> main() async {
   } catch (_) {}
 
   runApp(const MainApp());
+
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    if (!kIsWeb) {
+      try {
+        Workmanager().initialize(callbackDispatcher);
+        Workmanager().registerPeriodicTask(
+          "medicationRescheduleTask",
+          "medicationRescheduleTask",
+          frequency: const Duration(hours: 1),
+          initialDelay: const Duration(minutes: 1),
+          constraints: Constraints(
+            networkType: NetworkType.notRequired,
+            requiresBatteryNotLow: false,
+            requiresCharging: false,
+            requiresDeviceIdle: false,
+            requiresStorageNotLow: false,
+          ),
+        );
+      } catch (_) {}
+    }
+  });
 }
 
 class MainApp extends StatelessWidget {

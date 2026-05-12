@@ -1240,6 +1240,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Decline & Logout'**
   String get declineAndLogout;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

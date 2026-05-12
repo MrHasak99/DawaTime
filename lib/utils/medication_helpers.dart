@@ -208,9 +208,6 @@ String? getNextReminder(Medications medication) {
                   'December',
                 ];
 
-        final month = months[checkDay.month - 1];
-        final day = checkDay.day;
-        final year = checkDay.year;
         final displayHour =
             checkDay.hour == 0 || checkDay.hour == 12 ? 12 : checkDay.hour % 12;
         final displayMinute = checkDay.minute.toString().padLeft(2, '0');
@@ -218,6 +215,23 @@ String? getNextReminder(Medications medication) {
             isArabic
                 ? (checkDay.hour < 12 ? 'ص' : 'م')
                 : (checkDay.hour < 12 ? 'AM' : 'PM');
+
+        final isToday =
+            checkDay.year == now.year &&
+            checkDay.month == now.month &&
+            checkDay.day == now.day;
+
+        if (isToday) {
+          final todayLabel =
+              contextToUse != null
+                  ? AppLocalizations.of(contextToUse)!.today
+                  : 'Today';
+          return '$todayLabel - $displayHour:$displayMinute $period';
+        }
+
+        final month = months[checkDay.month - 1];
+        final day = checkDay.day;
+        final year = checkDay.year;
 
         return isArabic
             ? '$day $month $year - $displayHour:$displayMinute $period'
@@ -265,9 +279,6 @@ String? getNextReminder(Medications medication) {
             'November',
             'December',
           ];
-  final month = months[scheduledTime.month - 1];
-  final day = scheduledTime.day;
-  final year = scheduledTime.year;
   final displayHour =
       scheduledTime.hour == 0 || scheduledTime.hour == 12
           ? 12
@@ -277,6 +288,23 @@ String? getNextReminder(Medications medication) {
       isArabic
           ? (scheduledTime.hour < 12 ? 'ص' : 'م')
           : (scheduledTime.hour < 12 ? 'AM' : 'PM');
+
+  final isToday =
+      scheduledTime.year == now.year &&
+      scheduledTime.month == now.month &&
+      scheduledTime.day == now.day;
+
+  if (isToday) {
+    final todayLabel =
+        contextToUse != null
+            ? AppLocalizations.of(contextToUse)!.today
+            : 'Today';
+    return '$todayLabel - $displayHour:$displayMinute $period';
+  }
+
+  final month = months[scheduledTime.month - 1];
+  final day = scheduledTime.day;
+  final year = scheduledTime.year;
 
   return isArabic
       ? '$day $month $year - $displayHour:$displayMinute $period'
