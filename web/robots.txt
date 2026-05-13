@@ -1,4 +1,4 @@
 # DawaTime Web App - Convenience Tool Only
-# Block from search engines - users should find dawatime.com instead
+# Block from search engines - users should find dawatime.hamadalkhalaf.com instead
 User-agent: *
 Disallow: /

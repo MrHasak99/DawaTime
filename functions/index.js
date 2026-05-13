@@ -295,9 +295,9 @@ exports.emailAdminsOnContactMessage = functions
     .onCreate(async (snap, context) => {
       const data = snap.data();
       const mailOptions = {
-        from: "admin@dawatime.com",
+        from: "dawatime@hamadalkhalaf.com",
         to: "eng@hamadalkhalaf.com",
-        replyTo: data.userEmail || "admin@dawatime.com",
+        replyTo: data.userEmail || "dawatime@hamadalkhalaf.com",
         subject: `New Contact Message from ${data.userEmail || "Unknown"}`,
         text: `Message: ${data.message}`,
       };
@@ -395,7 +395,7 @@ exports.requestAccountDeletion = functions
         if (reason && reason.trim()) {
           try {
             const mailOptions = {
-              from: "admin@dawatime.com",
+              from: "dawatime@hamadalkhalaf.com",
               to: "eng@hamadalkhalaf.com",
               subject: "Account Deletion - User Feedback",
               text:

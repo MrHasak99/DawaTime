@@ -326,7 +326,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ..onTap = () async {
                                         try {
                                           final url = Uri.parse(
-                                            'https://dawatime.com/terms-and-conditions',
+                                            'https://dawatime.hamadalkhalaf.com/terms-and-conditions',
                                           );
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
@@ -342,7 +342,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'Could not open Terms. Please visit dawatime.com',
+                                                    'Could not open Terms. Please visit dawatime.hamadalkhalaf.com',
                                                   ),
                                                   backgroundColor: Colors.red,
                                                 ),
@@ -410,7 +410,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ..onTap = () async {
                                         try {
                                           final url = Uri.parse(
-                                            'https://dawatime.com/privacy-policy',
+                                            'https://dawatime.hamadalkhalaf.com/privacy-policy',
                                           );
                                           if (await canLaunchUrl(url)) {
                                             await launchUrl(
@@ -426,7 +426,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                               ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    'Could not open Privacy Policy. Please visit dawatime.com',
+                                                    'Could not open Privacy Policy. Please visit dawatime.hamadalkhalaf.com',
                                                   ),
                                                   backgroundColor: Colors.red,
                                                 ),

@@ -2,8 +2,8 @@
 
 [![iOS App Store](https://img.shields.io/badge/App_Store-iOS-blue?logo=apple&logoColor=white)](https://apps.apple.com/app/dawatime/id6748280994)
 [![Google Play Store](https://img.shields.io/badge/Google_Play-Android-green?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime)
-[![Web App](https://img.shields.io/badge/Web_App-Live-orange?logo=flutter&logoColor=white)](https://webapp.dawatime.com)
-[![Website](https://img.shields.io/badge/Website-dawatime.com-8AC249?logo=firebase&logoColor=white)](https://dawatime.com)
+[![Web App](https://img.shields.io/badge/Web_App-Live-orange?logo=flutter&logoColor=white)](https://webapp.dawatime.hamadalkhalaf.com)
+[![Website](https://img.shields.io/badge/Website-dawatime.hamadalkhalaf.com-8AC249?logo=firebase&logoColor=white)](https://dawatime.hamadalkhalaf.com)
 
 **DawaTime** is a production-grade medication reminder application designed for the Kuwait and GCC market. Built with Flutter and Firebase, it focuses on extreme reliability, bilingual accessibility (English/Arabic), and smart scheduling to help users never miss a dose.
 
@@ -20,7 +20,7 @@
 - **☁️ Cloud Synchronization** — Real-time data sync via Firebase Firestore with secure email/password authentication.
 - **🛡️ Security & Privacy** — Play Integrity API (Android), region-based access control (GCC compliance), and a transparent legal document versioning system.
 - **🎨 Modern UI** — Clean, accessible design with Light, Dark, and System theme modes.
-- **🌐 Web App** — Full CRUD functionality available at [webapp.dawatime.com](https://webapp.dawatime.com) without requiring a download.
+- **🌐 Web App** — Full CRUD functionality available at [webapp.dawatime.hamadalkhalaf.com](https://webapp.dawatime.hamadalkhalaf.com) without requiring a download.
 
 ---
 
@@ -28,9 +28,9 @@
 
 | Platform          | Link                                                                             | Status           |
 | ----------------- | -------------------------------------------------------------------------------- | ---------------- |
-| iOS App Store     | [Download](https://apps.apple.com/app/dawatime/id6748280994)                     | ✅ Live (v1.4.5) |
-| Google Play Store | [Download](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime) | ✅ Live (v1.4.5) |
-| Web App           | [Open](https://webapp.dawatime.com)                                              | ✅ Live          |
+| iOS App Store     | [Download](https://apps.apple.com/app/dawatime/id6748280994)                     | ✅ Live (v1.4.6) |
+| Google Play Store | [Download](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime) | ✅ Live (v1.4.6) |
+| Web App           | [Open](https://webapp.dawatime.hamadalkhalaf.com)                                | ✅ Live          |
 
 ---
 
@@ -48,7 +48,7 @@ Flutter App (iOS / Android / Web)
         ├── Firebase App Check     → Play Integrity API (Android) / reCAPTCHA (Web)
         ├── Firebase Crashlytics   → Production crash monitoring
         ├── Firebase Analytics     → User behavior tracking
-        └── Firebase Hosting       → dawatime.com + webapp.dawatime.com
+        └── Firebase Hosting       → dawatime.hamadalkhalaf.com + webapp.dawatime.hamadalkhalaf.com
 ```
 
 ---
@@ -165,6 +165,7 @@ dawatime/
 | v1.3.4  | Oct 28, 2025 | Weekday scheduling + website distribution                  |
 | v1.4.4  | Jan 21, 2026 | Database migration + iOS fixes + Google Play debut         |
 | v1.4.5  | Feb 11, 2026 | Play Integrity API + Safe URL launching + 7 critical fixes |
+| v1.4.6  | May 12, 2026 | iOS lifecycle simplification + startup timeout safety + "Today" reminder label |
 
 ---
 
@@ -199,9 +200,9 @@ DawaTime is a reincarnation of a [failed 2022 Flutter course final project](http
 
 All rights reserved © Hamad AlKhalaf.
 
-- [Privacy Policy](https://dawatime.com/privacy-policy)
-- [Terms & Conditions](https://dawatime.com/terms-and-conditions)
-- [Support](https://dawatime.com/support)
+- [Privacy Policy](https://dawatime.hamadalkhalaf.com/privacy-policy)
+- [Terms & Conditions](https://dawatime.hamadalkhalaf.com/terms-and-conditions)
+- [Support](https://dawatime.hamadalkhalaf.com/support)
 
 ---
 

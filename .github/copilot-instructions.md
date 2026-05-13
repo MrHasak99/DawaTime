@@ -258,7 +258,7 @@
 - **Trigger**: Decision to consolidate all hosting on Firebase/Google to eliminate Cloudflare dependency and simplify the stack
 - **Build**: `flutter build web --release` — succeeded (42 files output to `build/web/`)
 - **Deploy**: `firebase deploy --only hosting:webapp` — deployed to `dawatime-webapp` Firebase Hosting site
-- **Live URL**: https://webapp.dawatime.com (CNAME → `dawatime-webapp.web.app` ✅)
+- **Live URL**: https://webapp.dawatime.hamadalkhalaf.com (CNAME → `dawatime-webapp.web.app` ✅)
 - **Custom Domain**: `webapp.dawatime.com` was already "Connected" in Firebase Console (pre-configured)
 - **CDN**: Firebase uses Fastly CDN (`x-served-by: cache-dxb*` headers) — same performance tier as Netlify
 - **Firebase target**: `webapp` → `dawatime-webapp` (defined in `.firebaserc` and `firebase.json`)
@@ -425,7 +425,7 @@ cd functions && npm audit fix  # Updated transitive dependencies
 - **Web App Button Reactivation**:
   - ✅ Removed disabled state and opacity: 0.5
   - ✅ Added hover effects (color change, lift, shadow)
-  - ✅ Links to: https://webapp.dawatime.com
+  - ✅ Links to: https://webapp.dawatime.hamadalkhalaf.com
 - **Content Updates**:
   - ✅ English description: "Download from the App Store **or Google Play**, or use our web app"
   - ✅ Arabic description: "حمّل من آب ستور **أو جوجل بلاي**، أو استخدم تطبيق الويب"
@@ -442,17 +442,17 @@ cd functions && npm audit fix  # Updated transitive dependencies
 - **Files Modified**:
   - public/index.html (8 replacements: badge integration, Web App reactivation, translations, logo styling, favicon updates)
   - public/DawaTime-favicon.png (NEW: optimized favicon with larger icon, rounded corners, green background)
-- **Deployment**: Firebase Hosting (20 files deployed, live at https://dawatime.com)
+- **Deployment**: Firebase Hosting (20 files deployed, live at https://dawatime.hamadalkhalaf.com)
 
 ---
 
 ### Web App Enhancements (January-February 2026)
 
-**Status**: ✅ **DEPLOYED** - Live at https://webapp.dawatime.com (February 5, 2026)
+**Status**: ✅ **DEPLOYED** - Live at https://webapp.dawatime.hamadalkhalaf.com (February 5, 2026)
 
 **File**: web/index.html (Flutter Web App wrapper for Progressive Web App)
 
-**Context**: The Flutter web app serves as an alternative to mobile apps for users who prefer browser-based access. Unlike the marketing site (public/index.html at https://dawatime.com), the web app provides full CRUD functionality for medication management without requiring app downloads.
+**Context**: The Flutter web app serves as an alternative to mobile apps for users who prefer browser-based access. Unlike the marketing site (public/index.html at https://dawatime.hamadalkhalaf.com), the web app provides full CRUD functionality for medication management without requiring app downloads.
 
 #### 1. Kuwait-Specific SEO Optimization
 
@@ -481,11 +481,11 @@ cd functions && npm audit fix  # Updated transitive dependencies
 **Implementation**:
 
 - **Open Graph tags** (8 new properties):
-  - `og:url`: https://webapp.dawatime.com
+  - `og:url`: https://webapp.dawatime.hamadalkhalaf.com
   - `og:type`: website
   - `og:title`: DawaTime - Never Miss a Dose
   - `og:description`: Smart medication reminder app for Kuwait & GCC
-  - `og:image`: https://webapp.dawatime.com/icons/Icon-512.png
+  - `og:image`: https://webapp.dawatime.hamadalkhalaf.com/icons/Icon-512.png
   - `og:image:width`: 512
   - `og:image:height`: 512
   - `og:locale`: en_US (with ar_KW alternate)
@@ -494,7 +494,7 @@ cd functions && npm audit fix  # Updated transitive dependencies
   - Fixed: Changed `property="twitter:*"` to `name="twitter:*"` (HTML5 spec)
   - Added: `twitter:url` metadata
   - Card type: summary_large_image
-- **Image URLs**: Changed from relative to absolute (https://webapp.dawatime.com/icons/Icon-512.png)
+- **Image URLs**: Changed from relative to absolute (https://webapp.dawatime.hamadalkhalaf.com/icons/Icon-512.png)
 
 **Benefits**: Proper social media previews when users share web app links on Facebook, Twitter, LinkedIn, WhatsApp.
 
@@ -601,7 +601,7 @@ window.addEventListener("flutter-first-frame", function () {
 **Deployment** (Migrated to Firebase Hosting - February 19, 2026):
 
 - **Platform**: Firebase Hosting (multi-site target: `webapp`)
-- **URL**: https://webapp.dawatime.com
+- **URL**: https://webapp.dawatime.hamadalkhalaf.com
 - **Build command**: `flutter build web --release`
 - **Deploy command**: `firebase deploy --only hosting:webapp`
 - **Build time**: ~24 seconds
@@ -619,7 +619,7 @@ window.addEventListener("flutter-first-frame", function () {
 - **February 17, 2026**: Logo update deployment (5 assets uploaded to CDN)
   - Replaced CSS pill icon with professional branded logo (DawaTime.png)
   - Build time: 22.0s, MaterialIcons tree-shaken 99.3%
-  - Deployed to: https://webapp.dawatime.com
+  - Deployed to: https://webapp.dawatime.hamadalkhalaf.com
 - **Status**: ✅ Live in production
 
 **Why These Changes**:
@@ -1476,9 +1476,9 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
    - **Clean URL Pattern**: All 6 pages accessible without `.html` extension
    - **301 Redirects**: Configured from `.html` URLs to clean URLs for SEO
    - **Examples**:
-     - `https://dawatime.com/terms-and-conditions` (not `/terms-and-conditions.html`)
-     - `https://dawatime.com/support` (not `/support.html`)
-     - `https://dawatime.com/account-deletion` (not `/account-deletion.html`)
+     - `https://dawatime.hamadalkhalaf.com/terms-and-conditions` (not `/terms-and-conditions.html`)
+     - `https://dawatime.hamadalkhalaf.com/support` (not `/support.html`)
+     - `https://dawatime.hamadalkhalaf.com/account-deletion` (not `/account-deletion.html`)
 
 3. **Version Tracking System** (Firestore):
    - Created `/AppConfig/LegalDocuments` collection with fields:
@@ -1497,7 +1497,7 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
 
 2. **Signup Flow Updates** (signup_page.dart):
    - Checkbox validation for T&C and Privacy Policy acceptance
-   - Links open webpages in browser: `https://dawatime.com/terms-and-conditions`
+   - Links open webpages in browser: `https://dawatime.hamadalkhalaf.com/terms-and-conditions`
    - On successful signup, fetches current versions from `/AppConfig/LegalDocuments`
    - Stores accepted versions in user profile (no hardcoded version numbers)
 
@@ -1511,8 +1511,8 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
    - User declines → Signs out (on login) or blocked from app (on startup)
 
 4. **Settings Page Links** (settings.dart):
-   - Privacy Policy button: Opens `https://dawatime.com/privacy-policy` in browser
-   - Terms & Conditions button: Opens `https://dawatime.com/terms-and-conditions` in browser
+   - Privacy Policy button: Opens `https://dawatime.hamadalkhalaf.com/privacy-policy` in browser
+   - Terms & Conditions button: Opens `https://dawatime.hamadalkhalaf.com/terms-and-conditions` in browser
    - Users can review documents anytime without being forced to accept
 
 5. **Support Page Links** (support.html):
@@ -1807,7 +1807,7 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
   - `/terms-and-conditions` → `terms-and-conditions.html`
   - `/` → `index.html`
 - **301 Redirects**: Configured from `.html` URLs to clean URLs for SEO benefits
-- **User Experience**: All pages accessible without file extensions (e.g., `https://dawatime.com/support`)
+- **User Experience**: All pages accessible without file extensions (e.g., `https://dawatime.hamadalkhalaf.com/support`)
 
 **Documentation Changes**:
 
@@ -1910,7 +1910,7 @@ The "Validation Failed" status is **expected behavior** — redirect pages can n
    - App info: Crash logs, Diagnostics, Performance (Firebase)
    - ❌ Health info: NOT checked (critical - medication names are user-entered text, not health sensor data)
 3. **Authentication**: Username and password
-4. **Account Deletion**: https://dawatime.com/account-deletion
+4. **Account Deletion**: https://dawatime.hamadalkhalaf.com/account-deletion
 5. **Data Encryption**: Yes (Firebase HTTPS/SSL)
 
 **REJECTION REASON (January 5, 2026)**:
@@ -2209,7 +2209,7 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Android Website (Firebase Hosting)**:
 
-- Deployed: https://dawatime.com
+- Deployed: https://dawatime.hamadalkhalaf.com
 - File: dawatime-v1.4.4.apk (60MB)
 - Verification: MD5 checksum confirmed
 - Distribution: Public download via website
@@ -2217,15 +2217,15 @@ First internal testing release of DawaTime on Google Play Console. Core features
 
 **Web App (Firebase Hosting - Migrated February 19, 2026)**:
 
-- Deployed: https://webapp.dawatime.com
+- Deployed: https://webapp.dawatime.hamadalkhalaf.com
 - Platform: Firebase Hosting multi-site (target: `webapp`)
 - Assets: 42 files deployed
 - Version tracking: version.json with build number
 - Build time: 22.3s
 - **SEO Strategy**: Blocked from search engines via robots.txt (Day 11)
   - Purpose: Convenience tool for existing users (CRUD without notifications)
-  - Not an acquisition channel - search traffic directed to dawatime.com
-  - robots.txt deployed: https://webapp.dawatime.com/robots.txt
+  - Not an acquisition channel - search traffic directed to dawatime.hamadalkhalaf.com
+  - robots.txt deployed: https://webapp.dawatime.hamadalkhalaf.com/robots.txt
 
 **Google Play Console (Closed Testing)**:
 
@@ -2455,7 +2455,7 @@ This is NOT a new app launch - it's an **upgrade story**:
   - Technical Bullets: 🛠️ Architecture (Firebase), 💊 Features (5 reminders every 30 min), 🌍 Localization (Arabic/English RTL), 🔔 Reliability (iOS + Android)
   - Validation: 12 continuous beta testers, 10+ days testing, 100% crash-free rate on v1.4.4+50
   - Lesson: "Sometimes you learn more from rebuilding than from getting it right the first time"
-  - CTA: https://dawatime.com
+  - CTA: https://dawatime.hamadalkhalaf.com
 - **Hashtags**: #Flutter #HealthTech #Kuwait #AndroidDev #iOSDev #CrossPlatform #DawaTime #FromFailureToSuccess
 - **Positioning**: Builder credibility + technical execution showcase + growth mindset (vs generic product announcement)
 - **Timeline**: December 20, 2022 (failed project) → January 21, 2026 (production launch) = 3 years 1 month
@@ -2521,7 +2521,7 @@ Mystery teaser posted **Sunday, January 11 at 11:00 AM Kuwait time** when audien
 **Primary Change**: Google Play Store integration for Android update flow
 
 - **File**: `lib/main.dart` (line 1006-1008, `showForceUpdateDialog()` function)
-- **Before**: Android users redirected to `https://dawatime.com` (website APK download)
+- **Before**: Android users redirected to `https://dawatime.hamadalkhalaf.com` (website APK download)
 - **After**: Android users redirected to `https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime`
 - **Rationale**: Play Store users should receive updates from Play Store, not website downloads
 - **iOS**: Unchanged, still directs to App Store
@@ -4044,8 +4044,8 @@ Future<void> _saveFCMToken(String uid) async {
 
 DawaTime uses Firebase Hosting multi-site configuration to host two separate applications on a single Firebase project:
 
-1. **Marketing Site** (target: `main`) - Static HTML site at https://dawatime.com
-2. **Flutter Web App** (target: `webapp`) - Progressive web app at https://webapp.dawatime.com
+1. **Marketing Site** (target: `main`) - Static HTML site at https://dawatime.hamadalkhalaf.com
+2. **Flutter Web App** (target: `webapp`) - Progressive web app at https://webapp.dawatime.hamadalkhalaf.com
 
 **Migration History**:
 
@@ -4149,14 +4149,14 @@ DawaTime uses Firebase Hosting multi-site configuration to host two separate app
 1. **dawatime-com** (Marketing Site)
    - Target: `main`
    - Source Directory: `public/` (20 files)
-   - Custom Domain: https://dawatime.com (connected)
+   - Custom Domain: https://dawatime.hamadalkhalaf.com (connected)
    - Firebase URL: https://dawatime-com.web.app
    - SSL: Automatic (Firebase managed)
 
 2. **dawatime-webapp** (Flutter Web App)
    - Target: `webapp`
    - Source Directory: `build/web/` (42 files, generated by `flutter build web --release`)
-   - Custom Domain: https://webapp.dawatime.com (connected)
+   - Custom Domain: https://webapp.dawatime.hamadalkhalaf.com (connected)
    - Firebase URL: https://dawatime-webapp.web.app
    - SSL: Automatic (Firebase managed)
 
@@ -4308,7 +4308,7 @@ flutter run --flavor production
 - `flutter build apk --release` - Production build for website distribution
 - `flutter build appbundle --release` - Google Play Store (AAB format, not currently used)
 
-**Distribution Method**: APK distributed via website (https://dawatime.com) due to Google Play Console restrictions on health-related apps from personal developer accounts.
+**Distribution Method**: APK distributed via website (https://dawatime.hamadalkhalaf.com) due to Google Play Console restrictions on health-related apps from personal developer accounts.
 
 **Android Build Configuration** (`android/app/build.gradle.kts`):
 
