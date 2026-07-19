@@ -2,6 +2,7 @@
 
 [![iOS App Store](https://img.shields.io/badge/App_Store-iOS-blue?logo=apple&logoColor=white)](https://apps.apple.com/app/dawatime/id6748280994)
 [![Google Play Store](https://img.shields.io/badge/Google_Play-Android-green?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime)
+[![APK Download](https://img.shields.io/badge/APK-v1.4.6-3DDC84?logo=android&logoColor=white)](https://dawatime.hamadalkhalaf.com/dawatime-v1.4.6.apk)
 [![Web App](https://img.shields.io/badge/Web_App-Live-orange?logo=flutter&logoColor=white)](https://webapp.dawatime.hamadalkhalaf.com)
 [![Website](https://img.shields.io/badge/Website-dawatime.hamadalkhalaf.com-8AC249?logo=firebase&logoColor=white)](https://dawatime.hamadalkhalaf.com)
 
@@ -26,11 +27,12 @@
 
 ## 📱 Download
 
-| Platform          | Link                                                                             | Status           |
-| ----------------- | -------------------------------------------------------------------------------- | ---------------- |
-| iOS App Store     | [Download](https://apps.apple.com/app/dawatime/id6748280994)                     | ✅ Live (v1.4.6) |
-| Google Play Store | [Download](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime) | ✅ Live (v1.4.6) |
-| Web App           | [Open](https://webapp.dawatime.hamadalkhalaf.com)                                | ✅ Live          |
+| Platform               | Link                                                                             | Status           |
+| ---------------------- | -------------------------------------------------------------------------------- | ---------------- |
+| iOS App Store          | [Download](https://apps.apple.com/app/dawatime/id6748280994)                     | ✅ Live (v1.4.6) |
+| Google Play Store      | [Download](https://play.google.com/store/apps/details?id=com.mrhasak99.dawatime) | ✅ Live (v1.4.6) |
+| Android APK (Direct)   | [Download](https://dawatime.hamadalkhalaf.com/dawatime-v1.4.6.apk)               | ✅ Live (v1.4.6) |
+| Web App                | [Open](https://webapp.dawatime.hamadalkhalaf.com)                                | ✅ Live          |
 
 ---
 
@@ -92,7 +94,7 @@ dawatime/
 ├── functions/
 │   └── index.js                   # Cloud Functions (FCM, Play Integrity verification, email, version check)
 ├── public/                        # Firebase Hosting (marketing site — dawatime.hamadalkhalaf.com)
-│   ├── index.html                 # Landing page (bilingual, Google Play + App Store badges)
+│   ├── index.html                 # Landing page (bilingual, App Store + Google Play badges, direct APK download)
 │   ├── privacy-policy.html        # Privacy Policy (bilingual, Trust Box, FOUC prevention)
 │   ├── terms-and-conditions.html  # Terms & Conditions (bilingual, Safety Box, FOUC prevention)
 │   ├── support.html               # Support center
@@ -191,6 +193,7 @@ dawatime/
 | Feb 27, 2026 | Infrastructure consolidation: Netlify → Firebase Hosting; DNS cleanup (Zoho/SendGrid records removed) |
 | Mar 12, 2026 | SEO fixes: `robots.txt` + `sitemap.xml` corrected, Search Console issues resolved  |
 | May 14, 2026 | **v1.4.6** — iOS lifecycle improvements and "Today" label                          |
+| Jul 19, 2026 | Direct APK download (v1.4.6) added to landing page; domain consolidated to `dawatime.hamadalkhalaf.com` |
 
 ### Beta Testing (January 7–21, 2026)
 
